@@ -1,6 +1,5 @@
 import { mapObject } from '../utils/commonUtils'
 import { getHighZIdex } from '../utils/styleUtils'
-import colors from './colors'
 import { fontParams } from './fonts'
 import sizes from './sizes'
 
@@ -68,12 +67,6 @@ export const underline = () => `
   text-underline-offset: 0.125em;
 `
 
-export const hoverActive = () => `
-  &:hover {
-    color:${colors.activeElem}; 
-  }
-`
-
 export const media = ({ $aspectRatio, $hasLoaded }) => `
   aspect-ratio: ${$aspectRatio};
   background-color: ${$hasLoaded ? '' : 'rgb(240,240,240)'};
@@ -92,7 +85,6 @@ const mixins = {
   fontVar,
   slant,
   underline,
-  hoverActive,
   media,
   chain: function () {
     const chainedObject = {

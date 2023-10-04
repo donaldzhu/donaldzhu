@@ -55,6 +55,8 @@ export const getNativeResolution = () => [
 ]
 
 export const joinPaths = (...paths) => paths.filter(p => p).join('/')
+export const appendQuery = (...queries) => queries.reduce((string, [queryKey, queryValue], i) =>
+  string += i ? '&' : '' + `${queryKey}=${queryValue}`, '?')
 
 export const getToolTipPoints = (toolTip, popUp) => {
   if (popUp.y2 >= toolTip.y2 && popUp.y1 <= toolTip.y1)

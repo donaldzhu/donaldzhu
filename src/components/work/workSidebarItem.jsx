@@ -1,5 +1,6 @@
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { styled } from 'styled-components'
+import Anchor from '../common/anchor'
 import { em } from '../../utils/styleUtils'
 import mixins from '../../styles/mixins'
 import { fontSizes } from '../../styles/fonts'
@@ -22,7 +23,7 @@ const WorkSideBarItem = ({ data, isHighlighted, highlightedRef, handleHover }) =
   )
 }
 
-const LinkContainer = styled(Link)`
+const LinkContainer = styled(Anchor)`
   ${mixins.noSelect()}  
   display: inline;
   line-height: ${fontSizes.textLineHeight};

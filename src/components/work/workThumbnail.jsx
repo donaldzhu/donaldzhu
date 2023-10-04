@@ -1,8 +1,9 @@
-import { Link, useOutletContext } from 'react-router-dom'
+import { useOutletContext } from 'react-router-dom'
 import { styled } from 'styled-components'
 import PreloadMedia from '../common/media/preloadMedia'
 import { joinPaths } from '../../utils/commonUtils'
 import { FILE_EXT, MEDIA_TYPES } from '../../utils/helpers/preloader/preloadUtils'
+import Anchor from '../common/anchor'
 
 const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }) => {
   const { title, alt, id, animatedThumbnail } = data
@@ -24,7 +25,7 @@ const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }) => 
   )
 }
 
-const ThumbnailLink = styled(Link)`  
+const ThumbnailLink = styled(Anchor)`  
   display: block;
    img, video {
     width: 100%;  

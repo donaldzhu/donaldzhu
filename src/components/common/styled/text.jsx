@@ -11,10 +11,7 @@ const Text = styled.p`
   line-height: ${fontSizes.textLineHeight};
 
   a {
-    ${mixins
-    .chain()
-    .hoverActive()
-    .underline()}
+    ${mixins.underline()}
   }
 
   b {

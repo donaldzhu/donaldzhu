@@ -21,10 +21,7 @@ const ContactCopy = ({ content }) => {
 }
 
 const CopyContainer = styled.span`
-  ${mixins
-    .chain()
-    .fontVar({ MONO: 1 })
-    .hoverActive()}
+  ${mixins.fontVar({ MONO: 1 })}
   font-size: ${fontSizes.contactCopy};
   margin-left: 0.35em;
   letter-spacing: 0.015em;

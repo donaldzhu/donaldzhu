@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
 import { styled } from 'styled-components'
 import ContactCopy from './contactCopy'
 import Text from '../common/styled/text'
+import Anchor from '../common/anchor'
 import { em } from '../../utils/styleUtils'
 import mixins, { squared } from '../../styles/mixins'
 import colorConfig from '../../styles/colors'
@@ -30,12 +30,9 @@ const ItemContainer = styled.li`
   ${mixins.flex('center', 'initial')}
 `
 
-const LinkContainer = styled(Link)`
+const LinkContainer = styled(Anchor)`
   width: fit-content;
-  ${mixins
-    .chain()
-    .hoverActive()
-    .underline()}
+  ${mixins.underline()}
   text-decoration-thickness: 0.0765em;
 `
 

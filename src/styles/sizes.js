@@ -25,7 +25,7 @@ const sizes = {
   sidebarPaddingVertical,
 
   footerPaddingTop,
-  footerLinkPadding: em(0.5),
+  footerLinkPadding: em(0.25),
 
   mainContainerMargin: responsiveSize({ l: 25, xxl: 50 }),
   autoPlayWidth: responsiveSize({ l: 330, xxl: 560 }),

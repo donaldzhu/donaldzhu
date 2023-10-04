@@ -11,8 +11,8 @@ export const fontParams = {
   semiBold: 575,
 }
 
-const sansToMonoratio = 1.02
-const sidebarText = responsiveRem({ l: 1.325, xxl: 2.95 })
+const sansToMonoratio = 1.03
+const sidebarText = responsiveRem({ l: 1.325, xxl: 2.925 })
 const workIndex = responsiveRem({ l: 0.85, xxl: 1.7 })
 export const fontSizes = {
   autoPlayMessage: responsiveRem({ l: 1.5, xxl: 2.75 }),

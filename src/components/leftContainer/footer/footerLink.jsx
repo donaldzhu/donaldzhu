@@ -1,5 +1,6 @@
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { styled } from 'styled-components'
+import Anchor from '../../common/anchor'
 import { fontFamilies } from '../../../styles/fonts'
 import colors from '../../../styles/colors'
 import mixins from '../../../styles/mixins'
@@ -17,7 +18,7 @@ const FooterLink = ({ path, children }) => {
 }
 
 const linkColorMixin = ({ $isHighlighted }) => $isHighlighted ? colors.activeElem : colors.footer
-const FooterAnchor = styled(Link)`
+const FooterAnchor = styled(Anchor)`
   height: fit-content;
   padding: ${sizes.footerLinkPadding};
   font-family: ${fontFamilies.sansFont};  
@@ -29,9 +30,15 @@ const FooterAnchor = styled(Link)`
     .chain()
     .noSelect()
     .recursiveCenterText()
-    .hoverActive()
   }
 
+  &:first-of-type {
+    padding-left: 0;
+  }
+
+  &:last-of-type {
+    padding-right: 0;
+  }
 `
 
 export default FooterLink

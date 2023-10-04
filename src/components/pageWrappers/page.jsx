@@ -19,7 +19,6 @@ const Page = () => {
   const [zoomMedia, setZoomMedia] = useState()
   const location = useLocation()
 
-
   const allCanvasCallbackRefs = [
     useGlobalCanvas(),
     useGlobalCanvas()

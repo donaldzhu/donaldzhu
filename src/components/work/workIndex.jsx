@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { styled } from 'styled-components'
 import Masonry from '@mui/lab/Masonry'
-import { useMediaQuery } from "@uidotdev/usehooks"
+import { useMediaQuery } from '@uidotdev/usehooks'
 import WorkThumbnail from './workThumbnail'
 import WorkSideBar from './workSidebar'
 import MainContainer from '../common/styled/mainContainer'
@@ -12,6 +12,7 @@ import drawWorkSketch from '../../p5/sketches/drawWorkSketch'
 import sizes from '../../styles/sizes'
 import queries from '../../utils/queryUtil'
 import workData from '../../data/work/workData'
+import usePortfolioQuery from '../../hooks/usePortfolioQuery'
 
 const WorkIndex = () => {
   const [highlighted, setHighlighted] = useState()
@@ -26,7 +27,12 @@ const WorkIndex = () => {
   usePreloadQueue(setupDone, preloadManager =>
     preloadManager.defaultPreload())
 
+  const { portfolioData } = usePortfolioQuery()
+  const filteredWorkData = portfolioData?.projects.map(projectId =>
+    workData.find(work => work.id === projectId)
+  ) || workData
   useSidebar(<WorkSideBar
+    workData={filteredWorkData}
     highlighted={highlighted}
     sidebarRef={sidebarRef}
     handleHover={handleHover} />, [highlighted])
@@ -37,7 +43,7 @@ const WorkIndex = () => {
   return (
     <ThumbnailContainer $columns={columns}>
       <Masonry columns={columns}>
-        {workData.map(project => project.enabled && project.listed && <WorkThumbnail
+        {filteredWorkData.map(project => project.enabled && project.listed && <WorkThumbnail
           key={project.title}
           data={project}
           isHighlighted={highlighted === project.title}

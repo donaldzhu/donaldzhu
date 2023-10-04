@@ -49,40 +49,28 @@ button {
   src: url("./assets/fonts/Recursive/Recursive.woff2");
 }
 @font-face {
-  font-family: "Inria Sans";
-  src: url("./assets/fonts/InriaSans/InriaSans-Light.woff2");
-  font-weight: 300;
+  font-family: "Manifont Grotesk";
+  font-weight: bold;
   font-style: normal;
+  src: url("./assets/fonts/ManifontGrotesk/ManifontGroteskBold.woff");
 }
 @font-face {
-  font-family: "Inria Sans";
-  src: url("./assets/fonts/InriaSans/InriaSans-Regular.woff2");
+  font-family: "Manifont Grotesk";
+  font-weight: bold;
+  font-style: italic;
+  src: url("./assets/fonts/ManifontGrotesk/ManifontGroteskBoldItalic.woff");
+}
+@font-face {
+  font-family: "Manifont Grotesk";
   font-weight: normal;
   font-style: normal;
+  src: url("./assets/fonts/ManifontGrotesk/ManifontGroteskBook.woff");
 }
 @font-face {
-  font-family: "Inria Sans";
-  src: url("./assets/fonts/InriaSans/InriaSans-Bold.woff2");
-  font-weight: 700;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Inria Sans";
-  src: url("./assets/fonts/InriaSans/InriaSans-LightItalic.woff2");
-  font-weight: 300;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Inria Sans";
-  src: url("./assets/fonts/InriaSans/InriaSans-Italic.woff2");
+  font-family: "Manifont Grotesk";
   font-weight: normal;
   font-style: italic;
-}
-@font-face {
-  font-family: "Inria Sans";
-  src: url("./assets/fonts/InriaSans/InriaSans-BoldItalic.woff2");
-  font-weight: 700;
-  font-style: italic;
+  src: url("./assets/fonts/ManifontGrotesk/ManifontGroteskBookItalic.woff");
 }
 
 /*# sourceMappingURL=index.css.map */

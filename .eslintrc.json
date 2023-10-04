@@ -18,7 +18,6 @@
   },
   "plugins": ["react", "react-hooks", "import"],
   "rules": {
-    "indent": ["error", 2, { "ignoredNodes": ["TemplateLiteral > *"] }],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "never"],
@@ -39,5 +38,6 @@
         "extensions": [".js", ".jsx", ".json"]
       }
     }
-  }
+  },
+  "ignorePatterns": ["scripts/"]
 }

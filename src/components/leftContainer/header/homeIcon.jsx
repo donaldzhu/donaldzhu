@@ -1,6 +1,6 @@
 import { useRef } from 'react'
-import { Link } from 'react-router-dom'
 import { styled } from 'styled-components'
+import Anchor from '../../common/anchor'
 import useCanvas from '../../../hooks/useCanvas'
 import drawHomeIcon from '../../../p5/sketches/drawHomeIcon'
 import { percent, responsiveSize } from '../../../utils/styleUtils'
@@ -38,7 +38,7 @@ const HomeButtonContainer = styled.div`
   left: calc(${sizes.homeIconPadding} / -2);
 `
 
-const HomeButtonLink = styled(Link)`
+const HomeButtonLink = styled(Anchor)`
   ${mixins.squared(percent(85))}
   z-index: 2;
   display: block;
