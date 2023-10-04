@@ -1,0 +1,88 @@
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+p {
+  hyphens: auto;
+  hyphenate-limit-chars: 8 3 3;
+}
+
+a {
+  text-decoration: none;
+  color: unset;
+}
+a h3,
+a p {
+  display: inline;
+}
+
+ul {
+  list-style-type: none;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-transform: uppercase;
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+}
+
+@font-face {
+  font-family: "Recursive";
+  src: url("./assets/fonts/Recursive/Recursive.woff2");
+}
+@font-face {
+  font-family: "Inria Sans";
+  src: url("./assets/fonts/InriaSans/InriaSans-Light.woff2");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Inria Sans";
+  src: url("./assets/fonts/InriaSans/InriaSans-Regular.woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Inria Sans";
+  src: url("./assets/fonts/InriaSans/InriaSans-Bold.woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Inria Sans";
+  src: url("./assets/fonts/InriaSans/InriaSans-LightItalic.woff2");
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Inria Sans";
+  src: url("./assets/fonts/InriaSans/InriaSans-Italic.woff2");
+  font-weight: normal;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Inria Sans";
+  src: url("./assets/fonts/InriaSans/InriaSans-BoldItalic.woff2");
+  font-weight: 700;
+  font-style: italic;
+}
+
+/*# sourceMappingURL=index.css.map */

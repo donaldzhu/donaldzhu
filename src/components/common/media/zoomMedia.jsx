@@ -1,0 +1,56 @@
+import { forwardRef, useContext, useRef } from 'react'
+import { useOutletContext } from 'react-router-dom'
+import { styled } from 'styled-components'
+import PreloadMedia from './preloadMedia'
+import { WorkPageContext } from '../../../contexts/context'
+import { percent, toPercent } from '../../../utils/styleUtils'
+import { joinPaths } from '../../../utils/commonUtils'
+import { MEDIA_TYPES } from '../../../utils/helpers/preloader/preloadUtils'
+import mixins from '../../../styles/mixins'
+
+const ZoomMedia = forwardRef((props, ref) => {
+  const { preloadManager, handleZoomMedia } = useOutletContext()
+  const { pageId } = useContext(WorkPageContext)
+  let mediaRef = useRef()
+  mediaRef = ref || mediaRef
+
+  let { src, maxSize, width, isToolTip, ...rest } = props
+  let { type } = rest
+
+  if (isToolTip) type = MEDIA_TYPES.toolTips
+
+  const fallbackPath = joinPaths('/assets/work', pageId, 'original', src)
+  const mediaStack = preloadManager?.enabled &&
+    preloadManager.workPages[pageId][type][src]
+  const handleClick = () =>
+    handleZoomMedia({
+      ...props,
+      mediaStack,
+      fallbackPath,
+      getCurrentTime: () => mediaRef.current.currentTime,
+      maxSize: typeof maxSize === 'number' ? toPercent(maxSize) : maxSize
+    })
+
+  return (
+    <MediaContainer $width={width}>
+      <PreloadMedia
+        {...rest}
+        mediaStack={mediaStack}
+        fallbackPath={fallbackPath}
+        ref={mediaRef}
+        onClick={handleClick} />
+    </MediaContainer>
+  )
+})
+
+const MediaContainer = styled.div`
+  ${mixins.flex('initial', 'center')}
+
+  img, video {
+    cursor: zoom-in;
+    width: ${({ $width }) => $width || percent(100)};
+    object-fit: cover;
+  }
+`
+
+export default ZoomMedia

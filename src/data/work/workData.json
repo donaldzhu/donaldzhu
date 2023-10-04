@@ -1,0 +1,167 @@
+[
+  {
+    "id": "vector-struct",
+    "title": "VECTOR [ Struct ]",
+    "abbr": null,
+    "date": "2022-2023",
+    "tags": ["Fabrication", "Typography"],
+    "medium": ["Wood", "Elastic Fabric"],
+    "animatedThumbnail": true,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "vector-string",
+    "title": "VECTOR [ String ]",
+    "abbr": null,
+    "date": "2022-2023",
+    "tags": ["Fabrication", "Typography"],
+    "medium": ["Vellum", "Drawing", "Elastic String"],
+    "animatedThumbnail": true,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "spin",
+    "title": "SPIN",
+    "abbr": null,
+    "date": "2022-2023",
+    "tags": ["Fabrication", "Typography"],
+    "medium": ["Photography", "3D printing", "Stepper motor", "Acetate"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "roll",
+    "title": "ROLL",
+    "abbr": null,
+    "date": "2022",
+    "tags": ["Typography"],
+    "medium": ["Toilet paper roll", "Scanned photography"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "stroke",
+    "title": "STROKE",
+    "abbr": null,
+    "date": "2022-2023",
+    "tags": ["Fabrication", "Typography"],
+    "medium": ["CNC", "Brush", "Parallel Pen", "Marker", "Pencil"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "memory-of-memories",
+    "title": "memory ( of memories )",
+    "abbr": null,
+    "date": "2022",
+    "tags": ["Typography"],
+    "medium": ["Kettle-stitched Book", "Acetate", "Inkjet print"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "thrasher-reconstructed",
+    "title": "Thrasher: Reconstructed",
+    "abbr": "Thrasher: Recon.",
+    "date": "2019",
+    "tags": ["Collage", "Motion"],
+    "medium": ["Analog", "Digital", "Animation"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "vector-spin-stroke",
+    "title": "VECTOR, SPIN, STROKE",
+    "abbr": null,
+    "date": "2023",
+    "tags": ["Anthology"],
+    "medium": ["Exhibition", "Assorted Tools"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": false
+  },
+  {
+    "id": "i-voted",
+    "title": "I Voted!",
+    "abbr": null,
+    "date": "2019",
+    "tags": ["Digital Asset"],
+    "medium": ["Instagram Sticker"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "dm2020",
+    "title": "Design ManifesTO 2020",
+    "abbr": null,
+    "date": "2021",
+    "tags": ["Editorial"],
+    "medium": ["Book", "Collage"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "the-poor-image",
+    "title": "The Poor Image",
+    "abbr": null,
+    "date": "2020",
+    "tags": ["Web Design"],
+    "medium": ["Website"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "systemized-creativity",
+    "title": "Systemized Creativity",
+    "abbr": null,
+    "date": "2019",
+    "tags": ["Editorial"],
+    "medium": ["Analog", "Pasteup", "Book"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "acogito",
+    "title": "ACOGITO",
+    "abbr": null,
+    "date": "2022-2023",
+    "tags": ["Speculative", "Generative"],
+    "medium": ["Book", "Acrylic", "Poster", "Vellum", "Acetate Deck", "p5.js"],
+    "animatedThumbnail": true,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "architecture",
+    "title": "“Architecture”",
+    "abbr": null,
+    "date": "2019",
+    "tags": ["Poster Design"],
+    "medium": ["Paste up", "Gel medium", "Duct tape"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "object-bulb",
+    "title": "Object - Bulb",
+    "abbr": null,
+    "date": "2018",
+    "tags": ["Form Studies"],
+    "medium": ["Cyanotype", "Spray paint", "Photography"],
+    "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  }
+]
