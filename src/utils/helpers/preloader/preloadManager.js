@@ -259,7 +259,6 @@ class PreloadManager {
 
   restart() {
     if (!this.mainQueueName) return
-    console.log('restarted')
     this.abort()
     this.isComplete = false
     this[this.mainQueueName]()

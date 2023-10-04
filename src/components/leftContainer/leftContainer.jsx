@@ -41,12 +41,8 @@ const SidebarContainer = styled.div`
   flex: auto;
   overflow: scroll;
 
-  > :first-child {
+  &>:first-child {
     margin-top: ${sizes.sidebarPaddingVertical};
-  }
-  
-  > :last-child {
-    margin-bottom: ${sizes.sidebarPaddingVertical};
   }
 `
 

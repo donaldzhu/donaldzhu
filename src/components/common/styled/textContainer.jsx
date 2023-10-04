@@ -8,9 +8,9 @@ const TextContainer = styled.div`
     .chain()
     .fontVar({ MONO: fontParams.monoVariable })
     .innerMargin(sizes.textInnerMargin)}
-  
-  &:last-child {
-    padding-bottom: ${sizes.workDetailsMarginBottom};
+
+  &>:last-child {
+    padding-bottom: ${sizes.sidebarPaddingVertical};
   }
 `
 
