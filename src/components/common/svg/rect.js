@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import colorConfig from '../../../styles/colors'
-import { isOdd, repeatMap, keysToObject } from '../../../utils/generalUtils'
+import { isOdd, repeatMap, keysToObject } from '../../../utils/commonUtils'
 
 // RECT
 class Rect {

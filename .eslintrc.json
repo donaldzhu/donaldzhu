@@ -6,7 +6,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:react-hooks/recommended",
+    "plugin:import/recommended"
   ],
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -15,9 +16,9 @@
       "jsx": true
     }
   },
-  "plugins": ["react", "react-hooks"],
+  "plugins": ["react", "react-hooks", "import"],
   "rules": {
-    "indent": ["error", 2],
+    "indent": ["error", 2, { "ignoredNodes": ["TemplateLiteral > *"] }],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "never"],
@@ -25,11 +26,18 @@
     "react-hooks/exhaustive-deps": "off",
     "react/prop-types": "off",
     "react/display-name": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "import/no-named-as-default": "off",
+    "import/no-named-as-default-member": "off"
   },
   "settings": {
     "react": {
       "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".json"]
+      }
     }
   }
 }
