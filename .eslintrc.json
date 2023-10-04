@@ -3,29 +3,16 @@
     "browser": true,
     "es2021": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parserOptions": {
-    "ecmaVersion": 13,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
+    "ecmaVersion": "latest",
+    "sourceType": "module"
   },
-  "plugins": ["react", "react-hooks"],
+  "plugins": ["react"],
   "rules": {
-    "react/react-in-jsx-scope": "off",
-    "react-hooks/exhaustive-deps": "off",
-    "react/prop-types": "off",
-    "react/display-name": "off",
-    "no-irregular-whitespace": "off"
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
+    "indent": ["error", "space"],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "never"]
   }
 }
