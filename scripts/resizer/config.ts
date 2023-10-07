@@ -1,0 +1,1 @@
+export const POSTER_SUBFOLDER = 'posters'
