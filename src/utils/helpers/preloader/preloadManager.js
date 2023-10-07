@@ -4,8 +4,8 @@ import Queue from '../queue'
 import { ImgStack, VidStack } from './mediaStack'
 import { capitalize, mapObject } from '../../commonUtils'
 import { getBreakpointKey } from '../../queryUtil'
-import { FILE_EXT, MEDIA_SIZES, MEDIA_TYPES, isImg, isPoster, isVid } from './preloadUtils'
-import nativeDimensions from '../../../data/media/nativeSizes.json'
+import { MEDIA_SIZES, MEDIA_TYPES, fileIsVid, isImg, isPoster, isVid } from './preloadUtils'
+import nativeDimensions from '../../../data/media/nativeDimensions.json'
 import workData from '../../../data/work/workData.json'
 
 const LOG_COLORS = {
@@ -40,25 +40,51 @@ class PreloadManager {
       console.log(this)
   }
 
-  //-----stack creators-----//
   _createThumbnailStacks() {
-    mapObject(nativeDimensions, (pageId, pageSizes) => {
+    this.thumbnails = nativeDimensions.thumbnails.map(([fileName, nativeDimension]) => {
+      const pageId = fileName.replace(/\.[^/.]+$/, '')
       const { animatedThumbnail, listed, disabled } = workData.find(page => page.id === pageId)
       if (!listed || disabled) return
       const Stack = animatedThumbnail ? VidStack : ImgStack
-      this.thumbnails[pageId] = new Stack({
+      return new Stack({
         pageId,
-        nativeDimension: pageSizes[MEDIA_TYPES.thumbnails],
+        nativeDimension,
         mediaType: MEDIA_TYPES.thumbnails,
-        fileName: `${pageId}.${animatedThumbnail ?
-          FILE_EXT.webm : FILE_EXT.webp}`,
+        fileName,
         autoPlayConfig: this.autoPlayConfig,
         loadVid: this.loadVid
       })
-    })
+    }).filter(thumbnail => thumbnail)
   }
 
+  // _createWorkPageStacks() {
+  //   mapObject(_.cloneDeep(nativeDimensions), (pageId, pageSizes) => {
+  //     this.workPages[pageId] =
+  //       _.omit(pageSizes, [MEDIA_TYPES.thumbnails])
+  //     mapObject(this.workPages[pageId], (mediaType, mediaSizes) => {
+  //       const Stack = isVid(mediaType) ? VidStack : ImgStack
+  //       mapObject(mediaSizes, (fileName, nativeDimension) =>
+  //         mediaSizes[fileName] = new Stack({
+  //           pageId,
+  //           fileName,
+  //           mediaType,
+  //           nativeDimension,
+  //           autoPlayConfig: this.autoPlayConfig,
+  //           loadVid: this.loadVid
+  //         })
+  //       )
+  //     })
+  //   })
+  // }
+
+
   _createWorkPageStacks() {
+    mapObject(nativeDimensions.work, (pageId, nativeDimensions) => {
+      this.workPages[pageId] = nativeDimensions.map(([fileName, nativeDimensions]) => {
+        const Stack = fileIsVid(fileName) ? VidStack : ImgStack
+      })
+    })
+
     mapObject(_.cloneDeep(nativeDimensions), (pageId, pageSizes) => {
       this.workPages[pageId] =
         _.omit(pageSizes, [MEDIA_TYPES.thumbnails])

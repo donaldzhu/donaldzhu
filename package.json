@@ -31,12 +31,12 @@
     "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "parse": "node scripts/parseDescription.js",
+    "parse": "node scripts/dist/scripts/parseDescription",
+    "resize": "node scripts/dist/scripts/resizer/index",
     "watch:parse": "nodemon -q -e html --watch src/data/work/descriptions -x \"npm run parse\"",
     "watch:sass": "sass --watch ./",
     "watch": "npm run watch:parse & npm run watch:sass",
     "lint": "eslint ./src",
-    "resize": "node scripts/resizeImages/resizeImages",
     "tsc-script": "tsc -w -p scripts/tsconfig.json"
   },
   "eslintConfig": {
