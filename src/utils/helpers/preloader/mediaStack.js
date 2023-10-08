@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { ImgPreloader, VidPreloader } from './preloader'
 import { joinPaths, keysToObject } from '../../commonUtils'
 import { getBreakpointKey } from '../../queryUtil'
-import { FILE_EXT, MEDIA_SIZES, MEDIA_TYPES, isImg, isThumbnail, isVid } from './preloadUtils'
+import { FILE_EXT, MEDIA_SIZES, MEDIA_TYPES, getPreviewBreakpointKey, isImg, isThumbnail, isVid } from './preloadUtils'
 import breakpoints from '../../../data/breakpoints.json'
 
 class MediaStack {
@@ -18,7 +18,7 @@ class MediaStack {
     this.stackKeys = this.breakpoints
 
     if (!isVid(fileType)) this.stackKeys.unshift(MEDIA_SIZES.desktopFallback)
-    if (!this.isThumbnail) this.stackKeys.push(MEDIA_SIZES.original)
+    if (!this.isThumbnail) this.stackKeys.push(MEDIA_SIZES.max)
 
     this.stack = keysToObject(this.stackKeys, size => new Preloader(this._getPath(size), autoPlayConfig, loadVid))
     this.listeners = []
@@ -34,8 +34,6 @@ class MediaStack {
       paths = !this.isPoster ?
         [...thumbnailRootPath, this.fileName] :
         [...thumbnailRootPath, MEDIA_TYPES.posters, this.fileName]
-    else if (this.mediaType === MEDIA_TYPES.toolTips)
-      paths = [pagePath, this.mediaType, this.fileName]
     else if (this.isPoster)
       paths = [pagePath, MEDIA_TYPES.posters, this.fileName]
     else paths = [pagePath, this.fileName]
@@ -48,8 +46,8 @@ class MediaStack {
       .then(() => this._onFinished())
   }
 
-  preloadOriginal() {
-    return this.stack.original.preload()
+  preloadMax() {
+    return this.stack.max.preload()
       .then(() => this._onFinished())
   }
 
@@ -88,6 +86,13 @@ export class ImgStack extends MediaStack {
 
   preloadDesktopFallback() {
     return this.stack.desktopFallback.preload()
+      .then(() => this._onFinished())
+  }
+
+  preloadPreview() {
+    const previewKey = getPreviewBreakpointKey()
+    if (!previewKey) return
+    return this.stack[previewKey].preload()
       .then(() => this._onFinished())
   }
 }

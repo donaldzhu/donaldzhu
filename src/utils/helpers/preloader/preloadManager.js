@@ -4,14 +4,15 @@ import Queue from '../queue'
 import { ImgStack, VidStack } from './mediaStack'
 import { capitalize, mapObject } from '../../commonUtils'
 import { getBreakpointKey } from '../../queryUtil'
-import { MEDIA_SIZES, MEDIA_TYPES, fileIsVid, isImg, isPoster, isVid } from './preloadUtils'
+import { MEDIA_SIZES, MEDIA_TYPES, fileIsVid, isImg, isImgSize, isPoster } from './preloadUtils'
 import nativeDimensions from '../../../data/media/nativeDimensions.json'
 import workData from '../../../data/work/workData.json'
 
 const LOG_COLORS = {
   [MEDIA_SIZES.desktopFallback]: 'yellow',
+  [MEDIA_SIZES.preview]: 'cyan',
   [MEDIA_SIZES.full]: 'orange',
-  [MEDIA_SIZES.original]: 'red',
+  [MEDIA_SIZES.max]: 'red',
 }
 
 class PreloadManager {
@@ -43,7 +44,8 @@ class PreloadManager {
   _createThumbnailStacks() {
     this.thumbnails = nativeDimensions.thumbnails.map(([fileName, nativeDimension]) => {
       const pageId = fileName.replace(/\.[^/.]+$/, '')
-      const { animatedThumbnail, listed, disabled } = workData.find(page => page.id === pageId)
+      const { animatedThumbnail, listed, disabled } =
+        workData.find(page => page.id === pageId)
       if (!listed || disabled) return
       const Stack = animatedThumbnail ? VidStack : ImgStack
       return new Stack({
@@ -57,49 +59,21 @@ class PreloadManager {
     }).filter(thumbnail => thumbnail)
   }
 
-  // _createWorkPageStacks() {
-  //   mapObject(_.cloneDeep(nativeDimensions), (pageId, pageSizes) => {
-  //     this.workPages[pageId] =
-  //       _.omit(pageSizes, [MEDIA_TYPES.thumbnails])
-  //     mapObject(this.workPages[pageId], (mediaType, mediaSizes) => {
-  //       const Stack = isVid(mediaType) ? VidStack : ImgStack
-  //       mapObject(mediaSizes, (fileName, nativeDimension) =>
-  //         mediaSizes[fileName] = new Stack({
-  //           pageId,
-  //           fileName,
-  //           mediaType,
-  //           nativeDimension,
-  //           autoPlayConfig: this.autoPlayConfig,
-  //           loadVid: this.loadVid
-  //         })
-  //       )
-  //     })
-  //   })
-  // }
-
-
   _createWorkPageStacks() {
-    // mapObject(nativeDimensions.work, (pageId, nativeDimensions) => {
-    //   this.workPages[pageId] = nativeDimensions.map(([fileName, nativeDimensions]) => {
-    //     const Stack = fileIsVid(fileName) ? VidStack : ImgStack
-    //   })
-    // })
-
-    mapObject(_.cloneDeep(nativeDimensions), (pageId, pageSizes) => {
-      this.workPages[pageId] =
-        _.omit(pageSizes, [MEDIA_TYPES.thumbnails])
-      mapObject(this.workPages[pageId], (mediaType, mediaSizes) => {
-        const Stack = isVid(mediaType) ? VidStack : ImgStack
-        mapObject(mediaSizes, (fileName, nativeDimension) =>
-          mediaSizes[fileName] = new Stack({
-            pageId,
-            fileName,
-            mediaType,
-            nativeDimension,
-            autoPlayConfig: this.autoPlayConfig,
-            loadVid: this.loadVid
-          })
-        )
+    mapObject(nativeDimensions.work, (pageId, nativeDimensions) => {
+      const workPage = this.workPages[pageId] = {}
+      nativeDimensions.forEach(([fileName, nativeDimension]) => {
+        const Stack = fileIsVid(fileName) ? VidStack : ImgStack
+        const mediaType = fileName.match(/^toolTips\//) ? MEDIA_TYPES.toolTips :
+          fileIsVid(fileName) ? MEDIA_TYPES.videos : MEDIA_TYPES.images;
+        (workPage[mediaType] ??= []).push(new Stack({
+          pageId,
+          fileName,
+          mediaType,
+          nativeDimension,
+          autoPlayConfig: this.autoPlayConfig,
+          loadVid: this.loadVid
+        }))
       })
     })
   }
@@ -118,21 +92,24 @@ class PreloadManager {
   }
 
   pagePreload(pageId) {
-    const pagePreloaders = this._createPagePreloaders((size) => ({
+    const pagePreloaders = this._createPagePreloaders(size => ({
       run: () => this._preloadPageMedia(pageId, size),
       callback: this._logGroup(`current page (${pageId})`, size)
     }))
 
-    const allPagePreloaders = this._createPagePreloaders((size) => ({
-      run: () => this._preloadAllPageMedia(size, { exclude: pageId }),
-      callback: this._logGroup('all other pages', size)
-    }))
+    const allPagePreloaders = this._createPagePreloaders(size => {
+      if (!isImgSize(size)) return {
+        run: () => this._preloadAllPageMedia(size, { exclude: pageId }),
+        callback: this._logGroup('all other pages', size)
+      }
+    })
 
     this._preloadMain('pagePreload', [
       pagePreloaders.desktopFallback,
+      pagePreloaders.preview,
       pagePreloaders.full,
       this._getPreloadThumbnails(),
-      pagePreloaders.original,
+      pagePreloaders.max,
       ...Object.values(allPagePreloaders)
     ])
   }
@@ -169,7 +146,7 @@ class PreloadManager {
 
     return this._addToSubqueue([
       getPreload(MEDIA_SIZES.full),
-      getPreload(MEDIA_SIZES.original)
+      getPreload(MEDIA_SIZES.max)
     ])
   }
 
@@ -217,23 +194,23 @@ class PreloadManager {
 
     return this._addToSubqueue([
       getPreload(MEDIA_TYPES.images),
-      size !== MEDIA_SIZES.original && getPreload(MEDIA_TYPES.posters),
+      size !== MEDIA_SIZES.max && getPreload(MEDIA_TYPES.posters),
       getPreload(MEDIA_TYPES.toolTips),
-      size !== MEDIA_SIZES.desktopFallback && getPreload(MEDIA_TYPES.videos)
+      !isImgSize(size) && getPreload(MEDIA_TYPES.videos)
     ])
   }
 
   _preloadPageMedia(pageId, size) {
     const mediaStacks = this.workPages[pageId]
     const mediaTypes = _.without(Object.keys(mediaStacks),
-      size === MEDIA_SIZES.desktopFallback && MEDIA_TYPES.videos)
+      isImgSize(size) && MEDIA_TYPES.videos)
 
     const queueFunctions = mediaTypes.map(type => ({
       run: () => this._preloadMediaType(mediaStacks[type], size),
       callback: this._log(3, type, size, pageId)
     }))
 
-    if (size !== MEDIA_SIZES.original)
+    if (size !== MEDIA_SIZES.max)
       queueFunctions.push({
         run: () => this._preloadMediaType(mediaStacks.videos, size, true),
         callback: this._log(3, MEDIA_TYPES.posters, size, pageId)
@@ -253,11 +230,10 @@ class PreloadManager {
   _preloadMediaType(mediaTypeStacks, size, isPoster) {
     if (!mediaTypeStacks) return Promise.resolve()
     const preloadFunctionName = this._prefixPreload(size)
-    const queueFunctions = Object.values(mediaTypeStacks)
-      .map(stack => {
-        const targetStack = isPoster ? stack.posterStack : stack
-        return targetStack[preloadFunctionName].bind(targetStack)
-      })
+    const queueFunctions = mediaTypeStacks.map(stack => {
+      const targetStack = isPoster ? stack.posterStack : stack
+      return targetStack[preloadFunctionName].bind(targetStack)
+    })
 
     return this._addToSubqueue(queueFunctions)
   }

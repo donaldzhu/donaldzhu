@@ -5,7 +5,7 @@ import PreloadMedia from './preloadMedia'
 import { WorkPageContext } from '../../../contexts/context'
 import { percent, toPercent } from '../../../utils/styleUtils'
 import { joinPaths } from '../../../utils/commonUtils'
-import { MEDIA_TYPES } from '../../../utils/helpers/preloader/preloadUtils'
+import { MEDIA_SIZES, MEDIA_TYPES } from '../../../utils/helpers/preloader/preloadUtils'
 import mixins from '../../../styles/mixins'
 
 const ZoomMedia = forwardRef((props, ref) => {
@@ -19,9 +19,10 @@ const ZoomMedia = forwardRef((props, ref) => {
 
   if (isToolTip) type = MEDIA_TYPES.toolTips
 
-  const fallbackPath = joinPaths('/assets/work', pageId, 'original', src)
+  src = isToolTip ? joinPaths(MEDIA_TYPES.toolTips, src) : src
+  const fallbackPath = joinPaths('/assets/work', pageId, MEDIA_SIZES.max, src)
   const mediaStack = preloadManager?.enabled &&
-    preloadManager.workPages[pageId][type][src]
+    preloadManager.workPages[pageId][type].find(stack => stack.fileName === src)
   const handleClick = () =>
     handleZoomMedia({
       ...props,

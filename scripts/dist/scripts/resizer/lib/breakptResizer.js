@@ -16,7 +16,7 @@ const path_1 = __importDefault(require("path"));
 const lodash_1 = __importDefault(require("lodash"));
 const glob_1 = require("glob");
 const utils_1 = require("../../utils");
-const config_1 = require("./config");
+const constants_1 = require("../constants");
 class BreakpointResizer {
     constructor(source, config, { destination, mediaOptions, removeFilesAtDest, exportPoster }) {
         this.source = source;
@@ -82,6 +82,8 @@ class BreakpointResizer {
         return (0, utils_1.joinPaths)(this.destination, ...subpaths);
     }
     createFolder(...subpaths) {
+        if (this.config.debugOnly)
+            return;
         const filePath = this.getSubpath(...subpaths);
         if (this.removeFilesAtDest)
             (0, utils_1.emptyDir)(filePath);
@@ -92,8 +94,9 @@ class BreakpointResizer {
         if (this.hasVid &&
             this.exportPoster &&
             this.shouldExport("video") &&
-            this.shouldExport("poster"))
-            this.createFolder(config_1.POSTER_SUBFOLDER);
+            this.shouldExport("poster") &&
+            !this.config.debugOnly)
+            this.createFolder(constants_1.POSTER_SUBFOLDER);
     }
     prepareDest(fileName) {
         (0, utils_1.removeFile)(fileName);
@@ -116,7 +119,7 @@ class BreakpointResizer {
         return Math.min(resizedWidth, maxWidth);
     }
     getPosterPath(fileName) {
-        return (0, utils_1.joinPaths)(config_1.POSTER_SUBFOLDER, fileName.replace("webm", "webp"));
+        return (0, utils_1.joinPaths)(constants_1.POSTER_SUBFOLDER, fileName.replace("webm", "webp"));
     }
     shouldExport(type) {
         var _a;

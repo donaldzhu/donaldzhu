@@ -41,8 +41,7 @@ const ToolTip = ({ children }) => {
       ) return
 
       const toolTipPoints = getToolTipPoints(toolTip, popUp)
-      if (pointInPolygon(mousePositionRef.current, toolTipPoints))
-        return
+      if (pointInPolygon(mousePositionRef.current, toolTipPoints)) return
 
       setIsShown(false)
       toolTipRef.current = undefined

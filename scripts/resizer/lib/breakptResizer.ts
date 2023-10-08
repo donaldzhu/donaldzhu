@@ -1,11 +1,12 @@
 import path from 'path'
+import fs from 'fs'
 import sharp from 'sharp'
 import ffmpeg from 'fluent-ffmpeg'
 import _ from 'lodash'
 import { globSync } from 'glob'
 import { BreakptConfig, BreakptResizeConfig, BreakptResizerConfig, MediaTypes, VidExtensions, ImgExtentions, MediaOptions, dimensionType } from './resizerTypes'
 import { mkdirIfNone, emptyDir, joinPaths, removeFile, parseMediaType, getExtension } from '../../utils'
-import { POSTER_SUBFOLDER } from './config'
+import { POSTER_SUBFOLDER } from '../constants'
 
 class BreakpointResizer<K extends string> {
   source: string
@@ -101,6 +102,7 @@ class BreakpointResizer<K extends string> {
   }
 
   private createFolder(...subpaths: (string | undefined)[]) {
+    if (this.config.debugOnly) return
     const filePath = this.getSubpath(...subpaths)
     if (this.removeFilesAtDest) emptyDir(filePath)
     else mkdirIfNone(filePath)
@@ -111,7 +113,8 @@ class BreakpointResizer<K extends string> {
       this.hasVid &&
       this.exportPoster &&
       this.shouldExport(MediaTypes.video) &&
-      this.shouldExport(MediaTypes.poster)
+      this.shouldExport(MediaTypes.poster) &&
+      !this.config.debugOnly
     ) this.createFolder(POSTER_SUBFOLDER)
   }
 

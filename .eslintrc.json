@@ -27,7 +27,8 @@
     "react/display-name": "off",
     "react/react-in-jsx-scope": "off",
     "import/no-named-as-default": "off",
-    "import/no-named-as-default-member": "off"
+    "import/no-named-as-default-member": "off",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
   },
   "settings": {
     "react": {

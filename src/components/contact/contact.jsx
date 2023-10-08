@@ -73,10 +73,14 @@ const TextContainerWithQr = styled(TextContainer)`
   font-size: ${fontSizes.sidebarText};
   
   > svg {  
+    ${mixins.squared(responsiveSize({ l: 120, xxl: 200 }))};
     position: relative;
     top: ${sizes.contactQrTop};
     color: ${colorConfig.toolTipColor};
-    ${mixins.squared(responsiveSize({ l: 120, xxl: 200 }))};
+  }
+
+  &>:last-child {
+    padding:0;
   }
 `
 

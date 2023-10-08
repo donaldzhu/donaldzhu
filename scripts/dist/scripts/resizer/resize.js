@@ -30,26 +30,29 @@ const createBreakptMap = (mapObj, callback) => {
     return map;
 };
 const getNoSizesError = (sizes, sizeType) => new Error(`Breakpoint size has no ${sizeType} sizes: ${sizes[sizeType]}`);
-const getBreakptConfig = (breakpt, sizes, debugOnly) => ({
-    breakpt,
-    breakptWidth: constants_1.BREAKPT_WIDTHS[breakpt],
-    sizes,
-    blur: breakpt === "desktopFallback" ? constants_1.BLUR : undefined,
-    exclude: breakpt === "desktopFallback" ? ["video"] : undefined,
-    debugOnly
-});
+const getBreakptConfig = (breakpt, sizes, debugOnly) => {
+    sizes.map((size) => size[1] *= size[0].match(/^toolTips\//) ?
+        constants_1.TOOL_TIP_PERCENTAGE : constants_1.MAIN_RESIZE_PERCENTAGE);
+    return {
+        breakpt,
+        breakptWidth: constants_1.BREAKPT_WIDTHS[breakpt],
+        sizes,
+        blur: breakpt === "desktopFallback" ? constants_1.BLUR : undefined,
+        exclude: breakpt === "desktopFallback" ? ["video"] : undefined,
+        debugOnly
+    };
+};
 const getResizeCallback = (array, rootPath) => (fileName, size) => array
     .push([
     fileName.replace(new RegExp(`^${rootPath}/`), ''),
     [size.width, size.height]
 ]);
-const sizesFolder = (0, utils_1.joinPaths)(constants_1.ROOT_PATH, constants_1.SIZE_FOLDER);
 const workFolder = constants_1.SRC_WORK_PATH;
 const destination = (0, utils_1.joinPaths)(constants_1.ROOT_PATH, constants_1.DESTINATION_ROOT);
 const resize = (config) => __awaiter(void 0, void 0, void 0, function* () {
     const { resizeThumbnails, resizeWork, includePages, includeBreakpts } = Object.assign(Object.assign({}, constants_1.DEFAULT_CONFIG), config);
     const breakptWidths = includeBreakpts.length ? lodash_1.default.pick(constants_1.BREAKPT_WIDTHS, includeBreakpts) : constants_1.BREAKPT_WIDTHS;
-    const allBreakptSizes = createBreakptMap(breakptWidths, breakpt => (0, utils_1.readJsonSync)((0, utils_1.joinPaths)(sizesFolder, `${breakpt}.json`)));
+    const allBreakptSizes = createBreakptMap(breakptWidths, breakpt => (0, utils_1.readJsonSync)((0, utils_1.joinPaths)(constants_1.SIZE_PATH, `${breakpt}.json`)));
     const pageSizes = {};
     (0, utils_1.mapObject)(allBreakptSizes, (breakpt, allSizes) => {
         const { work } = allSizes;

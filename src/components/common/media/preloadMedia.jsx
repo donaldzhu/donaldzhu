@@ -15,13 +15,13 @@ const PreloadMedia = forwardRef((props, ref) => {
     }
 
     let size = _.chain(mediaStack.loadedSizes)
-      .without(mediaStack, isZoomed ? '' : MEDIA_SIZES.original)
+      .without(mediaStack, isZoomed ? '' : MEDIA_SIZES.max)
       .last()
       .value()
     const hasLoaded = mediaIsVid || size
 
     if (mediaIsVid)
-      size = isZoomed ? MEDIA_SIZES.original : getBreakpointKey()
+      size = isZoomed ? MEDIA_SIZES.max : getBreakpointKey()
     else size ||= MEDIA_SIZES.desktopFallback
 
     return {

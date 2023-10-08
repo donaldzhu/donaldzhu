@@ -25,7 +25,7 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }) => {
     return zoomMedia ? addEventListener(document, 'keydown', escListener) : _.noop
   }, [])
 
-  const { maxSize, type, mediaStack, alt } = zoomMedia
+  const { maxSize, type, mediaStack, fallbackPath, alt } = zoomMedia
   return (
     <ZoomedContainer
       $maxSize={maxSize}
@@ -33,6 +33,7 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }) => {
       <PreloadMedia
         type={type}
         mediaStack={mediaStack}
+        fallbackPath={fallbackPath}
         alt={alt}
         ref={zoomedMediaRef}
         isZoomed={true}

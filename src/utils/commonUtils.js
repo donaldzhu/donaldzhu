@@ -60,10 +60,10 @@ export const appendQuery = (...queries) => queries.reduce((string, [queryKey, qu
 
 export const getToolTipPoints = (toolTip, popUp) => {
   if (popUp.y2 >= toolTip.y2 && popUp.y1 <= toolTip.y1)
-    return [toolTip.topRight, popUp.topRight, toolTip.botRight, popUp.botRight]
+    return [popUp.topRight, toolTip.topRight, toolTip.botRight, popUp.botRight]
   if (popUp.y2 <= toolTip.y2)
-    return [toolTip.topRight, popUp.topRight, toolTip.botLeft, popUp.botLeft]
-  return [toolTip.topLeft, popUp.topLeft, toolTip.botRight, popUp.botRight]
+    return [popUp.topRight, toolTip.topRight, toolTip.botLeft, popUp.botLeft]
+  return [popUp.topLeft, toolTip.topLeft, toolTip.botRight, popUp.botRight]
 }
 
 // funuction 

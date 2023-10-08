@@ -21,7 +21,7 @@ const glob_1 = require("glob");
 const chalk_1 = __importDefault(require("chalk"));
 const breakptResizer_1 = __importDefault(require("./breakptResizer"));
 const utils_1 = require("../../utils");
-const config_1 = require("./config");
+const constants_1 = require("../constants");
 class Resizer {
     constructor(source, breakptConfigs, { destination, mediaOptions = {}, toParentFolder = true, removeFilesAtDest = true, exportPoster = true, callback = lodash_1.default.noop } = {}) {
         this.source = source;
@@ -54,7 +54,7 @@ class Resizer {
     createPosterFolder() {
         const hasVid = !!this.allFileEntries.find(fileName => (0, utils_1.parseMediaType)(fileName) === "video");
         if (hasVid && this.exportPoster)
-            this.createFolder(config_1.POSTER_SUBFOLDER);
+            this.createFolder(constants_1.POSTER_SUBFOLDER);
     }
     resizeMedia(fileName, fileEntry) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -74,11 +74,13 @@ class Resizer {
             const imgObj = (0, sharp_1.default)(imgPath, { animated });
             const size = posterConfig ? posterConfig.vidSize :
                 this.throwNoWidth(yield imgObj.metadata(), fileName);
-            yield this.mapBreakpts(resizer => resizer.resizeImg(imgObj, {
-                size,
-                fileName: posterConfig ? posterConfig.vidFileName : fileName,
-                fileEntry,
-                isPoster: !!posterConfig
+            yield this.mapBreakpts((resizer) => __awaiter(this, void 0, void 0, function* () {
+                return yield resizer.resizeImg(imgObj, {
+                    size,
+                    fileName: posterConfig ? posterConfig.vidFileName : fileName,
+                    fileEntry,
+                    isPoster: !!posterConfig
+                });
             }));
             this.log(imgPath);
             if (!posterConfig)
@@ -88,7 +90,7 @@ class Resizer {
     resizeVid(fileName, fileEntry) {
         return __awaiter(this, void 0, void 0, function* () {
             const vidPath = this.getSubpath(fileName);
-            const vidObj = (0, fluent_ffmpeg_1.default)(vidPath).noAudio();
+            const vidObj = (0, fluent_ffmpeg_1.default)({ source: vidPath, priority: 10 }).noAudio();
             const size = yield new Promise(resolve => {
                 vidObj.ffprobe((_, { streams }) => __awaiter(this, void 0, void 0, function* () { return resolve(this.throwNoWidth(streams[0], fileName)); }));
             });
@@ -101,7 +103,7 @@ class Resizer {
                     (0, fluent_ffmpeg_1.default)(vidPath).screenshots({
                         filename: path_1.default.basename(pngPosterPath),
                         timestamps: [0],
-                        folder: this.getSubpath(config_1.POSTER_SUBFOLDER)
+                        folder: this.getSubpath(constants_1.POSTER_SUBFOLDER)
                     }).on('end', () => __awaiter(this, void 0, void 0, function* () {
                         yield (0, sharp_1.default)(pngPosterPath)
                             .webp(this.mediaOptions.webp)
@@ -114,8 +116,10 @@ class Resizer {
                     vidSize: size, vidFileName: fileName
                 });
             }
-            this.mapBreakpts(resizer => resizer
-                .resizeVideo(vidObj, { size, fileName, fileEntry }));
+            yield this.mapBreakpts((resizer) => __awaiter(this, void 0, void 0, function* () {
+                return yield resizer
+                    .resizeVideo(vidObj, { size, fileName, fileEntry });
+            }));
             const hasOutputs = lodash_1.default.some(this.breakptConfigs, { debugOnly: false });
             if (hasOutputs)
                 yield new Promise(resolve => vidObj.on('end', () => resolve(null)).run());
@@ -147,7 +151,7 @@ class Resizer {
         console.log(`${chalk_1.default.gray('Resized: ')}${chalk_1.default[color](fileName)}`);
     }
     getScreenshotPath(filename) {
-        return (0, utils_1.joinPaths)(path_1.default.dirname(filename), config_1.POSTER_SUBFOLDER, path_1.default.basename(filename).replace("webm", "png"));
+        return (0, utils_1.joinPaths)(path_1.default.dirname(filename), constants_1.POSTER_SUBFOLDER, path_1.default.basename(filename).replace("webm", "png"));
     }
     getPosterPath(filename) {
         return filename.replace("png", "webp");

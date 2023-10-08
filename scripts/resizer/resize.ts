@@ -5,7 +5,7 @@ import Resizer from './lib/resizer'
 import { BreakptConfig, BreakptSize, MediaTypes, dimensionType } from './lib/resizerTypes'
 import { joinPaths, mapObject, mapObjectPromises, readJsonSync } from '../utils'
 import { BreakptExports, Breakpts, breakptSizeCollection, sizesJson, fileDataPair, size, dimensionsJson, dimension, fileDataCollection, configType } from './resizeTypes'
-import { BLUR, BREAKPT_WIDTHS, DESTINATION_ROOT, MAX_FOLDER, ROOT_PATH, SIZE_FOLDER, THUMBNAIL_FOLDER, WORK_FOLDER, DEFAULT_CONFIG, NATIVE_DIMENSIONS_PATH, SRC_WORK_PATH, SRC_THUMBNAIL_PATH } from './constants'
+import { BLUR, BREAKPT_WIDTHS, DESTINATION_ROOT, MAX_FOLDER, ROOT_PATH, THUMBNAIL_FOLDER, WORK_FOLDER, DEFAULT_CONFIG, NATIVE_DIMENSIONS_PATH, SRC_WORK_PATH, SRC_THUMBNAIL_PATH, SIZE_PATH, TOOL_TIP_PERCENTAGE, MAIN_RESIZE_PERCENTAGE } from './constants'
 
 const createBreakptMap = <T, V>(
   mapObj: Record<Breakpts, V>,
@@ -26,14 +26,18 @@ const createBreakptMap = <T, V>(
 const getNoSizesError = (sizes: sizesJson, sizeType: string) =>
   new Error(`Breakpoint size has no ${sizeType} sizes: ${sizes[sizeType]}`)
 
-const getBreakptConfig = (breakpt: Breakpts, sizes: BreakptSize[], debugOnly: boolean) => ({
-  breakpt,
-  breakptWidth: BREAKPT_WIDTHS[breakpt],
-  sizes,
-  blur: breakpt === Breakpts.desktopFallback ? BLUR : undefined,
-  exclude: breakpt === Breakpts.desktopFallback ? [MediaTypes.video] : undefined,
-  debugOnly
-})
+const getBreakptConfig = (breakpt: Breakpts, sizes: BreakptSize[], debugOnly: boolean) => {
+  sizes.map((size) => size[1] *= size[0].match(/^toolTips\//) ?
+    TOOL_TIP_PERCENTAGE : MAIN_RESIZE_PERCENTAGE)
+  return {
+    breakpt,
+    breakptWidth: BREAKPT_WIDTHS[breakpt],
+    sizes,
+    blur: breakpt === Breakpts.desktopFallback ? BLUR : undefined,
+    exclude: breakpt === Breakpts.desktopFallback ? [MediaTypes.video] : undefined,
+    debugOnly
+  }
+}
 
 const getResizeCallback = (array: fileDataPair<dimension>[], rootPath: string) =>
   (fileName: string, size: dimensionType) => array
@@ -42,7 +46,6 @@ const getResizeCallback = (array: fileDataPair<dimension>[], rootPath: string) =
       [size.width, size.height]]
     )
 
-const sizesFolder = joinPaths(ROOT_PATH, SIZE_FOLDER)
 const workFolder = SRC_WORK_PATH
 const destination = joinPaths(ROOT_PATH, DESTINATION_ROOT)
 
@@ -56,7 +59,7 @@ const resize = async (config?: configType) => {
 
   const breakptWidths = includeBreakpts.length ? _.pick(BREAKPT_WIDTHS, includeBreakpts) : BREAKPT_WIDTHS
   const allBreakptSizes = createBreakptMap<sizesJson, number>(breakptWidths, breakpt =>
-    readJsonSync(joinPaths(sizesFolder, `${breakpt}.json`)))
+    readJsonSync(joinPaths(SIZE_PATH, `${breakpt}.json`)))
 
   const pageSizes: Record<string, breakptSizeCollection> = {}
   mapObject(allBreakptSizes, (breakpt, allSizes) => {

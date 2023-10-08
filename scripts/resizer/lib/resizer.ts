@@ -8,7 +8,7 @@ import chalk from 'chalk'
 import BreakpointResizer from './breakptResizer'
 import { BreakptConfig, ImgExtentions, MediaOptions, MediaTypes, ResizePosterConfig, ResizerConfig, VidExtensions, callbackType, dimensionType } from './resizerTypes'
 import { mkdirIfNone, emptyDir, joinPaths, removeFile, parseMediaType, getExtension, mapPromises, sortFileNames } from '../../utils'
-import { POSTER_SUBFOLDER } from './config'
+import { POSTER_SUBFOLDER } from '../constants'
 
 class Resizer<K extends string> {
   source: string
@@ -86,7 +86,7 @@ class Resizer<K extends string> {
     const size = posterConfig ? posterConfig.vidSize :
       this.throwNoWidth(await imgObj.metadata(), fileName)
 
-    await this.mapBreakpts(resizer => resizer.resizeImg(imgObj, {
+    await this.mapBreakpts(async resizer => await resizer.resizeImg(imgObj, {
       size,
       fileName: posterConfig ? posterConfig.vidFileName : fileName,
       fileEntry,
@@ -99,7 +99,7 @@ class Resizer<K extends string> {
 
   private async resizeVid(fileName: string, fileEntry: string) {
     const vidPath = this.getSubpath(fileName)
-    const vidObj = ffmpeg(vidPath).noAudio()
+    const vidObj = ffmpeg({ source: vidPath, priority: 10 }).noAudio()
     const size = await new Promise<dimensionType>(resolve => {
       vidObj.ffprobe(async (_, { streams }) =>
         resolve(this.throwNoWidth(streams[0], fileName)))
@@ -130,7 +130,7 @@ class Resizer<K extends string> {
       })
     }
 
-    this.mapBreakpts(resizer => resizer
+    await this.mapBreakpts(async resizer => await resizer
       .resizeVideo(vidObj, { size, fileName, fileEntry }))
 
     const hasOutputs = _.some(this.breakptConfigs, { debugOnly: false })
