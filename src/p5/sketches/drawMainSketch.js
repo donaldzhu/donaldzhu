@@ -41,7 +41,7 @@ const drawMainSketch = ({ placeholderRef }) => {
   const setup = createVectors
 
   const draw = (p5, { mousePositionRef }) => {
-    const { CENTER, ROUND, mouseX, mouseY } = p5
+    let { CENTER, ROUND, mouseX, mouseY } = p5
     const halfCursorSize = dashLineConfigs.cursorSize() / 2
 
     upperText.write(UPPER_TEXT_CONTENT)
