@@ -79,11 +79,11 @@ class PreloadManager {
 
 
   _createWorkPageStacks() {
-    mapObject(nativeDimensions.work, (pageId, nativeDimensions) => {
-      this.workPages[pageId] = nativeDimensions.map(([fileName, nativeDimensions]) => {
-        const Stack = fileIsVid(fileName) ? VidStack : ImgStack
-      })
-    })
+    // mapObject(nativeDimensions.work, (pageId, nativeDimensions) => {
+    //   this.workPages[pageId] = nativeDimensions.map(([fileName, nativeDimensions]) => {
+    //     const Stack = fileIsVid(fileName) ? VidStack : ImgStack
+    //   })
+    // })
 
     mapObject(_.cloneDeep(nativeDimensions), (pageId, pageSizes) => {
       this.workPages[pageId] =
