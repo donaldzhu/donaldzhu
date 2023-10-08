@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, HashRouter } from 'react-router-dom'
 import { styled } from 'styled-components'
 import { useMediaQuery } from '@uidotdev/usehooks'
 import MobileBlocker from './components/mobileBlocker'
@@ -21,7 +21,7 @@ const App = () => {
   const isMobile = !useMediaQuery(queries.l)
   return (
     <StyledGlobal>
-      <Router>
+      <HashRouter>
         <Routes>
           <Route path='/' element={isMobile ? <MobileBlocker /> : <Page />}>
             <Route path='' element={<PageWithMainSketch />}>
@@ -40,7 +40,7 @@ const App = () => {
             <Route path='*' element={<Navigate to='/' replace />} />
           </Route>
         </Routes>
-      </Router>
+      </HashRouter>
     </StyledGlobal>
   )
 }
