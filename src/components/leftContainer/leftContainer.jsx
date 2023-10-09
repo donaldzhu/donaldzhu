@@ -37,14 +37,9 @@ const LeftContainer = ({ sidebar, allCanvasCallbackRefs, canvasStateRefs }) => {
   )
 }
 
-// TODO
 const SidebarContainer = styled.div`
   flex: auto;
   overflow: scroll;
-  position: relative;  
-  padding-left: ${sizes.workIndexRectPadding()}px;
-  left: -${sizes.workIndexRectPadding()}px;
-  
   &>:first-child {
     margin-top: ${sizes.sidebarPaddingVertical};
   }

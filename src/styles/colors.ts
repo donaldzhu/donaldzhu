@@ -10,7 +10,7 @@ const white = 'white'
 const swatches = [
   [red, blue, white, black]
 ]
-const colors = {
+const colors: Record<string, string | number> = {
   background: 2,
   defaultText: 1,
   defaultTextSelectColor: 2,

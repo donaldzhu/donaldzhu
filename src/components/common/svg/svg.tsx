@@ -1,4 +1,6 @@
-const Svg = ({ w, h, children, ...props }) => {
+import { SvgPropsType } from './svgTypes'
+
+const Svg = ({ w, h, children, ...props }: SvgPropsType) => {
   return (
     <svg
       {...props}
@@ -7,6 +9,7 @@ const Svg = ({ w, h, children, ...props }) => {
       height={h}
       viewBox={`0 0 ${w} ${h}`}>
       {children}
+      <line></line>
     </svg>
   )
 }
