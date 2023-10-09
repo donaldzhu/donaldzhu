@@ -1,5 +1,5 @@
 import * as easing from 'easing-utils'
-import { getVh, getVw, map } from '../../../utils/commonUtils'
+import { getVh, getVw, map } from '../../../utils/commonUtils.ts'
 import { Enum, StringEnum } from '../../../utils/helpers/enum'
 import spacingsData from '../../../data/vector/spacings'
 

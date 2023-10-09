@@ -2,7 +2,7 @@ import { forwardRef } from 'react'
 import { styled } from 'styled-components'
 import _ from 'lodash'
 import ToolTip from './toolTip'
-import { arrayify } from '../../utils/commonUtils'
+import { arrayify } from '../../utils/commonUtils.ts'
 import sizes from '../../styles/sizes'
 import mixins from '../../styles/mixins'
 

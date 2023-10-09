@@ -3,11 +3,10 @@ import { useOutletContext } from 'react-router-dom'
 import { styled } from 'styled-components'
 import _ from 'lodash'
 import pointInPolygon from 'point-in-polygon'
-import useMemoRef from '../../hooks/useMemoRef'
 import { WorkPageContext } from '../../contexts/context'
 import { fontSizes, fontParams } from '../../styles/fonts'
 import { addEventListener } from '../../utils/reactUtils'
-import { getToolTipPoints } from '../../utils/commonUtils'
+import { getToolTipPoints } from '../../utils/commonUtils.ts'
 import ElemRect from '../../utils/helpers/elemRect'
 import { em } from '../../utils/styleUtils'
 import mixins from '../../styles/mixins'
@@ -17,9 +16,8 @@ import sizes from '../../styles/sizes'
 const ToolTip = ({ children }) => {
   const [isShown, setIsShown] = useState(false)
   const { toolTipRef, popUpRef } = useContext(WorkPageContext)
-  const { zoomedImg, canvasStateRefs } = useOutletContext()
+  const { zoomMedia, canvasStateRefs } = useOutletContext()
   const { mousePositionRef } = canvasStateRefs
-  const zoomedImgRef = useMemoRef(() => zoomedImg, [zoomedImg])
 
   const handleHover = ({ currentTarget }) => {
     toolTipRef.current = currentTarget
@@ -37,7 +35,7 @@ const ToolTip = ({ children }) => {
       if (
         toolTip.mouseIsOver(mousePosition) ||
         popUp.mouseIsOver(mousePosition) ||
-        zoomedImgRef.current
+        zoomMedia
       ) return
 
       const toolTipPoints = getToolTipPoints(toolTip, popUp)
@@ -53,7 +51,7 @@ const ToolTip = ({ children }) => {
       removeMouseMove()
       removeScroll()
     }
-  }, [isShown])
+  }, [isShown, zoomMedia])
 
   return (
     <Container>

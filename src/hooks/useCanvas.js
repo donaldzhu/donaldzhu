@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import _ from 'lodash'
-import { mapObject } from '../utils/commonUtils'
+import { mapObject } from '../utils/commonUtils.ts'
 import { P5_EVENTS } from '../utils/p5Utils'
 
 const useCanvas = (createSketch, config = {}, deps = []) => {

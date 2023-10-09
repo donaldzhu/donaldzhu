@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { ImgPreloader, VidPreloader } from './preloader'
-import { joinPaths, keysToObject } from '../../commonUtils'
+import { joinPaths, keysToObject } from '../../commonUtils.ts'
 import { getBreakpointKey } from '../../queryUtil'
 import { FILE_EXT, MEDIA_SIZES, MEDIA_TYPES, getPreviewBreakpointKey, isImg, isThumbnail, isVid } from './preloadUtils'
 import breakpoints from '../../../data/breakpoints.json'

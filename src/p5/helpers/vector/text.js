@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import Glyph from './glyph'
-import { mapObject, keysToObject, callFunctionLike } from '../../../utils/commonUtils'
+import { mapObject, keysToObject, callFunctionLike } from '../../../utils/commonUtils.ts'
 import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT, X_POSITIONS, Y_POSITIONS } from './constants'
 
 class Text {

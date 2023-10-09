@@ -1,6 +1,6 @@
 import Vector from './vector'
 import { parsePoints, wrapDrawingContext } from '../../../utils/p5Utils'
-import { callFunctionLike } from '../../../utils/commonUtils'
+import { callFunctionLike } from '../../../utils/commonUtils.ts'
 import bearingsData from '../../../data/vector/spacings'
 
 class Glyph {

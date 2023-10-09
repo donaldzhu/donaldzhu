@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { arrayify } from '../commonUtils'
+import { arrayify } from '../commonUtils.ts'
 
 class Queue {
   constructor(interval) {

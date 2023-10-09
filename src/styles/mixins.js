@@ -1,4 +1,4 @@
-import { mapObject } from '../utils/commonUtils'
+import { mapObject } from '../utils/commonUtils.ts'
 import { getHighZIdex } from '../utils/styleUtils'
 import { fontParams } from './fonts'
 import sizes from './sizes'

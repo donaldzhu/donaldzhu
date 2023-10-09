@@ -1,5 +1,5 @@
 import Text from '../helpers/vector/text'
-import { repeatMap } from '../../utils/commonUtils'
+import { repeatMap } from '../../utils/commonUtils.ts'
 import { wrapDrawingContext } from '../../utils/p5Utils'
 import ElemRect from '../../utils/helpers/elemRect'
 import colors from '../../styles/colors'

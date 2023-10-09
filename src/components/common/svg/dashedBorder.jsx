@@ -1,30 +1,57 @@
+import { useRef, useState } from 'react'
 import { styled } from 'styled-components'
-import Rect from './rect'
 import Svg from './svg'
+import SvgDashedRect from '../../../utils/helpers/svgDashedRect'
+import useMemoRef from '../../../hooks/useMemoRef.ts'
+import { px } from '../../../utils/styleUtils'
+import useAnimate from '../../../hooks/useAnimate'
+import _ from 'lodash'
 
-const DashedBorder = ({ x = 0, y = 0, w = 400, h = 200 }) => {
-  const rect = new Rect({ x, y, w, h }) // memoize
-  const poly = rect.getPolyline()
-  const lines = rect.getLine()
+const DashedBorder = ({ padding }) => {
+  padding = typeof padding === 'number' ? px(padding) : padding
+  const containerRef = useRef()
+  const rect = useMemoRef(() => new SvgDashedRect(containerRef), [containerRef])
+  const [rectData, setRectData] = useState()
+
+  useAnimate(() => {
+    if (!rect || !containerRef.current) return
+    setRectData(_.pick(rect.current, ['paddedW', 'paddedH', 'polyLineStyle',
+      'lineStyles', 'polylines', 'lines']))
+  }, [rect, containerRef])
 
   return (
-    <SvgContainer>
-      <Svg w={rect.paddedW} h={rect.paddedH}>
-        {poly.map((points, i) => <polyline
-          key={i}
-          points={points}
-          style={rect.polyLineStyle} />)}
-        {lines.map((coors, i) => <line
-          key={i}
-          {...coors}
-          style={rect.lineStyles[Math.floor(i / 2)]} />)}
-      </Svg>
+    <SvgContainer
+      ref={containerRef}
+      $padding={padding}>
+      {rectData &&
+        <Svg w={rectData.paddedW} h={rectData.paddedH}>
+          {rectData.polylines.map((points, i) => <polyline
+            key={i}
+            points={points}
+            style={rectData.polyLineStyle} />)}
+          {rectData.lines.map((coors, i) => <line
+            key={i}
+            {...coors}
+            style={rectData.lineStyles[Math.floor(i / 2)]} />)}
+        </Svg>}
     </SvgContainer>
   )
 }
 
+const getSize = () => ({ $padding }) => `calc(100%${$padding ? ` + ${$padding} * 2` : ''})`
+const getPadding = () => ({ $padding }) => $padding ? `calc(${$padding} * -1)` : ''
 const SvgContainer = styled.div`
-  position:absolute;  
+  position: absolute;  
+  width: ${getSize()};
+  height: ${getSize()};
+  left: ${getPadding()};
+  top:${getPadding()};
+
+  svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 `
 
 export default DashedBorder

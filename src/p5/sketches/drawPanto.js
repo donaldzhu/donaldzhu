@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import Brush from '../helpers/brush/brush'
 import FlatBrush from '../helpers/brush/flatBrush'
-import { getVw, mapObject } from '../../utils/commonUtils'
+import { getVw, mapObject } from '../../utils/commonUtils.ts'
 import { intersectTwoCircles, parsePoints, wrapDrawingContext } from '../../utils/p5Utils'
 import ElemRect from '../../utils/helpers/elemRect'
 import colors from '../../styles/colors'

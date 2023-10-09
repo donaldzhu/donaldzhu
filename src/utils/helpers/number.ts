@@ -1,10 +1,14 @@
+type toCompareType = (newValue: number, currValue: number) => number
+
 class ExtremeNumber {
-  constructor(extremum, toCompare) {
+  value: number
+  toCompare: toCompareType
+  constructor(extremum: number, toCompare: toCompareType) {
     this.value = extremum
     this.toCompare = toCompare
   }
 
-  compare(newValue) {
+  compare(newValue: number) {
     this.value = this.toCompare(newValue, this.value)
   }
 }

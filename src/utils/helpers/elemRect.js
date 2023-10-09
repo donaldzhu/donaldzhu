@@ -1,9 +1,10 @@
 import Rect from './rect'
 
 class ElemRect extends Rect {
-  constructor(ref, padding) {
+  constructor(ref, padding, isRelative) {
     super({ padding })
     this.ref = ref
+    this.isRelative = isRelative
   }
 
   get elem() {
@@ -15,19 +16,19 @@ class ElemRect extends Rect {
   }
 
   get x() {
-    return this.elemBounds.x - this.padding
+    return (this.isRelative ? 0 : this.elemBounds.x) - this.padding.x
   }
 
   get y() {
-    return this.elemBounds.y - this.padding
+    return (this.isRelative ? 0 : this.elemBounds.y) - this.padding.y
   }
 
   get w() {
-    return this.elemBounds.width + this.padding * 2
+    return this.elemBounds.width + this.padding.x * 2
   }
 
   get h() {
-    return this.elemBounds.height + this.padding * 2
+    return this.elemBounds.height + this.padding.y * 2
   }
 }
 

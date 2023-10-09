@@ -1,4 +1,4 @@
-import { getNativeResolution, mapObject } from './commonUtils'
+import { getNativeResolution, mapObject } from './commonUtils.ts'
 import { StringEnum } from './helpers/enum'
 import breakpoints from '../data/breakpoints.json'
 

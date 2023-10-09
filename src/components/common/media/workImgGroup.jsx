@@ -1,6 +1,6 @@
 import RowContainer from '../rowContainer'
 import WorkImg from './workImg'
-import { joinPaths, repeatMap } from '../../../utils/commonUtils'
+import { joinPaths, repeatMap } from '../../../utils/commonUtils.ts'
 
 const WorkImgGroup = ({ grid, toolTip, prefix, props }) => {
   const [col, row] = grid

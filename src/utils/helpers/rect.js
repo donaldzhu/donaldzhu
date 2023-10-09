@@ -1,3 +1,4 @@
+import { arrayify } from '../commonUtils.ts'
 import { styleDashedRect, wrapDrawingContext } from '../p5Utils'
 
 class Rect {
@@ -6,12 +7,19 @@ class Rect {
   #_w
   #_h
 
-  constructor({ x = 0, y = 0, w = 0, h = 0, padding = 0 }) {
+  constructor({ x = 0, y = 0, w = 0, h = 0, padding = [0, 0] }) {
+    padding = arrayify(padding)
     this.#_x = x
     this.#_y = y
     this.#_w = w
     this.#_h = h
-    this.padding = padding
+    this.padding = {
+      x: padding[0],
+      y: padding[1] === undefined ? padding[0] : padding[1]
+    }
+
+    this.padding[0] = this.padding.x
+    this.padding[1] = this.padding.y
   }
 
   // TODO: replace with svg
@@ -47,19 +55,19 @@ class Rect {
   }
 
   get x() {
-    return this.#_x - this.padding
+    return this.#_x - this.padding.x
   }
 
   get y() {
-    return this.#_y - this.padding
+    return this.#_y - this.padding.y
   }
 
   get w() {
-    return this.#_w + this.padding * 2
+    return this.#_w + this.padding.x * 2
   }
 
   get h() {
-    return this.#_h + this.padding * 2
+    return this.#_h + this.padding.y * 2
   }
 
   get x1() {

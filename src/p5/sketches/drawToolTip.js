@@ -1,4 +1,4 @@
-import { getToolTipPoints } from '../../utils/commonUtils'
+import { getToolTipPoints } from '../../utils/commonUtils.ts'
 import ElemRect from '../../utils/helpers/elemRect'
 import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
 import sizes from '../../styles/sizes'

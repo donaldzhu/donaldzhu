@@ -7,7 +7,7 @@ import usePreloadQueue from '../../hooks/usePreloadQueue'
 import { WorkPageContext } from '../../contexts/context'
 import drawToolTip from '../../p5/sketches/drawToolTip'
 import { parseHtml } from '../../utils/reactUtils'
-import { capitalize } from '../../utils/commonUtils'
+import { capitalize } from '../../utils/commonUtils.ts'
 import { fontSizes } from '../../styles/fonts'
 import sizes from '../../styles/sizes'
 import mixins from '../../styles/mixins'
@@ -49,7 +49,6 @@ const WorkPageSidebar = ({ title, id, date, tags, medium }) =>
 const ContentContainer = styled.div`
   ${mixins.innerMargin(sizes.workPageGridGap)}
 `
-
 
 const Details = styled.div`
   font-size: ${fontSizes.workDetails};

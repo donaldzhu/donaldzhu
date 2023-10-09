@@ -2,7 +2,7 @@ import { styled } from 'styled-components'
 import _ from 'lodash'
 import Canvas from './canvas'
 import { mousePosition, P5_EVENTS, wrapDrawingContext } from '../../utils/p5Utils'
-import { getVh, getVw } from '../../utils/commonUtils'
+import { getVh, getVw } from '../../utils/commonUtils.ts'
 import mixins from '../../styles/mixins'
 
 const GlobalCanvas = ({ callbackRefs, canvasStateRefs, zIndex = 1 }) => {

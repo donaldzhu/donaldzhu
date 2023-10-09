@@ -3,7 +3,7 @@ import usePortfolioQuery from '../../hooks/usePortfolioQuery'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 import colors from '../../styles/colors'
-import { appendQuery } from '../../utils/commonUtils'
+import { appendQuery } from '../../utils/commonUtils.ts'
 
 const Anchor = forwardRef(function Anchor({ to, target, noQuery, ...props }, ref) {
   const linkIsExternal = to && to.match(/^(https|www)/)

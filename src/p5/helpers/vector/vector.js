@@ -1,7 +1,7 @@
 import _ from 'lodash'
-import { callFunctionLike } from '../../../utils/commonUtils'
+import { callFunctionLike } from '../../../utils/commonUtils.ts'
 import { parsePoints, wrapDrawingContext } from '../../../utils/p5Utils'
-import { MaxNumber } from '../../../utils/helpers/number'
+import { MaxNumber } from '../../../utils/helpers/number.ts'
 import vectorsData from '../../../data/vector/glyphs'
 import { MODES } from './constants'
 
@@ -83,12 +83,12 @@ class Vector {
     return this.position.x
   }
 
-  get y() {
-    return this.position.y
-  }
-
   set x(newX) {
     this.position.x = newX
+  }
+
+  get y() {
+    return this.position.y
   }
 
   set y(newY) {

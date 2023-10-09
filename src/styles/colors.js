@@ -1,4 +1,4 @@
-import { mapObject } from '../utils/commonUtils'
+import { mapObject } from '../utils/commonUtils.ts'
 
 const COLOR_PRESET = 0
 

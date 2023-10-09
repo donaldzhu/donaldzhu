@@ -4,7 +4,7 @@ import { styled } from 'styled-components'
 import PreloadMedia from './preloadMedia'
 import { WorkPageContext } from '../../../contexts/context'
 import { percent, toPercent } from '../../../utils/styleUtils'
-import { joinPaths } from '../../../utils/commonUtils'
+import { joinPaths } from '../../../utils/commonUtils.ts'
 import { MEDIA_SIZES, MEDIA_TYPES } from '../../../utils/helpers/preloader/preloadUtils'
 import mixins from '../../../styles/mixins'
 

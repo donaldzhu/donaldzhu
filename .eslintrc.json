@@ -5,10 +5,12 @@
   },
   "extends": [
     "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:import/recommended"
   ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
@@ -16,19 +18,26 @@
       "jsx": true
     }
   },
-  "plugins": ["react", "react-hooks", "import"],
+  "plugins": ["@typescript-eslint", "react", "react-hooks", "import"],
   "rules": {
+    "indent": ["error", 2, { "ignoredNodes": ["TemplateLiteral *"] }],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "never"],
     "no-irregular-whitespace": "off",
-    "react-hooks/exhaustive-deps": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_" }
+    ],
     "react/prop-types": "off",
     "react/display-name": "off",
     "react/react-in-jsx-scope": "off",
+    "react-hooks/exhaustive-deps": "off",
     "import/no-named-as-default": "off",
     "import/no-named-as-default-member": "off",
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-explicit-any": 0
   },
   "settings": {
     "react": {
@@ -36,7 +45,7 @@
     },
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx", ".json"]
+        "extensions": [".js", ".ts", ".jsx", ".tsx", ".json"]
       }
     }
   },

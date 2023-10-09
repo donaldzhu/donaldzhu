@@ -1,6 +1,6 @@
 import Brush from './brush'
 import FlatBrushMark from './flatBrushMark'
-import { repeatMap, shuffleTo } from '../../../utils/commonUtils'
+import { repeatMap, shuffleTo } from '../../../utils/commonUtils.ts'
 
 // TODO: responsive value
 class FlatBrush extends Brush {
