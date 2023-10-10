@@ -35,9 +35,8 @@ const colors: Record<string, string | number> = {
   vectorStringSketch: 3
 }
 
-
 loopObject(colors, (colorTarget, colorIndex) =>
   colors[colorTarget] = swatches[COLOR_PRESET][colorIndex])
 
-export default colors
+export default (colors as Record<string, string>)
 

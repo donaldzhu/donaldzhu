@@ -1,3 +1,4 @@
+import p5 from 'p5'
 import { createStringEnum } from './helpers/enum'
 import colors from '../styles/colors'
 import { dashLineConfigs } from '../p5/configs/pageBorders'
@@ -23,20 +24,22 @@ export const P5_EVENTS = createStringEnum([
   'deviceShaken',
 ])
 
-export const parsePoints = (...vectors) => vectors.reduce((result, vector) => {
-  result = [...result, vector.x, vector.y]
+export const parsePoints = (...vectors: p5.Vector[]) => vectors.reduce<number[]>((result, vector) => {
+  result.push(vector.x, vector.y)
   return result
 }, [])
 
 
-export const styleDashedRect = p5 => {
+export const styleDashedRect = (p5: p5) => {
   p5.drawingContext.setLineDash(dashLineConfigs.lineDash())
   p5.noFill()
   p5.stroke(colors.dashLine)
+  // @ts-ignore
   p5.strokeWeight(dashLineConfigs.lineWeight())
 }
 
-export const intersectTwoCircles = (center1, r1, center2, r2) => {
+
+export const intersectTwoCircles = (center1: p5.Vector, r1: number, center2: p5.Vector, r2: number) => {
   const { x: x1, y: y1 } = center1
   const { x: x2, y: y2 } = center2
   const R = center1.dist(center2)
@@ -64,9 +67,9 @@ export const intersectTwoCircles = (center1, r1, center2, r2) => {
   return [[ix1, iy1], [ix2, iy2]]
 }
 
-export const mousePosition = p5 => [p5.mouseX, p5.mouseY]
+export const mousePosition = (p5: p5) => [p5.mouseX, p5.mouseY]
 
-export const wrapDrawingContext = (p5, callback) => {
+export const wrapDrawingContext = (p5: p5, callback: () => any) => {
   p5.push()
   callback()
   p5.pop()
