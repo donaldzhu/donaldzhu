@@ -1,4 +1,4 @@
-import ElemRect from '../../utils/helpers/elemRect'
+import ElemRect from '../../utils/helpers/rect/elemRect'
 import colors from '../../styles/colors'
 import sizes from '../../styles/sizes'
 import { dashLineConfigs } from '../configs/pageBorders'
@@ -30,7 +30,7 @@ const drawPageBorders = ({ headerRef, footerRef, sidebarRef }) => {
     p5.strokeWeight(dashLineConfigs.lineWeight())
     drawBorder(p5, headerRef, 'header')
     drawBorder(p5, footerRef, 'footer')
-    drawBorder(p5, sidebarRef, 'sidebar')
+    // drawBorder(p5, sidebarRef, 'sidebar')
   }
 
   return { draw }

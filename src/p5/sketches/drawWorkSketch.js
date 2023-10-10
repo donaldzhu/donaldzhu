@@ -1,4 +1,4 @@
-import ElemRect from '../../utils/helpers/elemRect'
+import ElemRect from '../../utils/helpers/rect/elemRect'
 import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
 import sizes from '../../styles/sizes'
 

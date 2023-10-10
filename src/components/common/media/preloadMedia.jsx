@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useState } from 'react'
 import _ from 'lodash'
 import Media from './media'
 import { MEDIA_SIZES, isVid } from '../../../utils/helpers/preloader/preloadUtils'
-import { getBreakpointKey } from '../../../utils/queryUtil'
+import { getBreakptKey } from '../../../utils/queryUtil'
 
 const PreloadMedia = forwardRef((props, ref) => {
   const { mediaStack, isZoomed, type, fallbackPath, ...rest } = props
@@ -21,7 +21,7 @@ const PreloadMedia = forwardRef((props, ref) => {
     const hasLoaded = mediaIsVid || size
 
     if (mediaIsVid)
-      size = isZoomed ? MEDIA_SIZES.max : getBreakpointKey()
+      size = isZoomed ? MEDIA_SIZES.max : getBreakptKey()
     else size ||= MEDIA_SIZES.desktopFallback
 
     return {

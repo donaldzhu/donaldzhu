@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import Glyph from './glyph'
-import { mapObject, keysToObject, callFunctionLike } from '../../../utils/commonUtils.ts'
+import { loopObject, keysToObject, callFunctionLike } from '../../../utils/commonUtils.ts'
 import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT, X_POSITIONS, Y_POSITIONS } from './constants'
 
 class Text {
@@ -87,7 +87,7 @@ class Text {
       Object.assign(this.setting, _.defaults(newTransform, this.setting))
     this.cachedBounds.clear()
 
-    mapObject(this.glyphs, (_, glyph) => {
+    loopObject(this.glyphs, (_, glyph) => {
       Object.assign(glyph.setting, this.setting)
       glyph.still.setTransform({ x, y, scale })
       glyph.active.setTransform({ x, y, scale })

@@ -21,7 +21,7 @@ const linkColorMixin = ({ $isHighlighted }) => $isHighlighted ? colors.activeEle
 const FooterAnchor = styled(Anchor)`
   height: fit-content;
   padding: ${sizes.footerLinkPadding};
-  font-family: ${fontFamilies.sansFont};  
+  font-family: ${fontFamilies.sansFont}; 
   font-weight: bold;
   letter-spacing: -0.015em;
   color: ${linkColorMixin};

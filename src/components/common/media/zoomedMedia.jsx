@@ -45,7 +45,7 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }) => {
 const ZoomedContainer = styled(PopUpContainer)`
   background-color: rgba(0, 0, 0, 0.85);
   cursor: zoom-out;
-  
+
   img, video {
     object-fit: contain;
     ${({ $maxSize }) => mixins.squared($maxSize || toPercent(sizes.imgZoomPercentage))}

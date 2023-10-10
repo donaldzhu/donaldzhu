@@ -99,8 +99,8 @@ const SvgOuterContainer = styled.div`
       width: 12.5%;
       height: fit-content;
     }
-  
-  
+
+
 `
 
 

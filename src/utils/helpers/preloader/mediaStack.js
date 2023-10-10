@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import { ImgPreloader, VidPreloader } from './preloader'
 import { joinPaths, keysToObject } from '../../commonUtils.ts'
-import { getBreakpointKey } from '../../queryUtil'
-import { FILE_EXT, MEDIA_SIZES, MEDIA_TYPES, getPreviewBreakpointKey, isImg, isThumbnail, isVid } from './preloadUtils'
-import breakpoints from '../../../data/breakpoints.json'
+import { getBreakptKey } from '../../queryUtil'
+import { FILE_EXT, MEDIA_SIZES, MEDIA_TYPES, getPreviewBreakptKey, isImg, isThumbnail, isVid } from './preloadUtils'
+import breakpts from '../../../data/breakpoints.ts'
 
 class MediaStack {
   constructor({ pageId, fileName, fileType, mediaType, isPoster, autoPlayConfig, loadVid, Preloader, nativeDimension }) {
@@ -14,8 +14,8 @@ class MediaStack {
     this.isPoster = isPoster
     this.nativeDimension = nativeDimension
 
-    this.breakpoints = Object.keys(breakpoints)
-    this.stackKeys = this.breakpoints
+    this.breakpts = Object.keys(breakpts)
+    this.stackKeys = this.breakpts
 
     if (!isVid(fileType)) this.stackKeys.unshift(MEDIA_SIZES.desktopFallback)
     if (!this.isThumbnail) this.stackKeys.push(MEDIA_SIZES.max)
@@ -41,8 +41,8 @@ class MediaStack {
   }
 
   preloadFull() {
-    const breakpointKey = getBreakpointKey()
-    return this.stack[breakpointKey].preload()
+    const breakptKey = getBreakptKey()
+    return this.stack[breakptKey].preload()
       .then(() => this._onFinished())
   }
 
@@ -90,7 +90,7 @@ export class ImgStack extends MediaStack {
   }
 
   preloadPreview() {
-    const previewKey = getPreviewBreakpointKey()
+    const previewKey = getPreviewBreakptKey()
     if (!previewKey) return
     return this.stack[previewKey].preload()
       .then(() => this._onFinished())

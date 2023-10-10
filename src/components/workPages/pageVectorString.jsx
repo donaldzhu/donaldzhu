@@ -5,7 +5,7 @@ import WorkImg from '../common/media/workImg'
 import useCanvas from '../../hooks/useCanvas'
 import drawVectorString from '../../p5/sketches/drawVectorString'
 import { addEventListener } from '../../utils/reactUtils'
-import ElemRect from '../../utils/helpers/elemRect'
+import ElemRect from '../../utils/helpers/rect/elemRect'
 
 const PageVectorString = () => {
   const [translateImgSrc, setTranslateImgSrc] = useState(1)

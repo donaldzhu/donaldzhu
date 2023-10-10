@@ -28,7 +28,7 @@ const Container = styled.div`
 const Row = styled.div`
   display: flex;
   width: 100%;
-  
+
   ${({ $cols }) =>
     $cols ? $cols.map((col, i) => `
     >:nth-child(${i + 1}){

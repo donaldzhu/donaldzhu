@@ -4,13 +4,13 @@ import PreloadMedia from '../common/media/preloadMedia'
 import { joinPaths } from '../../utils/commonUtils'
 import { FILE_EXT, MEDIA_TYPES } from '../../utils/helpers/preloader/preloadUtils'
 import Anchor from '../common/anchor'
-import { getBreakpointKey } from '../../utils/queryUtil'
+import { getBreakptKey } from '../../utils/queryUtil'
 
 const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }) => {
   const { title, alt, id, animatedThumbnail } = data
   const { preloadManager } = useOutletContext()
 
-  const fallbackPath = joinPaths('/assets/thumbnails/', getBreakpointKey(), id) + '.' +
+  const fallbackPath = joinPaths('/assets/thumbnails/', getBreakptKey(), id) + '.' +
     (animatedThumbnail ? FILE_EXT.webm : FILE_EXT.webp)
   return (
     <ThumbnailLink
@@ -26,10 +26,10 @@ const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }) => 
   )
 }
 
-const ThumbnailLink = styled(Anchor)`  
+const ThumbnailLink = styled(Anchor)` 
   display: block;
    img, video {
-    width: 100%;  
+    width: 100%; 
   }
 `
 

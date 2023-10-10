@@ -6,6 +6,8 @@ import useCanvas from '../../hooks/useCanvas'
 import drawPageBorders from '../../p5/sketches/drawPageBorder'
 import mixins from '../../styles/mixins'
 import sizes from '../../styles/sizes'
+import Svg from '../common/svg'
+import colors from '../../styles/colors'
 
 const LeftContainer = ({ sidebar, allCanvasCallbackRefs, canvasStateRefs }) => {
   const headerRef = useRef()
@@ -23,42 +25,75 @@ const LeftContainer = ({ sidebar, allCanvasCallbackRefs, canvasStateRefs }) => {
     if (sidebar) sidebar.scroll(0, 0)
   }, [sidebar])
 
+  const stroke = sizes.borderWeightValue()
+
   return (
     <Container>
-      <Header
-        ref={headerRef}
-        callbackRefs={front}
-        canvasStateRefs={canvasStateRefs} />
-      <SidebarContainer ref={sidebarRef}>
-        {sidebar || <div />}
-      </SidebarContainer>
-      <Footer ref={footerRef} />
+      <ContentContainer>
+        <Header
+          ref={headerRef}
+          callbackRefs={front}
+          canvasStateRefs={canvasStateRefs} />
+        <SidebarContainer ref={sidebarRef}>
+          {sidebar || <div />}
+        </SidebarContainer>
+        <Footer ref={footerRef} />
+      </ContentContainer>
+      <div>
+        {/* <SvgContainer>
+          <Svg w={stroke} h={stroke}>
+            <line
+              x1='0'
+              y1={stroke / 2}
+              x2={sizes.sidebarWidthValue}
+              y2={stroke / 2}
+              stroke={colors.border}
+              strokeWidth={stroke}
+              strokeLinecap='round'
+            />
+          </Svg>
+        </SvgContainer> */}
+      </div>
     </Container>
   )
 }
 
 const SidebarContainer = styled.div`
   flex: auto;
+  padding-right: ${sizes.sidebarPaddingRight};
   overflow: scroll;
+  
   &>:first-child {
     margin-top: ${sizes.sidebarPaddingVertical};
   }
 `
 
 const Container = styled.div`
-  ${mixins
-    .chain()
-    .fixed()
-    .flex()}
-  
-  flex-direction: column;
+  ${mixins.fixed()}
   width: ${sizes.sidebarWidth};
   margin-left: ${sizes.sidebarPaddingLeft};
   z-index: 2;
+  
+  &, & > div {
+    ${mixins.flex()}
+    height: 100%;
+  }
 
-  > header, footer, ${SidebarContainer} {    
-    ${mixins.flex('', 'space-between')}    
-    padding-right: ${sizes.sidebarPaddingRight};
+  > div  {
+    flex-direction: column;
+  }
+`
+
+const ContentContainer = styled.div`
+
+`
+
+const SvgContainer = styled.div`
+  height: fit-content;
+
+  svg {
+    overflow: visible;
+    display: block;
   }
 `
 

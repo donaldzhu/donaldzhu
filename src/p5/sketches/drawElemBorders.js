@@ -1,4 +1,4 @@
-import ElemRect from '../../utils/helpers/elemRect'
+import ElemRect from '../../utils/helpers/rect/elemRect'
 import { styleDashedRect } from '../../utils/p5Utils'
 
 const drawElemBorders = ({ elemRefs }) => {

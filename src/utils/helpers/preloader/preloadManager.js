@@ -2,8 +2,8 @@ import _ from 'lodash'
 import toSpaceCase from 'to-space-case'
 import Queue from '../queue'
 import { ImgStack, VidStack } from './mediaStack'
-import { capitalize, mapObject } from '../../commonUtils.ts'
-import { getBreakpointKey } from '../../queryUtil'
+import { capitalize, loopObject } from '../../commonUtils.ts'
+import { getBreakptKey } from '../../queryUtil'
 import { MEDIA_SIZES, MEDIA_TYPES, fileIsVid, isImg, isImgSize, isPoster } from './preloadUtils'
 import nativeDimensions from '../../../data/media/nativeDimensions.json'
 import workData from '../../../data/work/workData.json'
@@ -60,7 +60,7 @@ class PreloadManager {
   }
 
   _createWorkPageStacks() {
-    mapObject(nativeDimensions.work, (pageId, nativeDimensions) => {
+    loopObject(nativeDimensions.work, (pageId, nativeDimensions) => {
       const workPage = this.workPages[pageId] = {}
       nativeDimensions.forEach(([fileName, nativeDimension]) => {
         const Stack = fileIsVid(fileName) ? VidStack : ImgStack
@@ -240,7 +240,7 @@ class PreloadManager {
 
   //-----queuers-----//
   _createPagePreloaders(callback) {
-    return mapObject({ ...MEDIA_SIZES },
+    return loopObject({ ...MEDIA_SIZES },
       (key, size, sizes) => sizes[key] = callback(size))
   }
 
@@ -331,7 +331,7 @@ class PreloadManager {
   _decorateLog(messages, styles, size, isFullVid) {
     const extraMessages = [
       ` ${size}${size === MEDIA_SIZES.full ?
-        ` (${getBreakpointKey().toLocaleUpperCase()})` : ''}`,
+        ` (${getBreakptKey().toLocaleUpperCase()})` : ''}`,
       ` - ${isFullVid ? 'full vid ' : ''}preloaded!`
     ]
     const extraStyles = [

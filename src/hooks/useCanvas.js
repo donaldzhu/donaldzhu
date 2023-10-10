@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import _ from 'lodash'
-import { mapObject } from '../utils/commonUtils.ts'
+import { loopObject } from '../utils/commonUtils.ts'
 import { P5_EVENTS } from '../utils/p5Utils'
 
 const useCanvas = (createSketch, config = {}, deps = []) => {
@@ -34,7 +34,7 @@ const useCanvas = (createSketch, config = {}, deps = []) => {
     }
 
     registerCallback(P5_EVENTS.draw, drawFunction)
-    mapObject(callbacks, (eventName, callback) =>
+    loopObject(callbacks, (eventName, callback) =>
       registerCallback(eventName, p5 => callback(p5, canvasStateRefs)))
 
     return () => {

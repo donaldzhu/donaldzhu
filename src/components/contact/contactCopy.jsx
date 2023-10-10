@@ -26,7 +26,7 @@ const CopyContainer = styled.span`
   margin-left: 0.35em;
   letter-spacing: 0.015em;
   font-weight: ${fontParams.semiBold};
-  text-transform: uppercase;  
+  text-transform: uppercase; 
 `
 
 export default ContactCopy

@@ -47,13 +47,13 @@ const App = () => {
 
 const StyledGlobal = styled.main`
   ${mixins.flex()}
-  
+
   width: ${sizes.appWidth};
   height: fit-content;
-  
+
   font-family: ${fontFamilies.monoFont};
   font-feature-settings: 'case';
-  
+
   color: ${colorConfig.defaultText};
 
   > div {

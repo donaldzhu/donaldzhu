@@ -5,9 +5,9 @@ import TextContainer from '../common/styled/textContainer'
 import Text from '../common/styled/text'
 import useCanvas from '../../hooks/useCanvas'
 import useSidebar from '../../hooks/useSidebar'
-import { responsiveSize } from '../../utils/styleUtils'
+import { responsiveCssSize } from '../../utils/styleUtils'
 import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
-import ElemRect from '../../utils/helpers/elemRect'
+import ElemRect from '../../utils/helpers/rect/elemRect'
 import colorConfig from '../../styles/colors'
 import mixins from '../../styles/mixins'
 import sizes from '../../styles/sizes'
@@ -69,11 +69,11 @@ const ContactSidebar = ({ shownQrData, qrRef, handleHover }) => {
 }
 
 const TextContainerWithQr = styled(TextContainer)`
-  ${mixins.innerMargin(0)}  
+  ${mixins.innerMargin(0)} 
   font-size: ${fontSizes.sidebarText};
-  
-  > svg {  
-    ${mixins.squared(responsiveSize({ l: 120, xxl: 200 }))};
+
+  > svg { 
+    ${mixins.squared(responsiveCssSize({ l: 120, xxl: 200 }))};
     position: relative;
     top: ${sizes.contactQrTop};
     color: ${colorConfig.toolTipColor};

@@ -1,9 +1,9 @@
 import * as easing from 'easing-utils'
 import { getVh, getVw, map } from '../../../utils/commonUtils.ts'
-import { Enum, StringEnum } from '../../../utils/helpers/enum'
+import { Enum, createStringEnum } from '../../../utils/helpers/enum.ts'
 import spacingsData from '../../../data/vector/spacings'
 
-export const MODES = new StringEnum(['CENTER', 'CORNER'])
+export const MODES = createStringEnum(['CENTER', 'CORNER'])
 export const AXES = ['x', 'y']
 export const X_HEIGHT = 44
 export const GLYPH_NAMES = Object.keys(spacingsData).filter(char => char.length === 1)

@@ -1,5 +1,5 @@
 import Text from '../helpers/vector/text'
-import ElemRect from '../../utils/helpers/elemRect'
+import ElemRect from '../../utils/helpers/rect/elemRect'
 import configs from '../configs/vector'
 
 const drawVectorString = ({ containerRef, placeholderRef }) => {

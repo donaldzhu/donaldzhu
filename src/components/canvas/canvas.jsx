@@ -31,7 +31,7 @@ const Canvas = ({ setup, className, children, ...eventHandlers }) => {
         if (p._loop) eventHandlers.draw(p)
       }
 
-      P5_EVENTS.keys.forEach(event => {
+      Object.keys(P5_EVENTS).forEach(event => {
         if (eventHandlers[event] && event !== P5_EVENTS.draw)
           p[event] = (...args) => eventHandlers[event](p, ...args)
       })

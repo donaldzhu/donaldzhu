@@ -28,7 +28,7 @@ const Container = styled.div`
     .highZIndex(5)}
   text-align: center;
   color: ${colors.popUpColor};
-  
+
   h1,
   h2,
   h3,

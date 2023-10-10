@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { mapObject } from '../utils/commonUtils.ts'
+import { loopObject } from '../utils/commonUtils.ts'
 import { getHighZIdex } from '../utils/styleUtils.ts'
 import { fontParams } from './fonts.js'
 import sizes from './sizes.js'
@@ -48,7 +48,7 @@ export const squared = (size: string) => `
 `
 
 export const innerMargin = (margin: string, direction = 'top') => `
-  >:not(:first-child) {     
+  >:not(:first-child) {
     margin-${direction}: ${margin};
   }
 `
@@ -114,7 +114,7 @@ const mixins: mixinInterface & { chain: () => chainedMixinInterface } = {
   chain: function () {
     const chainedObject: Partial<chainedMixinInterface> = {}
     let accumulatedReturn = ''
-    mapObject(_.omit(mixins, 'chain'), (mixinName, originalMixin) => {
+    loopObject(_.omit(mixins, 'chain'), (mixinName, originalMixin) => {
       chainedObject[mixinName] = function (...args: Parameters<typeof originalMixin>) {
         // @ts-ignore
         accumulatedReturn += originalMixin(...args)

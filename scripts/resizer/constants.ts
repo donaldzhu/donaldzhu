@@ -1,5 +1,5 @@
 import { Breakpts, configType } from './resizeTypes'
-import breakpoints from '../../src/data/breakpoints.json'
+import breakpoints from '../../src/data/breakpoints'
 import { joinPaths } from '../utils'
 
 export const ROOT_PATH = ''

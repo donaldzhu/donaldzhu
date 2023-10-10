@@ -24,7 +24,7 @@ const WorkSideBarItem = ({ data, isHighlighted, highlightedRef, handleHover }) =
 }
 
 const LinkContainer = styled(Anchor)`
-  ${mixins.noSelect()}  
+  ${mixins.noSelect()} 
   display: inline;
   line-height: ${fontSizes.textLineHeight};
   letter-spacing: -0.005em;

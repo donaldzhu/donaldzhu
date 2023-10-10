@@ -1,8 +1,8 @@
-import { StringEnum } from './helpers/enum'
+import { createStringEnum } from './helpers/enum'
 import colors from '../styles/colors'
 import { dashLineConfigs } from '../p5/configs/pageBorders'
 
-export const P5_EVENTS = new StringEnum([
+export const P5_EVENTS = createStringEnum([
   'draw',
   'windowResized',
   'mouseClicked',

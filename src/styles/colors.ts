@@ -1,4 +1,4 @@
-import { mapObject } from '../utils/commonUtils.ts'
+import { loopObject } from '../utils/commonUtils.ts'
 
 const COLOR_PRESET = 0
 
@@ -36,7 +36,7 @@ const colors: Record<string, string | number> = {
 }
 
 
-mapObject(colors, (colorTarget, colorIndex) =>
+loopObject(colors, (colorTarget, colorIndex) =>
   colors[colorTarget] = swatches[COLOR_PRESET][colorIndex])
 
 export default colors

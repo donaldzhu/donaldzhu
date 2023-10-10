@@ -7,7 +7,7 @@ const SmallText = styled(Text)`
   font-size: ${fontSizes.workDescription};
   max-width: ${sizes.workDescriptionMaxWidth};
   line-height: ${fontSizes.smallTextLineHeight};
-  
+
   b {
     font-size: 1em;
     letter-spacing: inherit;

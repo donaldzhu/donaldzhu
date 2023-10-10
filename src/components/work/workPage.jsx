@@ -55,7 +55,7 @@ const Details = styled.div`
   line-height: ${fontSizes.textLineHeight};
   margin-bottom: ${sizes.textInnerMargin};
   font-weight: 450;
-  
+
   :first-child{
     ${mixins.fontVar({ MONO: 1 })};
   }

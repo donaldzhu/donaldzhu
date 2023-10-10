@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import Brush from '../helpers/brush/brush'
 import FlatBrush from '../helpers/brush/flatBrush'
-import { getVw, mapObject } from '../../utils/commonUtils.ts'
+import { getVw, loopObject } from '../../utils/commonUtils.ts'
 import { intersectTwoCircles, parsePoints, wrapDrawingContext } from '../../utils/p5Utils'
-import ElemRect from '../../utils/helpers/elemRect'
+import ElemRect from '../../utils/helpers/rect/elemRect.js'
 import colors from '../../styles/colors'
 import sizes from '../../styles/sizes'
 import config from '../configs/stroke'
@@ -172,7 +172,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }) => {
 
     p5.strokeWeight(getVw(0.35))
     p5.fill(255)
-    mapObject(vectors,
+    loopObject(vectors,
       (vectorKey, { x, y }) => {
         const drawingVectors = ['primary', 'secondary']
         if (drawingVectors.includes(vectorKey)) {

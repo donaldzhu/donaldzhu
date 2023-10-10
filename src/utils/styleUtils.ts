@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { getRem, getVw, sortLike } from './commonUtils'
-import { BREAKPOINT_ENUM } from './queryUtil.js'
-import breakpoints from '../data/breakpoints.json'
+import { BREAKPOINT_ENUM } from './queryUtil.ts'
+import breakpts from '../data/breakpoints.ts'
 
 // units
 const createSuffixFunction = (suffix: string) =>
@@ -21,22 +21,22 @@ export const vwWithVhCss = (vwPerecntage: number, vhPercentage: number, remSize?
 type slopeFuntionType = (
   lowerVal: number,
   upperVal: number,
-  lowerBreakpoint: number,
-  upperBreakpoint: number
+  lowerBreakpt: number,
+  upperBreakpt: number
 ) => {
   m: number,
   b: number
 }
 
-const getSlope: slopeFuntionType = (lowerVal, upperVal, lowerBreakpoint, upperBreakpoint) => {
-  const m = (upperVal - lowerVal) / (upperBreakpoint - lowerBreakpoint)
-  const b = upperVal - (m * upperBreakpoint)
+const getSlope: slopeFuntionType = (lowerVal, upperVal, lowerBreakpt, upperBreakpt) => {
+  const m = (upperVal - lowerVal) / (upperBreakpt - lowerBreakpt)
+  const b = upperVal - (m * upperBreakpt)
   return { m: _.round(m * 100, 3), b: _.round(b, 3) }
 }
 
-const getSlopeRem: slopeFuntionType = (lowerVal, upperVal, lowerBreakpoint, upperBreakpoint) => {
+const getSlopeRem: slopeFuntionType = (lowerVal, upperVal, lowerBreakpt, upperBreakpt) => {
   const rem = getRem()
-  const { m, b } = getSlope(lowerVal * rem, upperVal * rem, lowerBreakpoint, upperBreakpoint)
+  const { m, b } = getSlope(lowerVal * rem, upperVal * rem, lowerBreakpt, upperBreakpt)
   return { m: _.round(m, 3), b: _.round(b / rem, 3) }
 }
 
@@ -45,19 +45,18 @@ const vwSlopedCss = (vwPercentage: number, remSize: number, useRem = true) =>
 const vwSlopedValue = (vwPercentage: number, intercept: number) => getVw(vwPercentage) + intercept
 
 const sortQueryKeys = sizes => {
-  const { keys } = BREAKPOINT_ENUM
-  const [lowerBreakpoint, upperBreakpoint] = sortLike(Object.keys(sizes), keys)
-  return { lowerBreakpoint, upperBreakpoint }
+  const [lowerBreakpt, upperBreakpt] = sortLike(Object.keys(sizes), Object.keys(BREAKPOINT_ENUM))
+  return { lowerBreakpt, upperBreakpt }
 }
 
 const getResponsiveSlope = (sizes, useRem: boolean) => {
-  const { lowerBreakpoint, upperBreakpoint } = sortQueryKeys(sizes)
+  const { lowerBreakpt, upperBreakpt } = sortQueryKeys(sizes)
   const slopeFunction = useRem ? getSlopeRem : getSlope
   return slopeFunction(
-    sizes[lowerBreakpoint],
-    sizes[upperBreakpoint],
-    breakpoints[lowerBreakpoint],
-    breakpoints[upperBreakpoint]
+    sizes[lowerBreakpt],
+    sizes[upperBreakpt],
+    breakpts[lowerBreakpt],
+    breakpts[upperBreakpt]
   )
 }
 const getReponsive = (sizes, { useRem, returnCss }) => {
@@ -65,7 +64,7 @@ const getReponsive = (sizes, { useRem, returnCss }) => {
   return returnCss ? vwSlopedCss(m, b, useRem) : vwSlopedValue(m, b)
 }
 
-export const responsiveSize = sizes => getReponsive(sizes, { useRem: false, returnCss: true })
+export const responsiveCssSize = sizes => getReponsive(sizes, { useRem: false, returnCss: true })
 export const responsiveRem = sizes => getReponsive(sizes, { useRem: true, returnCss: true })
 export const responsiveValue = sizes => getReponsive(sizes, { useRem: false, returnCss: false })
 

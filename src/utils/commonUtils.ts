@@ -29,7 +29,7 @@ export const sortLike = <T>(array: T[], modelArray: T[]) =>
 
 
 // object
-export const mapObject = <K extends string, V>(
+export const loopObject = <K extends string | number | symbol, V>(
   object: Record<K, V>,
   callback: (key: K, value: V, object: Record<K, V>) => any
 ) => {
@@ -42,6 +42,19 @@ export const mapObject = <K extends string, V>(
   return object
 }
 
+export const mapObject = <K extends string | number | symbol, V, R>(
+  object: Record<K, V>,
+  callback: (key: K, value: V) => R
+) => {
+  const newObject: Partial<Record<K, R>> = {}
+  const keys = Object.keys(object) as K[]
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+    const value = object[key]
+    newObject[key] = callback(key, value)
+  }
+  return newObject as Record<K, R>
+}
 
 export const keysToObject = <V>(array: string[], callback: (
   key: string,

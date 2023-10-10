@@ -3,12 +3,10 @@ import { styled } from 'styled-components'
 import Anchor from '../../common/anchor'
 import useCanvas from '../../../hooks/useCanvas'
 import drawHomeIcon from '../../../p5/sketches/drawHomeIcon'
-import { percent, responsiveSize } from '../../../utils/styleUtils'
-import { homeIconSizes } from '../../../p5/configs/vector'
+import { percent } from '../../../utils/styleUtils'
 import mixins from '../../../styles/mixins'
 import sizes from '../../../styles/sizes'
 
-const BASE_ICON_SIZE = [43, 44]
 const HomeIcon = ({ callbackRefs, canvasStateRefs }) => {
   const placeholderRef = useRef()
   const isHoveringRef = useRef(false)
@@ -29,13 +27,13 @@ const HomeIcon = ({ callbackRefs, canvasStateRefs }) => {
   )
 }
 
-const homeIconSize = responsiveSize(homeIconSizes)
 const HomeButtonContainer = styled.div`
   ${mixins.flex('center', 'center')}
-  width: calc(${BASE_ICON_SIZE[0]} * ${homeIconSize} + ${sizes.homeIconPadding});
-  height: calc(${BASE_ICON_SIZE[1]} * ${homeIconSize} + ${sizes.homeIconPadding});
+  width: ${sizes.homeIconWidth};
+  height: ${sizes.homeIconHeight};
   position: relative;
   left: calc(${sizes.homeIconPadding} / -2);
+  margin-bottom: ${sizes.homeIconPaddingTop};
 `
 
 const HomeButtonLink = styled(Anchor)`

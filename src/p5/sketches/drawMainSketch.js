@@ -1,7 +1,7 @@
 import Text from '../helpers/vector/text'
 import { repeatMap } from '../../utils/commonUtils.ts'
 import { wrapDrawingContext } from '../../utils/p5Utils'
-import ElemRect from '../../utils/helpers/elemRect'
+import ElemRect from '../../utils/helpers/rect/elemRect.js'
 import colors from '../../styles/colors'
 import sizes from '../../styles/sizes'
 import { dashLineConfigs } from '../configs/pageBorders'

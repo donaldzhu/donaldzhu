@@ -7,7 +7,7 @@ import { WorkPageContext } from '../../contexts/context'
 import { fontSizes, fontParams } from '../../styles/fonts'
 import { addEventListener } from '../../utils/reactUtils'
 import { getToolTipPoints } from '../../utils/commonUtils.ts'
-import ElemRect from '../../utils/helpers/elemRect'
+import ElemRect from '../../utils/helpers/rect/elemRect.js'
 import { em } from '../../utils/styleUtils'
 import mixins from '../../styles/mixins'
 import colors from '../../styles/colors'
@@ -91,17 +91,17 @@ const ToolTipContainer = styled.div`
 
   ${({ $isHighlighted }) => $isHighlighted ? `
     color:${colors.activeElem}; 
-    outline: none;  
+    outline: none; 
   ` : ''}
 `
 
 const PopUpContainer = styled.div`
   width: calc(${sizes.workDescriptionMaxWidth} * 0.85);
   padding: 0.8em;
-  
+
   color: ${colors.toolTipColor};
   background-color: ${colors.toolTipBg};
-  
+
   font-size: ${fontSizes.toolTipPopUp};
   font-weight: ${fontParams.semiLight};
   letter-spacing: -0.012em;

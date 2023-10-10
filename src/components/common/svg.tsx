@@ -1,4 +1,11 @@
-import { SvgPropsType } from './svgTypes'
+import { SVGProps } from 'react'
+
+type SvgPropsType = {
+  w: number,
+  h: number,
+  children: JSX.Element | JSX.Element[],
+  props: SVGProps<SVGSVGElement>
+}
 
 const Svg = ({ w, h, children, ...props }: SvgPropsType) => {
   return (
@@ -9,7 +16,6 @@ const Svg = ({ w, h, children, ...props }: SvgPropsType) => {
       height={h}
       viewBox={`0 0 ${w} ${h}`}>
       {children}
-      <line></line>
     </svg>
   )
 }

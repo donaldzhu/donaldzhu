@@ -1,5 +1,5 @@
-import { arrayify } from '../commonUtils.ts'
-import { styleDashedRect, wrapDrawingContext } from '../p5Utils'
+import { arrayify } from '../../commonUtils.ts'
+import { styleDashedRect, wrapDrawingContext } from '../../p5Utils.js'
 
 class Rect {
   #_x

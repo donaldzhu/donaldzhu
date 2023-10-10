@@ -91,7 +91,7 @@ ${mixins
   }
 `
 
-const CanvasCaption = styled.p`  
+const CanvasCaption = styled.p` 
   pointer-events: none;
 `
 

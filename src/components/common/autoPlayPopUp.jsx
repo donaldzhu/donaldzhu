@@ -23,13 +23,13 @@ const FullScreenContainer = styled(PopUpContainer)`
 const Container = styled.div`
   ${mixins.flex('center', 'center')}
   flex-direction: column;
-  
+
   width: ${sizes.autoPlayWidth};
   height: fit-content;
   padding: 1.35em 1em;
-  
+
   font-size: ${fontSizes.autoPlayMessage};
-  
+
   background-color: ${colors.autoPlayPopUpBg};
   border: ${sizes.autoPlayBorder} solid ${colors.popUpColor};
   border-radius: ${sizes.autoPlayBorderRadius};
