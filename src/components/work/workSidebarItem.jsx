@@ -3,7 +3,7 @@ import { styled } from 'styled-components'
 import Anchor from '../common/anchor'
 import { em } from '../../utils/styleUtils'
 import mixins from '../../styles/mixins'
-import { fontSizes } from '../../styles/fonts'
+import { fontSizes, fontLineHeights } from '../../styles/fonts'
 import colors from '../../styles/colors'
 
 const WorkSideBarItem = ({ data, isHighlighted, highlightedRef, handleHover }) => {
@@ -26,13 +26,13 @@ const WorkSideBarItem = ({ data, isHighlighted, highlightedRef, handleHover }) =
 const LinkContainer = styled(Anchor)`
   ${mixins.noSelect()} 
   display: inline;
-  line-height: ${fontSizes.textLineHeight};
+  line-height: ${fontLineHeights.text};
   letter-spacing: -0.005em;
 `
 
 const negativeIndent = em(1.5)
 const ItemContainer = styled.li`
-  font-size: ${fontSizes.workIndex};
+  font-size: ${fontSizes.workIndex.mono.css};
   color: ${({ $isHighlighted }) => $isHighlighted ? colors.activeElem : colors.workIndex};
   position: relative;
   left: ${negativeIndent};
@@ -44,7 +44,7 @@ const ItemDelimiter = styled.span`
 `
 
 const Title = styled.h3`
-  font-size: ${fontSizes.workIndexSans};
+  font-size: ${fontSizes.workIndex.sans.css};
   display: inline;
 `
 

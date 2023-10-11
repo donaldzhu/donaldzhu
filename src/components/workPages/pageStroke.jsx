@@ -8,7 +8,7 @@ import WorkImgGroup from '../common/media/workImgGroup'
 import useCanvas from '../../hooks/useCanvas'
 import drawPanto from '../../p5/sketches/drawPanto'
 import drawElemBorders from '../../p5/sketches/drawElemBorders'
-import { fontSizes, fontParams } from '../../styles/fonts'
+import { fontParams, fontSizes } from '../../styles/fonts'
 import mixins from '../../styles/mixins'
 import { sizes } from '../../styles/sizes'
 import colors from '../../styles/colors'
@@ -81,7 +81,7 @@ ${mixins
     .flex('initial', 'space-between')}
   width: 100%;
   aspect-ratio: 2 / 1;
-  font-size: ${fontSizes.canvasCaption};
+  font-size: ${fontSizes.workPageStroke.caption.css};
   font-weight: ${fontParams.semiBold};
   color: ${colors.strokeCaption};
 

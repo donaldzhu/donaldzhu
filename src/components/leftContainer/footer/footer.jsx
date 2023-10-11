@@ -3,7 +3,7 @@ import { styled } from 'styled-components'
 import FooterLink from './footerLink'
 import mixins, { flex } from '../../../styles/mixins'
 import { sizes } from '../../../styles/sizes'
-import { fontSizers, fontSizes } from '../../../styles/fonts'
+import { fontSizes } from '../../../styles/fonts'
 import colors from '../../../styles/colors'
 import Svg from '../../common/svg'
 
@@ -44,7 +44,7 @@ const Footer = forwardRef((_, ref) => {
 const FooterContainer = styled.footer`
   ${mixins.highZIndex(4)}
   bottom: 0;
-  font-size: ${fontSizers.footer.link.css};
+  font-size: ${fontSizes.footer.link.css};
 `
 
 const SvgContainer = styled.div`
@@ -64,7 +64,7 @@ const FooterLinkContainer = styled.div`
   padding: ${sizes.footer.padding.top.sub(sizes.footer.link.padding).css} 0;
   padding-right: ${sizes.sidebar.padding.right.css};
  
-  font-size: ${fontSizers.footer.link.css};
+  font-size: ${fontSizes.footer.link.css};
 `
 
 const FooterDelimiter = styled.div` 

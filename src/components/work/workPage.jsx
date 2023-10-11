@@ -8,7 +8,7 @@ import { WorkPageContext } from '../../contexts/context'
 import drawToolTip from '../../p5/sketches/drawToolTip'
 import { parseHtml } from '../../utils/reactUtils'
 import { capitalize } from '../../utils/commonUtils.ts'
-import { fontSizes } from '../../styles/fonts'
+import { fontSizes, fontLineHeights } from '../../styles/fonts'
 import { sizes } from '../../styles/sizes'
 import mixins from '../../styles/mixins'
 import workDescriptions from '../../data/work/workDescriptions'
@@ -51,8 +51,8 @@ const ContentContainer = styled.div`
 `
 
 const Details = styled.div`
-  font-size: ${fontSizes.workDetails};
-  line-height: ${fontSizes.textLineHeight};
+  font-size: ${fontSizes.workPage.details.css};
+  line-height: ${fontLineHeights.text};
   margin-bottom: ${sizes.text.innerMargin.css};
   font-weight: 450;
 

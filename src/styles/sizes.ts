@@ -1,6 +1,6 @@
 import Size from '../utils/helpers/size'
 import { getSize } from '../utils/helpers/sizer'
-import { fontSizers } from './fonts'
+import { fontSizes } from './fonts'
 import { homeIconSizes } from '../p5/configs/vector'
 
 const homeIconBaseSize = [43, 44]
@@ -85,7 +85,7 @@ export const sizes = {
   },
   toolTip: {
     border: getSize({ l: 3, xxl: 4 }),
-    bottom: fontSizers.footer.link.add(
+    bottom: fontSizes.footer.link.add(
       footerPaddingTop.mult(2)).add(sidebarPaddingVert),
     left: sidebarPaddingLeft
   },

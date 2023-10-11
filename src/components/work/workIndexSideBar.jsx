@@ -41,7 +41,7 @@ const linkPositionOffset = sizes.footer.link.padding.mult(-1).css
 const ToMainSiteLink = styled(Anchor)`
   padding: ${sizes.footer.link.padding.css};
   font-family: ${fontFamilies.sansFont}; 
-  font-size: ${fontSizes.footerLink};
+  font-size: ${fontSizes.footer.link.css};
   position: absolute;
   left: ${linkPositionOffset};
   bottom: ${linkPositionOffset};

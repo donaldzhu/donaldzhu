@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import styled from 'styled-components'
 import mixins from '../../styles/mixins'
 import colors from '../../styles/colors'
-import { fontSizes } from '../../styles/fonts'
+import { fontLineHeights } from '../../styles/fonts'
 
 const PopUpContainer = ({ className, children, ...props }) => {
   useEffect(() => {
@@ -37,7 +37,7 @@ const Container = styled.div`
   h6,
   p {
     font-weight: normal;
-    line-height: ${fontSizes.popUpLineHeight};
+    line-height: ${fontLineHeights.popUp};
     text-transform: initial;
     hyphens: none;
   }

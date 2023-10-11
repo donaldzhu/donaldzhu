@@ -1,21 +1,21 @@
 import { styled } from 'styled-components'
-import { fontParams, fontSizes } from '../../../styles/fonts'
+import { fontParams, fontSizes, fontLineHeights } from '../../../styles/fonts'
 import mixins from '../../../styles/mixins'
 
 const Text = styled.p`
   margin: 0;
 
-  font-size: ${fontSizes.sidebarText};
+  font-size: ${fontSizes.text.mono.css};
   font-weight: ${fontParams.semiLight};
   letter-spacing: -0.03em;
-  line-height: ${fontSizes.textLineHeight};
+  line-height: ${fontLineHeights.text};
 
   a {
     ${mixins.underline()}
   }
 
   b {
-    font-size: ${fontSizes.sidebarTextSans};
+    font-size: ${fontSizes.text.sans.css};
     letter-spacing: 0;
   }
 

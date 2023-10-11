@@ -1,9 +1,9 @@
 import _ from 'lodash'
-import { loopObject } from '../utils/commonUtils.ts'
-import { getHighZIdex } from '../utils/styleUtils.ts'
-import { fontParams } from './fonts.js'
-import { sizes } from './sizes.js'
-import { fontVarConfigType, mediaPropsType, positionsType } from './types.ts'
+import { loopObject } from '../utils/commonUtils'
+import { getHighZIdex } from '../utils/styleUtils'
+import { fontParams } from './fonts'
+import { sizes } from './sizes'
+import { fontVarConfigType, mediaPropsType, positionsType } from './types'
 
 export const recursiveCenterText = () => `
   position: relative;

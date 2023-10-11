@@ -4,7 +4,7 @@ import { styled } from 'styled-components'
 import _ from 'lodash'
 import pointInPolygon from 'point-in-polygon'
 import { WorkPageContext } from '../../contexts/context'
-import { fontSizes, fontParams } from '../../styles/fonts'
+import { fontParams, fontSizes } from '../../styles/fonts'
 import { addEventListener } from '../../utils/reactUtils'
 import { getToolTipPoints, validateString } from '../../utils/commonUtils.ts'
 import ElemRect from '../../utils/helpers/rect/elemRect.js'
@@ -77,7 +77,7 @@ const ToolTipContainer = styled.div`
   position: absolute;
   left: calc(${sizes.mainContainer.margin.css} * -1 - ${toolTipSize} / 2);
   background-color: ${colors.toolTipBg};
-  font-size: ${fontSizes.toolTip};
+  font-size: ${fontSizes.toolTip.icon.css};
 
   ${mixins
     .chain()
@@ -102,7 +102,7 @@ const PopUpContainer = styled.div`
   color: ${colors.toolTipColor};
   background-color: ${colors.toolTipBg};
 
-  font-size: ${fontSizes.toolTipPopUp};
+  font-size: ${fontSizes.toolTip.popUp.css};
   font-weight: ${fontParams.semiLight};
   letter-spacing: -0.012em;
   word-spacing: -0.0225em;

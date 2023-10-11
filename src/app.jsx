@@ -83,7 +83,7 @@ const StyledGlobal = styled.main`
   }
 
   h1 {
-    font-size: ${fontSizes.title};
+    font-size: ${fontSizes.title.css};
     margin-bottom: 1em;
   }
 `

@@ -68,7 +68,7 @@ const ContactSidebar = ({ shownQrData, qrRef, handleHover }) => {
 }
 
 const TextContainerWithQr = styled(TextContainer)`
-  font-size: ${fontSizes.sidebarText};
+  font-size: ${fontSizes.text.mono.css};
 
   > svg { 
     ${mixins.squared(sizes.contact.qr.size.css)};
