@@ -60,8 +60,12 @@ class Size {
     return validateString(this[unit], this[unit] + unit)
   }
 
-  static subFromFullpage(subtrahend: Size) {
+  static subFromFullWidth(subtrahend: Size) {
     return new Size({ vw: 100 }).sub(subtrahend)
+  }
+
+  static subFromFullHeight(subtrahend: Size) {
+    return new Size({ vh: 100 }).sub(subtrahend)
   }
 }
 

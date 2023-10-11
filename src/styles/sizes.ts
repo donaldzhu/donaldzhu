@@ -15,7 +15,7 @@ const footerPaddingTop = getSize({ l: 20, xxl: 42.4, xxlSm: 33.5 })
 
 export const sizes = {
   app: {
-    width: Size.subFromFullpage(sidebarPaddingLeft)
+    width: Size.subFromFullWidth(sidebarPaddingLeft)
   },
   text: {
     innerMargin: getSize({ l: 16, xxl: 30 })

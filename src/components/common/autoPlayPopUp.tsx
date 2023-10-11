@@ -31,9 +31,9 @@ const Container = styled.div`
   font-size: ${fontSizes.autoPlay.message.css};
 
   background-color: ${colors.autoPlayPopUpBg};
-  border: ${sizes.autoPlay.border.ccs} solid ${colors.popUpColor};
-  border-radius: ${sizes.autoPlay.borderRadius.ccs};
-  box-shadow: 0 0 ${sizes.autoPlay.borderRadius.ccs} ${colors.popUpColor};
+  border: ${sizes.autoPlay.border.css} solid ${colors.popUpColor};
+  border-radius: ${sizes.autoPlay.borderRadius.css};
+  box-shadow: 0 0 ${sizes.autoPlay.borderRadius.css} ${colors.popUpColor};
 `
 
 const Message = styled.h2`

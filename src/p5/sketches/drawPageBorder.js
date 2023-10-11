@@ -28,8 +28,8 @@ const drawPageBorders = ({ headerRef, footerRef, sidebarRef }) => {
     p5.noFill()
     p5.stroke(colors.border)
     p5.strokeWeight(dashLineConfigs.lineWeight())
-    drawBorder(p5, headerRef, 'header')
-    drawBorder(p5, footerRef, 'footer')
+    // drawBorder(p5, headerRef, 'header')
+    // drawBorder(p5, footerRef, 'footer')
     // drawBorder(p5, sidebarRef, 'sidebar')
   }
 

@@ -19,7 +19,7 @@ const FooterLink = ({ path, children }) => {
 
 const linkColorMixin = ({ $isHighlighted }) => $isHighlighted ? colors.activeElem : colors.footer
 const FooterAnchor = styled(Anchor)`
-  height: fit-content;
+  height: 1em;
   padding: ${sizes.footer.link.padding.css};
   font-family: ${fontFamilies.sansFont}; 
   font-weight: bold;

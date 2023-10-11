@@ -26,7 +26,7 @@ const PageWithMainSketch = () => {
 const leftContainerWidth = sizes.sidebar.width.add(sizes.sidebar.padding.left)
 const MainSketchPlaceHolder = styled.div`
   ${mixins.fixed({ left: leftContainerWidth.css })}
-  width: ${Size.subFromFullpage(leftContainerWidth).css};
+  width: ${Size.subFromFullWidth(leftContainerWidth).css};
 `
 
 export default PageWithMainSketch

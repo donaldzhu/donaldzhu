@@ -8,6 +8,8 @@ import mixins from '../../styles/mixins'
 import { sizes } from '../../styles/sizes'
 import Svg from '../common/svg'
 import colors from '../../styles/colors'
+import { fontSizes } from '../../styles/fonts'
+import Size from '../../utils/helpers/size'
 
 const LeftContainer = ({ sidebar, allCanvasCallbackRefs, canvasStateRefs }) => {
   const headerRef = useRef()
@@ -27,6 +29,18 @@ const LeftContainer = ({ sidebar, allCanvasCallbackRefs, canvasStateRefs }) => {
 
   const stroke = sizes.sidebar.border.value
 
+  const headerHeight = sizes.homeIcon.padding.vert
+    .mult(2)
+    .add(sizes.homeIcon.height)
+  const footerHeight = sizes.footer.padding.top
+    .mult(2)
+    .add(fontSizes.footer.link)
+  const sidebarHeight = Size.subFromFullHeight(headerHeight)
+    .sub(footerHeight)
+
+  const height = headerHeight.sub(sizes.sidebar.borderGap)
+  const height2 = footerHeight.sub(sizes.sidebar.borderGap)
+  const height3 = sidebarHeight.sub(sizes.sidebar.borderGap.mult(2))
   return (
     <Container>
       <ContentContainer>
@@ -39,21 +53,47 @@ const LeftContainer = ({ sidebar, allCanvasCallbackRefs, canvasStateRefs }) => {
         </SidebarContainer>
         <Footer ref={footerRef} />
       </ContentContainer>
-      <div>
-        {/* <SvgContainer>
-          <Svg w={stroke} h={stroke}>
+      <BorderContainer>
+        <SvgContainer>
+          <Svg w={stroke} h={height.value}>
             <line
-              x1='0'
-              y1={stroke / 2}
-              x2={sizers.sidebar.width.value}
-              y2={stroke / 2}
+              x1={stroke / 2}
+              y1={0}
+              x2={stroke / 2}
+              y2={height.value}
               stroke={colors.border}
               strokeWidth={stroke}
               strokeLinecap='round'
             />
           </Svg>
-        </SvgContainer> */}
-      </div>
+        </SvgContainer>
+        <SvgContainer>
+          <Svg w={stroke} h={height3.value}>
+            <line
+              x1={stroke / 2}
+              y1={0}
+              x2={stroke / 2}
+              y2={height3.value}
+              stroke={colors.border}
+              strokeWidth={stroke}
+              strokeLinecap='round'
+            />
+          </Svg>
+        </SvgContainer>
+        <SvgContainer>
+          <Svg w={stroke} h={height2.value}>
+            <line
+              x1={stroke / 2}
+              y1={0}
+              x2={stroke / 2}
+              y2={height2.value}
+              stroke={colors.border}
+              strokeWidth={stroke}
+              strokeLinecap='round'
+            />
+          </Svg>
+        </SvgContainer>
+      </BorderContainer>
     </Container>
   )
 }
@@ -68,13 +108,15 @@ const SidebarContainer = styled.div`
   }
 `
 
+const ContentContainer = styled.div``
+
 const Container = styled.div`
   ${mixins.fixed()}
   width: ${sizes.sidebar.width.css};
   margin-left: ${sizes.sidebar.padding.left.css};
   z-index: 2;
   
-  &, & > div {
+  &, & > ${ContentContainer} {
     ${mixins.flex()}
     height: 100%;
   }
@@ -84,8 +126,8 @@ const Container = styled.div`
   }
 `
 
-const ContentContainer = styled.div`
-
+const BorderContainer = styled.div`
+  ${mixins.flex('initial', 'space-between')}
 `
 
 const SvgContainer = styled.div`

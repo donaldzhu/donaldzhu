@@ -1,15 +1,21 @@
-import { useEffect } from 'react'
+import { HTMLAttributes, ReactNode, useEffect } from 'react'
 import styled from 'styled-components'
 import mixins from '../../styles/mixins'
 import colors from '../../styles/colors'
 import { fontLineHeights } from '../../styles/fonts'
 
-const PopUpContainer = ({ className, children, ...props }) => {
+interface PopUpContainerProps {
+  className?: string,
+  children?: ReactNode,
+  props?: HTMLAttributes<HTMLDivElement>[]
+}
+
+const PopUpContainer = ({ className, children, ...props }: PopUpContainerProps) => {
   useEffect(() => {
     const { style } = document.body
     style.overflow = 'hidden'
 
-    return () => style.overflow = ''
+    return () => { style.overflow = '' }
   }, [])
 
   return (

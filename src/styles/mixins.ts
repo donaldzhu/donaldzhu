@@ -79,7 +79,7 @@ export const media = ({ $aspectRatio, $hasLoaded }: mediaPropsType) => `
   border-radius: ${sizes.media.borderRadius.css};
 `
 
-interface mixinInterface {
+interface MixinInterface {
   recursiveCenterText: typeof recursiveCenterText
   fixed: typeof fixed
   fullscreen: typeof fullscreen
@@ -94,11 +94,13 @@ interface mixinInterface {
   media: typeof media
 }
 
-type chainedMixinInterface = {
-  [P in keyof mixinInterface]: (...args: Parameters<mixinInterface[P]>) => () => string
+
+type chainedMixinType<T> = {
+  [P in keyof MixinInterface]: (...args: Parameters<MixinInterface[P]>) => (() => string) &
+    (T extends true ? Partial<chainedMixinType<T>> : chainedMixinType<T>)
 }
 
-const mixins: mixinInterface & { chain: () => chainedMixinInterface } = {
+const mixins: MixinInterface & { chain: () => chainedMixinType<false> } = {
   recursiveCenterText,
   fixed,
   fullscreen,
@@ -112,7 +114,7 @@ const mixins: mixinInterface & { chain: () => chainedMixinInterface } = {
   underline,
   media,
   chain: function () {
-    const chainedObject: Partial<chainedMixinInterface> = {}
+    const chainedObject: Partial<chainedMixinType<true>> = {}
     let accumulatedReturn = ''
     loopObject(_.omit(mixins, 'chain'), (mixinName, originalMixin) => {
       chainedObject[mixinName] = function (...args: Parameters<typeof originalMixin>) {
@@ -122,7 +124,7 @@ const mixins: mixinInterface & { chain: () => chainedMixinInterface } = {
         return Object.assign(returnFunction, this)
       }
     })
-    return chainedObject as chainedMixinInterface
+    return chainedObject as chainedMixinType<false>
   }
 }
 

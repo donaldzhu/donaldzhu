@@ -1,9 +1,9 @@
-import { SVGProps } from 'react'
+import { ReactNode, SVGProps } from 'react'
 
 type SvgPropsType = {
   w: number,
   h: number,
-  children: JSX.Element | JSX.Element[],
+  children: ReactNode,
   props: SVGProps<SVGSVGElement>
 }
 
