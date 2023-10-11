@@ -4,7 +4,7 @@ type SvgPropsType = {
   w: number,
   h: number,
   children: ReactNode,
-  props: SVGProps<SVGSVGElement>
+  props?: SVGProps<SVGSVGElement>
 }
 
 const Svg = ({ w, h, children, ...props }: SvgPropsType) => {

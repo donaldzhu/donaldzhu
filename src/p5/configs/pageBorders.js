@@ -1,4 +1,3 @@
-import { sizes } from '../../styles/sizes'
 import { responsiveValue } from '../../utils/styleUtils'
 
 export const dashLineConfigs = {

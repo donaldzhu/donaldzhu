@@ -7,20 +7,13 @@ import { P5_EVENTS } from '../utils/p5Utils'
 const useCanvas = (createSketch, config = {}, deps = []) => {
   const [setupDone, setSetupDone] = useState(false)
   const outletContext = useOutletContext()
-  let {
-    callbackRefs,
-    canvasIndex = 0,
-    canvasStateRefs
-  } = config
-  callbackRefs ??= outletContext.allCanvasCallbackRefs[canvasIndex]
-  canvasStateRefs ??= outletContext.canvasStateRefs
-
+  const { canvasRef, canvasStateRefs } = _.defaults(config, outletContext)
   const { setup = _.noop, draw, cleanup = _.noop, ...callbacks } = useMemo(createSketch, deps)
 
   const registeredCallbacks = []
   const registerCallback = (eventName, callback) => {
-    callbackRefs.current[eventName].push(callback)
-    registeredCallbacks.push(() => _.pull(callbackRefs.current[eventName], callback))
+    canvasRef.current[eventName].push(callback)
+    registeredCallbacks.push(() => _.pull(canvasRef.current[eventName], callback))
   }
 
   const unregisterCallbacks = () => registeredCallbacks.forEach(unregister => unregister())

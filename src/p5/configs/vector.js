@@ -12,7 +12,7 @@ const mainSketchConfigs = {
 }
 
 const lowerWeight = () => responsiveValue({ l: 6, xxl: 10 })
-export const homeIconSizes = { l: 0.75, xxl: 1.15 }
+export const homeIconScales = { l: 0.75, xxl: 1.15 }
 const homeIconWeight = () => responsiveValue({ l: 4, xxl: 6 })
 
 const configs = {
@@ -33,7 +33,7 @@ const configs = {
     drawingSequence: ['drawLinks', 'drawVolume'],
   },
   HOME_ICON: {
-    scale: () => responsiveValue(homeIconSizes),
+    scale: () => responsiveValue(homeIconScales),
     position: ['LEFT', 'TOP'],
     glyphWeight: homeIconWeight,
     linkWeight: homeIconWeight,

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import mixins from '../../../styles/mixins'
 import _ from 'lodash'
 
-const Img = forwardRef(({ src, alt, hasLoaded, aspectRatio, ...props }, ref) => {
+const Img = forwardRef(function Img({ src, alt, hasLoaded, aspectRatio, ...props }, ref) {
   return (
     <StyledImg
       src={src}

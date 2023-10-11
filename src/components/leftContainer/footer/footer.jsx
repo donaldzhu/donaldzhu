@@ -1,11 +1,11 @@
 import { Fragment, forwardRef } from 'react'
 import { styled } from 'styled-components'
 import FooterLink from './footerLink'
-import mixins, { flex } from '../../../styles/mixins'
+import mixins from '../../../styles/mixins'
 import { sizes } from '../../../styles/sizes'
 import { fontSizes } from '../../../styles/fonts'
 import colors from '../../../styles/colors'
-import Svg from '../../common/svg'
+import SvgBorder from '../../common/svgBorder'
 
 const nameTextMap = {
   work: 'WORK',
@@ -13,23 +13,12 @@ const nameTextMap = {
   contact: 'CONTACT'
 }
 
-const Footer = forwardRef((_, ref) => {
-  const stroke = sizes.sidebar.border.value
+const Footer = forwardRef(function Footer(_, ref) {
   return (
     <FooterContainer ref={ref}>
-      <SvgContainer>
-        <Svg w={sizes.sidebar.width.value} h={stroke}>
-          <line
-            x1='0'
-            y1={stroke / 2}
-            x2={sizes.sidebar.width.value}
-            y2={stroke / 2}
-            stroke={colors.border}
-            strokeWidth={stroke}
-            strokeLinecap='round'
-          />
-        </Svg>
-      </SvgContainer>
+      <SvgBorder
+        size={sizes.sidebar.width}
+        isVertical={false} />
       <FooterLinkContainer>
         {Object.keys(nameTextMap).map((name, i) =>
           <Fragment key={name}>
@@ -47,17 +36,8 @@ const FooterContainer = styled.footer`
   font-size: ${fontSizes.footer.link.css};
 `
 
-const SvgContainer = styled.div`
-  height: fit-content;
-
-  svg {
-    overflow: visible;
-    display: block;
-  }
-`
-
 const FooterLinkContainer = styled.div`
-  ${flex('center', 'space-between')} 
+  ${mixins.flex('center', 'space-between')} 
   width: 100%;
   box-sizing: border-box;
  

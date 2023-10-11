@@ -4,7 +4,7 @@ import { usePrevious } from '@uidotdev/usehooks'
 import styled from 'styled-components'
 import mixins from '../../../styles/mixins'
 
-const Vid = forwardRef(({ src, alt, poster, loop = true, hasLoaded, aspectRatio, autoPlay = true, ...props }, ref) => {
+const Vid = forwardRef(function Vid({ src, alt, poster, loop = true, hasLoaded, aspectRatio, autoPlay = true, ...props }, ref) {
   const canAutoPlay = useOutletContext()?.canAutoPlay
   const prevCanAutoPlay = usePrevious(canAutoPlay)
 

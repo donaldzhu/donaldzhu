@@ -5,7 +5,7 @@ import { fontParams } from './fonts'
 import { sizes } from './sizes'
 import { fontVarConfigType, mediaPropsType, positionsType } from './types'
 
-export const recursiveCenterText = () => `
+const recursiveCenterText = () => `
   position: relative;
   top: 0.125em;
 `
@@ -21,18 +21,18 @@ const parsePositions = <U1 extends string, U2 extends string>(
       `${unitName2}: ${unit2}`};`
 }
 
-export const fixed = (positions: positionsType = {}) => `
+const fixed = (positions: positionsType = {}) => `
   position: fixed;
   ${parsePositions(positions, 'top', 'bottom')};
   ${parsePositions(positions, 'left', 'right')};
 `
 
-export const fullscreen = () => `
+const fullscreen = () => `
   width: 100vw;
   height: 100vh;
 `
 
-export const flex = (
+const flex = (
   alignItems = 'initial',
   justifyContent = 'initial',
   isInLine = false
@@ -42,21 +42,21 @@ export const flex = (
   align-items: ${alignItems};
 `
 
-export const squared = (size: string) => `
+const squared = (size: string) => `
   width: ${size};
   height: ${size};
 `
 
-export const innerMargin = (margin: string, direction = 'top') => `
+const innerMargin = (margin: string, direction = 'top') => `
   >:not(:first-child) {
     margin-${direction}: ${margin};
   }
 `
 
-export const highZIndex = (level: number) => `z-index: ${getHighZIdex(level)};`
-export const noSelect = () => 'user-select: none;'
+const highZIndex = (level: number) => `z-index: ${getHighZIdex(level)};`
+const noSelect = () => 'user-select: none;'
 
-export const fontVar = (config: fontVarConfigType) => {
+const fontVar = (config: fontVarConfigType) => {
   config = {
     MONO: 0,
     CASL: 0,
@@ -67,13 +67,13 @@ export const fontVar = (config: fontVarConfigType) => {
   return `font-variation-settings: ${Object.entries(config).map(([key, value]) => `"${key}" ${value}`).join(',')};`
 }
 
-export const slant = () => fontVar({ slnt: -5, CRSV: 1, MONO: fontParams.monoVariable })
-export const underline = () => `
+const slant = () => fontVar({ slnt: -5, CRSV: 1, MONO: fontParams.monoVariable })
+const underline = () => `
   text-decoration: underline; 
   text-underline-offset: 0.125em;
 `
 
-export const media = ({ $aspectRatio, $hasLoaded }: mediaPropsType) => `
+const media = ({ $aspectRatio, $hasLoaded }: mediaPropsType) => `
   aspect-ratio: ${$aspectRatio};
   background-color: ${$hasLoaded ? '' : 'rgb(240,240,240)'};
   border-radius: ${sizes.media.borderRadius.css};
@@ -118,8 +118,7 @@ const mixins: MixinInterface & { chain: () => chainedMixinType<false> } = {
     let accumulatedReturn = ''
     loopObject(_.omit(mixins, 'chain'), (mixinName, originalMixin) => {
       chainedObject[mixinName] = function (...args: Parameters<typeof originalMixin>) {
-        // @ts-ignore
-        accumulatedReturn += originalMixin(...args)
+        accumulatedReturn += (originalMixin as unknown as (...args: any) => () => string)(...args)
         const returnFunction = () => accumulatedReturn
         return Object.assign(returnFunction, this)
       }

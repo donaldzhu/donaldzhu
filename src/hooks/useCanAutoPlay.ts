@@ -3,8 +3,8 @@ import _ from 'lodash'
 import { addEventListener } from '../utils/reactUtils'
 
 const useCanAutoPlay = () => {
-  const activationEvents = ['keydown', 'mousedown', 'pointerdown', 'pointerup', 'touchend']
-  const [canAutoPlay, setCanAutoPlay] = useState()
+  const activationEvents: (keyof DocumentEventMap)[] = ['keydown', 'mousedown', 'pointerdown', 'pointerup', 'touchend']
+  const [canAutoPlay, setCanAutoPlay] = useState<boolean | undefined>()
 
   useEffect(() => {
     const video = document.createElement('video')

@@ -4,7 +4,7 @@ import Media from './media'
 import { MEDIA_SIZES, isVid } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
 
-const PreloadMedia = forwardRef((props, ref) => {
+const PreloadMedia = forwardRef(function PreloadMedia(props, ref) {
   const { mediaStack, isZoomed, type, fallbackPath, ...rest } = props
 
   const mediaIsVid = isVid(type)

@@ -7,12 +7,12 @@ import { percent } from '../../../utils/styleUtils'
 import mixins from '../../../styles/mixins'
 import { sizes } from '../../../styles/sizes'
 
-const HomeIcon = ({ callbackRefs, canvasStateRefs }) => {
+const HomeIcon = ({ canvasRef, canvasStateRefs }) => {
   const placeholderRef = useRef()
   const isHoveringRef = useRef(false)
 
   useCanvas(() => drawHomeIcon({ placeholderRef, isHoveringRef }), {
-    callbackRefs, canvasStateRefs
+    canvasRef, canvasStateRefs
   })
 
   const handleHover = isOver => isHoveringRef.current = isOver

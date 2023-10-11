@@ -7,7 +7,7 @@ import { sizes } from '../../styles/sizes'
 import mixins from '../../styles/mixins'
 
 
-const RowContainer = forwardRef(({ className, cols, width, children, toolTip }, ref) => {
+const RowContainer = forwardRef(function RowContainer({ className, cols, width, children, toolTip }, ref) {
   children = arrayify(children)
   return (
     <Container className={className} ref={ref}>

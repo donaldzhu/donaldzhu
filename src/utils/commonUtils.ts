@@ -77,7 +77,7 @@ export const getNativeResolution = () => [
 ]
 
 export const joinPaths = (...paths: string[]) => paths.filter(p => p).join('/')
-export const appendQuery = (...queries: string[]) => queries.reduce((string, [queryKey, queryValue], i) =>
+export const appendQuery = (...queries: [string, string | null | undefined][]) => queries.reduce((string, [queryKey, queryValue], i) =>
   string += i ? '&' : '' + `${queryKey}=${queryValue}`, '?')
 
 export const getToolTipPoints = (toolTip, popUp) => {

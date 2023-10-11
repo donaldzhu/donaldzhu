@@ -19,11 +19,6 @@ const Page = () => {
   const [zoomMedia, setZoomMedia] = useState()
   const location = useLocation()
 
-  const allCanvasCallbackRefs = [
-    useGlobalCanvas(),
-    useGlobalCanvas()
-  ]
-
   const canvasStateRefs = {
     mousePositionRef: useRef(null),
     hideCursorRef: useRef(false)
@@ -33,23 +28,19 @@ const Page = () => {
   const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
 
   const handleZoomMedia = media => setZoomMedia(media)
-  const [front, back] = allCanvasCallbackRefs
+  const canvasRef = useGlobalCanvas()
 
-  useCanvas(drawCursor, {
-    callbackRefs: front,
-    canvasStateRefs,
-  })
+  useCanvas(drawCursor, { canvasRef, canvasStateRefs })
 
   useEffect(() => {
     window.scrollTo(0, 0)
     if (zoomMedia) setZoomMedia()
   }, [location])
 
-
   return (
     <>
       <GlobalCanvas
-        callbackRefs={front}
+        canvasRef={canvasRef}
         canvasStateRefs={canvasStateRefs}
         zIndex={99} />
       {zoomMedia && <ZoomedMedia
@@ -59,10 +50,10 @@ const Page = () => {
         <AutoPlayPopUp />}
       <LeftContainer
         sidebar={sidebar}
-        allCanvasCallbackRefs={allCanvasCallbackRefs}
+        canvasRef={canvasRef}
         canvasStateRefs={canvasStateRefs} />
       <Outlet context={{
-        allCanvasCallbackRefs,
+        canvasRef,
         canvasStateRefs,
         sidebar,
         setSidebar,
@@ -71,9 +62,6 @@ const Page = () => {
         canAutoPlay,
         preloadManager
       }} />
-      <GlobalCanvas
-        callbackRefs={back}
-        canvasStateRefs={canvasStateRefs} />
       {!!Object.keys(vidLoadData).length &&
         <VidLoadContainer>
           {Object.keys(vidLoadData).map(src => {

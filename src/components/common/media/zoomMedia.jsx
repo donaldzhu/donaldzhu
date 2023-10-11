@@ -8,7 +8,7 @@ import { joinPaths } from '../../../utils/commonUtils.ts'
 import { MEDIA_SIZES, MEDIA_TYPES } from '../../../utils/helpers/preloader/preloadUtils'
 import mixins from '../../../styles/mixins'
 
-const ZoomMedia = forwardRef((props, ref) => {
+const ZoomMedia = forwardRef(function ZoomMedia(props, ref) {
   const { preloadManager, handleZoomMedia } = useOutletContext()
   const { pageId } = useContext(WorkPageContext)
   let mediaRef = useRef()

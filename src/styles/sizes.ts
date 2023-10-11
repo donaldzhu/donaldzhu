@@ -1,17 +1,25 @@
 import Size from '../utils/helpers/size'
 import { getSize } from '../utils/helpers/sizer'
 import { fontSizes } from './fonts'
-import { homeIconSizes } from '../p5/configs/vector'
+import { homeIconScales } from '../p5/configs/vector'
 
 const homeIconBaseSize = [43, 44]
-const homeIconSize = getSize(homeIconSizes)
-const homeIconPadding = getSize({ l: 30, xxl: 40 })
+const homeIconInnerPadding = getSize({ l: 30, xxl: 40 })
+const homeIconSizes = homeIconBaseSize.map(baseSize =>
+  getSize(homeIconScales).mult(baseSize).add(homeIconInnerPadding))
+const homeIconPaddingVert = getSize({ l: 8.125, xxl: 24, xxlSm: 19.5 })
+
 const sidebarWidth = getSize({ l: 375, xxl: 700 })
 const sidebarPaddingLeft = getSize({ l: 20, xxl: 40 })
 const sidebarPaddingRight = getSize({ l: 30, xxl: 60 })
 const sidebarPaddingVert = getSize({ l: 17.5, xxl: 32 })
+const sidebarBorderGap = getSize({ l: 20, xxl: 35 })
+
 const workSidebarPaddingRight = getSize({ l: 10, xxl: 20 })
 const footerPaddingTop = getSize({ l: 20, xxl: 42.4, xxlSm: 33.5 })
+
+const headerHeight = homeIconPaddingVert.mult(2).add(homeIconSizes[1]).sub(sidebarBorderGap)
+const footerHeight = footerPaddingTop.mult(2).add(fontSizes.footer.link).sub(sidebarBorderGap)
 
 export const sizes = {
   app: {
@@ -28,7 +36,13 @@ export const sizes = {
       vert: sidebarPaddingVert
     },
     border: getSize({ l: 4, xxl: 6 }),
-    borderGap: getSize({ l: 20, xxl: 35 })
+    borderHeights: {
+      header: headerHeight,
+      main: Size.subFromFullHeight(headerHeight)
+        .sub(footerHeight)
+        .sub(sidebarBorderGap.mult(4)),
+      footer: footerHeight,
+    }
   },
   footer: {
     link: {
@@ -39,10 +53,10 @@ export const sizes = {
     }
   },
   homeIcon: {
-    width: homeIconSize.mult(homeIconBaseSize[0]).add(homeIconPadding),
-    height: homeIconSize.mult(homeIconBaseSize[1]).add(homeIconPadding),
+    width: homeIconSizes[0],
+    height: homeIconSizes[1],
     padding: {
-      vert: getSize({ l: 8.125, xxl: 24, xxlSm: 19.5 }),
+      vert: homeIconPaddingVert,
       left: getSize({ l: 30, xxl: 40 })
     }
   },
@@ -104,7 +118,7 @@ export const sizes = {
       }
     },
     homeIcon: {
-      height: getSize(homeIconSizes).mult(homeIconBaseSize[1]).add(homeIconPadding)
+      height: getSize(homeIconScales).mult(homeIconBaseSize[1]).add(homeIconInnerPadding)
     },
     workIndex: {
       listPadding: getSize({ l: 6, xxl: 8 }),

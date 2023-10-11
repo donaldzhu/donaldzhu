@@ -3,7 +3,7 @@ import ContactCopy from './contactCopy'
 import Text from '../common/styled/text'
 import Anchor from '../common/anchor'
 import { em } from '../../utils/styleUtils'
-import mixins, { squared } from '../../styles/mixins'
+import mixins from '../../styles/mixins'
 import colorConfig from '../../styles/colors'
 import { ReactComponent as Qr } from '../../assets/qr.svg'
 import contactData from '../../data/contactData'
@@ -37,7 +37,7 @@ const LinkContainer = styled(Anchor)`
 `
 
 const QRSvg = styled(Qr)`
-  ${squared(em(1))}
+  ${mixins.squared(em(1))}
   display: inline-block;
   margin-left: 0.25em;
   color: ${({ $isHighlighted }) => $isHighlighted ? colorConfig.activeElem : colorConfig.defaultText}; 

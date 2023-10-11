@@ -5,7 +5,7 @@ import { mousePosition, P5_EVENTS, wrapDrawingContext } from '../../utils/p5Util
 import { getVh, getVw } from '../../utils/commonUtils.ts'
 import mixins from '../../styles/mixins'
 
-const GlobalCanvas = ({ callbackRefs, canvasStateRefs, zIndex = 1 }) => {
+const GlobalCanvas = ({ canvasRef, canvasStateRefs, zIndex = 1 }) => {
   const setup = (p5, canvasParentRef) =>
     p5.createCanvas(getVw(), getVh()).parent(canvasParentRef)
 
@@ -26,7 +26,7 @@ const GlobalCanvas = ({ callbackRefs, canvasStateRefs, zIndex = 1 }) => {
   }
 
   const handleEvent = (p5, eventName) => {
-    const handlers = callbackRefs.current[eventName]
+    const handlers = canvasRef.current[eventName]
     if (handlers.length) handlers.forEach(handler =>
       wrapDrawingContext(p5, () => handler(p5))
     )
