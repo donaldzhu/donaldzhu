@@ -1,12 +1,12 @@
 import { getToolTipPoints } from '../../utils/commonUtils.ts'
 import ElemRect from '../../utils/helpers/rect/elemRect.js'
 import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
-import sizes from '../../styles/sizes'
+import { sizes } from '../../styles/sizes'
 
 const drawToolTip = ({ toolTipRef, popUpRef }) => {
   const draw = p5 => {
     if (!toolTipRef.current || !popUpRef.current) return
-    const toolTip = new ElemRect(toolTipRef, sizes.toolTipPadding())
+    const toolTip = new ElemRect(toolTipRef, sizes.sketches.toolTip.padding.value)
     const popUp = new ElemRect(popUpRef)
 
     wrapDrawingContext(p5, () => {

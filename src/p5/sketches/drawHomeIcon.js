@@ -1,13 +1,13 @@
 import Text from '../helpers/vector/text'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import colors from '../../styles/colors'
-import sizes from '../../styles/sizes'
+import { sizes } from '../../styles/sizes'
 import configs from '../configs/vector'
 
 const drawHomeIcon = ({ placeholderRef, isHoveringRef }) => {
   let text
   const TEXT_CONTENT = 'A'
-  const sidebarPaddingLeft = sizes.homeIconPaddingValue() / 2
+  const sidebarPaddingLeft = sizes.homeIcon.padding.left.value / 2
   const placeholder = new ElemRect(placeholderRef, -sidebarPaddingLeft)
 
   const createVector = p5 => {

@@ -1,3 +1,4 @@
+import { getRemSize, getSize } from '../utils/helpers/sizer'
 import { em, responsiveRem } from '../utils/styleUtils'
 
 export const fontFamilies = {
@@ -42,3 +43,8 @@ export const fontSizes = {
   popUpLineHeight: em(1.25)
 }
 
+export const fontSizers = {
+  footer: {
+    link: getRemSize({ l: 1.15, xxl: 2 })
+  }
+}

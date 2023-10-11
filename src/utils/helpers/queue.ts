@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { arrayify } from '../commonUtils.ts'
+import { arrayify, filterFalsy } from '../commonUtils.ts'
 
 type queueFunctionType<T> = (() => T) | {
   run: () => T,
@@ -15,7 +15,7 @@ class Queue {
   }
 
   create<T>(queueArgs: queueFunctionType<T> | queueFunctionType<T>[]) {
-    const queueFunctions = arrayify(queueArgs).filter(fn => fn)
+    const queueFunctions = arrayify(queueArgs).filter(filterFalsy)
     return new Promise<void>((resolve, reject) => {
       const id = this.currentId = Date.now()
       const serve = (i: number) => {

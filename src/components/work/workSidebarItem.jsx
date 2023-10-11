@@ -32,7 +32,6 @@ const LinkContainer = styled(Anchor)`
 
 const negativeIndent = em(1.5)
 const ItemContainer = styled.li`
-
   font-size: ${fontSizes.workIndex};
   color: ${({ $isHighlighted }) => $isHighlighted ? colors.activeElem : colors.workIndex};
   position: relative;

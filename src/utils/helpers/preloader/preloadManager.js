@@ -2,7 +2,7 @@ import _ from 'lodash'
 import toSpaceCase from 'to-space-case'
 import Queue from '../queue'
 import { ImgStack, VidStack } from './mediaStack'
-import { capitalize, loopObject } from '../../commonUtils.ts'
+import { capitalize, filterFalsy, loopObject, validateString } from '../../commonUtils.ts'
 import { getBreakptKey } from '../../queryUtil'
 import { MEDIA_SIZES, MEDIA_TYPES, fileIsVid, isImg, isImgSize, isPoster } from './preloadUtils'
 import nativeDimensions from '../../../data/media/nativeDimensions.json'
@@ -56,7 +56,7 @@ class PreloadManager {
         autoPlayConfig: this.autoPlayConfig,
         loadVid: this.loadVid
       })
-    }).filter(thumbnail => thumbnail)
+    }).filter(filterFalsy)
   }
 
   _createWorkPageStacks() {
@@ -332,7 +332,7 @@ class PreloadManager {
     const extraMessages = [
       ` ${size}${size === MEDIA_SIZES.full ?
         ` (${getBreakptKey().toLocaleUpperCase()})` : ''}`,
-      ` - ${isFullVid ? 'full vid ' : ''}preloaded!`
+      ` - ${validateString(isFullVid, 'full vid ')}preloaded!`
     ]
     const extraStyles = [
       `color: ${LOG_COLORS[size]};`,

@@ -27,6 +27,8 @@ export const sortLike = <T>(array: T[], modelArray: T[]) =>
   array.sort((a, b) =>
     modelArray.indexOf(a) - modelArray.indexOf(b))
 
+export const filterFalsy = <T>(elem: T) => !!elem
+
 
 // object
 export const loopObject = <K extends string | number | symbol, V>(
@@ -89,3 +91,13 @@ export const getToolTipPoints = (toolTip, popUp) => {
 // funuction 
 export const callFunctionLike = <T>(functionLike: (() => T | T)) => typeof functionLike === 'function' ? functionLike() : functionLike
 
+
+interface ValidateString {
+  (string: string): string
+  <T>(validator: T, string?: string): string
+}
+
+export const validateString: ValidateString = <T>(validatorOrString: T | string, string?: string) => {
+  if (!string) return validatorOrString || ''
+  return validatorOrString ? string : ''
+}

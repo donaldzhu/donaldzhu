@@ -4,7 +4,7 @@ import Anchor from '../../common/anchor'
 import { fontFamilies } from '../../../styles/fonts'
 import colors from '../../../styles/colors'
 import mixins from '../../../styles/mixins'
-import sizes from '../../../styles/sizes'
+import { sizes } from '../../../styles/sizes'
 
 const FooterLink = ({ path, children }) => {
   const location = useLocation()
@@ -20,7 +20,7 @@ const FooterLink = ({ path, children }) => {
 const linkColorMixin = ({ $isHighlighted }) => $isHighlighted ? colors.activeElem : colors.footer
 const FooterAnchor = styled(Anchor)`
   height: fit-content;
-  padding: ${sizes.footerLinkPadding};
+  padding: ${sizes.footer.link.padding.css};
   font-family: ${fontFamilies.sansFont}; 
   font-weight: bold;
   letter-spacing: -0.015em;

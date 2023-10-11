@@ -1,13 +1,13 @@
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
-import sizes from '../../styles/sizes'
+import { sizes } from '../../styles/sizes'
 
 
 const drawWorkSketch = ({ sidebarRef, rosterRef }) => {
   const draw = p5 => {
     if (!sidebarRef.current || !rosterRef.current) return
-    const sidebar = new ElemRect(sidebarRef, sizes.workIndexRectPadding())
-    const roster = new ElemRect(rosterRef, sizes.workThumbnailRectPadding())
+    const sidebar = new ElemRect(sidebarRef, sizes.sketches.workIndex.listPadding.value)
+    const roster = new ElemRect(rosterRef, sizes.sketches.workIndex.thumbnailPadding.value)
 
     wrapDrawingContext(p5, () => {
       sidebar.rectAround(p5)

@@ -3,7 +3,7 @@ import { repeatMap } from '../../utils/commonUtils.ts'
 import { wrapDrawingContext } from '../../utils/p5Utils'
 import ElemRect from '../../utils/helpers/rect/elemRect.js'
 import colors from '../../styles/colors'
-import sizes from '../../styles/sizes'
+import { sizes } from '../../styles/sizes'
 import { dashLineConfigs } from '../configs/pageBorders'
 import configs from '../configs/vector'
 
@@ -11,13 +11,13 @@ const drawMainSketch = ({ placeholderRef }) => {
   const UPPER_TEXT_CONTENT = 'WORK IN\nPROGRESS'
   const LOWER_TEXT_CONTENT = 'DONALD\nZHU'
 
-  const placeholder = new ElemRect(placeholderRef, -sizes.mainSketchAnchorOffset())
+  const placeholder = new ElemRect(placeholderRef, -sizes.sketches.main.anchor.offset.value)
   let upperText, lowerText
   let mouseOrigin = []
 
   const createVectors = p5 => {
     const [x, y] = placeholder.center
-    const centerPadding = sizes.mainSketchCenterPadding()
+    const centerPadding = sizes.sketches.main.centerPadding.value
 
     upperText = new Text(p5, {
       ...configs.MAIN_UPPER, x, y
@@ -48,7 +48,7 @@ const drawMainSketch = ({ placeholderRef }) => {
     lowerText.write(LOWER_TEXT_CONTENT)
 
     if (!mousePositionRef.current) return
-    const anchorSize = sizes.mainSketchAnchorSize()
+    const anchorSize = sizes.sketches.main.anchor.size.value
     const { x1, y1, x2, y2 } = placeholder
 
     const getCoors = (xCoors, yCoors) => repeatMap(4, i => [xCoors[Math.floor(i / 2)], yCoors[i % 2]])

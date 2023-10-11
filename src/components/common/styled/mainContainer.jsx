@@ -1,19 +1,19 @@
 import { styled } from 'styled-components'
-import sizes from '../../../styles/sizes'
+import { sizes } from '../../../styles/sizes'
 
 const MainContainer = styled.div`
-  width: calc(${sizes.appWidth} - ${sizes.sidebarWidth});
+  width: ${sizes.app.width.sub(sizes.sidebar.width).css};
   height: fit-content;
 
   position: relative;
-  left: calc(${sizes.sidebarWidth} + ${sizes.sidebarPaddingLeft});
+  left: ${sizes.sidebar.width.add(sizes.sidebar.padding.left).css};
 
   overflow: visible;
   z-index: 2;
 
   > div {
-    margin: ${sizes.mainContainerMargin};
-    width: calc(100% - ${sizes.mainContainerMargin} * 2);
+    margin: ${sizes.mainContainer.margin.css};
+    width: calc(100% - ${sizes.mainContainer.margin.css} * 2);
   }
 `
 

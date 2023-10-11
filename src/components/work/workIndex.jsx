@@ -3,14 +3,14 @@ import { styled } from 'styled-components'
 import Masonry from '@mui/lab/Masonry'
 import { useMediaQuery } from '@uidotdev/usehooks'
 import WorkThumbnail from './workThumbnail'
-import WorkSideBar from './workSidebar'
+import WorkIndexSidebar from './workIndexSideBar'
 import MainContainer from '../common/styled/mainContainer'
 import useSidebar from '../../hooks/useSidebar'
 import useCanvas from '../../hooks/useCanvas'
 import usePreloadQueue from '../../hooks/usePreloadQueue'
 import drawWorkSketch from '../../p5/sketches/drawWorkSketch'
-import sizes from '../../styles/sizes'
-import queries from '../../utils/queryUtil'
+import { sizes } from '../../styles/sizes'
+import { queries } from '../../utils/queryUtil'
 import workData from '../../data/work/workData'
 import usePortfolioQuery from '../../hooks/usePortfolioQuery'
 
@@ -31,7 +31,7 @@ const WorkIndex = () => {
   const filteredWorkData = portfolioData?.projects.map(projectId =>
     workData.find(work => work.id === projectId)
   ) || workData
-  useSidebar(<WorkSideBar
+  useSidebar(<WorkIndexSidebar
     workData={filteredWorkData}
     highlighted={highlighted}
     sidebarRef={sidebarRef}
@@ -56,8 +56,8 @@ const WorkIndex = () => {
 
 const ThumbnailContainer = styled(MainContainer)`
   a {
-    width: ${({ $columns }) => `calc(100% / ${$columns} - ${sizes.workThumbnailGap} * 2)`};
-    margin: ${sizes.workThumbnailGap};
+    width: ${({ $columns }) => `calc(100% / ${$columns} - ${sizes.workIndex.thumbnail.gap.css} * 2)`};
+    margin: ${sizes.workIndex.thumbnail.gap.css};
   }
 `
 

@@ -9,7 +9,7 @@ import drawToolTip from '../../p5/sketches/drawToolTip'
 import { parseHtml } from '../../utils/reactUtils'
 import { capitalize } from '../../utils/commonUtils.ts'
 import { fontSizes } from '../../styles/fonts'
-import sizes from '../../styles/sizes'
+import { sizes } from '../../styles/sizes'
 import mixins from '../../styles/mixins'
 import workDescriptions from '../../data/work/workDescriptions'
 import TextContainer from '../common/styled/textContainer'
@@ -47,13 +47,13 @@ const WorkPageSidebar = ({ title, id, date, tags, medium }) =>
   </div>
 
 const ContentContainer = styled.div`
-  ${mixins.innerMargin(sizes.workPageGridGap)}
+  ${mixins.innerMargin(sizes.workPage.media.gap.css)}
 `
 
 const Details = styled.div`
   font-size: ${fontSizes.workDetails};
   line-height: ${fontSizes.textLineHeight};
-  margin-bottom: ${sizes.textInnerMargin};
+  margin-bottom: ${sizes.text.innerMargin.css};
   font-weight: 450;
 
   :first-child{

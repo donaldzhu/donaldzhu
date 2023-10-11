@@ -6,12 +6,12 @@ import pointInPolygon from 'point-in-polygon'
 import { WorkPageContext } from '../../contexts/context'
 import { fontSizes, fontParams } from '../../styles/fonts'
 import { addEventListener } from '../../utils/reactUtils'
-import { getToolTipPoints } from '../../utils/commonUtils.ts'
+import { getToolTipPoints, validateString } from '../../utils/commonUtils.ts'
 import ElemRect from '../../utils/helpers/rect/elemRect.js'
 import { em } from '../../utils/styleUtils'
 import mixins from '../../styles/mixins'
 import colors from '../../styles/colors'
-import sizes from '../../styles/sizes'
+import { sizes } from '../../styles/sizes'
 
 const ToolTip = ({ children }) => {
   const [isShown, setIsShown] = useState(false)
@@ -28,7 +28,7 @@ const ToolTip = ({ children }) => {
     if (!isShown) return _.noop
     const mouseHandler = () => {
       if (!toolTipRef.current || !popUpRef.current) return
-      const toolTip = new ElemRect(toolTipRef, sizes.toolTipPadding())
+      const toolTip = new ElemRect(toolTipRef, sizes.sketches.toolTip.padding.value)
       const popUp = new ElemRect(popUpRef)
 
       const mousePosition = mousePositionRef.current
@@ -75,7 +75,7 @@ const Container = styled.div`
 const toolTipSize = em(1.35)
 const ToolTipContainer = styled.div`
   position: absolute;
-  left: calc(${sizes.mainContainerMargin} * -1 - ${toolTipSize} / 2);
+  left: calc(${sizes.mainContainer.margin.css} * -1 - ${toolTipSize} / 2);
   background-color: ${colors.toolTipBg};
   font-size: ${fontSizes.toolTip};
 
@@ -87,16 +87,16 @@ const ToolTipContainer = styled.div`
     .flex('center', 'center')}
 
   border-radius: 1px;
-  outline: ${sizes.toolTipBorder} currentColor solid;
+  outline: ${sizes.toolTip.border.css} currentColor solid;
 
-  ${({ $isHighlighted }) => $isHighlighted ? `
+  ${({ $isHighlighted }) => validateString($isHighlighted, `
     color:${colors.activeElem}; 
     outline: none; 
-  ` : ''}
+  `)}
 `
 
 const PopUpContainer = styled.div`
-  width: calc(${sizes.workDescriptionMaxWidth} * 0.85);
+  width: ${sizes.workPage.sidebar.description.maxWidth.mult(0.85).css};
   padding: 0.8em;
 
   color: ${colors.toolTipColor};
@@ -108,9 +108,12 @@ const PopUpContainer = styled.div`
   word-spacing: -0.0225em;
 
   ${mixins.chain()
-    .fixed(sizes.popUpPositions)
+    .fixed({
+      left: sizes.toolTip.left.css,
+      bottom: sizes.toolTip.bottom.css,
+    })
     .slant()
-    .innerMargin(sizes.textInnerMargin)}
+    .innerMargin(sizes.text.innerMargin.css)}
 
   p > b {
     font-family: inherit;

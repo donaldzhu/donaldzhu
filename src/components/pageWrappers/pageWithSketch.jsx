@@ -4,8 +4,9 @@ import styled from 'styled-components'
 import useCanvas from '../../hooks/useCanvas'
 import usePreloadQueue from '../../hooks/usePreloadQueue'
 import drawMainSketch from '../../p5/sketches/drawMainSketch'
-import sizes from '../../styles/sizes'
+import { sizes } from '../../styles/sizes'
 import mixins from '../../styles/mixins'
+import Size from '../../utils/helpers/size'
 
 const PageWithMainSketch = () => {
   const placeholderRef = useRef()
@@ -22,10 +23,10 @@ const PageWithMainSketch = () => {
   )
 }
 
-const leftContainerWidth = `calc(${sizes.sidebarWidth} + ${sizes.sidebarPaddingLeft})`
+const leftContainerWidth = sizes.sidebar.width.add(sizes.sidebar.padding.left)
 const MainSketchPlaceHolder = styled.div`
-  ${mixins.fixed({ left: leftContainerWidth })}
-  width: calc(100vw - ${leftContainerWidth});
+  ${mixins.fixed({ left: leftContainerWidth.css })}
+  width: ${Size.subFromFullpage(leftContainerWidth).css};
 `
 
 export default PageWithMainSketch

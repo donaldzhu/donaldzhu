@@ -1,11 +1,11 @@
 import { styled } from 'styled-components'
 import Text from './text'
 import { fontSizes } from '../../../styles/fonts'
-import sizes from '../../../styles/sizes'
+import { sizes } from '../../../styles/sizes'
 
 const SmallText = styled(Text)`
   font-size: ${fontSizes.workDescription};
-  max-width: ${sizes.workDescriptionMaxWidth};
+  max-width: ${sizes.workPage.sidebar.description.maxWidth.css};
   line-height: ${fontSizes.smallTextLineHeight};
 
   b {

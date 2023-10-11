@@ -5,7 +5,7 @@ import { getVw, loopObject } from '../../utils/commonUtils.ts'
 import { intersectTwoCircles, parsePoints, wrapDrawingContext } from '../../utils/p5Utils'
 import ElemRect from '../../utils/helpers/rect/elemRect.js'
 import colors from '../../styles/colors'
-import sizes from '../../styles/sizes'
+import { sizes } from '../../styles/sizes'
 import config from '../configs/stroke'
 
 const drawPanto = ({ isClearingRef, placeholderRef }) => {
@@ -21,7 +21,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }) => {
   }
 
   const placeholder = new ElemRect(placeholderRef)
-  const paddedPlaceholder = new ElemRect(placeholderRef, sizes.pantoHoverPadding())
+  const paddedPlaceholder = new ElemRect(placeholderRef, sizes.sketches.panto.hoverPadding.value)
 
   let brushes = []
   let graphic
@@ -162,7 +162,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }) => {
   const drawPanto = p5 => {
     const { anchor, primary, topRight, leftBot, leftMid, rightMid } = vectors
     p5.stroke(colors.strokePanto)
-    p5.strokeWeight(sizes.pantoLineWeight())
+    p5.strokeWeight(sizes.sketches.panto.lineWeight.value)
     wrapDrawingContext(p5, () => {
       p5.line(...parsePoints(anchor, leftBot))
       p5.line(...parsePoints(leftMid, rightMid))
@@ -182,7 +182,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }) => {
           p5.stroke(colors.strokePanto)
           p5.fill(0)
         }
-        p5.ellipse(x, y, sizes.pantoPointSize())
+        p5.ellipse(x, y, sizes.sketches.panto.pointSize.value)
       })
   }
 

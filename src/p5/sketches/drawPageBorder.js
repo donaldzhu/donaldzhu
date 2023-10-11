@@ -1,6 +1,6 @@
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import colors from '../../styles/colors'
-import sizes from '../../styles/sizes'
+import { sizes } from '../../styles/sizes'
 import { dashLineConfigs } from '../configs/pageBorders'
 
 const drawPageBorders = ({ headerRef, footerRef, sidebarRef }) => {
@@ -12,7 +12,7 @@ const drawPageBorders = ({ headerRef, footerRef, sidebarRef }) => {
       p5.line(...botLeft, ...botRight)
     }
 
-    const vertGap = sizes.vertBorderGap()
+    const vertGap = sizes.sidebar.borderGap.value
     y1 += section === 'sidebar' || section === 'footer' ? vertGap : 0
     y2 -= section === 'sidebar' || section === 'header' ? vertGap : 0
     p5.line(x2, y1, x2, y2)

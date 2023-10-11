@@ -3,7 +3,7 @@ import mixins from '../../styles/mixins'
 import colors from '../../styles/colors'
 import PopUpContainer from './popUpContainer'
 import { fontSizes } from '../../styles/fonts'
-import sizes from '../../styles/sizes'
+import { sizes } from '../../styles/sizes'
 
 const AutoPlayPopUp = () => {
   return (
@@ -24,16 +24,16 @@ const Container = styled.div`
   ${mixins.flex('center', 'center')}
   flex-direction: column;
 
-  width: ${sizes.autoPlayWidth};
+  width: ${sizes.autoPlay.width.ccs};
   height: fit-content;
   padding: 1.35em 1em;
 
   font-size: ${fontSizes.autoPlayMessage};
 
   background-color: ${colors.autoPlayPopUpBg};
-  border: ${sizes.autoPlayBorder} solid ${colors.popUpColor};
-  border-radius: ${sizes.autoPlayBorderRadius};
-  box-shadow: 0 0 ${sizes.autoPlayBorderRadius} ${colors.popUpColor};
+  border: ${sizes.autoPlay.border.ccs} solid ${colors.popUpColor};
+  border-radius: ${sizes.autoPlay.borderRadius.ccs};
+  box-shadow: 0 0 ${sizes.autoPlay.borderRadius.ccs} ${colors.popUpColor};
 `
 
 const Message = styled.h2`

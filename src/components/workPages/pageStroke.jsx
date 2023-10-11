@@ -10,7 +10,7 @@ import drawPanto from '../../p5/sketches/drawPanto'
 import drawElemBorders from '../../p5/sketches/drawElemBorders'
 import { fontSizes, fontParams } from '../../styles/fonts'
 import mixins from '../../styles/mixins'
-import sizes from '../../styles/sizes'
+import { sizes } from '../../styles/sizes'
 import colors from '../../styles/colors'
 
 const PageStroke = () => {
@@ -98,9 +98,9 @@ const CanvasCaption = styled.p`
 const ClearButton = styled.button`
   cursor: pointer;
   color: ${colors.strokeClear};
-  border: ${sizes.pageStrokeButtonBorder} solid ${colors.strokeClear};
+  border: ${sizes.workPageStroke.button.border.css} solid ${colors.strokeClear};
   padding: 0.5em;
-  border-radius: ${sizes.pageStrokeButtonBorderRadius};
+  border-radius: ${sizes.workPageStroke.button.borderRadius.css};
 
   &:hover {
     color: ${colors.activeElem};

@@ -9,8 +9,8 @@ import PageWithMainSketch from './components/pageWrappers/pageWithSketch'
 import Process from './components/process/process'
 import WorkIndex from './components/work/workIndex'
 import WorkPage from './components/work/workPage'
-import queries from './utils/queryUtil'
-import sizes from './styles/sizes'
+import { queries } from './utils/queryUtil'
+import { sizes } from './styles/sizes'
 import colorConfig from './styles/colors'
 import { fontFamilies, fontSizes } from './styles/fonts'
 import mixins from './styles/mixins'
@@ -48,7 +48,7 @@ const App = () => {
 const StyledGlobal = styled.main`
   ${mixins.flex()}
 
-  width: ${sizes.appWidth};
+  width: ${sizes.app.width.css};
   height: fit-content;
 
   font-family: ${fontFamilies.monoFont};

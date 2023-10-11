@@ -1,22 +1,31 @@
 import _ from 'lodash'
-import { getRem, getVw, sortLike } from './commonUtils'
-import { BREAKPOINT_ENUM } from './queryUtil.ts'
+import { getRem, getVw, sortLike, validateString } from './commonUtils'
+import { breakptEnum } from './queryUtil.ts'
 import breakpts from '../data/breakpoints.ts'
 
 // units
-const createSuffixFunction = (suffix: string) =>
+export const enum unitEnums {
+  vw = 'vw',
+  vh = 'vh',
+  px = 'px',
+  '%' = '%',
+  em = 'em',
+  rem = 'rem'
+}
+
+const createSuffixFunction = (suffix: unitEnums) =>
   (quantity: number) => `${quantity}${suffix}`
 
-export const px = createSuffixFunction('px')
-export const vw = createSuffixFunction('vw')
-export const vh = createSuffixFunction('vh')
-export const percent = createSuffixFunction('%')
-export const em = createSuffixFunction('em')
-export const rem = createSuffixFunction('rem')
+export const px = createSuffixFunction(unitEnums.px)
+export const vw = createSuffixFunction(unitEnums.vw)
+export const vh = createSuffixFunction(unitEnums.vh)
+export const percent = createSuffixFunction(unitEnums['%'])
+export const em = createSuffixFunction(unitEnums.em)
+export const rem = createSuffixFunction(unitEnums.rem)
 
 // query
 export const vwWithVhCss = (vwPerecntage: number, vhPercentage: number, remSize?: number) =>
-  `calc(${vwPerecntage}vw + ${vhPercentage}vh${remSize ? ` + ${remSize}rem` : ''})`
+  `calc(${vwPerecntage}vw + ${vhPercentage}vh${validateString(remSize, ` + ${remSize}rem`)})`
 
 type slopeFuntionType = (
   lowerVal: number,
@@ -45,7 +54,7 @@ const vwSlopedCss = (vwPercentage: number, remSize: number, useRem = true) =>
 const vwSlopedValue = (vwPercentage: number, intercept: number) => getVw(vwPercentage) + intercept
 
 const sortQueryKeys = sizes => {
-  const [lowerBreakpt, upperBreakpt] = sortLike(Object.keys(sizes), Object.keys(BREAKPOINT_ENUM))
+  const [lowerBreakpt, upperBreakpt] = sortLike(Object.keys(sizes), Object.keys(breakptEnum))
   return { lowerBreakpt, upperBreakpt }
 }
 

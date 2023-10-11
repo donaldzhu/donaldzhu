@@ -5,7 +5,7 @@ import PreloadMedia from './preloadMedia'
 import { addEventListener } from '../../../utils/reactUtils'
 import { toPercent } from '../../../utils/styleUtils'
 import mixins from '../../../styles/mixins'
-import sizes from '../../../styles/sizes'
+import { sizes } from '../../../styles/sizes'
 import PopUpContainer from '../popUpContainer'
 
 const ZoomedMedia = ({ zoomMedia, handleUnzoom }) => {
@@ -48,7 +48,7 @@ const ZoomedContainer = styled(PopUpContainer)`
 
   img, video {
     object-fit: contain;
-    ${({ $maxSize }) => mixins.squared($maxSize || toPercent(sizes.imgZoomPercentage))}
+    ${({ $maxSize }) => mixins.squared($maxSize || toPercent(sizes.media.zoomPercentage))}
   }
 `
 

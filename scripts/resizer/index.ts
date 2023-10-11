@@ -1,8 +1,8 @@
 import resize from './resize'
 
 const config = {
-  resizeThumbnails: true,
-  resizeWork: true,
+  resizeThumbnails: false,
+  resizeWork: false,
   includePages: [],
   includeBreakpts: [],
 }
