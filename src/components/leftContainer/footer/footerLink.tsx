@@ -1,26 +1,36 @@
+import { ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import { styled } from 'styled-components'
 import Anchor from '../../common/anchor'
 import { fontFamilies } from '../../../styles/fonts'
 import colors from '../../../styles/colors'
 import mixins from '../../../styles/mixins'
-import { sizes } from '../../../styles/sizes'
+import { domSizes } from '../../../styles/sizes'
 
-const FooterLink = ({ path, children }) => {
+interface FooterLinkProps {
+  path: string,
+  children: ReactNode
+}
+
+interface StyledFooterLinkProps {
+  $isHighlighted: boolean
+}
+
+const FooterLink = ({ path, children }: FooterLinkProps) => {
   const location = useLocation()
   return (
     <FooterAnchor
       to={path}
-      $isHighlighted={location.pathname.match(path)}>
+      $isHighlighted={!!location.pathname.match(path)}>
       {children}
     </FooterAnchor>
   )
 }
 
 const linkColorMixin = ({ $isHighlighted }) => $isHighlighted ? colors.activeElem : colors.footer
-const FooterAnchor = styled(Anchor)`
+const FooterAnchor = styled(Anchor) <StyledFooterLinkProps>`
   height: 1em;
-  padding: ${sizes.footer.link.padding.css};
+  padding: ${domSizes.footer.link.padding.css};
   font-family: ${fontFamilies.sansFont}; 
   font-weight: bold;
   letter-spacing: -0.015em;

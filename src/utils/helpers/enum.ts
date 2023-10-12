@@ -1,4 +1,4 @@
-export class Enum<T extends string | number | symbol> {
+export class Enum<T extends PropertyKey> {
   readonly keys: T[]
   constructor(keys: T[], startingIndex = 0) {
     this.keys = keys

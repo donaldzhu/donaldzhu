@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { DependencyList, useEffect, useRef } from 'react'
 
-const useAnimate = <T>(callback: () => void, dependencies: T[]) => {
+const useAnimate = (callback: () => void, dependencies: DependencyList = []) => {
   const requestRef = useRef<number>()
   const animate = () => {
     callback()

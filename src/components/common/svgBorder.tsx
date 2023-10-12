@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { sizes } from '../../styles/sizes'
+import { domSizes } from '../../styles/sizes'
 import Size from '../../utils/helpers/size'
 import { useWindowSize } from '@uidotdev/usehooks'
 import { useMemo } from 'react'
@@ -17,7 +17,7 @@ const SvgBorder = ({ className, size, isVertical }: SvgBorderProps) => {
   const { dimension, strokeWidth } = useMemo(() => {
     return {
       dimension: size.value,
-      strokeWidth: sizes.sidebar.border.value
+      strokeWidth: domSizes.sidebar.border.value
     }
   }, [windowSize])
 

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { arrayify, filterFalsy } from '../commonUtils.ts'
+import { arrayify, filterFalsy } from '../commonUtils'
 
 type queueFunctionType<T> = (() => T) | {
   run: () => T,

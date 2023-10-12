@@ -13,6 +13,7 @@ import mixins from '../../styles/mixins'
 import { SINGLE_MEDIA_TYPES } from '../../utils/helpers/preloader/preloadUtils'
 import useCanAutoPlay from '../../hooks/useCanAutoPlay'
 import AutoPlayPopUp from '../common/autoPlayPopUp'
+import { typedKeys } from '../../utils/commonUtils'
 
 const Page = () => {
   const [sidebar, setSidebar] = useState()
@@ -64,7 +65,7 @@ const Page = () => {
       }} />
       {!!Object.keys(vidLoadData).length &&
         <VidLoadContainer>
-          {Object.keys(vidLoadData).map(src => {
+          {typedKeys(vidLoadData).map(src => {
             const { onProgress } = vidLoadData[src]
             return <Media
               key={src}

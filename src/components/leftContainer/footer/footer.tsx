@@ -1,34 +1,35 @@
-import { Fragment, forwardRef } from 'react'
+import { Fragment } from 'react'
 import { styled } from 'styled-components'
 import FooterLink from './footerLink'
 import mixins from '../../../styles/mixins'
-import { sizes } from '../../../styles/sizes'
+import { domSizes } from '../../../styles/sizes'
 import { fontSizes } from '../../../styles/fonts'
 import colors from '../../../styles/colors'
 import SvgBorder from '../../common/svgBorder'
+import { typedKeys } from '../../../utils/commonUtils'
 
-const nameTextMap = {
-  work: 'WORK',
-  process: 'HOW I WORK',
-  contact: 'CONTACT'
+enum NameTextMap {
+  work = 'WORK',
+  process = 'HOW I WORK',
+  contact = 'CONTACT'
 }
 
-const Footer = forwardRef(function Footer(_, ref) {
+const Footer = () => {
   return (
-    <FooterContainer ref={ref}>
+    <FooterContainer >
       <SvgBorder
-        size={sizes.sidebar.width}
+        size={domSizes.sidebar.width}
         isVertical={false} />
       <FooterLinkContainer>
-        {Object.keys(nameTextMap).map((name, i) =>
+        {typedKeys<NameTextMap>(NameTextMap).map((name, i) =>
           <Fragment key={name}>
             {!!i && <FooterDelimiter>●</FooterDelimiter>}
-            <FooterLink path={`/${name}`}>{nameTextMap[name]}</FooterLink>
+            <FooterLink path={`/${name}`}>{NameTextMap[name]}</FooterLink>
           </Fragment>)}
       </FooterLinkContainer>
     </FooterContainer >
   )
-})
+}
 
 const FooterContainer = styled.footer`
   ${mixins.highZIndex(4)}
@@ -41,8 +42,8 @@ const FooterLinkContainer = styled.div`
   width: 100%;
   box-sizing: border-box;
  
-  padding: ${sizes.footer.padding.top.sub(sizes.footer.link.padding).css} 0;
-  padding-right: ${sizes.sidebar.padding.right.css};
+  padding: ${domSizes.footer.padding.top.sub(domSizes.footer.link.padding).css} 0;
+  padding-right: ${domSizes.sidebar.padding.right.css};
  
   font-size: ${fontSizes.footer.link.css};
 `

@@ -3,7 +3,7 @@ import { styled } from 'styled-components'
 import _ from 'lodash'
 import ToolTip from './toolTip'
 import { arrayify, validateString } from '../../utils/commonUtils.ts'
-import { sizes } from '../../styles/sizes'
+import { domSizes } from '../../styles/sizes'
 import mixins from '../../styles/mixins'
 
 
@@ -32,11 +32,11 @@ const Row = styled.div`
   ${({ $cols }) =>
     validateString($cols, $cols.map((col, i) => `
       >:nth-child(${i + 1}){
-        width: calc((100% - ${sizes.workPage.media.gap.css} * ${$cols.length - 1}) * ${col / _.sum($cols)});
+        width: calc((100% - ${domSizes.workPage.media.gap.css} * ${$cols.length - 1}) * ${col / _.sum($cols)});
       }`).join(''))
   }
 
-  ${mixins.innerMargin(sizes.workPage.media.gap.css, 'left')}
+  ${mixins.innerMargin(domSizes.workPage.media.gap.css, 'left')}
 
   > svg {
     width: 100%;

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { ImgPreloader, VidPreloader } from './preloader'
-import { joinPaths, keysToObject } from '../../commonUtils.ts'
+import { joinPaths, keysToObject, typedKeys } from '../../commonUtils.ts'
 import { getBreakptKey } from '../../queryUtil'
 import { FILE_EXT, MEDIA_SIZES, MEDIA_TYPES, getPreviewBreakptKey, isImg, isThumbnail, isVid } from './preloadUtils'
 import breakpts from '../../../data/breakpoints.ts'
@@ -14,7 +14,7 @@ class MediaStack {
     this.isPoster = isPoster
     this.nativeDimension = nativeDimension
 
-    this.breakpts = Object.keys(breakpts)
+    this.breakpts = typedKeys(breakpts)
     this.stackKeys = this.breakpts
 
     if (!isVid(fileType)) this.stackKeys.unshift(MEDIA_SIZES.desktopFallback)
@@ -71,7 +71,7 @@ class MediaStack {
     const loadedMedia = _.pickBy(this.stack,
       media => isImg(this.fileType) ?
         media.isLoaded : media.loadCount >= 1)
-    return Object.keys(loadedMedia)
+    return typedKeys(loadedMedia)
   }
 }
 

@@ -1,4 +1,3 @@
-import { MediaTypes } from './lib/resizerTypes'
 import { MAX_FOLDER } from './constants'
 export const enum Breakpts {
   desktopFallback = 'desktopFallback',

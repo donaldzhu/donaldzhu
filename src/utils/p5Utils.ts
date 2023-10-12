@@ -1,28 +1,28 @@
 import p5 from 'p5'
-import { createStringEnum } from './helpers/enum'
 import colors from '../styles/colors'
-import { dashLineConfigs } from '../p5/configs/pageBorders'
+import { sketchSizes } from '../styles/sizes'
+import { repeat } from './commonUtils'
 
-export const P5_EVENTS = createStringEnum([
-  'draw',
-  'windowResized',
-  'mouseClicked',
-  'doubleClicked',
-  'mouseMoved',
-  'mousePressed',
-  'mouseWheel',
-  'mouseDragged',
-  'mouseReleased',
-  'keyPressed',
-  'keyReleased',
-  'keyTyped',
-  'touchStarted',
-  'touchMoved',
-  'touchEnded',
-  'deviceMoved',
-  'deviceTurned',
-  'deviceShaken',
-])
+export enum P5Events {
+  draw = 'draw',
+  windowResized = 'windowResized',
+  mouseClicked = 'mouseClicked',
+  doubleClicked = 'doubleClicked',
+  mouseMoved = 'mouseMoved',
+  mousePressed = 'mousePressed',
+  mouseWheel = 'mouseWheel',
+  mouseDragged = 'mouseDragged',
+  mouseReleased = 'mouseReleased',
+  keyPressed = 'keyPressed',
+  keyReleased = 'keyReleased',
+  keyTyped = 'keyTyped',
+  touchStarted = 'touchStarted',
+  touchMoved = 'touchMoved',
+  touchEnded = 'touchEnded',
+  deviceMoved = 'deviceMoved',
+  deviceTurned = 'deviceTurned',
+  deviceShaken = 'deviceShaken',
+}
 
 export const parsePoints = (...vectors: p5.Vector[]) => vectors.reduce<number[]>((result, vector) => {
   result.push(vector.x, vector.y)
@@ -31,11 +31,10 @@ export const parsePoints = (...vectors: p5.Vector[]) => vectors.reduce<number[]>
 
 
 export const styleDashedRect = (p5: p5) => {
-  p5.drawingContext.setLineDash(dashLineConfigs.lineDash())
+  p5.drawingContext.setLineDash(repeat(2, sketchSizes.line.dash.value))
   p5.noFill()
   p5.stroke(colors.dashLine)
-  // @ts-ignore
-  p5.strokeWeight(dashLineConfigs.lineWeight())
+  p5.strokeWeight(sketchSizes.line.weight.value)
 }
 
 
@@ -67,7 +66,7 @@ export const intersectTwoCircles = (center1: p5.Vector, r1: number, center2: p5.
   return [[ix1, iy1], [ix2, iy2]]
 }
 
-export const mousePosition = (p5: p5) => [p5.mouseX, p5.mouseY]
+export const mousePosition = (p5: p5) => [p5.mouseX, p5.mouseY] as [number, number]
 
 export const wrapDrawingContext = (p5: p5, callback: () => any) => {
   p5.push()

@@ -1,7 +1,7 @@
 import _ from 'lodash'
-import { getRem, getVw, sortLike, validateString } from './commonUtils'
-import { breakptEnum } from './queryUtil.ts'
-import breakpts from '../data/breakpoints.ts'
+import { getRem, getVw, sortLike, typedKeys, validateString } from './commonUtils'
+import { BreakptEnum } from './queryUtil'
+import breakpts from '../data/breakpoints'
 
 // units
 export const enum unitEnums {
@@ -54,7 +54,7 @@ const vwSlopedCss = (vwPercentage: number, remSize: number, useRem = true) =>
 const vwSlopedValue = (vwPercentage: number, intercept: number) => getVw(vwPercentage) + intercept
 
 const sortQueryKeys = sizes => {
-  const [lowerBreakpt, upperBreakpt] = sortLike(Object.keys(sizes), Object.keys(breakptEnum))
+  const [lowerBreakpt, upperBreakpt] = sortLike(typedKeys(sizes), typedKeys<BreakptEnum>(BreakptEnum))
   return { lowerBreakpt, upperBreakpt }
 }
 

@@ -21,7 +21,7 @@ const footerPaddingTop = getSize({ l: 20, xxl: 42.4, xxlSm: 33.5 })
 const headerHeight = homeIconPaddingVert.mult(2).add(homeIconSizes[1]).sub(sidebarBorderGap)
 const footerHeight = footerPaddingTop.mult(2).add(fontSizes.footer.link).sub(sidebarBorderGap)
 
-export const sizes = {
+export const domSizes = {
   app: {
     width: Size.subFromFullWidth(sidebarPaddingLeft)
   },
@@ -108,33 +108,39 @@ export const sizes = {
       top: getSize({ l: 20, xxl: 55, xxlSm: 46.5 }),
       size: getSize({ l: 120, xxl: 200 })
     }
-  },
-  sketches: {
-    main: {
-      centerPadding: getSize({ l: 50, xxl: 150 }),
-      anchor: {
-        size: getSize({ l: 37.5, xxl: 50 }),
-        offset: getSize({ l: 55, xxl: 70 })
-      }
-    },
-    homeIcon: {
-      height: getSize(homeIconScales).mult(homeIconBaseSize[1]).add(homeIconInnerPadding)
-    },
-    workIndex: {
-      listPadding: getSize({ l: 6, xxl: 8 }),
-      thumbnailPadding: getSize({ l: 10, xxl: 15 })
-    },
-    panto: {
-      hoverPadding: getSize({ l: 15, xxl: 20 }),
-      pointSize: getSize({ l: 12, xxl: 36 }),
-      lineWeight: getSize({ l: 6, xxl: 14 })
-    },
-    toolTip: {
-      padding: getSize({ l: 2, xxl: 3 })
-    },
-    contactQr: {
-      toolTipPadding: getSize({ l: 2, xxl: 3 }),
-      popUpPadding: getSize({ l: 8, xxl: 12.5 }),
+  }
+}
+
+export const sketchSizes = {
+  main: {
+    centerPadding: getSize({ l: 50, xxl: 150 }),
+    anchor: {
+      size: getSize({ l: 37.5, xxl: 50 }),
+      offset: getSize({ l: 55, xxl: 70 })
     }
+  },
+  cursor: getSize({ l: 40, xxl: 65 }),
+  line: {
+    weight: getSize({ l: 3, xxl: 5 }),
+    dash: getSize({ l: 5, xxl: 8 })
+  },
+  homeIcon: {
+    height: getSize(homeIconScales).mult(homeIconBaseSize[1]).add(homeIconInnerPadding)
+  },
+  workIndex: {
+    listPadding: getSize({ l: 6, xxl: 8 }),
+    thumbnailPadding: getSize({ l: 10, xxl: 15 })
+  },
+  panto: {
+    hoverPadding: getSize({ l: 15, xxl: 20 }),
+    pointSize: getSize({ l: 12, xxl: 36 }),
+    lineWeight: getSize({ l: 6, xxl: 14 })
+  },
+  toolTip: {
+    padding: getSize({ l: 2, xxl: 3 })
+  },
+  contactQr: {
+    toolTipPadding: getSize({ l: 2, xxl: 3 }),
+    popUpPadding: getSize({ l: 8, xxl: 12.5 }),
   }
 }

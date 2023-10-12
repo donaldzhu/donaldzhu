@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { DependencyList, useEffect, useRef } from 'react'
 
-const useMemoRef = <T, D>(factory: () => T, dependencies: D[] = []) => {
+const useMemoRef = <T>(factory: () => T, dependencies: DependencyList = []) => {
   const ref = useRef<T>()
   useEffect(() => { ref.current = factory() }, dependencies)
   return ref

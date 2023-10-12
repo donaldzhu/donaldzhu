@@ -17,6 +17,8 @@ export const repeatMap = <T>(repetition: number, callback: (i: number) => T) => 
   return accumulatedReturns
 }
 
+export const repeat = <T>(repetition: number, value: T) => Array(repetition).fill(value)
+
 export const arrayify = <T>(possibleArray: T | T[]) => Array.isArray(possibleArray) ? possibleArray : [possibleArray]
 export const shuffleTo = <T>(array: T[], index: number) => {
   array = [...array]
@@ -31,11 +33,11 @@ export const filterFalsy = <T>(elem: T) => !!elem
 
 
 // object
-export const loopObject = <K extends string | number | symbol, V>(
-  object: Record<K, V>,
-  callback: (key: K, value: V, object: Record<K, V>) => any
+export const loopObject = <T extends object>(
+  object: T,
+  callback: (key: keyof T, value: T[keyof T], object: T) => any
 ) => {
-  const keys = Object.keys(object) as K[]
+  const keys = typedKeys(object)
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
     const value = object[key]
@@ -44,18 +46,18 @@ export const loopObject = <K extends string | number | symbol, V>(
   return object
 }
 
-export const mapObject = <K extends string | number | symbol, V, R>(
-  object: Record<K, V>,
-  callback: (key: K, value: V) => R
+export const mapObject = <T extends object, R>(
+  object: T,
+  callback: (key: keyof T, value: T[keyof T]) => R
 ) => {
-  const newObject: Partial<Record<K, R>> = {}
-  const keys = Object.keys(object) as K[]
+  const newObject: Partial<Record<keyof T, R>> = {}
+  const keys = typedKeys(object)
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
     const value = object[key]
     newObject[key] = callback(key, value)
   }
-  return newObject as Record<K, R>
+  return newObject as Record<keyof T, R>
 }
 
 export const keysToObject = <V>(array: string[], callback: (
@@ -91,13 +93,16 @@ export const getToolTipPoints = (toolTip, popUp) => {
 // funuction 
 export const callFunctionLike = <T>(functionLike: (() => T | T)) => typeof functionLike === 'function' ? functionLike() : functionLike
 
-
-interface ValidateString {
-  (string: string): string
-  <T>(validator: T, string?: string): string
-}
-
-export const validateString: ValidateString = <T>(validatorOrString: T | string, string?: string) => {
+export function validateString(string: string): string
+export function validateString<T>(validator: T, string?: string): string
+export function validateString<T>(validatorOrString: T | string, string?: string) {
   if (!string) return validatorOrString || ''
   return validatorOrString ? string : ''
 }
+
+export function typedKeys<T extends object>(object: T): (keyof T)[]
+export function typedKeys<T extends string>(object: object): T[]
+export function typedKeys<T extends (object | string)>(object: T) {
+  return Object.keys(object) as (T extends object ? keyof T : T)[]
+}
+

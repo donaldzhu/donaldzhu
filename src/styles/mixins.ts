@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { loopObject } from '../utils/commonUtils'
 import { getHighZIdex } from '../utils/styleUtils'
 import { fontParams } from './fonts'
-import { sizes } from './sizes'
+import { domSizes } from './sizes'
 import { fontVarConfigType, mediaPropsType, positionsType } from './types'
 
 const recursiveCenterText = () => `
@@ -76,7 +76,7 @@ const underline = () => `
 const media = ({ $aspectRatio, $hasLoaded }: mediaPropsType) => `
   aspect-ratio: ${$aspectRatio};
   background-color: ${$hasLoaded ? '' : 'rgb(240,240,240)'};
-  border-radius: ${sizes.media.borderRadius.css};
+  border-radius: ${domSizes.media.borderRadius.css};
 `
 
 interface MixinInterface {

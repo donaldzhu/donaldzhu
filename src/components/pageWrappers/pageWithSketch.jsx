@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import useCanvas from '../../hooks/useCanvas'
 import usePreloadQueue from '../../hooks/usePreloadQueue'
 import drawMainSketch from '../../p5/sketches/drawMainSketch'
-import { sizes } from '../../styles/sizes'
+import { domSizes } from '../../styles/sizes'
 import mixins from '../../styles/mixins'
 import Size from '../../utils/helpers/size'
 
@@ -23,7 +23,7 @@ const PageWithMainSketch = () => {
   )
 }
 
-const leftContainerWidth = sizes.sidebar.width.add(sizes.sidebar.padding.left)
+const leftContainerWidth = domSizes.sidebar.width.add(domSizes.sidebar.padding.left)
 const MainSketchPlaceHolder = styled.div`
   ${mixins.fixed({ left: leftContainerWidth.css })}
   width: ${Size.subFromFullWidth(leftContainerWidth).css};

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import toSpaceCase from 'to-space-case'
 import Queue from '../queue'
 import { ImgStack, VidStack } from './mediaStack'
-import { capitalize, filterFalsy, loopObject, validateString } from '../../commonUtils.ts'
+import { capitalize, filterFalsy, loopObject, typedKeys, validateString } from '../../commonUtils.ts'
 import { getBreakptKey } from '../../queryUtil'
 import { MEDIA_SIZES, MEDIA_TYPES, fileIsVid, isImg, isImgSize, isPoster } from './preloadUtils'
 import nativeDimensions from '../../../data/media/nativeDimensions.json'
@@ -202,7 +202,7 @@ class PreloadManager {
 
   _preloadPageMedia(pageId, size) {
     const mediaStacks = this.workPages[pageId]
-    const mediaTypes = _.without(Object.keys(mediaStacks),
+    const mediaTypes = _.without(typedKeys(mediaStacks),
       isImgSize(size) && MEDIA_TYPES.videos)
 
     const queueFunctions = mediaTypes.map(type => ({

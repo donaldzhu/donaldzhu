@@ -9,7 +9,7 @@ import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import colorConfig from '../../styles/colors'
 import mixins from '../../styles/mixins'
-import { sizes } from '../../styles/sizes'
+import { domSizes, sketchSizes } from '../../styles/sizes'
 import contactData from '../../data/contactData'
 import { fontSizes } from '../../styles/fonts'
 
@@ -22,8 +22,8 @@ const Contact = () => {
     draw: p5 => {
       if (!qrToolTip.current || !qrPopUpRef.current) return
 
-      const qrTooltip = new ElemRect(qrToolTip, sizes.sketches.contactQr.toolTipPadding.value)
-      const qrPopUp = new ElemRect(qrPopUpRef, sizes.sketches.contactQr.popUpPadding.value)
+      const qrTooltip = new ElemRect(qrToolTip, sketchSizes.contactQr.toolTipPadding.value)
+      const qrPopUp = new ElemRect(qrPopUpRef, sketchSizes.contactQr.popUpPadding.value)
 
       wrapDrawingContext(p5, () => {
         qrTooltip.rectAround(p5)
@@ -71,9 +71,9 @@ const TextContainerWithQr = styled(TextContainer)`
   font-size: ${fontSizes.text.mono.css};
 
   > svg { 
-    ${mixins.squared(sizes.contact.qr.size.css)};
+    ${mixins.squared(domSizes.contact.qr.size.css)};
     position: relative;
-    top: ${sizes.contact.qr.top.css};
+    top: ${domSizes.contact.qr.top.css};
     color: ${colorConfig.toolTipColor};
   }
 

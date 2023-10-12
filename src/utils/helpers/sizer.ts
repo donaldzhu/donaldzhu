@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import breakpts from '../../data/breakpoints'
-import { getRem, sortLike } from '../commonUtils'
-import { breakptEnum } from '../queryUtil'
+import { getRem, sortLike, typedKeys } from '../commonUtils'
+import { BreakptEnum } from '../queryUtil'
 import Size from './size'
 
 type mobileBreakptSizesType = { s: number, m: number }
@@ -25,13 +25,13 @@ class Sizer {
   upperBreakpt: string
 
   constructor(breakptSizes: breakptSizesType) {
-    this.breakptSizes = !(breakptEnum.xxl in breakptSizes) ? breakptSizes : {
+    this.breakptSizes = !(BreakptEnum.xxl in breakptSizes) ? breakptSizes : {
       ...breakptSizes,
       xxlSm: breakptSizes.xxlSm !== undefined ? breakptSizes.xxlSm : breakptSizes.xxl
     }
     const [lowerBreakpt, upperBreakpt] = sortLike(
-      Object.keys(_.omit(this.breakptSizes, 'xxlSm')),
-      Object.keys(breakptEnum)
+      typedKeys(_.omit(this.breakptSizes, 'xxlSm')),
+      typedKeys<BreakptEnum>(BreakptEnum)
     )
 
     this.lowerBreakpt = lowerBreakpt
@@ -72,7 +72,7 @@ class Sizer {
   }
 
   private get vh() {
-    return !(breakptEnum.xxl in this.breakptSizes) ? 0 :
+    return !(BreakptEnum.xxl in this.breakptSizes) ? 0 :
       (this.breakptSizes.xxl - this.breakptSizes.xxlSm) / (xxlHeight - xxlSmHeight)
   }
 }

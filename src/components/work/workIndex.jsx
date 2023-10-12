@@ -9,7 +9,7 @@ import useSidebar from '../../hooks/useSidebar'
 import useCanvas from '../../hooks/useCanvas'
 import usePreloadQueue from '../../hooks/usePreloadQueue'
 import drawWorkSketch from '../../p5/sketches/drawWorkSketch'
-import { sizes } from '../../styles/sizes'
+import { domSizes } from '../../styles/sizes'
 import { queries } from '../../utils/queryUtil'
 import workData from '../../data/work/workData'
 import usePortfolioQuery from '../../hooks/usePortfolioQuery'
@@ -56,8 +56,8 @@ const WorkIndex = () => {
 
 const ThumbnailContainer = styled(MainContainer)`
   a {
-    width: ${({ $columns }) => `calc(100% / ${$columns} - ${sizes.workIndex.thumbnail.gap.css} * 2)`};
-    margin: ${sizes.workIndex.thumbnail.gap.css};
+    width: ${({ $columns }) => `calc(100% / ${$columns} - ${domSizes.workIndex.thumbnail.gap.css} * 2)`};
+    margin: ${domSizes.workIndex.thumbnail.gap.css};
   }
 `
 

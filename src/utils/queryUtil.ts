@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { getNativeResolution, mapObject } from './commonUtils'
 import breakpts from '../data/breakpoints'
 
-export enum breakptEnum {
+export enum BreakptEnum {
   l = 'l',
   xl = 'xl',
   xxl = 'xxl'

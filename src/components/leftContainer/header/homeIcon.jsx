@@ -5,7 +5,7 @@ import useCanvas from '../../../hooks/useCanvas'
 import drawHomeIcon from '../../../p5/sketches/drawHomeIcon'
 import { percent } from '../../../utils/styleUtils'
 import mixins from '../../../styles/mixins'
-import { sizes } from '../../../styles/sizes'
+import { domSizes } from '../../../styles/sizes'
 
 const HomeIcon = ({ canvasRef, canvasStateRefs }) => {
   const placeholderRef = useRef()
@@ -29,11 +29,11 @@ const HomeIcon = ({ canvasRef, canvasStateRefs }) => {
 
 const HomeButtonContainer = styled.div`
   ${mixins.flex('center', 'center')}
-  width: ${sizes.homeIcon.width.css};
-  height: ${sizes.homeIcon.height.css};
+  width: ${domSizes.homeIcon.width.css};
+  height: ${domSizes.homeIcon.height.css};
   position: relative; 
-  left: ${sizes.homeIcon.padding.left.div(-2).css};
-  margin-bottom: ${sizes.homeIcon.padding.vert.css};
+  left: ${domSizes.homeIcon.padding.left.div(-2).css};
+  margin-bottom: ${domSizes.homeIcon.padding.vert.css};
 `
 
 const HomeButtonLink = styled(Anchor)`

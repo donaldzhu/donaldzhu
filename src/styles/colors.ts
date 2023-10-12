@@ -1,4 +1,4 @@
-import { loopObject } from '../utils/commonUtils.ts'
+import { loopObject } from '../utils/commonUtils'
 
 const COLOR_PRESET = 0
 
