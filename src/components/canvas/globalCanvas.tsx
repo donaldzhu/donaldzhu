@@ -48,7 +48,10 @@ const GlobalCanvas = ({ canvasRef, canvasStateRefs }: GlobalCanvasStates) => {
 }
 
 const CanvasStyled = styled(Canvas)`
-  ${mixins.fixed()}
+  ${mixins
+    .chain()
+    .highZIndex(1)
+    .fixed()}
   pointer-events: none;
   mix-blend-mode: multiply;
 `

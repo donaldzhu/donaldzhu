@@ -1,5 +1,5 @@
-import { responsiveValue } from '../../utils/styleUtils'
 import colors from '../../styles/colors'
+import { sketchSizes } from '../../styles/sizes'
 
 const defaultConfig = {
   splitNum: 20,
@@ -7,21 +7,21 @@ const defaultConfig = {
   friction: 0.45,
 }
 
+const { primary, secondary } = sketchSizes.panto.brush
 const config = {
   PRIMARY_BRUSH: {
     ...defaultConfig,
     fill: 175,
     sizeReductionFactor: 0.05,
-    maxSize: () => responsiveValue({ l: 4, xxl: 7 }),
-    minSize: () => responsiveValue({ l: 3, xxl: 5 })
+    maxSize: primary.max,
+    minSize: primary.min
   },
   SECONDARY_BRUSH: {
     ...defaultConfig,
     fill: colors.strokeSecondary,
     sizeReductionFactor: 0.4,
-    maxSize: () => responsiveValue({ l: 10, xxl: 28 }),
-    minSize: () => responsiveValue({ l: 4, xxl: 8 }),
-    rotation: Math.PI / 4
+    maxSize: secondary.max,
+    minSize: secondary.max,
   }
 }
 

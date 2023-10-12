@@ -50,12 +50,12 @@ class Rect {
     return x >= x1 && x <= x2 && y >= y1 && y <= y2
   }
 
-  toScreenCoors(...coors: parseCoorsType) {
+  toScreenCoors(...coors: parseCoorsType): coorTuple {
     const [x, y] = this._parseCoors(...coors)
     return [x + this.x1, y + this.y1]
   }
 
-  toRectCoors(...coors: parseCoorsType) {
+  toRectCoors(...coors: parseCoorsType): coorTuple {
     const [x, y] = this._parseCoors(...coors)
     return [x - this.x1, y - this.y1]
   }

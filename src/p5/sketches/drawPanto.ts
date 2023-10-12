@@ -1,15 +1,32 @@
 import _ from 'lodash'
 import Brush from '../helpers/brush/brush'
 import FlatBrush from '../helpers/brush/flatBrush'
-import { getVw, loopObject } from '../../utils/commonUtils.ts'
-import { intersectTwoCircles, parsePoints, wrapDrawingContext } from '../../utils/p5Utils'
+import { getVw, loopObject } from '../../utils/commonUtils'
+import { intersectTwoCircles, parseVector, wrapDrawingContext } from '../../utils/p5Utils'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import colors from '../../styles/colors'
 import { sketchSizes } from '../../styles/sizes'
 import config from '../configs/stroke'
+import p5 from 'p5'
+import { canvasState } from '../../components/canvas/canvasTypes'
+import { MutableRefObject } from 'react'
 
-const drawPanto = ({ isClearingRef, placeholderRef }) => {
-  const vectors = {
+interface DrawPantoProps {
+  isClearingRef: MutableRefObject<boolean>
+  placeholderRef: MutableRefObject<HTMLDivElement>
+}
+
+const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
+  const vectors: {
+    anchor: p5.Vector | undefined,
+    primary: p5.Vector | undefined,
+    secondary: p5.Vector | undefined,
+
+    topRight: p5.Vector | undefined,
+    rightMid: p5.Vector | undefined,
+    leftBot: p5.Vector | undefined,
+    leftMid: p5.Vector | undefined
+  } = {
     anchor: undefined,
     primary: undefined,
     secondary: undefined,
@@ -23,22 +40,24 @@ const drawPanto = ({ isClearingRef, placeholderRef }) => {
   const placeholder = new ElemRect(placeholderRef)
   const paddedPlaceholder = new ElemRect(placeholderRef, sketchSizes.panto.hoverPadding.value)
 
-  let brushes = []
-  let graphic
-  let armLength
+  let brushes: [Brush, FlatBrush] | [] = []
+
+  // TODO
+  let graphic: p5.Graphics
+  let armLength: number
 
   let isHovering = false
   let isHoveringStrict = false
-  let lastHoverTimeStamp
+  let lastHoverTimeStamp: number | undefined
 
-  const setup = p5 => {
+  const setup = (p5: p5) => {
     p5.background(255)
     p5.ellipseMode(p5.CENTER)
     p5.noFill()
     createPanto(p5)
   }
 
-  const draw = (p5, { hideCursorRef }) => {
+  const draw = (p5: p5, { hideCursorRef }: canvasState) => {
     const isClearing = isClearingRef.current
     if (isClearing) clear()
 
@@ -60,12 +79,15 @@ const drawPanto = ({ isClearingRef, placeholderRef }) => {
 
   const cleanup = ({ hideCursorRef }) => {
     hideCursorRef.current = false
+    // @ts-ignore
     graphic && graphic.canvas.remove()
   }
 
-  const createPanto = p5 => {
+  const createPanto = (p5: p5) => {
     const { w, h } = placeholder
     armLength = w / 1.985
+
+    // @ts-ignore
     if (graphic) graphic.canvas.remove()
     graphic = p5.createGraphics(w, h)
     brushes = [
@@ -77,11 +99,11 @@ const drawPanto = ({ isClearingRef, placeholderRef }) => {
   const windowResized = createPanto
 
   const clear = () => {
-    graphic.clear()
+    graphic.clear(0, 0, 0, 0)
     isClearingRef.current = false
   }
 
-  const updateVector = p5 => {
+  const updateVector = (p5: p5) => {
     const [x1, y1, x2, y2] = placeholder.sides
     const halfHeight = (y2 - y1) / 2
     vectors.anchor = p5.createVector(...placeholder.toScreenCoors(0, halfHeight))
@@ -113,9 +135,10 @@ const drawPanto = ({ isClearingRef, placeholderRef }) => {
     )
   }
 
-  const updatePivot = p5 => {
+  const updatePivot = (p5: p5) => {
     const { anchor, primary } = vectors
-    let intersections = intersectTwoCircles(
+    if (!anchor || !primary) throw new Error(`Incomplete vectors: ${vectors}`)
+    const intersections = intersectTwoCircles(
       anchor,
       armLength,
       primary,
@@ -130,6 +153,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }) => {
     }
 
     const pivotIndex = intersections.findIndex(intersection => {
+      if (!vectors.primary) throw new Error(`Incomplete vectors: ${vectors}`)
       const intersectionVec = p5.createVector(...intersection)
       const arm1 = anchor.copy().sub(intersectionVec)
       const arm2 = intersectionVec.copy().sub(vectors.primary)
@@ -140,12 +164,13 @@ const drawPanto = ({ isClearingRef, placeholderRef }) => {
     return [pivotIndex, pivotIndex ^ 1].map(index => p5.createVector(...intersections[index]))
   }
 
-  const drawVectors = (p5, hideCursorRef, shouldDrawMarks) => {
+  const drawVectors = (p5: p5, hideCursorRef: MutableRefObject<boolean>, shouldDrawMarks: boolean) => {
     wrapDrawingContext(p5, () => {
       p5.stroke(0)
 
       const { primary, secondary } = vectors
 
+      if (!primary || !secondary) throw new Error(`Incomplete vectors: ${vectors}`)
       hideCursorRef.current = isHoveringStrict
       if (shouldDrawMarks)
         brushes.forEach((brush, i) =>
@@ -159,24 +184,26 @@ const drawPanto = ({ isClearingRef, placeholderRef }) => {
     })
   }
 
-  const drawPanto = p5 => {
+  const drawPanto = (p5: p5) => {
     const { anchor, primary, topRight, leftBot, leftMid, rightMid } = vectors
     p5.stroke(colors.strokePanto)
     p5.strokeWeight(sketchSizes.panto.lineWeight.value)
     wrapDrawingContext(p5, () => {
-      p5.line(...parsePoints(anchor, leftBot))
-      p5.line(...parsePoints(leftMid, rightMid))
-      p5.line(...parsePoints(topRight, primary))
-      p5.line(...parsePoints(anchor, topRight))
+      if (!anchor || !leftBot || !leftMid || !rightMid || !topRight || !primary)
+        throw new Error(`Incomplete vectors: ${vectors}`)
+      p5.line(...parseVector(anchor), ...parseVector(leftBot))
+      p5.line(...parseVector(leftMid), ...parseVector(rightMid))
+      p5.line(...parseVector(topRight), ...parseVector(primary))
+      p5.line(...parseVector(anchor), ...parseVector(topRight))
     })
 
     p5.strokeWeight(getVw(0.35))
     p5.fill(255)
-    loopObject(vectors,
+    loopObject(vectors as Record<string, p5.Vector>,
       (vectorKey, { x, y }) => {
         const drawingVectors = ['primary', 'secondary']
         if (drawingVectors.includes(vectorKey)) {
-          p5.stroke(brushes[drawingVectors.indexOf(vectorKey)].setting.fill)
+          p5.stroke(`${brushes[drawingVectors.indexOf(vectorKey)].setting.fill}`)
           p5.fill(255)
         } else {
           p5.stroke(colors.strokePanto)

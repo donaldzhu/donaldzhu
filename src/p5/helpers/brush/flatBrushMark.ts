@@ -1,5 +1,14 @@
+import p5 from 'p5'
+
 class FlatBrushMark {
-  constructor(p5, x, y, w, h, rotation = 0) {
+  p5: p5 | p5.Graphics
+  vector: p5.Vector
+  w: number
+  r: number
+  rotation: number
+  brushPoints: FlatBrushPoint[]
+
+  constructor(p5: p5 | p5.Graphics, x: number, y: number, w: number, h: number, rotation = 0) {
     this.p5 = p5
     this.vector = p5.createVector(x, y)
     this.w = w
@@ -32,8 +41,11 @@ class FlatBrushMark {
   }
 }
 
-class FlatBrushPoint {
-  constructor(p5, vector, r) {
+export class FlatBrushPoint {
+  p5: p5 | p5.Graphics
+  vector: p5.Vector
+  r: number
+  constructor(p5: p5 | p5.Graphics, vector: p5.Vector, r: number) {
     this.p5 = p5
     this.vector = vector
     this.r = r

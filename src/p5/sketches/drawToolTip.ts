@@ -1,10 +1,17 @@
+import p5 from 'p5'
 import { getToolTipPoints } from '../../utils/commonUtils'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
 import { sketchSizes } from '../../styles/sizes'
+import { MutableRefObject } from 'react'
 
-const drawToolTip = ({ toolTipRef, popUpRef }) => {
-  const draw = p5 => {
+interface DrawToolTipProps {
+  toolTipRef: MutableRefObject<HTMLDivElement>,
+  popUpRef: MutableRefObject<HTMLDivElement>,
+}
+
+const drawToolTip = ({ toolTipRef, popUpRef }: DrawToolTipProps) => {
+  const draw = (p5: p5) => {
     if (!toolTipRef.current || !popUpRef.current) return
     const toolTip = new ElemRect(toolTipRef, sketchSizes.toolTip.padding.value)
     const popUp = new ElemRect(popUpRef)

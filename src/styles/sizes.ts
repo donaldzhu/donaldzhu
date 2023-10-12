@@ -134,7 +134,18 @@ export const sketchSizes = {
   panto: {
     hoverPadding: getSize({ l: 15, xxl: 20 }),
     pointSize: getSize({ l: 12, xxl: 36 }),
-    lineWeight: getSize({ l: 6, xxl: 14 })
+    lineWeight: getSize({ l: 6, xxl: 14 }),
+    brush: {
+      primary: {
+        max: getSize({ l: 4, xxl: 7 }),
+        min: getSize({ l: 3, xxl: 5 })
+      },
+      secondary: {
+        max: getSize({ l: 10, xxl: 28 }),
+        min: getSize({ l: 4, xxl: 8 }),
+        radius: getSize({ l: 4, xxl: 8 })
+      }
+    }
   },
   toolTip: {
     padding: getSize({ l: 2, xxl: 3 })

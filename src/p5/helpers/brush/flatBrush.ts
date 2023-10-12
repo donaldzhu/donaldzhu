@@ -1,39 +1,45 @@
 import Brush from './brush'
-import FlatBrushMark from './flatBrushMark'
-import { repeatMap, shuffleTo } from '../../../utils/commonUtils.ts'
+import FlatBrushMark, { FlatBrushPoint } from './flatBrushMark'
+import { repeatMap, shuffleTo } from '../../../utils/commonUtils'
+import { BrushSetting } from '../../sketches/sketchTypes'
+import p5 from 'p5'
+import { sketchSizes } from '../../../styles/sizes'
 
-// TODO: responsive value
+
 class FlatBrush extends Brush {
-  constructor(setting, p5, drawingContext) {
+  rotation: number
+  radius: number
+  constructor(setting: BrushSetting, p5: p5, drawingContext: p5.Graphics) {
     super(setting, p5, drawingContext)
-    this.brushW = 30
-    this.brushH = 8
+    this.rotation = Math.PI / 4
+    this.radius = 4
   }
 
-  _doDraw(context) {
+  doDraw(context: p5.Graphics) {
     context.rectMode(context.CENTER)
     context.ellipseMode(context.CENTER)
-    const { x, y, prevX, prevY, brushH } = this
+    const { x, y, prevX, prevY } = this
+    const { radius } = sketchSizes.panto.brush.secondary
     if (prevX === x && prevY === y) return
 
     const brushMarks = [
-      new FlatBrushMark(context, prevX, prevY, this.prevSize, brushH, this.setting.rotation),
-      new FlatBrushMark(context, x, y, this.prevSize, brushH, this.setting.rotation)
+      new FlatBrushMark(context, prevX, prevY, this.prevSize, radius.value, this.rotation),
+      new FlatBrushMark(context, x, y, this.prevSize, radius.value, this.rotation)
     ]
 
-    this._fillInShape(
+    this.fillInShape(
       context,
-      this._getOrderedBrushPoints(brushMarks)
+      this.getOrderedBrushPoints(brushMarks)
     )
   }
 
-  _fillInShape(context, points) {
+  private fillInShape(context: p5.Graphics, points: FlatBrushPoint[]) {
     context.beginShape()
     points.forEach((_, i) => {
       const shufledPoints = shuffleTo(points, i)
       const vectors = shufledPoints.map(point => point.vector)
 
-      const placement = this._getStrokePlacement(vectors)
+      const placement = this.getStrokePlacement(vectors)
       const strokeNormalVector = vectors[1].copy().sub(vectors[0])
       strokeNormalVector.setHeading(strokeNormalVector.heading() + Math.PI / 2 * placement)
 
@@ -48,7 +54,7 @@ class FlatBrush extends Brush {
     context.endShape(context.CLOSE)
   }
 
-  _getOrderedBrushPoints(marks) {
+  private getOrderedBrushPoints(marks: FlatBrushMark[]) {
     return [
       marks[0].brushPoints[0],
       marks[1].brushPoints[0],
@@ -57,8 +63,8 @@ class FlatBrush extends Brush {
     ]
   }
 
-  _getStrokePlacement(vectors) {
-    const shorten = vector => vector.copy().sub(vectors[1])
+  private getStrokePlacement(vectors: p5.Vector[]) {
+    const shorten = (vector: p5.Vector) => vector.copy().sub(vectors[1])
     const angleArm1Short = shorten(vectors[0])
     const angleArm2Short = shorten(vectors[2])
     const angle = angleArm1Short.angleBetween(angleArm2Short)

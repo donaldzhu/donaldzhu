@@ -1,3 +1,6 @@
+import ElemRect from './helpers/rect/elemRect'
+import { coorTuple } from './helpers/rect/rectType'
+
 // string
 export const capitalize = (string: string) => string.charAt(0)
   .toUpperCase() + string.slice(1)
@@ -82,7 +85,8 @@ export const joinPaths = (...paths: string[]) => paths.filter(p => p).join('/')
 export const appendQuery = (...queries: [string, string | null | undefined][]) => queries.reduce((string, [queryKey, queryValue], i) =>
   string += i ? '&' : '' + `${queryKey}=${queryValue}`, '?')
 
-export const getToolTipPoints = (toolTip, popUp) => {
+export const getToolTipPoints = <T extends Element>(toolTip: ElemRect<T>, popUp: ElemRect<T>):
+  [coorTuple, coorTuple, coorTuple, coorTuple] => {
   if (popUp.y2 >= toolTip.y2 && popUp.y1 <= toolTip.y1)
     return [popUp.topRight, toolTip.topRight, toolTip.botRight, popUp.botRight]
   if (popUp.y2 <= toolTip.y2)
