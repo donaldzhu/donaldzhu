@@ -7,12 +7,24 @@ import mixins from '../../styles/mixins'
 import colorConfig from '../../styles/colors'
 import { ReactComponent as Qr } from '../../assets/qr.svg'
 import contactData from '../../data/contactData'
+import { ContactDataInterface } from '../../data/dataTypes'
+import { handleHoverType } from './contactType'
 
-const ContactItem = ({ data, handleHover, isQrShown }) => {
-  const email = contactData
+interface ContactItemProps {
+  data: ContactDataInterface
+  handleHover: handleHoverType
+  isQrShown: boolean
+}
+
+interface StyledQrSvg {
+  $isHighlighted: boolean
+}
+
+const ContactItem = ({ data, handleHover, isQrShown }: ContactItemProps) => {
+  const emailContact = contactData
     .find(contact => contact.type === 'email')
-    .link
-    .replace('mailto:', '')
+  if (!emailContact) return
+  const email = emailContact.link.replace('mailto:', '')
 
   return (
     <ItemContainer>
@@ -36,7 +48,7 @@ const LinkContainer = styled(Anchor)`
   text-decoration-thickness: 0.0765em;
 `
 
-const QRSvg = styled(Qr)`
+const QRSvg = styled(Qr) <StyledQrSvg>`
   ${mixins.squared(em(1))}
   display: inline-block;
   margin-left: 0.25em;

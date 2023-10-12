@@ -56,8 +56,8 @@ class Brush {
 
     const { fill, splitNum, spring, friction, sizeReductionFactor, maxSize, minSize } = this.setting
     wrapDrawingContext(context, () => {
-      context.stroke(fill)
-      context.fill(fill)
+      context.stroke(`${fill}`)
+      context.fill(`${fill}`)
       this.prevSize = this.size
       this.modifiedX += (x - this.x) * spring
       this.modifiedY += (y - this.y) * spring

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { MutableRefObject, useRef, useState } from 'react'
 import { styled } from 'styled-components'
 import ContactItem from './contactItem'
 import TextContainer from '../common/styled/textContainer'
@@ -12,18 +12,20 @@ import mixins from '../../styles/mixins'
 import { domSizes, sketchSizes } from '../../styles/sizes'
 import contactData from '../../data/contactData'
 import { fontSizes } from '../../styles/fonts'
+import { handleHoverType, qrSvg } from './contactType'
+import { ContactDataInterface } from '../../data/dataTypes'
 
 const Contact = () => {
-  const [shownQr, setShownQR] = useState()
-  const qrToolTip = useRef()
-  const qrPopUpRef = useRef()
+  const [shownQr, setShownQR] = useState<ContactDataInterface>()
+  const qrToolTipRef = useRef<qrSvg | null>(null)
+  const qrPopUpRef = useRef<qrSvg | null>(null)
 
   useCanvas(() => ({
     draw: p5 => {
-      if (!qrToolTip.current || !qrPopUpRef.current) return
+      if (!qrToolTipRef.current || !qrPopUpRef.current) return
 
-      const qrTooltip = new ElemRect(qrToolTip, sketchSizes.contactQr.toolTipPadding.value)
-      const qrPopUp = new ElemRect(qrPopUpRef, sketchSizes.contactQr.popUpPadding.value)
+      const qrTooltip = new ElemRect(qrToolTipRef as MutableRefObject<qrSvg>, sketchSizes.contactQr.toolTipPadding.value)
+      const qrPopUp = new ElemRect(qrPopUpRef as MutableRefObject<qrSvg>, sketchSizes.contactQr.popUpPadding.value)
 
       wrapDrawingContext(p5, () => {
         qrTooltip.rectAround(p5)
@@ -35,9 +37,9 @@ const Contact = () => {
     }
   }))
 
-  const handleQrHover = (elem, data) => {
+  const handleQrHover = (elem: qrSvg, data: ContactDataInterface) => {
     setShownQR(data)
-    qrToolTip.current = elem
+    qrToolTipRef.current = elem
   }
 
   useSidebar(
@@ -49,7 +51,13 @@ const Contact = () => {
   )
 }
 
-const ContactSidebar = ({ shownQrData, qrRef, handleHover }) => {
+interface ContactSidebarProps {
+  shownQrData?: ContactDataInterface
+  qrRef: MutableRefObject<qrSvg | null>
+  handleHover: handleHoverType
+}
+
+const ContactSidebar = ({ shownQrData, qrRef, handleHover }: ContactSidebarProps) => {
   const { SvgComponent } = shownQrData || {}
   return (
     <TextContainerWithQr>
@@ -62,7 +70,7 @@ const ContactSidebar = ({ shownQrData, qrRef, handleHover }) => {
           handleHover={handleHover}
         />)}
       </ul>
-      {shownQrData && <SvgComponent ref={qrRef} />}
+      {shownQrData && SvgComponent && <SvgComponent ref={qrRef} />}
     </TextContainerWithQr>
   )
 }
