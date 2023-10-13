@@ -3,8 +3,9 @@ import _ from 'lodash'
 import p5 from 'p5'
 import Canvas from './canvas'
 import { mousePosition, P5Events, wrapDrawingContext } from '../../utils/p5Utils'
-import { getVh, getVw, mapObject } from '../../utils/commonUtils'
+import { mapObject } from '../../utils/commonUtils'
 import mixins from '../../styles/mixins'
+import { getVh, getVw } from '../../utils/sizeUtils'
 import { GlobalCanvasStates, p5EventCallback } from './canvasTypes'
 
 const GlobalCanvas = ({ canvasRef, canvasStateRefs }: GlobalCanvasStates) => {

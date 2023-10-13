@@ -47,9 +47,4 @@ declare module 'p5' {
 
   export default p5
   export = p5
-
-  // TODO
-  // export const Graphics: p5.Graphics & {
-  //   canvas: HTMLCanvasElement
-  // }
 }

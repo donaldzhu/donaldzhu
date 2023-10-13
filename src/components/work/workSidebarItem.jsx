@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom'
 import { styled } from 'styled-components'
 import Anchor from '../common/anchor'
-import { em } from '../../utils/styleUtils'
+import { em } from '../../utils/sizeUtils'
 import mixins from '../../styles/mixins'
 import { fontSizes, fontLineHeights } from '../../styles/fonts'
 import colors from '../../styles/colors'

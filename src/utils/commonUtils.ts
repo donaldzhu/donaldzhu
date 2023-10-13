@@ -1,5 +1,5 @@
 import ElemRect from './helpers/rect/elemRect'
-import { coorTuple } from './helpers/rect/rectType'
+import { coorTuple } from './utilTypes'
 
 // string
 export const capitalize = (string: string) => string.charAt(0)
@@ -8,9 +8,6 @@ export const capitalize = (string: string) => string.charAt(0)
 // number
 export const map = (value: number, inMin: number, inMax: number, outMin: number, outMax: number) =>
   (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
-export const isOdd = (number: number) => !!(number % 2)
-
-export const sum = (array: number[]) => array.reduce((prev, curr) => prev + curr)
 
 // array
 export const repeatMap = <T>(repetition: number, callback: (i: number) => T) => {
@@ -63,24 +60,14 @@ export const mapObject = <T extends object, R>(
   return newObject as Record<keyof T, R>
 }
 
-export const keysToObject = <V>(array: string[], callback: (
-  key: string,
-  obj: Record<string, V>,
+export const keysToObject = <T extends PropertyKey, V>(array: T[], callback: (
+  key: T,
+  obj: Record<T, V>,
   i: number) => V) => array.reduce((obj, key, i) => ({
     ...obj, [key]: callback(key, obj, i)
-  }), {})
+  }), {} as Record<T, V>)
 
 // util
-export const getVw = (percentage = 100) => window.innerWidth / 100 * percentage
-export const getVh = (percentage = 100) => window.innerHeight / 100 * percentage
-export const getRem = (multiplier = 1) => parseFloat(getComputedStyle(
-  document.documentElement).fontSize) * multiplier
-
-export const getNativeResolution = () => [
-  window.screen.width * window.devicePixelRatio,
-  window.screen.height * window.devicePixelRatio,
-]
-
 export const joinPaths = (...paths: string[]) => paths.filter(p => p).join('/')
 export const appendQuery = (...queries: [string, string | null | undefined][]) => queries.reduce((string, [queryKey, queryValue], i) =>
   string += i ? '&' : '' + `${queryKey}=${queryValue}`, '?')
@@ -93,9 +80,6 @@ export const getToolTipPoints = <T extends Element>(toolTip: ElemRect<T>, popUp:
     return [popUp.topRight, toolTip.topRight, toolTip.botLeft, popUp.botLeft]
   return [popUp.topLeft, toolTip.topLeft, toolTip.botRight, popUp.botRight]
 }
-
-// funuction 
-export const callFunctionLike = <T>(functionLike: (() => T | T)) => typeof functionLike === 'function' ? functionLike() : functionLike
 
 export function validateString(string: string): string
 export function validateString<T>(validator: T, string?: string): string

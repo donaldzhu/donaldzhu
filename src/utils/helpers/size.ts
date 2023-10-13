@@ -1,17 +1,26 @@
 import _ from 'lodash'
-import { filterFalsy, getRem, getVh, getVw, validateString } from '../commonUtils'
-import { unitEnums } from '../styleUtils'
+import { filterFalsy, validateString } from '../commonUtils'
+import { unitEnums, getRem, getVh, getVw } from '../sizeUtils'
 
 type sizeTypes = unitEnums.vw | unitEnums.vh | unitEnums.rem
+type sizeConstructor = { vw?: number, vh?: number, rem?: number }
 
 class Size {
   vw: number
   vh: number
   rem: number
-  constructor({ vw = 0, vh = 0, rem = 0 }) {
-    this.vw = vw
-    this.vh = vh
-    this.rem = rem
+
+  constructor(config: number | sizeConstructor) {
+    const remFactor = getRem()
+    if (typeof config === 'number') {
+      this.vw = 0
+      this.vh = 0
+      this.rem = config / remFactor
+    } else {
+      this.vw = config.vw || 0
+      this.vh = config.vh || 0
+      this.rem = config.rem || 0
+    }
   }
 
   add(addend: Size) {

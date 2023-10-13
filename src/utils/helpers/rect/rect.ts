@@ -1,7 +1,7 @@
 import type p5 from 'p5'
 import { arrayify } from '../../commonUtils'
 import { styleDashedRect, wrapDrawingContext } from '../../p5Utils'
-import { coorTuple } from './rectType'
+import { coorTuple } from '../../utilTypes'
 
 type parseCoorsType = [{ x: number, y: number }] | coorTuple
 

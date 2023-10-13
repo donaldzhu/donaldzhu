@@ -1,10 +1,17 @@
 import Vector from './vector'
-import { parsePoints, wrapDrawingContext } from '../../../utils/p5Utils'
-import { callFunctionLike } from '../../../utils/commonUtils.ts'
-import bearingsData from '../../../data/vector/spacings'
+import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
+import bearingsData from '../../../data/vector/spacings.json'
+import p5 from 'p5'
+import { VectorSetting } from './vectorTypes'
 
 class Glyph {
-  constructor(p5, name, setting) {
+  p5: p5 | p5.Graphics
+  setting: VectorSetting
+  still: Vector
+  active: Vector
+  nativeBearings: [number, number]
+
+  constructor(p5: p5 | p5.Graphics, name: string, setting: VectorSetting) {
     this.p5 = p5
     this.setting = setting
     this.still = new Vector(p5, name, setting)
@@ -13,7 +20,7 @@ class Glyph {
   }
 
   draw() {
-    let { drawingSequence, mapFunction } = this.setting
+    const { drawingSequence, mapFunction } = this.setting
     this.active.setTransform(mapFunction.call(
       this.setting,
       this.still.position,
@@ -29,35 +36,33 @@ class Glyph {
 
   drawLinks() {
     const { p5, setting } = this
-    const { linkColor } = setting
-    const linkWeight = callFunctionLike(setting.linkWeight)
-    p5.strokeWeight(linkWeight)
+    const { linkColor, linkWeight } = setting
+    p5.strokeWeight(linkWeight.value)
     p5.stroke(linkColor)
     this.loopVectors(({ stillPoint, activePoint }) =>
-      p5.line(...parsePoints(stillPoint, activePoint))
+      p5.line(...parseVector(stillPoint), ...parseVector(activePoint))
     )
   }
 
   drawPoints() {
     const { p5, setting } = this
     const { pointColor, pointWeight, pointFill } = setting
-    const pointSize = callFunctionLike(setting.pointSize)
+    const pointSize = setting.pointSize.value
 
-    p5.strokeWeight(pointWeight)
+    p5.strokeWeight(pointWeight.value)
     p5.stroke(pointColor)
     if (pointFill === null) p5.noFill()
     else p5.fill(pointFill)
     p5.ellipseMode(p5.CENTER)
     this.loopVectors(({ stillPoint, activePoint }) => {
-      p5.ellipse(...parsePoints(stillPoint), pointSize)
-      p5.ellipse(...parsePoints(activePoint), pointSize)
+      p5.ellipse(...parseVector(stillPoint), pointSize)
+      p5.ellipse(...parseVector(activePoint), pointSize)
     })
   }
 
   drawVolume() {
     const { p5, setting } = this
-    const { volumeColor, correctVolumeStroke } = setting
-    const volumeWeight = callFunctionLike(setting.volumeWeight)
+    const { volumeColor, volumeWeight, correctVolumeStroke } = setting
 
     p5.fill(volumeColor)
     this.loopVectors(({ stillPoint, activePoint, nextStillPoint, nextActivePoint }) => {
@@ -66,24 +71,38 @@ class Glyph {
       if (correctVolumeStroke) p5.noStroke()
       else {
         p5.stroke(volumeColor)
-        p5.strokeWeight(volumeWeight)
+        p5.strokeWeight(volumeWeight.value)
       }
 
-      p5.quad(...parsePoints(stillPoint, nextStillPoint, nextActivePoint, activePoint))
+      p5.quad(
+        ...parseVector(stillPoint),
+        ...parseVector(nextStillPoint),
+        ...parseVector(nextActivePoint),
+        ...parseVector(activePoint)
+      )
 
       if (correctVolumeStroke) {
         p5.stroke(volumeColor)
-        p5.strokeWeight(volumeWeight)
-        p5.line(...parsePoints(stillPoint, activePoint))
+        p5.strokeWeight(volumeWeight.value)
+        p5.line(...parseVector(stillPoint), ...parseVector(activePoint))
       }
     })
   }
 
   getBearings() {
-    return this.nativeBearings.map(bearing => (bearing + this.setting.tracking) * this.still.scale)
+    return this.nativeBearings.map(bearing => (bearing + this.setting.tracking) * this.still.scale.value)
   }
 
-  loopVectors(callback) {
+  loopVectors(callback: (vectorData: {
+    stillPoint: p5.Vector,
+    activePoint: p5.Vector,
+    nextStillPoint: p5.Vector,
+    nextActivePoint: p5.Vector,
+    stillLine: p5.Vector[],
+    activeLine: p5.Vector[],
+    pointIndex: number,
+    lineIndex: number
+  }) => void) {
     this.still.loopPoints((stillPoint, stillLine, pointIndex, lineIndex) => {
       const activeLine = this.active.vectors[lineIndex]
       const activePoint = activeLine[pointIndex]

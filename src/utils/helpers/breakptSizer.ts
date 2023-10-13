@@ -1,13 +1,14 @@
 import _ from 'lodash'
 import breakpts from '../../data/breakpoints'
-import { getRem, sortLike, typedKeys } from '../commonUtils'
+import { sortLike, typedKeys } from '../commonUtils'
 import { BreakptEnum } from '../queryUtil'
+import { getRem } from '../sizeUtils'
 import Size from './size'
 
 type mobileBreakptSizesType = { s: number, m: number }
 type tabletBreakptSizesType = { m: number, l: number }
 type desktopBreakptSizesType = { l: number, xxl: number, xxlSm?: number }
-type breakptSizesType = mobileBreakptSizesType | tabletBreakptSizesType | desktopBreakptSizesType
+export type breakptSizesType = mobileBreakptSizesType | tabletBreakptSizesType | desktopBreakptSizesType
 
 
 type slopeType = {
@@ -19,7 +20,7 @@ const lHeight = 620
 const xxlHeight = 1200
 const xxlSmHeight = 800
 
-class Sizer {
+export class BreakptSizer {
   breakptSizes: Required<breakptSizesType>
   lowerBreakpt: string
   upperBreakpt: string
@@ -76,12 +77,4 @@ class Sizer {
       (this.breakptSizes.xxl - this.breakptSizes.xxlSm) / (xxlHeight - xxlSmHeight)
   }
 }
-
-export const getSize = (breakptSizes: breakptSizesType) =>
-  new Sizer(breakptSizes).getSize(false)
-
-export const getRemSize = (breakptSizes: breakptSizesType) =>
-  new Sizer(breakptSizes).getSize(true)
-
-
 

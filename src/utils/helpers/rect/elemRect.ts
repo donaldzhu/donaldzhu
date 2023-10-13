@@ -1,6 +1,6 @@
 import { MutableRefObject } from 'react'
 import Rect from './rect'
-import { coorTuple } from './rectType'
+import { coorTuple } from '../../utilTypes'
 
 class ElemRect<T extends Element> extends Rect {
   ref: MutableRefObject<T>

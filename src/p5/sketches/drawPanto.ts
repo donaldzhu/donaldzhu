@@ -1,7 +1,8 @@
 import _ from 'lodash'
 import Brush from '../helpers/brush/brush'
 import FlatBrush from '../helpers/brush/flatBrush'
-import { getVw, loopObject } from '../../utils/commonUtils'
+import { loopObject } from '../../utils/commonUtils'
+
 import { intersectTwoCircles, parseVector, wrapDrawingContext } from '../../utils/p5Utils'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import colors from '../../styles/colors'
@@ -10,6 +11,7 @@ import config from '../configs/stroke'
 import p5 from 'p5'
 import { canvasState } from '../../components/canvas/canvasTypes'
 import { MutableRefObject } from 'react'
+import { getVw } from '../../utils/sizeUtils'
 
 interface DrawPantoProps {
   isClearingRef: MutableRefObject<boolean>

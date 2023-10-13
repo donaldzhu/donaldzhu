@@ -3,7 +3,7 @@ import { styled } from 'styled-components'
 import Anchor from '../../common/anchor'
 import useCanvas from '../../../hooks/useCanvas'
 import drawHomeIcon from '../../../p5/sketches/drawHomeIcon'
-import { percent } from '../../../utils/styleUtils'
+import { percent } from '../../../utils/sizeUtils'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
 

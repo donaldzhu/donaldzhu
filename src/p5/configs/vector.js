@@ -1,8 +1,8 @@
-import { responsiveValue } from '../../utils/styleUtils'
 import colors from '../../styles/colors'
+import { getSize } from '../../utils/sizeUtils'
 
 const mainSketchConfigs = {
-  scale: () => responsiveValue({ l: 1.15, xxl: 2.5 }),
+  scale: getSize({ l: 1.15, xxl: 2.5 }),
   tracking: 4,
   leading: 70,
   easing: 'easeOutQuad',
@@ -11,16 +11,16 @@ const mainSketchConfigs = {
   linkColor: colors.homeSketch,
 }
 
-const lowerWeight = () => responsiveValue({ l: 6, xxl: 10 })
+const lowerWeight = getSize({ l: 6, xxl: 10 })
 export const homeIconScales = { l: 0.75, xxl: 1.15 }
-const homeIconWeight = () => responsiveValue({ l: 4, xxl: 6 })
+const homeIconWeight = getSize({ l: 4, xxl: 6 })
 
 const configs = {
   MAIN_UPPER: {
     ...mainSketchConfigs,
-    glyphWeight: () => responsiveValue({ l: 4, xxl: 7 }),
-    linkWeight: () => responsiveValue({ l: 3, xxl: 5 }),
-    pointSize: () => responsiveValue({ l: 8, xxl: 16 }),
+    glyphWeight: getSize({ l: 4, xxl: 7 }),
+    linkWeight: getSize({ l: 3, xxl: 5 }),
+    pointSize: getSize({ l: 8, xxl: 16 }),
     pointColor: colors.homeSketch,
     pointFill: colors.homeSketch,
     drawingSequence: ['drawLinks', 'drawPoints'],
@@ -33,7 +33,7 @@ const configs = {
     drawingSequence: ['drawLinks', 'drawVolume'],
   },
   HOME_ICON: {
-    scale: () => responsiveValue(homeIconScales),
+    scale: getSize(homeIconScales),
     position: ['LEFT', 'TOP'],
     glyphWeight: homeIconWeight,
     linkWeight: homeIconWeight,
@@ -45,9 +45,9 @@ const configs = {
     maxStretch: 8,
   },
   VECTOR_STRING_TRANSLATE: {
-    glyphWeight: () => responsiveValue({ l: 2, xxl: 3 }),
-    linkWeight: () => responsiveValue({ l: 2, xxl: 3 }),
-    pointSize: () => responsiveValue({ l: 7, xxl: 10 }),
+    glyphWeight: getSize({ l: 2, xxl: 3 }),
+    linkWeight: getSize({ l: 2, xxl: 3 }),
+    pointSize: getSize({ l: 7, xxl: 10 }),
     pointColor: colors.vectorStringSketch,
     pointFill: colors.vectorStringSketch,
     glyphColor: colors.vectorStringSketch,

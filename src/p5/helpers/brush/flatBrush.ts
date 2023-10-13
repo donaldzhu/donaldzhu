@@ -44,7 +44,7 @@ class FlatBrush extends Brush {
       strokeNormalVector.setHeading(strokeNormalVector.heading() + Math.PI / 2 * placement)
 
       repeatMap(2, i => {
-        strokeNormalVector.setMag(shufledPoints[i].r)
+        strokeNormalVector.setMag(shufledPoints[i].radius)
         const strokeShiftedVector = vectors[i].copy().add(strokeNormalVector)
         context.vertex(strokeShiftedVector.x, strokeShiftedVector.y)
       })

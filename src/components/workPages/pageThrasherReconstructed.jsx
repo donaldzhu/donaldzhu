@@ -1,7 +1,7 @@
 import RowContainer from '../common/rowContainer'
 import WorkImg from '../common/media/workImg'
 import WorkVid from '../common/media/workVid'
-import { percent } from '../../utils/styleUtils'
+import { percent } from '../../utils/sizeUtils'
 
 
 const PageThrasherReconstructed = () => {

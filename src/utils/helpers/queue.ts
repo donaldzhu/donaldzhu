@@ -7,8 +7,8 @@ type queueFunctionType<T> = (() => T) | {
 }
 
 class Queue {
-  currentId: undefined | number
-  interval: undefined | number
+  private currentId: undefined | number
+  private interval: undefined | number
   constructor(interval?: number) {
     this.currentId = undefined
     this.interval = interval

@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import { loopObject } from '../utils/commonUtils'
-import { getHighZIdex } from '../utils/styleUtils'
 import { fontParams } from './fonts'
 import { domSizes } from './sizes'
 import { fontVarConfigType, mediaPropsType, positionsType } from './types'
@@ -53,7 +52,7 @@ const innerMargin = (margin: string, direction = 'top') => `
   }
 `
 
-const highZIndex = (level: number) => `z-index: ${getHighZIdex(level)};`
+const highZIndex = (level: number) => `z-index: ${'9'.repeat(level)};`
 const noSelect = () => 'user-select: none;'
 
 const fontVar = (config: fontVarConfigType) => {
