@@ -1,22 +1,23 @@
 import { ForwardedRef, ImgHTMLAttributes, VideoHTMLAttributes, forwardRef } from 'react'
 import Vid from './vid'
 import Img from './img'
-import { SINGLE_MEDIA_TYPES } from '../../../utils/helpers/preloader/preloadUtils'
-import { ImgProps } from './mediaTypes'
+import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
+import { ImgProps, VidProps } from './mediaTypes'
 
-type MediaProps<T extends keyof typeof SINGLE_MEDIA_TYPES> =
-  (T extends typeof SINGLE_MEDIA_TYPES.image ?
+type MediaProps<T extends keyof typeof MediaFileType> =
+  (T extends typeof MediaFileType.Image ?
     ImgHTMLAttributes<HTMLImageElement> & ImgProps :
-    VideoHTMLAttributes<HTMLVideoElement>
+    VideoHTMLAttributes<HTMLVideoElement> & VidProps
   ) & { type: T }
 
-const Media = forwardRef(function Media<T extends keyof typeof SINGLE_MEDIA_TYPES,>(
+const Media = forwardRef(function Media<T extends keyof typeof MediaFileType,>(
   { type, ...props }: MediaProps<T>,
-  ref: T extends typeof SINGLE_MEDIA_TYPES.image ?
+  ref: T extends typeof MediaFileType.Image ?
     ForwardedRef<HTMLImageElement> :
     ForwardedRef<HTMLVideoElement>
 ) {
-  return type === SINGLE_MEDIA_TYPES.image ?
+  return type === MediaFileType.Image ?
+    //@ts-ignore // TODO
     <Img {...props} ref={ref} /> : <Vid {...props} ref={ref} />
 })
 

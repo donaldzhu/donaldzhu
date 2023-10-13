@@ -10,7 +10,7 @@ import useCanvas from '../../hooks/useCanvas'
 import usePreload from '../../hooks/usePreload'
 import drawCursor from '../../p5/sketches/drawCursor'
 import mixins from '../../styles/mixins'
-import { SINGLE_MEDIA_TYPES } from '../../utils/helpers/preloader/preloadUtils'
+import { MediaFileType } from '../../utils/helpers/preloader/preloadUtils'
 import useCanAutoPlay from '../../hooks/useCanAutoPlay'
 import AutoPlayPopUp from '../common/autoPlayPopUp'
 import { typedKeys } from '../../utils/commonUtils'
@@ -70,7 +70,7 @@ const Page = () => {
             return <Media
               key={src}
               src={src}
-              type={SINGLE_MEDIA_TYPES.video}
+              type={MediaFileType.Video}
               preload='true'
               autoPlay={true}
               onProgress={onProgress}

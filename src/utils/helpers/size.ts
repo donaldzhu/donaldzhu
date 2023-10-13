@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { filterFalsy, validateString } from '../commonUtils'
-import { unitEnums, getRem, getVh, getVw } from '../sizeUtils'
+import { Unit, getRem, getVh, getVw } from '../sizeUtils'
 
-type sizeTypes = unitEnums.vw | unitEnums.vh | unitEnums.rem
+type sizeTypes = Unit.Vw | Unit.Vh | Unit.Rem
 type sizeConstructor = { vw?: number, vh?: number, rem?: number }
 
 class Size {
@@ -56,8 +56,8 @@ class Size {
   }
 
   get css() {
-    const units: sizeTypes[] = [unitEnums.vw, unitEnums.vh, unitEnums.rem]
-    const addends = units.map(unit => this.returnUnit(unit)).filter(filterFalsy)
+    const units: sizeTypes[] = [Unit.Vw, Unit.Vh, Unit.Rem]
+    const addends = filterFalsy(units.map(unit => this.returnUnit(unit)))
     return `calc(${addends.join(' + ')})`
   }
 

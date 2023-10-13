@@ -1,23 +1,23 @@
 import { BreakptSizer, breakptSizesType } from './helpers/breakptSizer'
 
-export const enum unitEnums {
-  vw = 'vw',
-  vh = 'vh',
-  px = 'px',
+export const enum Unit {
+  Vw = 'vw',
+  Vh = 'vh',
+  Px = 'px',
   '%' = '%',
-  em = 'em',
-  rem = 'rem'
+  Em = 'em',
+  Rem = 'rem'
 }
 
-const createSuffixFunction = (suffix: unitEnums) =>
+const createSuffixFunction = (suffix: Unit) =>
   (quantity: number) => `${quantity}${suffix}`
 
-export const px = createSuffixFunction(unitEnums.px)
-export const vw = createSuffixFunction(unitEnums.vw)
-export const vh = createSuffixFunction(unitEnums.vh)
-export const percent = createSuffixFunction(unitEnums['%'])
-export const em = createSuffixFunction(unitEnums.em)
-export const rem = createSuffixFunction(unitEnums.rem)
+export const px = createSuffixFunction(Unit.Px)
+export const vw = createSuffixFunction(Unit.Vw)
+export const vh = createSuffixFunction(Unit.Vh)
+export const percent = createSuffixFunction(Unit['%'])
+export const em = createSuffixFunction(Unit.Em)
+export const rem = createSuffixFunction(Unit.Rem)
 
 export const getVw = (percentage = 100) => window.innerWidth / 100 * percentage
 export const getVh = (percentage = 100) => window.innerHeight / 100 * percentage

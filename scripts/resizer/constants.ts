@@ -1,4 +1,4 @@
-import { Breakpts, configType } from './resizeTypes'
+import { Breakpt, configType } from './resizeTypes'
 import breakpoints from '../../src/data/breakpoints'
 import { joinPaths } from '../utils'
 
@@ -18,11 +18,11 @@ export const NATIVE_DIMENSIONS_PATH = 'src/data/media/nativeDimensions.json'
 export const MAX_FOLDER = 'max'
 export const BLUR = 4
 
-export const BREAKPT_WIDTHS: Record<Breakpts, number> = {
-  [Breakpts.desktopFallback]: 600,
-  [Breakpts.l]: breakpoints.l,
-  [Breakpts.xl]: breakpoints.xl,
-  [Breakpts.xxl]: breakpoints.xxl
+export const BREAKPT_WIDTHS: Record<Breakpt, number> = {
+  [Breakpt.desktopFallback]: 600,
+  [Breakpt.l]: breakpoints.l,
+  [Breakpt.xl]: breakpoints.xl,
+  [Breakpt.xxl]: breakpoints.xxl
 }
 
 export const DEFAULT_CONFIG: configType = {

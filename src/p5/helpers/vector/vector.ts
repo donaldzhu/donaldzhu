@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
 import { MaxNumber } from '../../../utils/helpers/number'
 import vectorsData from '../../../data/vector/glyphs.json'
-import { Modes } from './constants'
+import { Mode } from './constants'
 import p5 from 'p5'
 import { SetTransformProps, VectorSetting } from './vectorTypes'
 import Size from '../../../utils/helpers/size'
@@ -14,14 +14,14 @@ class Vector {
   vectors: p5.Vector[][]
   position: p5.Vector
   scale: Size
-  mode: Modes
+  mode: Mode
   private nativeDimension: {
     w: number,
     h: number
   }
 
   constructor(p5: p5 | p5.Graphics, name: string, setting: VectorSetting) {
-    const { x, y, scale, mode = Modes.Corner } = setting
+    const { x, y, scale, mode = Mode.Corner } = setting
     this.setting = setting
     this.p5 = p5
 
@@ -77,7 +77,7 @@ class Vector {
     const { scale } = newSetting
 
     const scaleFactor = scale.value / this.scale.value
-    if (this.mode === Modes.Center) {
+    if (this.mode === Mode.Center) {
       x -= this.w * scaleFactor / 2
       y -= this.h * scaleFactor / 2
     }

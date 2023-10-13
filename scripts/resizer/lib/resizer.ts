@@ -6,7 +6,7 @@ import ffmpeg from 'fluent-ffmpeg'
 import { globSync } from 'glob'
 import chalk from 'chalk'
 import BreakpointResizer from './breakptResizer'
-import { BreakptConfig, ImgExtentions, MediaOptions, MediaTypes, ResizePosterConfig, ResizerConfig, VidExtensions, callbackType, dimensionType } from './resizerTypes'
+import { BreakptConfig, ImgExtention, MediaOptions, MediaType, ResizePosterConfig, ResizerConfig, VidExtension, callbackType, dimensionType } from './resizerTypes'
 import { mkdirIfNone, emptyDir, joinPaths, removeFile, parseMediaType, getExtension, mapPromises, sortFileNames } from '../../utils'
 import { POSTER_SUBFOLDER } from '../constants'
 
@@ -66,14 +66,14 @@ class Resizer<K extends string> {
 
   private createPosterFolder() {
     const hasVid = !!this.allFileEntries.find(fileName =>
-      parseMediaType(fileName) === MediaTypes.video)
+      parseMediaType(fileName) === MediaType.video)
     if (hasVid && this.exportPoster) this.createFolder(POSTER_SUBFOLDER)
   }
 
   private async resizeMedia(fileName: string, fileEntry: string) {
     const type = parseMediaType(fileName)
-    if (type === MediaTypes.image) await this.resizeImg(fileName, fileEntry)
-    else if (type === MediaTypes.video) await this.resizeVid(fileName, fileEntry)
+    if (type === MediaType.image) await this.resizeImg(fileName, fileEntry)
+    else if (type === MediaType.video) await this.resizeVid(fileName, fileEntry)
     else throw new Error(`${fileName} is not an approved file type.`)
   }
 
@@ -81,7 +81,7 @@ class Resizer<K extends string> {
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig): Promise<void>
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig) {
     const imgPath = posterConfig ? fileName : this.getSubpath(fileName)
-    const animated = getExtension(imgPath) === ImgExtentions.gif
+    const animated = getExtension(imgPath) === ImgExtention.gif
     const imgObj = sharp(imgPath, { animated })
     const size = posterConfig ? posterConfig.vidSize :
       this.throwNoWidth(await imgObj.metadata(), fileName)
@@ -161,7 +161,7 @@ class Resizer<K extends string> {
   }
 
   private log(fileName: string) {
-    const color = parseMediaType(fileName) === MediaTypes.image ? 'green' : 'cyan'
+    const color = parseMediaType(fileName) === MediaType.image ? 'green' : 'cyan'
     console.log(`${chalk.gray('Resized: ')}${chalk[color](fileName)}`)
   }
 
@@ -169,12 +169,12 @@ class Resizer<K extends string> {
     return joinPaths(
       path.dirname(filename),
       POSTER_SUBFOLDER,
-      path.basename(filename).replace(VidExtensions.webm, ImgExtentions.png)
+      path.basename(filename).replace(VidExtension.webm, ImgExtention.png)
     )
   }
 
   private getPosterPath(filename: string) {
-    return filename.replace(ImgExtentions.png, ImgExtentions.webp)
+    return filename.replace(ImgExtention.png, ImgExtention.webp)
   }
 
   private throwNoWidth(metadata: Partial<dimensionType>, fileName: string) {

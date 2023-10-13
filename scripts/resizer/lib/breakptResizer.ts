@@ -4,7 +4,7 @@ import sharp from 'sharp'
 import ffmpeg from 'fluent-ffmpeg'
 import _ from 'lodash'
 import { globSync } from 'glob'
-import { BreakptConfig, BreakptResizeConfig, BreakptResizerConfig, MediaTypes, VidExtensions, ImgExtentions, MediaOptions, dimensionType } from './resizerTypes'
+import { BreakptConfig, BreakptResizeConfig, BreakptResizerConfig, MediaType, VidExtension, ImgExtention, MediaOptions, dimensionType } from './resizerTypes'
 import { mkdirIfNone, emptyDir, joinPaths, removeFile, parseMediaType, getExtension } from '../../utils'
 import { POSTER_SUBFOLDER } from '../constants'
 
@@ -12,7 +12,7 @@ class BreakpointResizer<K extends string> {
   source: string
   config: BreakptConfig<K>
   destination: string
-  breakptTypes: MediaTypes[]
+  breakptTypes: MediaType[]
   mediaOptions: MediaOptions
   removeFilesAtDest: boolean
   exportPoster: boolean
@@ -56,8 +56,8 @@ class BreakpointResizer<K extends string> {
     const resizeWidth = this.getResizeWidth(fileEntry, size)
     if (
       !resizeWidth ||
-      !this.shouldExport(MediaTypes.image) ||
-      (isPoster && !this.shouldExport(MediaTypes.poster)) ||
+      !this.shouldExport(MediaType.image) ||
+      (isPoster && !this.shouldExport(MediaType.poster)) ||
       this.config.debugOnly
     ) return
 
@@ -71,9 +71,9 @@ class BreakpointResizer<K extends string> {
     this.prepareDest(outFile)
 
     const fileType = getExtension(fileName)
-    if (fileType === ImgExtentions.gif)
+    if (fileType === ImgExtention.gif)
       imgObjClone.gif(this.mediaOptions.gif)
-    else if (fileType === ImgExtentions.webp)
+    else if (fileType === ImgExtention.webp)
       imgObjClone.webp(this.mediaOptions.webp)
 
     return await imgObjClone.toFile(outFile)
@@ -86,7 +86,7 @@ class BreakpointResizer<K extends string> {
     const resizeWidth = this.getResizeWidth(fileEntry, size)
     if (
       !resizeWidth ||
-      !this.shouldExport(MediaTypes.video) ||
+      !this.shouldExport(MediaType.video) ||
       this.config.debugOnly
     ) return
 
@@ -112,8 +112,8 @@ class BreakpointResizer<K extends string> {
     if (
       this.hasVid &&
       this.exportPoster &&
-      this.shouldExport(MediaTypes.video) &&
-      this.shouldExport(MediaTypes.poster) &&
+      this.shouldExport(MediaType.video) &&
+      this.shouldExport(MediaType.poster) &&
       !this.config.debugOnly
     ) this.createFolder(POSTER_SUBFOLDER)
   }
@@ -144,16 +144,16 @@ class BreakpointResizer<K extends string> {
   private getPosterPath(fileName: string) {
     return joinPaths(
       POSTER_SUBFOLDER,
-      fileName.replace(VidExtensions.webm, ImgExtentions.webp)
+      fileName.replace(VidExtension.webm, ImgExtention.webp)
     )
   }
 
-  private shouldExport(type: MediaTypes) {
+  private shouldExport(type: MediaType) {
     return !this.config.exclude?.includes(type)
   }
 
   private get hasVid() {
-    return this.breakptTypes.includes(MediaTypes.video)
+    return this.breakptTypes.includes(MediaType.video)
   }
 }
 

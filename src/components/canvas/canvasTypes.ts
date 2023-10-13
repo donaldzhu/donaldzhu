@@ -1,6 +1,6 @@
 import { MutableRefObject } from 'react'
 import p5 from 'p5'
-import { P5Events } from '../../utils/p5Utils'
+import { P5Event } from '../../utils/p5Utils'
 import useGlobalCanvas from '../../hooks/useGlobalCanvas'
 
 export interface CanvasState {
@@ -10,10 +10,10 @@ export interface CanvasState {
 
 export type p5Callback = (p5: p5) => void
 export type p5EventCallback = (p5: p5, evt?: Event | UIEvent) => void
-export type p5EventHandlers = Record<P5Events, p5EventCallback>
+export type p5EventHandlers = Record<P5Event, p5EventCallback>
 
 export type sketchEventCallback = (p5: p5, canvasStateRefs: CanvasState) => void
-export type sketchEventHandler = Record<P5Events | 'setup', sketchEventCallback> & {
+export type sketchEventHandler = Record<P5Event | 'setup', sketchEventCallback> & {
   cleanup: (canvasStateRefs: CanvasState) => void
 }
 

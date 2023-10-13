@@ -2,39 +2,39 @@ import fs from 'fs'
 import path from 'path'
 import _ from 'lodash'
 import Resizer from './lib/resizer'
-import { BreakptConfig, BreakptSize, MediaTypes, dimensionType } from './lib/resizerTypes'
+import { BreakptConfig, BreakptSize, MediaType, dimensionType } from './lib/resizerTypes'
 import { joinPaths, mapObject, mapObjectPromises, readJsonSync } from '../utils'
-import { BreakptExports, Breakpts, breakptSizeCollection, sizesJson, fileDataPair, size, dimensionsJson, dimension, fileDataCollection, configType } from './resizeTypes'
+import { BreakptExports, Breakpt, breakptSizeCollection, sizesJson, fileDataPair, size, dimensionsJson, dimension, fileDataCollection, configType } from './resizeTypes'
 import { BLUR, BREAKPT_WIDTHS, DESTINATION_ROOT, MAX_FOLDER, ROOT_PATH, THUMBNAIL_FOLDER, WORK_FOLDER, DEFAULT_CONFIG, NATIVE_DIMENSIONS_PATH, SRC_WORK_PATH, SRC_THUMBNAIL_PATH, SIZE_PATH, TOOL_TIP_PERCENTAGE, MAIN_RESIZE_PERCENTAGE } from './constants'
 
 const createBreakptMap = <T, V>(
-  mapObj: Record<Breakpts, V>,
-  callback: (breakpt: Breakpts, mapValue: V) => T
+  mapObj: Record<Breakpt, V>,
+  callback: (breakpt: Breakpt, mapValue: V) => T
 ) => {
-  const map: Record<Breakpts, T | undefined> = {
-    [Breakpts.desktopFallback]: undefined,
-    [Breakpts.l]: undefined,
-    [Breakpts.xl]: undefined,
-    [Breakpts.xxl]: undefined
+  const map: Record<Breakpt, T | undefined> = {
+    [Breakpt.desktopFallback]: undefined,
+    [Breakpt.l]: undefined,
+    [Breakpt.xl]: undefined,
+    [Breakpt.xxl]: undefined
   }
   mapObject(mapObj, (breakpt, mapValue) => {
     map[breakpt] = callback(breakpt, mapValue)
   })
-  return map as Record<Breakpts, T>
+  return map as Record<Breakpt, T>
 }
 
 const getNoSizesError = (sizes: sizesJson, sizeType: string) =>
   new Error(`Breakpoint size has no ${sizeType} sizes: ${sizes[sizeType]}`)
 
-const getBreakptConfig = (breakpt: Breakpts, sizes: BreakptSize[], debugOnly: boolean) => {
+const getBreakptConfig = (breakpt: Breakpt, sizes: BreakptSize[], debugOnly: boolean) => {
   sizes.map((size) => size[1] *= size[0].match(/^toolTips\//) ?
     TOOL_TIP_PERCENTAGE : MAIN_RESIZE_PERCENTAGE)
   return {
     breakpt,
     breakptWidth: BREAKPT_WIDTHS[breakpt],
     sizes,
-    blur: breakpt === Breakpts.desktopFallback ? BLUR : undefined,
-    exclude: breakpt === Breakpts.desktopFallback ? [MediaTypes.video] : undefined,
+    blur: breakpt === Breakpt.desktopFallback ? BLUR : undefined,
+    exclude: breakpt === Breakpt.desktopFallback ? [MediaType.video] : undefined,
     debugOnly
   }
 }
@@ -72,7 +72,7 @@ const resize = async (config?: configType) => {
 
   const nativeDimensions: dimensionsJson = {}
 
-  const thumbnailConfigs = createBreakptMap<BreakptConfig<Breakpts>, sizesJson>(
+  const thumbnailConfigs = createBreakptMap<BreakptConfig<Breakpt>, sizesJson>(
     allBreakptSizes, (breakpt, sizes) => {
       const { thumbnails } = sizes
       if (!thumbnails || !Array.isArray(thumbnails)) throw getNoSizesError(sizes, 'thumbnails')
@@ -94,14 +94,14 @@ const resize = async (config?: configType) => {
   await mapObjectPromises(pageSizes, async (pageId, breakptSizes) => {
     const includePage = !includePages.length || includePages.includes(pageId)
     const debugOnly = !resizeWork || !includePage
-    const pageConfigs = createBreakptMap<BreakptConfig<Breakpts>, fileDataPair<size>[]>(breakptSizes,
+    const pageConfigs = createBreakptMap<BreakptConfig<Breakpt>, fileDataPair<size>[]>(breakptSizes,
       (breakpt, sizes) => getBreakptConfig(breakpt, sizes, debugOnly))
     const maxConfig = {
       breakpt: MAX_FOLDER,
       sizes: pageConfigs.xxl.sizes,
       noResize: true,
       maxDimension: 2500 * 3000,
-      exclude: [MediaTypes.poster],
+      exclude: [MediaType.poster],
       debugOnly
     }
 

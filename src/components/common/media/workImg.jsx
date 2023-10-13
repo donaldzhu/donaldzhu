@@ -1,9 +1,9 @@
 import { forwardRef } from 'react'
 import ZoomMedia from './zoomMedia'
-import { MEDIA_TYPES } from '../../../utils/helpers/preloader/preloadUtils'
+import { MediaType } from '../../../utils/helpers/preloader/preloadUtils'
 
 const WorkImg = forwardRef(function WorkImg(props, ref) {
-  return <ZoomMedia {...props} ref={ref} type={MEDIA_TYPES.images} />
+  return <ZoomMedia {...props} ref={ref} type={MediaType.Images} />
 })
 
 export default WorkImg

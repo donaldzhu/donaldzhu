@@ -8,7 +8,7 @@ import colors from '../../../styles/colors'
 import SvgBorder from '../../common/svgBorder'
 import { typedKeys } from '../../../utils/commonUtils'
 
-enum NameTextMap {
+enum NameText {
   work = 'WORK',
   process = 'HOW I WORK',
   contact = 'CONTACT'
@@ -21,10 +21,10 @@ const Footer = () => {
         size={domSizes.sidebar.width}
         isVertical={false} />
       <FooterLinkContainer>
-        {typedKeys<NameTextMap>(NameTextMap).map((name, i) =>
+        {typedKeys<NameText>(NameText).map((name, i) =>
           <Fragment key={name}>
             {!!i && <FooterDelimiter>●</FooterDelimiter>}
-            <FooterLink path={`/${name}`}>{NameTextMap[name]}</FooterLink>
+            <FooterLink path={`/${name}`}>{NameText[name]}</FooterLink>
           </Fragment>)}
       </FooterLinkContainer>
     </FooterContainer >

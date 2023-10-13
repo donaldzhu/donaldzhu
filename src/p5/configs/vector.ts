@@ -1,7 +1,7 @@
 import colors from '../../styles/colors'
 import { getSize } from '../../utils/sizeUtils'
-import { DEFAULT_SETTING, XPositions, YPositions } from '../helpers/vector/constants'
-import { VectorDrawMethods, VectorSetting } from '../helpers/vector/vectorTypes'
+import { DEFAULT_SETTING, XPosition, YPosition } from '../helpers/vector/constants'
+import { VectorDrawMethod, VectorSetting } from '../helpers/vector/vectorTypes'
 
 const mainSketchConfigs = {
   scale: getSize({ l: 1.15, xxl: 2.5 }),
@@ -25,25 +25,25 @@ const configs: Record<string, Partial<VectorSetting>> = {
     pointSize: getSize({ l: 8, xxl: 16 }),
     pointColor: colors.homeSketch,
     pointFill: colors.homeSketch,
-    drawingSequence: [VectorDrawMethods.DrawLinks, VectorDrawMethods.DrawPoints],
+    drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawPoints],
   },
   MAIN_LOWER: {
     ...mainSketchConfigs,
     glyphWeight: lowerWeight,
     linkWeight: lowerWeight,
     volumeColor: colors.homeSketch,
-    drawingSequence: [VectorDrawMethods.DrawLinks, VectorDrawMethods.DrawVolume],
+    drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawVolume],
   },
   HOME_ICON: {
     scale: getSize(homeIconScales),
-    position: [XPositions.Left, YPositions.Top],
+    position: [XPosition.Left, YPosition.Top],
     glyphWeight: homeIconWeight,
     linkWeight: homeIconWeight,
     glyphColor: colors.homeIcon,
     linkColor: colors.homeIcon,
     volumeColor: colors.homeIcon,
     easing: 'easeOutCubic',
-    drawingSequence: [VectorDrawMethods.DrawLinks, VectorDrawMethods.DrawVolume],
+    drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawVolume],
     maxStretch: 8,
   },
   VECTOR_STRING_TRANSLATE: {
@@ -54,7 +54,7 @@ const configs: Record<string, Partial<VectorSetting>> = {
     pointFill: colors.vectorStringSketch,
     glyphColor: colors.vectorStringSketch,
     linkColor: colors.vectorStringSketch,
-    drawingSequence: [VectorDrawMethods.DrawLinks, VectorDrawMethods.DrawPoints],
+    drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawPoints],
     mapFunction: function (stillVector, mouseVector) {
       const distVector = mouseVector.sub(this.mouseOrigin || stillVector)
       const segmentation = 20

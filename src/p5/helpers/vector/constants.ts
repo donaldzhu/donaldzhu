@@ -6,7 +6,7 @@ import p5 from 'p5'
 import { getVh, getVw } from '../../../utils/sizeUtils'
 import Size from '../../../utils/helpers/size'
 
-export const enum Modes {
+export const enum Mode {
   Center,
   Corner
 }
@@ -15,13 +15,13 @@ export const AXES = ['x', 'y']
 export const X_HEIGHT = 44
 export const GLYPH_NAMES = Object.keys(spacingsData).filter(char => char.length === 1)
 
-export const enum XPositions {
+export const enum XPosition {
   Left,
   Center,
   Right
 }
 
-export const enum YPositions {
+export const enum YPosition {
   Top,
   Center,
   Bottom
@@ -33,8 +33,8 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
   x: 0,
   y: 0,
   scale: new Size(1),
-  position: [XPositions.Center, YPositions.Center],
-  align: XPositions.Center,
+  position: [XPosition.Center, YPosition.Center],
+  align: XPosition.Center,
   spaceDelimiter: ' ',
   spaceWidth: 25,
   tracking: 3,

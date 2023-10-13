@@ -3,7 +3,7 @@ import { useOutletContext } from 'react-router-dom'
 import _ from 'lodash'
 import p5 from 'p5'
 import { loopObject } from '../utils/commonUtils'
-import { P5Events } from '../utils/p5Utils'
+import { P5Event } from '../utils/p5Utils'
 import { GlobalCanvasStates, sketchEventHandler, sketchEventCallback, p5Callback } from '../components/canvas/canvasTypes'
 
 
@@ -23,7 +23,7 @@ const useCanvas = (
   const { setup, draw, cleanup, ...callbacks } = useMemo(createSketch, dependencies)
 
   const registeredCallbacks: (() => void)[] = []
-  const registerCallback = (eventName: P5Events, callback: p5Callback) => {
+  const registerCallback = (eventName: P5Event, callback: p5Callback) => {
     canvasRef.current[eventName].push(callback)
     registeredCallbacks.push(() => { _.pull(canvasRef.current[eventName], callback) })
   }
@@ -38,7 +38,7 @@ const useCanvas = (
       setSetupDone(true)
     }
 
-    registerCallback(P5Events.draw, drawFunction)
+    registerCallback(P5Event.draw, drawFunction)
     loopObject(callbacks, (eventName, callback) =>
       registerCallback(eventName, (p5: p5) => {
         if (callback) callback(p5, canvasStateRefs)

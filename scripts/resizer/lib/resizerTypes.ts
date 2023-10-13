@@ -16,25 +16,25 @@ export type BreakptResizerConfig = {
   exportPoster: boolean
 }
 
-export const enum ImgExtentions {
+export const enum ImgExtention {
   gif = 'gif',
   webp = 'webp',
   png = 'png'
 }
 
-export const enum VidExtensions {
+export const enum VidExtension {
   webm = 'webm'
 }
 
-export const enum MediaTypes {
+export const enum MediaType {
   image = 'image',
   video = 'video',
   poster = 'poster'
 }
 
 export type MediaOptions = {
-  [ImgExtentions.gif]?: sharp.GifOptions
-  [ImgExtentions.webp]?: sharp.WebpOptions
+  [ImgExtention.gif]?: sharp.GifOptions
+  [ImgExtention.webp]?: sharp.WebpOptions
 }
 
 export type BreakptConfig<K extends string> = {
@@ -44,7 +44,7 @@ export type BreakptConfig<K extends string> = {
   noResize?: boolean
   maxDimension?: number
   blur?: number
-  exclude?: MediaTypes[]
+  exclude?: MediaType[]
   debugOnly?: boolean
 }
 

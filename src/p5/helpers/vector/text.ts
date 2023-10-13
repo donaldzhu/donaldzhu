@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import Glyph from './glyph'
 import { loopObject, keysToObject } from '../../../utils/commonUtils'
-import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT, YPositions } from './constants'
+import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT, YPosition } from './constants'
 import p5 from 'p5'
 import { SetTransformProps, VectorSetting } from './vectorTypes'
 import { coorObject, coorTuple } from '../../../utils/utilTypes'
@@ -50,7 +50,7 @@ class Text {
       const wordX = x1 + align / 2 * (w - wordWidths[i])
       this.writeWord(word, wordX, y1)
       const scaledLeading = leading * scale.value
-      if (position[1] === YPositions.Bottom) y1 -= scaledLeading
+      if (position[1] === YPosition.Bottom) y1 -= scaledLeading
       else y1 += scaledLeading
     })
   }

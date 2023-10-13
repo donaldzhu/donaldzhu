@@ -1,8 +1,8 @@
 import Size from '../../../utils/helpers/size'
-import { Modes, XPositions, YPositions } from './constants'
+import { Mode, XPosition, YPosition } from './constants'
 import p5 from 'p5'
 
-export enum VectorDrawMethods {
+export enum VectorDrawMethod {
   DrawLinks = 'drawLinks',
   DrawPoints = 'drawPoints',
   DrawVolume = 'drawVolume'
@@ -12,15 +12,15 @@ export interface VectorSetting {
   x: number
   y: number
   scale: Size
-  mode?: Modes
-  position: [XPositions, YPositions]
+  mode?: Mode
+  position: [XPosition, YPosition]
   mouseOrigin: p5.Vector
-  align: XPositions
+  align: XPosition
   spaceDelimiter: string
   spaceWidth: number
   tracking: number
   leading: number
-  drawingSequence: VectorDrawMethods[]
+  drawingSequence: VectorDrawMethod[]
   maxStretch: number
   glyphWeight: Size
   glyphColor: number | string

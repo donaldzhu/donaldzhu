@@ -1,4 +1,4 @@
-import { loopObject, mapObject } from '../utils/commonUtils'
+import { mapObject } from '../utils/commonUtils'
 
 const COLOR_PRESET = 0
 

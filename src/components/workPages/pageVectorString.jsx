@@ -6,6 +6,7 @@ import useCanvas from '../../hooks/useCanvas'
 import drawVectorString from '../../p5/sketches/drawVectorString'
 import { addEventListener } from '../../utils/reactUtils'
 import ElemRect from '../../utils/helpers/rect/elemRect'
+import { VideoIframeType } from '../common/media/mediaTypes'
 
 const PageVectorString = () => {
   const [translateImgSrc, setTranslateImgSrc] = useState(1)
@@ -48,7 +49,7 @@ const PageVectorString = () => {
       </RowContainer>
       <RowContainer>
         <VideoIframe
-          type='youtube'
+          type={VideoIframeType.Youtube}
           src='vPiSml8Y62k'
           aspectRatio='5 / 3'
           title='VECTOR [STRING]' />

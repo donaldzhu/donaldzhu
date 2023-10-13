@@ -3,6 +3,7 @@ import VideoIframe from '../common/media/videoIframe'
 import WorkImg from '../common/media/workImg'
 import WorkVid from '../common/media/workVid'
 import WorkImgGroup from '../common/media/workImgGroup'
+import { VideoIframeType } from '../common/media/mediaTypes'
 
 
 const PageSpin = () => {
@@ -25,7 +26,7 @@ const PageSpin = () => {
       </RowContainer>
       <RowContainer toolTip='Previously unthought-of material conditions of typography are revealed through the documentation of the tool: aperture, shutter speed, reflection, inter-layer shadows, backlight diffusion, and print type — real-life challenges that affect the legibility of type and communication.'>
         <VideoIframe
-          type='youtube'
+          type={VideoIframeType.Youtube}
           src='tTNSkb7iunw'
           title='SPIN Demo' />
       </RowContainer>

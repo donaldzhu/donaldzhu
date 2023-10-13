@@ -2,13 +2,7 @@ import { ImgHTMLAttributes, forwardRef } from 'react'
 import styled from 'styled-components'
 import _ from 'lodash'
 import mixins from '../../../styles/mixins'
-import { ImgProps } from './mediaTypes'
-
-
-interface StyledImgProps {
-  $hasLoaded: boolean
-  $aspectRatio: string
-}
+import { ImgProps, StyledMediaProps } from './mediaTypes'
 
 const Img = forwardRef<HTMLImageElement, ImgHTMLAttributes<HTMLImageElement> & ImgProps>(
   function Img({ src, alt, hasLoaded, aspectRatio, ...props }, ref) {
@@ -23,7 +17,7 @@ const Img = forwardRef<HTMLImageElement, ImgHTMLAttributes<HTMLImageElement> & I
     )
   })
 
-const StyledImg = styled.img<StyledImgProps>`
+const StyledImg = styled.img<StyledMediaProps>`
   ${mixins.media}
 `
 

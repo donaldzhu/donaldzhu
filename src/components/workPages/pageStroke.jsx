@@ -12,6 +12,7 @@ import { fontParams, fontSizes } from '../../styles/fonts'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import colors from '../../styles/colors'
+import { VideoIframeType } from '../common/media/mediaTypes'
 
 const PageStroke = () => {
   const [hoveringCard, setHoveringCard] = useState(null)
@@ -56,7 +57,7 @@ const PageStroke = () => {
       </RowContainer>
       <RowContainer>
         <VideoIframe
-          type='youtube'
+          type={VideoIframeType.Youtube}
           src='Xt4DlydwnO4'
           aspectRatio='14 / 9'
           title='STROKE Demo' />

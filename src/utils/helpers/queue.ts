@@ -1,10 +1,6 @@
 import _ from 'lodash'
 import { arrayify, filterFalsy } from '../commonUtils'
-
-type queueFunctionType<T> = (() => T) | {
-  run: () => T,
-  callback: () => void
-}
+import { queueArgType } from '../utilTypes'
 
 class Queue {
   private currentId: undefined | number
@@ -14,8 +10,8 @@ class Queue {
     this.interval = interval
   }
 
-  create<T>(queueArgs: queueFunctionType<T> | queueFunctionType<T>[]) {
-    const queueFunctions = arrayify(queueArgs).filter(filterFalsy)
+  create<T>(queueArgs: queueArgType<T>) {
+    const queueFunctions = filterFalsy(arrayify(queueArgs))
     return new Promise<void>((resolve, reject) => {
       const id = this.currentId = Date.now()
       const serve = (i: number) => {

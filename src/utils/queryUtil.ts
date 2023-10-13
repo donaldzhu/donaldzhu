@@ -1,9 +1,8 @@
-import _ from 'lodash'
-import { mapObject } from './commonUtils'
+import { mapObject, toPairs } from './commonUtils'
 import breakpts from '../data/breakpoints'
 import { getNativeResolution } from './sizeUtils'
 
-export enum BreakptEnum {
+export enum Breakpt {
   l = 'l',
   xl = 'xl',
   xxl = 'xxl'
@@ -14,7 +13,7 @@ export const queries = mapObject(breakpts, (_, breakpt) =>
 
 export const getBreakptKey = () => {
   const [width] = getNativeResolution()
-  const breakptPairs = _.toPairs(breakpts)
+  const breakptPairs = toPairs(breakpts)
     .sort((a, b) => a[1] - b[1])
   const breakptPair = breakptPairs
     .find(([_, breakptWidth]) => breakptWidth >= width)

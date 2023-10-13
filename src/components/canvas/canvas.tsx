@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useRef } from 'react'
 import { styled } from 'styled-components'
 import p5 from 'p5'
 import _ from 'lodash'
-import { P5Events } from '../../utils/p5Utils'
+import { P5Event } from '../../utils/p5Utils'
 import { typedKeys } from '../../utils/commonUtils'
 import { p5EventHandlers } from './canvasTypes'
 
@@ -45,8 +45,8 @@ const Canvas = ({ setup, className, children, ...eventHandlers }:
         if (p._loop) eventHandlers.draw(p)
       }
 
-      typedKeys<P5Events>(P5Events).forEach(event => {
-        if (eventHandlers[event] && event !== P5Events.draw)
+      typedKeys<P5Event>(P5Event).forEach(event => {
+        if (eventHandlers[event] && event !== P5Event.draw)
           p[event] = (nativeEvent?: Event | UIEvent) => eventHandlers[event](p, nativeEvent)
       })
     }, parentRef.current)

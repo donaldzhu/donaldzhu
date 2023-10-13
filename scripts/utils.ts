@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { ImgExtentions, MediaTypes, VidExtensions } from './resizer/lib/resizerTypes'
+import { ImgExtention, MediaType, VidExtension } from './resizer/lib/resizerTypes'
 import path from 'path'
 
 export const mkdirIfNone = (folderPath: string) => {
@@ -41,10 +41,10 @@ export const removeFile = (path: string) => {
 }
 
 export const parseMediaType = (fileName: string) => {
-  const imgRegex = new RegExp(`.(${ImgExtentions.gif}|${ImgExtentions.webp}|${ImgExtentions.png})$`, 'i')
-  const vidRegex = new RegExp(`.${VidExtensions.webm}$`, 'i')
-  if (fileName.match(imgRegex) || fileName.match(/\*$/)) return MediaTypes.image
-  if (fileName.match(vidRegex)) return MediaTypes.video
+  const imgRegex = new RegExp(`.(${ImgExtention.gif}|${ImgExtention.webp}|${ImgExtention.png})$`, 'i')
+  const vidRegex = new RegExp(`.${VidExtension.webm}$`, 'i')
+  if (fileName.match(imgRegex) || fileName.match(/\*$/)) return MediaType.image
+  if (fileName.match(vidRegex)) return MediaType.video
   throw new Error(`${fileName} is neither an image nor a video.`)
 }
 

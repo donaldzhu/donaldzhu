@@ -1,9 +1,10 @@
+import { Falsey } from 'lodash'
 import ElemRect from './helpers/rect/elemRect'
 import { coorTuple } from './utilTypes'
 
 // string
-export const capitalize = (string: string) => string.charAt(0)
-  .toUpperCase() + string.slice(1)
+export const capitalize = <T extends string>(string: T) => string.charAt(0)
+  .toUpperCase() + string.slice(1) as Capitalize<T>
 
 // number
 export const map = (value: number, inMin: number, inMax: number, outMin: number, outMax: number) =>
@@ -28,9 +29,6 @@ export const shuffleTo = <T>(array: T[], index: number) => {
 export const sortLike = <T>(array: T[], modelArray: T[]) =>
   array.sort((a, b) =>
     modelArray.indexOf(a) - modelArray.indexOf(b))
-
-export const filterFalsy = <T>(elem: T) => !!elem
-
 
 // object
 export const loopObject = <T extends object>(
@@ -94,3 +92,21 @@ export function typedKeys<T extends (object | string)>(object: T) {
   return Object.keys(object) as (T extends object ? keyof T : T)[]
 }
 
+export const toPairs = <T extends object>(object: T) => {
+  const keys = typedKeys<T>(object)
+  return keys.map(key => [key, object[key]] as [keyof T, T[keyof T]])
+}
+
+export const filterFalsy = <T>(array: T[]) =>
+  array.filter(elem => elem) as Exclude<T, Falsey>[]
+
+export const partition = <T, F>(
+  array: (T | F)[],
+  filterCallback: (elem: T | F) => boolean
+): [T[], F[]] => {
+  const filterTrue = (elem: T | F): elem is T => filterCallback(elem)
+  const filterFalse = (elem: T | F): elem is F => !filterCallback(elem)
+  const trueArray: T[] = array.filter(filterTrue)
+  const falseArray: F[] = array.filter(filterFalse)
+  return [trueArray, falseArray]
+}

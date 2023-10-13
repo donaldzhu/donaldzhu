@@ -3,7 +3,7 @@ import colors from '../styles/colors'
 import { sketchSizes } from '../styles/sizes'
 import { repeat } from './commonUtils'
 
-export enum P5Events {
+export enum P5Event {
   draw = 'draw',
   windowResized = 'windowResized',
   mouseClicked = 'mouseClicked',

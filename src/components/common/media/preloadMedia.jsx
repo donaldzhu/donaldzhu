@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react'
 import _ from 'lodash'
 import Media from './media'
-import { MEDIA_SIZES, isVid } from '../../../utils/helpers/preloader/preloadUtils'
+import { MediaSize, isVid } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
 
 const PreloadMedia = forwardRef(function PreloadMedia(props, ref) {
@@ -15,14 +15,14 @@ const PreloadMedia = forwardRef(function PreloadMedia(props, ref) {
     }
 
     let size = _.chain(mediaStack.loadedSizes)
-      .without(mediaStack, isZoomed ? '' : MEDIA_SIZES.max)
+      .without(mediaStack, isZoomed ? '' : MediaSize.Max)
       .last()
       .value()
     const hasLoaded = mediaIsVid || size
 
     if (mediaIsVid)
-      size = isZoomed ? MEDIA_SIZES.max : getBreakptKey()
-    else size ||= MEDIA_SIZES.desktopFallback
+      size = isZoomed ? MediaSize.Max : getBreakptKey()
+    else size ||= MediaSize.DesktopFallback
 
     return {
       src: mediaStack.stack[size].src,
