@@ -45,6 +45,9 @@ declare module 'p5' {
     doubleClicked(this: p5, evt?: MouseEvent): boolean | void
   }
 
+  // export type Graphics = p5.Graphics & {
+  //   canvas: HTMLCanvasElement
+  // }
   export default p5
   export = p5
 }

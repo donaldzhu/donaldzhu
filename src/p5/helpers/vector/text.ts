@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import Glyph from './glyph'
 import { loopObject, keysToObject } from '../../../utils/commonUtils'
-import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT } from './constants'
+import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT, YPositions } from './constants'
 import p5 from 'p5'
 import { SetTransformProps, VectorSetting } from './vectorTypes'
 import { coorObject, coorTuple } from '../../../utils/utilTypes'
@@ -23,14 +23,13 @@ class Text {
   glyphs: Record<string, Glyph>
   cachedBounds: Map<string, BoundsInterface>
 
-  constructor(p5: p5 | p5.Graphics, setting: VectorSetting) {
-    this.setting = {
-      ...DEFAULT_SETTING,
-      ...setting,
-      mouseOrigin: p5.createVector(setting.x, setting.y)
-    }
+  constructor(p5: p5 | p5.Graphics, setting: Partial<VectorSetting>) {
+    this.setting = _.defaults(
+      setting,
+      DEFAULT_SETTING,
+      { mouseOrigin: p5.createVector(setting.x, setting.y) }
+    )
 
-    this.setting.scale = setting.scale
     this.glyphs = keysToObject(GLYPH_NAMES,
       name => new Glyph(p5, name, this.setting))
 
@@ -51,10 +50,8 @@ class Text {
       const wordX = x1 + align / 2 * (w - wordWidths[i])
       this.writeWord(word, wordX, y1)
       const scaledLeading = leading * scale.value
-      // TODO
-      // if (position === YPositions.Bottom) y1 -= scaledLeading
-      // else 
-      y1 += scaledLeading
+      if (position[1] === YPositions.Bottom) y1 -= scaledLeading
+      else y1 += scaledLeading
     })
   }
 

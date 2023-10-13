@@ -9,7 +9,7 @@ import colors from '../../styles/colors'
 import { sketchSizes } from '../../styles/sizes'
 import config from '../configs/stroke'
 import p5 from 'p5'
-import { canvasState } from '../../components/canvas/canvasTypes'
+import { CanvasState } from '../../components/canvas/canvasTypes'
 import { MutableRefObject } from 'react'
 import { getVw } from '../../utils/sizeUtils'
 
@@ -59,7 +59,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
     createPanto(p5)
   }
 
-  const draw = (p5: p5, { hideCursorRef }: canvasState) => {
+  const draw = (p5: p5, { hideCursorRef }: CanvasState) => {
     const isClearing = isClearingRef.current
     if (isClearing) clear()
 

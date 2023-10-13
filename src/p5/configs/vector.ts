@@ -1,5 +1,7 @@
 import colors from '../../styles/colors'
 import { getSize } from '../../utils/sizeUtils'
+import { DEFAULT_SETTING, XPositions, YPositions } from '../helpers/vector/constants'
+import { VectorDrawMethods, VectorSetting } from '../helpers/vector/vectorTypes'
 
 const mainSketchConfigs = {
   scale: getSize({ l: 1.15, xxl: 2.5 }),
@@ -15,7 +17,7 @@ const lowerWeight = getSize({ l: 6, xxl: 10 })
 export const homeIconScales = { l: 0.75, xxl: 1.15 }
 const homeIconWeight = getSize({ l: 4, xxl: 6 })
 
-const configs = {
+const configs: Record<string, Partial<VectorSetting>> = {
   MAIN_UPPER: {
     ...mainSketchConfigs,
     glyphWeight: getSize({ l: 4, xxl: 7 }),
@@ -23,25 +25,25 @@ const configs = {
     pointSize: getSize({ l: 8, xxl: 16 }),
     pointColor: colors.homeSketch,
     pointFill: colors.homeSketch,
-    drawingSequence: ['drawLinks', 'drawPoints'],
+    drawingSequence: [VectorDrawMethods.DrawLinks, VectorDrawMethods.DrawPoints],
   },
   MAIN_LOWER: {
     ...mainSketchConfigs,
     glyphWeight: lowerWeight,
     linkWeight: lowerWeight,
     volumeColor: colors.homeSketch,
-    drawingSequence: ['drawLinks', 'drawVolume'],
+    drawingSequence: [VectorDrawMethods.DrawLinks, VectorDrawMethods.DrawVolume],
   },
   HOME_ICON: {
     scale: getSize(homeIconScales),
-    position: ['LEFT', 'TOP'],
+    position: [XPositions.Left, YPositions.Top],
     glyphWeight: homeIconWeight,
     linkWeight: homeIconWeight,
     glyphColor: colors.homeIcon,
     linkColor: colors.homeIcon,
     volumeColor: colors.homeIcon,
     easing: 'easeOutCubic',
-    drawingSequence: ['drawLinks', 'drawVolume'],
+    drawingSequence: [VectorDrawMethods.DrawLinks, VectorDrawMethods.DrawVolume],
     maxStretch: 8,
   },
   VECTOR_STRING_TRANSLATE: {
@@ -52,15 +54,15 @@ const configs = {
     pointFill: colors.vectorStringSketch,
     glyphColor: colors.vectorStringSketch,
     linkColor: colors.vectorStringSketch,
-    drawingSequence: ['drawLinks', 'drawPoints'],
+    drawingSequence: [VectorDrawMethods.DrawLinks, VectorDrawMethods.DrawPoints],
     mapFunction: function (stillVector, mouseVector) {
-      const distVector = mouseVector.sub(this.mouseOrigin)
+      const distVector = mouseVector.sub(this.mouseOrigin || stillVector)
       const segmentation = 20
       const segmentSize = Math.PI * 2 / segmentation
       const segmentedHeading = Math.floor(distVector.heading() / segmentSize) * segmentSize
       distVector
         .setHeading(segmentedHeading)
-        .setMag(this.maxStretch)
+        .setMag(this.maxStretch || DEFAULT_SETTING.maxStretch)
         .add(stillVector)
       return distVector
     }

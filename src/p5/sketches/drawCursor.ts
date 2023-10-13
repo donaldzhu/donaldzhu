@@ -1,12 +1,12 @@
 import { wrapDrawingContext } from '../../utils/p5Utils'
 import colors from '../../styles/colors'
 import p5 from 'p5'
-import { canvasState } from '../../components/canvas/canvasTypes'
+import { CanvasState } from '../../components/canvas/canvasTypes'
 import { sketchSizes } from '../../styles/sizes'
 import { repeat } from '../../utils/commonUtils'
 
 const drawCursor = () => {
-  const draw = (p5: p5, { mousePositionRef, hideCursorRef }: canvasState) => {
+  const draw = (p5: p5, { mousePositionRef, hideCursorRef }: CanvasState) => {
     if (!mousePositionRef.current || hideCursorRef.current) return
 
     wrapDrawingContext(p5, () => {

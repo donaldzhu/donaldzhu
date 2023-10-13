@@ -1,5 +1,5 @@
 import Size from '../../../utils/helpers/size'
-import { Modes, XPositions } from './constants'
+import { Modes, XPositions, YPositions } from './constants'
 import p5 from 'p5'
 
 export enum VectorDrawMethods {
@@ -13,7 +13,7 @@ export interface VectorSetting {
   y: number
   scale: Size
   mode?: Modes
-  position: [Modes, Modes]
+  position: [XPositions, YPositions]
   mouseOrigin: p5.Vector
   align: XPositions
   spaceDelimiter: string
@@ -23,15 +23,15 @@ export interface VectorSetting {
   drawingSequence: VectorDrawMethods[]
   maxStretch: number
   glyphWeight: Size
-  glyphColor: number
+  glyphColor: number | string
   linkWeight: Size
-  linkColor: number
+  linkColor: number | string
   pointWeight: Size
   pointSize: Size
-  pointFill: number
-  pointColor: number
+  pointFill: number | string
+  pointColor: number | string
   volumeWeight: Size
-  volumeColor: number
+  volumeColor: number | string
   correctVolumeStroke: boolean
   easing: string
   squareMap: true

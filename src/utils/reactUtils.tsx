@@ -2,6 +2,7 @@ import parse, { HTMLReactParserOptions, domToReact } from 'html-react-parser'
 import SmallText from '../components/common/styled/smallText'
 import Anchor from '../components/common/anchor'
 
+
 export const addEventListener = <T extends (Element | Document)>(
   target: T,
   eventName: T extends Element ? keyof ElementEventMap : keyof DocumentEventMap,

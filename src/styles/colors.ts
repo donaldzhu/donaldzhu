@@ -1,4 +1,4 @@
-import { loopObject } from '../utils/commonUtils'
+import { loopObject, mapObject } from '../utils/commonUtils'
 
 const COLOR_PRESET = 0
 
@@ -10,7 +10,8 @@ const white = 'white'
 const swatches = [
   [red, blue, white, black]
 ]
-const colors: Record<string, string | number> = {
+
+const colorPalette = {
   background: 2,
   defaultText: 1,
   defaultTextSelectColor: 2,
@@ -35,8 +36,8 @@ const colors: Record<string, string | number> = {
   vectorStringSketch: 3
 }
 
-loopObject(colors, (colorTarget, colorIndex) =>
-  colors[colorTarget] = swatches[COLOR_PRESET][colorIndex])
+const colors = mapObject<Record<string, number>, string>(colorPalette,
+  (_, colorIndex) => swatches[COLOR_PRESET][colorIndex])
 
-export default (colors as Record<string, string>)
+export default colors
 

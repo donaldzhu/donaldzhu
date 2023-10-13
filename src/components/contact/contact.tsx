@@ -14,6 +14,7 @@ import contactData from '../../data/contactData'
 import { fontSizes } from '../../styles/fonts'
 import { handleHoverType, qrSvg } from './contactType'
 import { ContactDataInterface } from '../../data/dataTypes'
+import { validateRef } from '../../utils/typeUtils'
 
 const Contact = () => {
   const [shownQr, setShownQR] = useState<ContactDataInterface>()
@@ -22,10 +23,10 @@ const Contact = () => {
 
   useCanvas(() => ({
     draw: p5 => {
-      if (!qrToolTipRef.current || !qrPopUpRef.current) return
+      if (!validateRef(qrToolTipRef) || !validateRef(qrPopUpRef)) return
 
-      const qrTooltip = new ElemRect(qrToolTipRef as MutableRefObject<qrSvg>, sketchSizes.contactQr.toolTipPadding.value)
-      const qrPopUp = new ElemRect(qrPopUpRef as MutableRefObject<qrSvg>, sketchSizes.contactQr.popUpPadding.value)
+      const qrTooltip = new ElemRect(qrToolTipRef, sketchSizes.contactQr.toolTipPadding.value)
+      const qrPopUp = new ElemRect(qrPopUpRef, sketchSizes.contactQr.popUpPadding.value)
 
       wrapDrawingContext(p5, () => {
         qrTooltip.rectAround(p5)

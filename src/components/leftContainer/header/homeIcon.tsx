@@ -6,16 +6,18 @@ import drawHomeIcon from '../../../p5/sketches/drawHomeIcon'
 import { percent } from '../../../utils/sizeUtils'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
+import { GlobalCanvasStates } from '../../canvas/canvasTypes'
 
-const HomeIcon = ({ canvasRef, canvasStateRefs }) => {
-  const placeholderRef = useRef()
+
+const HomeIcon = ({ canvasRef, canvasStateRefs }: GlobalCanvasStates) => {
+  const placeholderRef = useRef<HTMLDivElement | null>(null)
   const isHoveringRef = useRef(false)
 
   useCanvas(() => drawHomeIcon({ placeholderRef, isHoveringRef }), {
     canvasRef, canvasStateRefs
   })
 
-  const handleHover = isOver => isHoveringRef.current = isOver
+  const handleHover = (isOver: boolean) => isHoveringRef.current = isOver
 
   return (
     <HomeButtonContainer ref={placeholderRef}>

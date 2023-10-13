@@ -17,6 +17,7 @@ const useCanvas = (
   const [setupDone, setSetupDone] = useState(false)
   const outletContext = useOutletContext()
   const { canvasRef, canvasStateRefs } = _.defaults(config, outletContext)
+  // TODO
   if (!canvasRef || !canvasStateRefs) throw new Error('No canvasRef or canvasStateRefs is passed to canvas.')
 
   const { setup, draw, cleanup, ...callbacks } = useMemo(createSketch, dependencies)

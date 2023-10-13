@@ -67,7 +67,7 @@ export const intersectTwoCircles = (center1: p5.Vector, r1: number, center2: p5.
   return [[ix1, iy1], [ix2, iy2]]
 }
 
-export const mousePosition = (p5: p5) => [p5.mouseX, p5.mouseY] as [number, number]
+export const mousePosition = (p5: p5): [number, number] => [p5.mouseX, p5.mouseY]
 
 export const wrapDrawingContext = (p5: p5 | p5.Graphics, callback: () => any) => {
   p5.push()

@@ -54,7 +54,7 @@ class Vector {
 
     wrapDrawingContext(p5, () => {
       p5.strokeWeight(glyphWeight)
-      p5.stroke(glyphColor)
+      p5.stroke(`${glyphColor}`)
       this.loopPoints((point, line, pointIndex) => {
         const nextPoint = line[pointIndex + 1]
         if (nextPoint) p5.line(

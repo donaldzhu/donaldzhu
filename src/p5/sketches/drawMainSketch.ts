@@ -1,20 +1,31 @@
 import Text from '../helpers/vector/text'
-import { repeat, repeatMap } from '../../utils/commonUtils.ts'
+import { repeat, repeatMap } from '../../utils/commonUtils'
 import { wrapDrawingContext } from '../../utils/p5Utils'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import colors from '../../styles/colors'
 import { sketchSizes } from '../../styles/sizes'
 import configs from '../configs/vector'
+import { MutableRefObject } from 'react'
+import { validateRef } from '../../utils/typeUtils'
+import { coorTuple } from '../../utils/utilTypes'
+import p5 from 'p5'
+import { CanvasState } from '../../components/canvas/canvasTypes'
 
-const drawMainSketch = ({ placeholderRef }) => {
+interface DrawMainSketchProps {
+  placeholderRef: MutableRefObject<HTMLDivElement | null>
+}
+
+const drawMainSketch = ({ placeholderRef }: DrawMainSketchProps) => {
   const UPPER_TEXT_CONTENT = 'WORK IN\nPROGRESS'
   const LOWER_TEXT_CONTENT = 'DONALD\nZHU'
 
+  if (!validateRef(placeholderRef))
+    throw new Error('Main sketch has no placeholder ref.')
   const placeholder = new ElemRect(placeholderRef, -sketchSizes.main.anchor.offset.value)
-  let upperText, lowerText
-  let mouseOrigin = []
+  let upperText: Text, lowerText: Text
+  let mouseOrigin: coorTuple | [] = []
 
-  const createVectors = p5 => {
+  const createVectors = (p5: p5) => {
     const [x, y] = placeholder.center
     const centerPadding = sketchSizes.main.centerPadding.value
 
@@ -39,8 +50,8 @@ const drawMainSketch = ({ placeholderRef }) => {
 
   const setup = createVectors
 
-  const draw = (p5, { mousePositionRef }) => {
-    let { CENTER, ROUND, mouseX, mouseY } = p5
+  const draw = (p5: p5, { mousePositionRef }: CanvasState) => {
+    const { CENTER, ROUND, mouseX, mouseY } = p5
     const halfCursorSize = sketchSizes.cursor.value / 2
 
     upperText.write(UPPER_TEXT_CONTENT)
@@ -50,7 +61,11 @@ const drawMainSketch = ({ placeholderRef }) => {
     const anchorSize = sketchSizes.main.anchor.size.value
     const { x1, y1, x2, y2 } = placeholder
 
-    const getCoors = (xCoors, yCoors) => repeatMap(4, i => [xCoors[Math.floor(i / 2)], yCoors[i % 2]])
+    const getCoors = (xCoors: coorTuple, yCoors: coorTuple) =>
+      repeatMap(4, i => {
+        const result: coorTuple = [xCoors[Math.floor(i / 2)], yCoors[i % 2]]
+        return result
+      })
     const anchors = getCoors([x1, x2], [y1, y2])
     const cursorCoors = getCoors([mouseX - halfCursorSize, mouseX + halfCursorSize], [mouseY - halfCursorSize, mouseY + halfCursorSize])
 

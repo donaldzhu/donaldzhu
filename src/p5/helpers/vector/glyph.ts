@@ -38,7 +38,7 @@ class Glyph {
     const { p5, setting } = this
     const { linkColor, linkWeight } = setting
     p5.strokeWeight(linkWeight.value)
-    p5.stroke(linkColor)
+    p5.stroke(`${linkColor}`)
     this.loopVectors(({ stillPoint, activePoint }) =>
       p5.line(...parseVector(stillPoint), ...parseVector(activePoint))
     )
@@ -50,9 +50,9 @@ class Glyph {
     const pointSize = setting.pointSize.value
 
     p5.strokeWeight(pointWeight.value)
-    p5.stroke(pointColor)
+    p5.stroke(`${pointColor}`)
     if (pointFill === null) p5.noFill()
-    else p5.fill(pointFill)
+    else p5.fill(`${pointFill}`)
     p5.ellipseMode(p5.CENTER)
     this.loopVectors(({ stillPoint, activePoint }) => {
       p5.ellipse(...parseVector(stillPoint), pointSize)
@@ -63,14 +63,15 @@ class Glyph {
   drawVolume() {
     const { p5, setting } = this
     const { volumeColor, volumeWeight, correctVolumeStroke } = setting
+    const color = `${volumeColor}`
 
-    p5.fill(volumeColor)
+    p5.fill(color)
     this.loopVectors(({ stillPoint, activePoint, nextStillPoint, nextActivePoint }) => {
       if (!nextStillPoint) return
 
       if (correctVolumeStroke) p5.noStroke()
       else {
-        p5.stroke(volumeColor)
+        p5.stroke(color)
         p5.strokeWeight(volumeWeight.value)
       }
 
@@ -82,7 +83,7 @@ class Glyph {
       )
 
       if (correctVolumeStroke) {
-        p5.stroke(volumeColor)
+        p5.stroke(color)
         p5.strokeWeight(volumeWeight.value)
         p5.line(...parseVector(stillPoint), ...parseVector(activePoint))
       }

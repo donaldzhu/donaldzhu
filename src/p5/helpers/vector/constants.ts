@@ -33,7 +33,7 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
   x: 0,
   y: 0,
   scale: new Size(1),
-  position: [Modes.Center, Modes.Center],
+  position: [XPositions.Center, YPositions.Center],
   align: XPositions.Center,
   spaceDelimiter: ' ',
   spaceWidth: 25,

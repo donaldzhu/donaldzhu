@@ -2,8 +2,9 @@ import { styled } from 'styled-components'
 import HomeIcon from './homeIcon'
 import { domSizes } from '../../../styles/sizes'
 import SvgBorder from '../../common/svgBorder'
+import { GlobalCanvasStates } from '../../canvas/canvasTypes'
 
-const Header = ({ canvasRef, canvasStateRefs }) => {
+const Header = ({ canvasRef, canvasStateRefs }: GlobalCanvasStates) => {
   return (
     <header>
       <HomeIconContainer>
