@@ -4,11 +4,10 @@ import mixins from '../../styles/mixins'
 import colors from '../../styles/colors'
 import { fontLineHeights } from '../../styles/fonts'
 
-interface PopUpContainerProps {
+type PopUpContainerProps = {
   className?: string,
-  children?: ReactNode,
-  props?: HTMLAttributes<HTMLDivElement>[]
-}
+  children?: ReactNode
+} & HTMLAttributes<HTMLDivElement>
 
 const PopUpContainer = ({ className, children, ...props }: PopUpContainerProps) => {
   useEffect(() => {

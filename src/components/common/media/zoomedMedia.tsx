@@ -7,17 +7,31 @@ import { toPercent } from '../../../utils/sizeUtils'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
 import PopUpContainer from '../popUpContainer'
+import { handleUnzoom } from '../../pageWrappers/pageTypes'
+import { ZoomMediaProps } from './mediaTypes'
 
-const ZoomedMedia = ({ zoomMedia, handleUnzoom }) => {
-  const zoomedMediaRef = useRef()
+interface ZoomedMediaProps {
+  readonly zoomMedia: ZoomMediaProps
+  readonly handleUnzoom: handleUnzoom
+}
+
+interface StyledZoomedMediaProps {
+  readonly $maxSize: string
+}
+
+const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
+  const zoomedMediaRef = useRef<HTMLImageElement | HTMLVideoElement>(null)
 
   useEffect(() => {
-    const escListener = ({ key }) => {
+    const escListener = ({ key }: KeyboardEvent) => {
       if (key === 'Escape') handleUnzoom()
     }
 
     const currentZoomedMedia = zoomedMediaRef.current
-    if (zoomMedia && currentZoomedMedia?.tagName === 'VIDEO') {
+    function zoomMediaIsVid(zoomedMedia: HTMLElement): zoomedMedia is HTMLVideoElement {
+      return zoomedMedia.tagName === 'VIDEO'
+    }
+    if (zoomMedia && currentZoomedMedia && zoomMediaIsVid(currentZoomedMedia)) {
       currentZoomedMedia.currentTime = zoomMedia.getCurrentTime()
       currentZoomedMedia.play()
     }
@@ -29,7 +43,7 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }) => {
   return (
     <ZoomedContainer
       $maxSize={maxSize}
-      onClick={handleUnzoom}>
+      onClick={() => handleUnzoom()}>
       <PreloadMedia
         type={type}
         mediaStack={mediaStack}
@@ -42,7 +56,7 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }) => {
   )
 }
 
-const ZoomedContainer = styled(PopUpContainer)`
+const ZoomedContainer = styled(PopUpContainer) <StyledZoomedMediaProps>`
   background-color: rgba(0, 0, 0, 0.85);
   cursor: zoom-out;
 

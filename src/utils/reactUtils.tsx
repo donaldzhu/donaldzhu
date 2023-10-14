@@ -2,16 +2,31 @@ import parse, { HTMLReactParserOptions, domToReact } from 'html-react-parser'
 import SmallText from '../components/common/styled/smallText'
 import Anchor from '../components/common/anchor'
 
-
-export const addEventListener = <T extends (Element | Document)>(
-  target: T,
-  eventName: T extends Element ? keyof ElementEventMap : keyof DocumentEventMap,
-  callback: (this: T, event: T extends Element ? ElementEventMap[keyof ElementEventMap] : DocumentEventMap[keyof DocumentEventMap]) => any,
-  options?: boolean | AddEventListenerOptions
-) => {
-  target.addEventListener(eventName, callback, options)
-  return () => target.removeEventListener(eventName, callback, options)
+export const addEventListener = <
+  T extends Element | Document | Window,
+  K extends (
+    T extends Element ? keyof ElementEventMap :
+    T extends Document ? keyof DocumentEventMap :
+    T extends Window ? keyof WindowEventMap : never
+  )>(
+    target: T,
+    type: K,
+    listener: (
+      this: T,
+      ev: (
+        K extends keyof ElementEventMap ? ElementEventMap[K] :
+        K extends keyof DocumentEventMap ? DocumentEventMap[K] :
+        K extends keyof WindowEventMap ? WindowEventMap[K] : never
+      )
+    ) => any,
+    options?: T extends Element ?
+      (boolean | AddEventListenerOptions) :
+      (boolean | EventListenerOptions)
+  ) => {
+  target.addEventListener(type, listener as () => any, options)
+  return () => target.removeEventListener(type, listener as () => any, options)
 }
+
 
 export const parseHtml = (string: string) => {
   string = string.replace(/—/g, ' — ')

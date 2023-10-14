@@ -40,8 +40,8 @@ function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
       ...props,
       mediaStack,
       fallbackPath,
-      getCurrentTime: () => ('current' in mediaRef && mediaRef.current && 'currentTime' in mediaRef.current) ?
-        mediaRef.current?.currentTime : undefined,
+      getCurrentTime: () => (('current' in mediaRef && mediaRef.current && 'currentTime' in mediaRef.current) ?
+        mediaRef.current?.currentTime : undefined) || 0,
       maxSize: typeof maxSize === 'number' ? toPercent(maxSize) : maxSize
     })
 

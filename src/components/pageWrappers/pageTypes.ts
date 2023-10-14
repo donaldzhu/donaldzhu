@@ -11,3 +11,5 @@ export type PageContextProps = {
   canAutoPlay: boolean | undefined,
   preloadManager: PreloadManager
 } & GlobalCanvasStates
+
+export type handleUnzoom = (media?: ZoomMediaProps) => void

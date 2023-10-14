@@ -14,7 +14,7 @@ import { MediaFileType } from '../../utils/helpers/preloader/preloadUtils'
 import useCanAutoPlay from '../../hooks/useCanAutoPlay'
 import AutoPlayPopUp from '../common/autoPlayPopUp'
 import { typedKeys } from '../../utils/commonUtils'
-import { PageContextProps } from './pageTypes'
+import { PageContextProps, handleUnzoom } from './pageTypes'
 import { ZoomMediaProps } from '../common/media/mediaTypes'
 
 const Page = () => {
@@ -30,7 +30,7 @@ const Page = () => {
   const canAutoPlay = useCanAutoPlay()
   const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
 
-  const handleZoomMedia = (media: ZoomMediaProps | undefined) => setZoomMedia(media)
+  const handleZoomMedia: handleUnzoom = media => setZoomMedia(media)
   const canvasRef = useGlobalCanvas()
 
   useCanvas(drawCursor, { canvasRef, canvasStateRefs })

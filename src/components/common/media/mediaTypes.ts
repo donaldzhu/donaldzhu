@@ -1,5 +1,5 @@
 import { ForwardedRef, ImgHTMLAttributes, SyntheticEvent, VideoHTMLAttributes } from 'react'
-import { ImgStack, MediaStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
+import { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 
 export interface MediaProps {
@@ -8,8 +8,8 @@ export interface MediaProps {
 }
 
 export interface StyledMediaProps {
-  $hasLoaded?: boolean
-  $aspectRatio?: string | number
+  readonly $hasLoaded?: boolean
+  readonly $aspectRatio?: string | number
 }
 
 export type ImgProps = MediaProps
@@ -54,9 +54,9 @@ export type ZoomMediaBaseProps = {
   src: string,
   width: string,
   isToolTip: boolean,
-  mediaStack?: MediaStack
+  mediaStack?: ImgStack | VidStack
   fallbackPath: string
-  getCurrentTime: () => number | undefined
+  getCurrentTime: () => number
   maxSize: string
 }
 
