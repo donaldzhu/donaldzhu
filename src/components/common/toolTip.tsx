@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { ReactNode, useContext, useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { styled } from 'styled-components'
 import _ from 'lodash'
@@ -12,37 +12,50 @@ import { em } from '../../utils/sizeUtils'
 import mixins from '../../styles/mixins'
 import colors from '../../styles/colors'
 import { domSizes, sketchSizes } from '../../styles/sizes'
+import { WorkPageContextProps } from '../work/workTypes'
+import { PageContextProps } from '../pageWrappers/pageTypes'
+import { validateRef } from '../../utils/typeUtils'
 
-const ToolTip = ({ children }) => {
+interface ToolTipProps {
+  children?: ReactNode
+}
+
+interface StyledToolTipProps {
+  $isHighlighted: boolean
+}
+
+const ToolTip = ({ children }: ToolTipProps) => {
   const [isShown, setIsShown] = useState(false)
-  const { toolTipRef, popUpRef } = useContext(WorkPageContext)
-  const { zoomMedia, canvasStateRefs } = useOutletContext()
+  const { toolTipRef, popUpRef } = useContext<WorkPageContextProps>(WorkPageContext)
+  const { zoomMedia, canvasStateRefs } = useOutletContext<PageContextProps>()
   const { mousePositionRef } = canvasStateRefs
 
   const handleHover = ({ currentTarget }) => {
-    toolTipRef.current = currentTarget
+    if (toolTipRef) toolTipRef.current = currentTarget
     setIsShown(true)
   }
 
   useEffect(() => {
     if (!isShown) return _.noop
     const mouseHandler = () => {
-      if (!toolTipRef.current || !popUpRef.current) return
-      const toolTip = new ElemRect(toolTipRef, sketchSizes.toolTip.padding.value)
-      const popUp = new ElemRect(popUpRef)
+      if (validateRef(toolTipRef) && validateRef(popUpRef)) {
+        const toolTip = new ElemRect(toolTipRef, sketchSizes.toolTip.padding.value)
+        const popUp = new ElemRect(popUpRef)
 
-      const mousePosition = mousePositionRef.current
-      if (
-        toolTip.mouseIsOver(mousePosition) ||
-        popUp.mouseIsOver(mousePosition) ||
-        zoomMedia
-      ) return
+        const mousePosition = mousePositionRef.current
+        if (
+          (mousePosition &&
+            (toolTip.mouseIsOver(mousePosition) ||
+              popUp.mouseIsOver(mousePosition))) ||
+          zoomMedia
+        ) return
 
-      const toolTipPoints = getToolTipPoints(toolTip, popUp)
-      if (pointInPolygon(mousePositionRef.current, toolTipPoints)) return
+        const toolTipPoints = getToolTipPoints(toolTip, popUp)
+        if (pointInPolygon(mousePositionRef.current, toolTipPoints)) return
 
-      setIsShown(false)
-      toolTipRef.current = undefined
+        setIsShown(false)
+      }
+      if (toolTipRef) toolTipRef.current = null
     }
 
     const removeMouseMove = addEventListener(document, 'mousemove', mouseHandler)
@@ -73,7 +86,7 @@ const Container = styled.div`
 `
 
 const toolTipSize = em(1.35)
-const ToolTipContainer = styled.div`
+const ToolTipContainer = styled.div<StyledToolTipProps>`
   position: absolute;
   left: calc(${domSizes.mainContainer.margin.css} * -1 - ${toolTipSize} / 2);
   background-color: ${colors.toolTipBg};

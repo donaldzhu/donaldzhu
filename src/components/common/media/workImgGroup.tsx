@@ -1,8 +1,17 @@
 import RowContainer from '../rowContainer'
 import WorkImg from './workImg'
 import { joinPaths, repeatMap } from '../../../utils/commonUtils'
+import { ReactNode } from 'react'
+import { ZoomImgProps } from './mediaTypes'
 
-const WorkImgGroup = ({ grid, toolTip, prefix, props }) => {
+interface WorkImgGroupProps {
+  grid: number[]
+  toolTip: ReactNode
+  prefix: string
+  props: Omit<ZoomImgProps, 'src'>
+}
+
+const WorkImgGroup = ({ grid, toolTip, prefix, props }: WorkImgGroupProps) => {
   const [col, row] = grid
   return repeatMap(row, i =>
     <RowContainer key={i} toolTip={!i && toolTip}>

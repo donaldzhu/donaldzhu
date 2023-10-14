@@ -1,8 +1,8 @@
 import { MutableRefObject } from 'react'
 
 export interface ToolTipProps {
-  toolTipRef?: MutableRefObject<HTMLDivElement>,
-  popUpRef?: MutableRefObject<HTMLDivElement>,
+  toolTipRef?: MutableRefObject<HTMLDivElement | null>,
+  popUpRef?: MutableRefObject<HTMLDivElement | null>,
 }
 
 export type WorkPageContextProps = {
