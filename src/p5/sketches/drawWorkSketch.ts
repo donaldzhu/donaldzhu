@@ -2,11 +2,17 @@ import p5 from 'p5'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
 import { sketchSizes } from '../../styles/sizes'
+import { MutableRefObject } from 'react'
+import { validateRef } from '../../utils/typeUtils'
 
+interface DrawWorkSketchProps {
+  sidebarRef: MutableRefObject<HTMLAnchorElement | null>
+  rosterRef: MutableRefObject<HTMLAnchorElement | null>
+}
 
-const drawWorkSketch = ({ sidebarRef, rosterRef }) => {
+const drawWorkSketch = ({ sidebarRef, rosterRef }: DrawWorkSketchProps) => {
   const draw = (p5: p5) => {
-    if (!sidebarRef.current || !rosterRef.current) return
+    if (!validateRef(sidebarRef) || !validateRef(rosterRef)) return
     const sidebar = new ElemRect(sidebarRef, sketchSizes.workIndex.listPadding.value)
     const roster = new ElemRect(rosterRef, sketchSizes.workIndex.thumbnailPadding.value)
 

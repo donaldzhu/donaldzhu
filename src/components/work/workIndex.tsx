@@ -11,15 +11,28 @@ import usePreloadQueue from '../../hooks/usePreloadQueue'
 import drawWorkSketch from '../../p5/sketches/drawWorkSketch'
 import { domSizes } from '../../styles/sizes'
 import { queries } from '../../utils/queryUtil'
-import workData from '../../data/work/workData'
+import workData from '../../data/work/workData.json'
 import usePortfolioQuery from '../../hooks/usePortfolioQuery'
+import { filterFalsy } from '../../utils/commonUtils'
+
+export interface WorkDataInterface {
+  id: string
+  title: string
+  abbr: string | null
+  date: string
+  tags: string[]
+  medium: string[]
+  animatedThumbnail: boolean
+  enabled: boolean
+  listed: boolean
+}
 
 const WorkIndex = () => {
-  const [highlighted, setHighlighted] = useState()
-  const sidebarRef = useRef(null)
-  const rosterRef = useRef(null)
+  const [highlighted, setHighlighted] = useState<string>()
+  const sidebarRef = useRef<HTMLAnchorElement>(null)
+  const rosterRef = useRef<HTMLAnchorElement>(null)
 
-  const handleHover = projectTitle => setHighlighted(projectTitle)
+  const handleHover = (projectTitle: string) => setHighlighted(projectTitle)
 
   const setupDone = useCanvas(() =>
     drawWorkSketch({ sidebarRef, rosterRef }))
@@ -28,9 +41,10 @@ const WorkIndex = () => {
     preloadManager.defaultPreload())
 
   const { portfolioData } = usePortfolioQuery()
-  const filteredWorkData = portfolioData?.projects.map(projectId =>
-    workData.find(work => work.id === projectId)
-  ) || workData
+  const portfolioProjects = portfolioData ? filterFalsy(portfolioData?.projects
+    .map(projectId => workData.find(work => work.id === projectId))) : []
+  const filteredWorkData: WorkDataInterface[] = portfolioProjects.length ? portfolioProjects : workData
+
   useSidebar(<WorkIndexSidebar
     workData={filteredWorkData}
     highlighted={highlighted}
@@ -54,7 +68,7 @@ const WorkIndex = () => {
   )
 }
 
-const ThumbnailContainer = styled(MainContainer)`
+const ThumbnailContainer = styled(MainContainer) <{ $columns: number }>`
   a {
     width: ${({ $columns }) => `calc(100% / ${$columns} - ${domSizes.workIndex.thumbnail.gap.css} * 2)`};
     margin: ${domSizes.workIndex.thumbnail.gap.css};

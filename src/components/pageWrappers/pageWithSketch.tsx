@@ -9,7 +9,7 @@ import mixins from '../../styles/mixins'
 import Size from '../../utils/helpers/size'
 
 const PageWithMainSketch = () => {
-  const placeholderRef = useRef()
+  const placeholderRef = useRef<HTMLDivElement>(null)
   const setupDone = useCanvas(() =>
     drawMainSketch({ placeholderRef }))
 

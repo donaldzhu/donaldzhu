@@ -5,10 +5,20 @@ import { joinPaths } from '../../utils/commonUtils'
 import { FileExt, MediaFileType } from '../../utils/helpers/preloader/preloadUtils'
 import Anchor from '../common/anchor'
 import { getBreakptKey } from '../../utils/queryUtil'
+import { PageContextProps } from '../pageWrappers/pageTypes'
+import { WorkDataInterface } from './workIndex'
+import { MutableRefObject } from 'react'
 
-const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }) => {
-  const { title, alt, id, animatedThumbnail } = data
-  const { preloadManager } = useOutletContext()
+interface WorkThumbnailInterface {
+  data: WorkDataInterface
+  isHighlighted: boolean
+  highlightedRef: MutableRefObject<HTMLAnchorElement | null>
+  handleHover: (projectTitle: string) => void
+}
+
+const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }: WorkThumbnailInterface) => {
+  const { title, id, animatedThumbnail } = data
+  const { preloadManager } = useOutletContext<PageContextProps>()
 
   const fallbackPath = joinPaths('/assets/thumbnails/', getBreakptKey(), id) + '.' +
     (animatedThumbnail ? FileExt.Webm : FileExt.Webp)
@@ -18,9 +28,8 @@ const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }) => 
       ref={isHighlighted ? highlightedRef : null}
       onMouseOver={() => handleHover(title)}>
       <PreloadMedia
-        mediaStack={preloadManager?.enabled && preloadManager.thumbnails.find(stack => stack.pageId === id)}
+        mediaStack={preloadManager?.enabled ? preloadManager.thumbnails.find(stack => stack.pageId === id) : undefined}
         fallbackPath={fallbackPath}
-        alt={alt}
         type={animatedThumbnail ? MediaFileType.Video : MediaFileType.Image} />
     </ThumbnailLink>
   )
