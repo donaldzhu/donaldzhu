@@ -21,7 +21,9 @@ class Queue {
         if (queueFunction && typeof queueFunction !== 'function')
           queueFunction = queueFunction.run
 
-        const promise = queueFunction ? this.promisify<T>(queueFunction()) : this.promisify(_.noop)
+        const result = queueFunction ? queueFunction() : undefined
+        const promise = this.promisify<T | undefined>(result)
+
         promise.then(() => {
           const callback = typeof queueArg === 'object' ? queueArg.callback : null
           if (callback) callback()

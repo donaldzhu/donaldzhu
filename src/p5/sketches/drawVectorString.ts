@@ -13,18 +13,22 @@ interface DrawVectorStringProps {
 
 
 const drawVectorString = ({ containerRef, placeholderRef }: DrawVectorStringProps) => {
-  if (!validateRef(placeholderRef) || !validateRef(containerRef))
-    throw new Error('Vector string has no placeholder or container ref.')
-
   let text: Text
   const TEXT_CONTENT = 'Ä'
-  const placeholder = new ElemRect(placeholderRef)
-  const container = new ElemRect(containerRef)
+  let placeholder: ElemRect<HTMLDivElement>
+  let container: ElemRect<HTMLDivElement>
 
   const createVector = (p5: p5) =>
     text = new Text(p5, configs.VECTOR_STRING_TRANSLATE)
 
-  const setup = createVector
+  const setup = (p5: p5) => {
+    if (!validateRef(placeholderRef) || !validateRef(containerRef))
+      throw new Error('Vector string has no placeholder or container ref.')
+    placeholder = new ElemRect(placeholderRef)
+    container = new ElemRect(containerRef)
+
+    createVector(p5)
+  }
 
   const draw = () => {
     const [x, y] = placeholder.center

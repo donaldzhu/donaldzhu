@@ -109,4 +109,4 @@ export const partition = <T, F>(
   const trueArray: T[] = array.filter(filterTrue)
   const falseArray: F[] = array.filter(filterFalse)
   return [trueArray, falseArray]
-}
+} 

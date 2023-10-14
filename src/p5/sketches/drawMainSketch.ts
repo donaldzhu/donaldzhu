@@ -19,9 +19,7 @@ const drawMainSketch = ({ placeholderRef }: DrawMainSketchProps) => {
   const UPPER_TEXT_CONTENT = 'WORK IN\nPROGRESS'
   const LOWER_TEXT_CONTENT = 'DONALD\nZHU'
 
-  if (!validateRef(placeholderRef))
-    throw new Error('Main sketch has no placeholder ref.')
-  const placeholder = new ElemRect(placeholderRef, -sketchSizes.main.anchor.offset.value)
+  let placeholder: ElemRect<HTMLDivElement>
   let upperText: Text, lowerText: Text
   let mouseOrigin: coorTuple | [] = []
 
@@ -48,7 +46,12 @@ const drawMainSketch = ({ placeholderRef }: DrawMainSketchProps) => {
     lowerText.setMouseOrigin(mouseOrigin)
   }
 
-  const setup = createVectors
+  const setup = (p5: p5) => {
+    if (!validateRef(placeholderRef))
+      throw new Error('Main sketch has no placeholder ref.')
+    placeholder = new ElemRect(placeholderRef, -sketchSizes.main.anchor.offset.value)
+    createVectors(p5)
+  }
 
   const draw = (p5: p5, { mousePositionRef }: CanvasState) => {
     const { CENTER, ROUND, mouseX, mouseY } = p5

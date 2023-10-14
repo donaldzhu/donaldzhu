@@ -36,13 +36,13 @@ export enum VerboseLevel {
   Diagnostic,
 }
 
-export function _isImg(media: MediaPreloader | MediaStack): media is ImgPreloader | ImgStack {
+export function isImg(media: MediaPreloader | MediaStack): media is ImgPreloader | ImgStack {
   return media.fileType === MediaFileType.Image
 }
 export const isImgSize = (size: MediaSize) => [MediaSize.DesktopFallback, MediaSize.Preview].includes(size)
 
-export const isThumbnail = type => type === MediaType.Thumbnails
-export const isPoster = type => type === MediaType.Posters
+export const isThumbnail = (type: MediaType): type is MediaType.Thumbnails => type === MediaType.Thumbnails
+export const isPoster = (type: MediaType): type is MediaType.Posters => type === MediaType.Posters
 export const fileIsVid = fileName => {
   const imgRegex = new RegExp('.(gif|webp|png)$', 'i')
   const vidRegex = new RegExp('.webm$', 'i')

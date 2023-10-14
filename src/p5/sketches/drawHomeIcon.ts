@@ -13,13 +13,10 @@ interface DrawHomeIconProps {
 }
 
 const drawHomeIcon = ({ placeholderRef, isHoveringRef }: DrawHomeIconProps) => {
-  if (!validateRef(placeholderRef))
-    throw new Error('Home icon has no placeholder ref.')
-
   let text: Text
   const TEXT_CONTENT = 'A'
   const sidebarPaddingLeft = domSizes.homeIcon.padding.left.value / 2
-  const placeholder = new ElemRect(placeholderRef, -sidebarPaddingLeft)
+  let placeholder: ElemRect<HTMLDivElement>
 
   const createVector = (p5: p5) => {
     text = new Text(p5, configs.HOME_ICON)
@@ -28,7 +25,12 @@ const drawHomeIcon = ({ placeholderRef, isHoveringRef }: DrawHomeIconProps) => {
     text.setTransform({ x, y })
   }
 
-  const setup = createVector
+  const setup = (p5: p5) => {
+    if (!validateRef(placeholderRef))
+      throw new Error('Home icon has no placeholder ref.')
+    placeholder = new ElemRect(placeholderRef, -sidebarPaddingLeft)
+    createVector(p5)
+  }
 
   const draw = () => {
     const { setting } = text

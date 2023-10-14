@@ -12,10 +12,11 @@ import p5 from 'p5'
 import { CanvasState } from '../../components/canvas/canvasTypes'
 import { MutableRefObject } from 'react'
 import { getVw } from '../../utils/sizeUtils'
+import { validateRef } from '../../utils/typeUtils'
 
 interface DrawPantoProps {
   isClearingRef: MutableRefObject<boolean>
-  placeholderRef: MutableRefObject<HTMLDivElement>
+  placeholderRef: MutableRefObject<HTMLDivElement | null>
 }
 
 const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
@@ -39,8 +40,8 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
     leftMid: undefined
   }
 
-  const placeholder = new ElemRect(placeholderRef)
-  const paddedPlaceholder = new ElemRect(placeholderRef, sketchSizes.panto.hoverPadding.value)
+  let placeholder: ElemRect<HTMLDivElement>
+  let paddedPlaceholder: ElemRect<HTMLDivElement>
 
   let brushes: [Brush, FlatBrush] | [] = []
 
@@ -53,6 +54,12 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
   let lastHoverTimeStamp: number | undefined
 
   const setup = (p5: p5) => {
+    if (!validateRef(placeholderRef))
+      throw new Error('Pantograph sketch has no placeholder ref.')
+
+    placeholder = new ElemRect(placeholderRef)
+    paddedPlaceholder = new ElemRect(placeholderRef, sketchSizes.panto.hoverPadding.value)
+
     p5.background(255)
     p5.ellipseMode(p5.CENTER)
     p5.noFill()

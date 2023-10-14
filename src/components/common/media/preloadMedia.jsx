@@ -1,13 +1,13 @@
 import { forwardRef, useEffect, useState } from 'react'
 import _ from 'lodash'
 import Media from './media'
-import { MediaSize, isVid } from '../../../utils/helpers/preloader/preloadUtils'
+import { MediaSize, MediaType } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
 
 const PreloadMedia = forwardRef(function PreloadMedia(props, ref) {
   const { mediaStack, isZoomed, type, fallbackPath, ...rest } = props
 
-  const mediaIsVid = isVid(type)
+  const mediaIsVid = type === MediaType.Videos
   const getLoadState = (mediaStack = props.mediaStack) => {
     if (!mediaStack) return {
       src: fallbackPath,

@@ -4,7 +4,7 @@ import Queue from '../queue'
 import { ImgStack, MediaStack, VidStack } from './mediaStack'
 import { capitalize, filterFalsy, loopObject, mapObject, partition, typedKeys, validateString } from '../../commonUtils'
 import { getBreakptKey } from '../../queryUtil'
-import { MediaSize, MediaType, VerboseLevel, _isImg, fileIsVid, isImgSize } from './preloadUtils'
+import { MediaSize, MediaType, VerboseLevel, isImg, fileIsVid, isImgSize } from './preloadUtils'
 import nativeDimensions from '../../../data/media/nativeDimensions.json'
 import workData from '../../../data/work/workData.json'
 import { loadVidType } from './preloadTypes'
@@ -40,7 +40,7 @@ class PreloadManager {
 
     this.isComplete = false
     this.enabled = true
-    this.verboseLevel = VerboseLevel.Quiet
+    this.verboseLevel = VerboseLevel.Diagnostic
 
     this.autoPlayConfig = { canAutoPlay }
     this.loadVid = loadVid
@@ -179,7 +179,7 @@ class PreloadManager {
   private preloadThumbnails() {
     const thumbnailStacks = Object.values(this.thumbnails)
     const [imgStacks, vidStacks] = partition<ImgStack, VidStack>(
-      thumbnailStacks, stack => _isImg(stack))
+      thumbnailStacks, stack => isImg(stack))
     const getType = (type: MediaType) => `thumbnail ${type}`
     const getPreload = (type: MediaType, size: MediaSize) => ({
       run: () => this.preloadMediaType(

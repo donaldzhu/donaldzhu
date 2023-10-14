@@ -4,13 +4,13 @@ import Img from './img'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 import { ImgProps, VidProps } from './mediaTypes'
 
-type MediaProps<T extends keyof typeof MediaFileType> =
-  (T extends typeof MediaFileType.Image ?
+type MediaProps<T extends MediaFileType> =
+  (T extends MediaFileType.Image ?
     ImgHTMLAttributes<HTMLImageElement> & ImgProps :
     VideoHTMLAttributes<HTMLVideoElement> & VidProps
   ) & { type: T }
 
-const Media = forwardRef(function Media<T extends keyof typeof MediaFileType,>(
+const Media = forwardRef(function Media<T extends MediaFileType,>(
   { type, ...props }: MediaProps<T>,
   ref: T extends typeof MediaFileType.Image ?
     ForwardedRef<HTMLImageElement> :

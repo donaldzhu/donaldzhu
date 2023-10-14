@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { ImgPreloader, VidPreloader } from './preloader'
 import { joinPaths, keysToObject, typedKeys } from '../../commonUtils'
 import { Breakpt, getBreakptKey } from '../../queryUtil'
-import { FileExt, MediaSize, MediaType, MediaFileType, getPreviewBreakptKey, isThumbnail, _isImg } from './preloadUtils'
+import { FileExt, MediaSize, MediaType, MediaFileType, getPreviewBreakptKey, isThumbnail, isImg } from './preloadUtils'
 import breakpts from '../../../data/breakpoints'
 import { coorTuple } from '../../utilTypes'
 import { MediaStackProps, PreloadBreakpt } from './preloaderTypes'
@@ -44,7 +44,7 @@ export class MediaStack {
     this.breakpts = typedKeys<Breakpt>(breakpts)
     this.stackKeys = this.breakpts
 
-    if (_isImg(this)) this.stackKeys.unshift(MediaSize.DesktopFallback)
+    if (isImg(this)) this.stackKeys.unshift(MediaSize.DesktopFallback)
     if (!this.isThumbnail) this.stackKeys.push(MediaSize.Max)
 
     const Preloader = preloaderType === MediaFileType.Image ? ImgPreloader : VidPreloader
@@ -98,7 +98,7 @@ export class MediaStack {
 
   get loadedSizes() {
     const loadedMedia = _.pickBy(this.stack,
-      media => _isImg(media) ?
+      media => isImg(media) ?
         media.isLoaded : media.loadCount >= 1)
     return typedKeys(loadedMedia)
   }
@@ -131,7 +131,7 @@ export class VidStack extends MediaStack {
   constructor(props: MediaStackProps) {
     super({
       ...props,
-      fileType: MediaFileType.Image,
+      fileType: MediaFileType.Video,
       preloaderType: MediaFileType.Video
     })
 
