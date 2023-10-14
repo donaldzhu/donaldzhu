@@ -4,12 +4,12 @@ import { usePrevious } from '@uidotdev/usehooks'
 import styled from 'styled-components'
 import mixins from '../../../styles/mixins'
 import { StyledMediaProps, VidProps } from './mediaTypes'
-import { ContextInterface } from '../../pageWrappers/pageTypes'
+import { PageContextProps } from '../../pageWrappers/pageTypes'
 
 
 const Vid = forwardRef<HTMLVideoElement, VideoHTMLAttributes<HTMLVideoElement> & VidProps>(
   function Vid({ src, alt, poster, loop = true, hasLoaded, aspectRatio, autoPlay = true, ...props }, ref) {
-    const canAutoPlay: boolean | undefined = useOutletContext<ContextInterface>()?.canAutoPlay
+    const canAutoPlay: boolean | undefined = useOutletContext<PageContextProps>()?.canAutoPlay
     const prevCanAutoPlay = usePrevious(canAutoPlay)
 
     useEffect(() => {

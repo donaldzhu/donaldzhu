@@ -2,7 +2,7 @@ import { useOutletContext } from 'react-router-dom'
 import { styled } from 'styled-components'
 import PreloadMedia from '../common/media/preloadMedia'
 import { joinPaths } from '../../utils/commonUtils'
-import { FileExt, MediaFileType, MediaType } from '../../utils/helpers/preloader/preloadUtils'
+import { FileExt, MediaFileType } from '../../utils/helpers/preloader/preloadUtils'
 import Anchor from '../common/anchor'
 import { getBreakptKey } from '../../utils/queryUtil'
 

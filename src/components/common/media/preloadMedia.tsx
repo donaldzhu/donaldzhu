@@ -1,13 +1,13 @@
-import { ForwardedRef, forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import _ from 'lodash'
 import Media from './media'
 import { MediaFileType, MediaSize } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
-import { PreloadMediaProps } from './mediaTypes'
+import { MediaRef, PreloadMediaProps } from './mediaTypes'
 
 const PreloadMedia = forwardRef(PreloadMediaWithRef)
 
-function PreloadMediaWithRef(props: PreloadMediaProps, ref: ForwardedRef<HTMLImageElement | HTMLVideoElement>) {
+function PreloadMediaWithRef(props: PreloadMediaProps, ref: MediaRef) {
   const { mediaStack, isZoomed, fallbackPath, ...rest } = props
 
   const mediaIsVid = rest.type === MediaFileType.Video
@@ -33,7 +33,7 @@ function PreloadMediaWithRef(props: PreloadMediaProps, ref: ForwardedRef<HTMLIma
     }
   }
 
-  const getPosterSrc = () => 'posterStack' in mediaStack ?
+  const getPosterSrc = () => mediaStack && 'posterStack' in mediaStack ?
     getLoadState(mediaStack.posterStack).src :
     undefined
 
@@ -65,7 +65,7 @@ function PreloadMediaWithRef(props: PreloadMediaProps, ref: ForwardedRef<HTMLIma
       { poster: posterSrc } : {})}
     src={loadState.src}
     hasLoaded={loadState.hasLoaded}
-    aspectRatio={(nativeW / nativeH) || undefined}
+    aspectRatio={((nativeW || 1) / (nativeH || 1))}
     ref={ref} />
 }
 

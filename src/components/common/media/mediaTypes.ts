@@ -1,15 +1,15 @@
-import { ImgHTMLAttributes, SyntheticEvent, VideoHTMLAttributes } from 'react'
+import { ForwardedRef, ImgHTMLAttributes, SyntheticEvent, VideoHTMLAttributes } from 'react'
 import { ImgStack, MediaStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 
 export interface MediaProps {
   hasLoaded?: boolean
-  aspectRatio?: string | number | undefined
+  aspectRatio?: string | number
 }
 
 export interface StyledMediaProps {
   $hasLoaded?: boolean
-  $aspectRatio?: string | number | undefined
+  $aspectRatio?: string | number
 }
 
 export type ImgProps = MediaProps
@@ -37,24 +37,26 @@ export type VidIntrinsicProps =
 
 export type MediaIntrinsicProps = ImgIntrinsicProps | VidIntrinsicProps
 
-export interface PreloadMediaBaseProps<T extends ImgStack | VidStack> {
-  mediaStack: T
+export type MediaElement = HTMLImageElement | HTMLVideoElement
+export type MediaRef = ForwardedRef<MediaElement>
+
+export interface PreloadMediaBaseProps {
+  mediaStack?: ImgStack | VidStack
   fallbackPath: string
   isZoomed?: boolean
   autoPlay?: boolean
 }
-export type PreloadImgProps = ImgIntrinsicProps & PreloadMediaBaseProps<ImgStack>
-export type PreloadVidProps = VidIntrinsicProps & PreloadMediaBaseProps<VidStack>
-export type PreloadMediaProps = PreloadImgProps | PreloadVidProps
-
+export type PreloadImgProps = ImgIntrinsicProps
+export type PreloadVidProps = VidIntrinsicProps
+export type PreloadMediaProps = (PreloadImgProps | PreloadVidProps) & PreloadMediaBaseProps
 
 export type ZoomMediaBaseProps = {
   src: string,
   width: string,
   isToolTip: boolean,
-  mediaStack: MediaStack
+  mediaStack?: MediaStack
   fallbackPath: string
-  getCurrentTime: () => number
+  getCurrentTime: () => number | undefined
   maxSize: string
 }
 

@@ -4,30 +4,44 @@ import { styled } from 'styled-components'
 import PreloadMedia from './preloadMedia'
 import { WorkPageContext } from '../../../contexts/context'
 import { percent, toPercent } from '../../../utils/sizeUtils'
-import { joinPaths } from '../../../utils/commonUtils.ts'
+import { joinPaths } from '../../../utils/commonUtils'
 import { MediaFileType, MediaSize, MediaType } from '../../../utils/helpers/preloader/preloadUtils'
 import mixins from '../../../styles/mixins'
+import { MediaRef, ZoomMediaProps } from './mediaTypes'
+import { PageContextProps } from '../../pageWrappers/pageTypes'
+import { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
 
-const ZoomMedia = forwardRef(function ZoomMedia(props, ref) {
-  const { preloadManager, handleZoomMedia } = useOutletContext()
+interface StyledZoomMediaProps {
+  $width: string
+}
+
+const ZoomMedia = forwardRef(ZoomMediaWithRef)
+
+function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
+  const { preloadManager, handleZoomMedia } = useOutletContext<PageContextProps>()
   const { pageId } = useContext(WorkPageContext)
-  let mediaRef = useRef()
-  mediaRef = ref || mediaRef
+  const placeholderRef = useRef<HTMLImageElement | HTMLVideoElement>(null)
+  const mediaRef = ref || placeholderRef
 
-  let { src, maxSize, width, isToolTip, ...rest } = props
-  let { type } = rest
+  let { src } = props
+  const { maxSize, width, isToolTip, ...rest } = props
+  const { type } = rest
+
   const mediaType = isToolTip ? MediaType.ToolTips : type === MediaFileType.Image ? MediaType.Images : MediaType.Videos
 
   src = isToolTip ? joinPaths(MediaType.ToolTips, src) : src
   const fallbackPath = joinPaths('/assets/work', pageId, MediaSize.Max, src)
-  const mediaStack = preloadManager?.enabled &&
-    preloadManager.workPages[pageId][mediaType].find(stack => stack.fileName === src)
+  const mediaStack = preloadManager.enabled ?
+    preloadManager.workPages[pageId][mediaType]?.find(stack => stack.fileName === src) :
+    undefined
+
   const handleClick = () =>
     handleZoomMedia({
       ...props,
       mediaStack,
       fallbackPath,
-      getCurrentTime: () => mediaRef.current.currentTime,
+      getCurrentTime: () => ('current' in mediaRef && mediaRef.current && 'currentTime' in mediaRef.current) ?
+        mediaRef.current?.currentTime : undefined,
       maxSize: typeof maxSize === 'number' ? toPercent(maxSize) : maxSize
     })
 
@@ -35,15 +49,15 @@ const ZoomMedia = forwardRef(function ZoomMedia(props, ref) {
     <MediaContainer $width={width}>
       <PreloadMedia
         {...rest}
-        mediaStack={mediaStack}
+        mediaStack={mediaStack satisfies ImgStack | VidStack | undefined}
         fallbackPath={fallbackPath}
         ref={mediaRef}
         onClick={handleClick} />
     </MediaContainer>
   )
-})
+}
 
-const MediaContainer = styled.div`
+const MediaContainer = styled.div<StyledZoomMediaProps>`
   ${mixins.flex('initial', 'center')}
 
   img, video {
