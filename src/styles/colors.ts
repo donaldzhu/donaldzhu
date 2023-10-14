@@ -36,7 +36,7 @@ const colorPalette = {
   vectorStringSketch: 3
 }
 
-const colors = mapObject<Record<string, number>, string>(colorPalette,
+const colors = mapObject<Record<keyof typeof colorPalette, number>, string>(colorPalette,
   (_, colorIndex) => swatches[COLOR_PRESET][colorIndex])
 
 export default colors

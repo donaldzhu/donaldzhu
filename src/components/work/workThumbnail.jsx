@@ -2,7 +2,7 @@ import { useOutletContext } from 'react-router-dom'
 import { styled } from 'styled-components'
 import PreloadMedia from '../common/media/preloadMedia'
 import { joinPaths } from '../../utils/commonUtils'
-import { FileExt, MediaType } from '../../utils/helpers/preloader/preloadUtils'
+import { FileExt, MediaFileType, MediaType } from '../../utils/helpers/preloader/preloadUtils'
 import Anchor from '../common/anchor'
 import { getBreakptKey } from '../../utils/queryUtil'
 
@@ -21,7 +21,7 @@ const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }) => 
         mediaStack={preloadManager?.enabled && preloadManager.thumbnails.find(stack => stack.pageId === id)}
         fallbackPath={fallbackPath}
         alt={alt}
-        type={animatedThumbnail ? MediaType.Videos : MediaType.Images} />
+        type={animatedThumbnail ? MediaFileType.Video : MediaFileType.Image} />
     </ThumbnailLink>
   )
 }

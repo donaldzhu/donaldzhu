@@ -1,25 +1,15 @@
-import { ForwardedRef, ImgHTMLAttributes, VideoHTMLAttributes, forwardRef } from 'react'
+import { ForwardedRef, forwardRef } from 'react'
+import _ from 'lodash'
 import Vid from './vid'
 import Img from './img'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
-import { ImgProps, VidProps } from './mediaTypes'
+import { ImgIntrinsicProps, MediaIntrinsicProps, VidIntrinsicProps } from './mediaTypes'
 
-type MediaProps<T extends MediaFileType> =
-  (T extends MediaFileType.Image ?
-    ImgHTMLAttributes<HTMLImageElement> & ImgProps :
-    VideoHTMLAttributes<HTMLVideoElement> & VidProps
-  ) & { type: T }
+const Media = forwardRef(MediaWithRef)
 
-const Media = forwardRef(function Media<T extends MediaFileType,>(
-  { type, ...props }: MediaProps<T>,
-  ref: T extends typeof MediaFileType.Image ?
-    ForwardedRef<HTMLImageElement> :
-    ForwardedRef<HTMLVideoElement>
-) {
-  return type === MediaFileType.Image ?
-    //@ts-ignore // TODO
-    <Img {...props} ref={ref} /> : <Vid {...props} ref={ref} />
-})
-
-
+function MediaWithRef(props: MediaIntrinsicProps, ref: ForwardedRef<HTMLImageElement | HTMLVideoElement>) {
+  return props.type === MediaFileType.Image ?
+    <Img {..._.omit(props, 'type')} ref={ref as ForwardedRef<HTMLImageElement>} /> :
+    <Vid {..._.omit(props, 'type')} ref={ref as ForwardedRef<HTMLVideoElement>} />
+}
 export default Media

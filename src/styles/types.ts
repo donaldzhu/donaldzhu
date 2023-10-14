@@ -13,6 +13,6 @@ export type fontVarConfigType = {
 }
 
 export type mediaPropsType = {
-  $aspectRatio: string | number
-  $hasLoaded: boolean
+  $aspectRatio?: string | number
+  $hasLoaded?: boolean
 }

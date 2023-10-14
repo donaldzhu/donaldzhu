@@ -4,7 +4,7 @@ import Queue from '../queue'
 import { ImgStack, MediaStack, VidStack } from './mediaStack'
 import { capitalize, filterFalsy, loopObject, mapObject, partition, typedKeys, validateString } from '../../commonUtils'
 import { getBreakptKey } from '../../queryUtil'
-import { MediaSize, MediaType, VerboseLevel, isImg, fileIsVid, isImgSize } from './preloadUtils'
+import { MediaSize, MediaType, VerboseLevel, isImg, fileIsImg, isImgSize } from './preloadUtils'
 import nativeDimensions from '../../../data/media/nativeDimensions.json'
 import workData from '../../../data/work/workData.json'
 import { loadVidType } from './preloadTypes'
@@ -40,7 +40,7 @@ class PreloadManager {
 
     this.isComplete = false
     this.enabled = true
-    this.verboseLevel = VerboseLevel.Diagnostic
+    this.verboseLevel = VerboseLevel.Minimal
 
     this.autoPlayConfig = { canAutoPlay }
     this.loadVid = loadVid
@@ -81,9 +81,9 @@ class PreloadManager {
     loopObject(nativeDimensions.work, (pageId, nativeDimensions) => {
       const workPage = this.workPages[pageId] = {} as Partial<Record<MediaType, (ImgStack | VidStack)[]>>;
       (nativeDimensions as [string, coorTuple][]).forEach(([fileName, nativeDimension]) => {
-        const Stack = fileIsVid(fileName) ? VidStack : ImgStack
+        const Stack = fileIsImg(fileName) ? ImgStack : VidStack
         const mediaType = fileName.match(/^toolTips\//) ? MediaType.ToolTips :
-          fileIsVid(fileName) ? MediaType.Videos : MediaType.Images;
+          fileIsImg(fileName) ? MediaType.Images : MediaType.Videos;
         (workPage[mediaType] ??= []).push(new Stack({
           pageId,
           fileName,

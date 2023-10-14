@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import LeftContainer from '../leftContainer/leftContainer'
@@ -14,10 +14,12 @@ import { MediaFileType } from '../../utils/helpers/preloader/preloadUtils'
 import useCanAutoPlay from '../../hooks/useCanAutoPlay'
 import AutoPlayPopUp from '../common/autoPlayPopUp'
 import { typedKeys } from '../../utils/commonUtils'
+import { ContextInterface } from './pageTypes'
+import { ZoomMediaProps } from '../common/media/mediaTypes'
 
 const Page = () => {
-  const [sidebar, setSidebar] = useState()
-  const [zoomMedia, setZoomMedia] = useState()
+  const [sidebar, setSidebar] = useState<ReactNode | undefined>()
+  const [zoomMedia, setZoomMedia] = useState<ZoomMediaProps | undefined>()
   const location = useLocation()
 
   const canvasStateRefs = {
@@ -28,25 +30,24 @@ const Page = () => {
   const canAutoPlay = useCanAutoPlay()
   const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
 
-  const handleZoomMedia = media => setZoomMedia(media)
+  const handleZoomMedia = (media: ZoomMediaProps) => setZoomMedia(media)
   const canvasRef = useGlobalCanvas()
 
   useCanvas(drawCursor, { canvasRef, canvasStateRefs })
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    if (zoomMedia) setZoomMedia()
+    if (zoomMedia) setZoomMedia(undefined)
   }, [location])
 
   return (
     <>
       <GlobalCanvas
         canvasRef={canvasRef}
-        canvasStateRefs={canvasStateRefs}
-        zIndex={99} />
+        canvasStateRefs={canvasStateRefs} />
       {zoomMedia && <ZoomedMedia
         zoomMedia={zoomMedia}
-        handleUnzoom={() => setZoomMedia()} />}
+        handleUnzoom={() => setZoomMedia(undefined)} />}
       {(location.pathname.match(/^\/work/) && canAutoPlay === false) &&
         <AutoPlayPopUp />}
       <LeftContainer
@@ -62,7 +63,7 @@ const Page = () => {
         handleZoomMedia,
         canAutoPlay,
         preloadManager
-      }} />
+      } satisfies ContextInterface} />
       {!!Object.keys(vidLoadData).length &&
         <VidLoadContainer>
           {typedKeys(vidLoadData).map(src => {

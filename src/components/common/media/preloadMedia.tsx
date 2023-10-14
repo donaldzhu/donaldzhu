@@ -1,24 +1,27 @@
-import { forwardRef, useEffect, useState } from 'react'
+import { ForwardedRef, forwardRef, useEffect, useState } from 'react'
 import _ from 'lodash'
 import Media from './media'
-import { MediaSize, MediaType } from '../../../utils/helpers/preloader/preloadUtils'
+import { MediaFileType, MediaSize } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
+import { PreloadMediaProps } from './mediaTypes'
 
-const PreloadMedia = forwardRef(function PreloadMedia(props, ref) {
-  const { mediaStack, isZoomed, type, fallbackPath, ...rest } = props
+const PreloadMedia = forwardRef(PreloadMediaWithRef)
 
-  const mediaIsVid = type === MediaType.Videos
+function PreloadMediaWithRef(props: PreloadMediaProps, ref: ForwardedRef<HTMLImageElement | HTMLVideoElement>) {
+  const { mediaStack, isZoomed, fallbackPath, ...rest } = props
+
+  const mediaIsVid = rest.type === MediaFileType.Video
   const getLoadState = (mediaStack = props.mediaStack) => {
     if (!mediaStack) return {
       src: fallbackPath,
       hasLoaded: true
     }
 
-    let size = _.chain(mediaStack.loadedSizes)
-      .without(mediaStack, isZoomed ? '' : MediaSize.Max)
-      .last()
-      .value()
-    const hasLoaded = mediaIsVid || size
+    const sizes = _.chain(mediaStack.loadedSizes)
+    if (!isZoomed) sizes.without(MediaSize.Max)
+    let size = _.last(sizes.value())
+
+    const hasLoaded = mediaIsVid || !!size
 
     if (mediaIsVid)
       size = isZoomed ? MediaSize.Max : getBreakptKey()
@@ -30,10 +33,12 @@ const PreloadMedia = forwardRef(function PreloadMedia(props, ref) {
     }
   }
 
-  const getPosterSrc = () => getLoadState(mediaStack?.posterStack).src
+  const getPosterSrc = () => 'posterStack' in mediaStack ?
+    getLoadState(mediaStack.posterStack).src :
+    undefined
 
   const [loadState, setLoadState] = useState(getLoadState())
-  const [posterSrc, setPosterSrc] = useState(mediaIsVid && getPosterSrc())
+  const [posterSrc, setPosterSrc] = useState(mediaIsVid ? getPosterSrc() : undefined)
 
   useEffect(() => {
     setLoadState(getLoadState())
@@ -53,15 +58,15 @@ const PreloadMedia = forwardRef(function PreloadMedia(props, ref) {
 
 
   const [nativeW, nativeH] = mediaStack?.nativeDimension || []
+
   return <Media
     {...rest}
-    type={type.slice(0, type.length - 1)}
+    {...(rest.type === MediaFileType.Video ?
+      { poster: posterSrc } : {})}
     src={loadState.src}
-    poster={posterSrc}
     hasLoaded={loadState.hasLoaded}
     aspectRatio={(nativeW / nativeH) || undefined}
     ref={ref} />
-})
-
+}
 
 export default PreloadMedia

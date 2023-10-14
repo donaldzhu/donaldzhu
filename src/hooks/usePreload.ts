@@ -1,13 +1,18 @@
-import { useEffect, useMemo, useState } from 'react'
+import { ReactEventHandler, useEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 import PreloadManager from '../utils/helpers/preloader/preloadManager'
 
-const usePreload = canAutoPlay => {
-  const [vidLoadData, setVidLoadData] = useState({})
+interface LoadDataInterface {
+  promise: Promise<void>
+  onProgress: ReactEventHandler<HTMLVideoElement>
+}
 
-  const loadVid = (src, threshold) => {
+const usePreload = (canAutoPlay: boolean | undefined) => {
+  const [vidLoadData, setVidLoadData] = useState<Record<string, LoadDataInterface>>({})
+
+  const loadVid = (src: string, threshold: number) => {
     if (vidLoadData[src]) return Promise.resolve()
-    const loadData = {}
+    const loadData: Partial<LoadDataInterface> = {}
     loadData.promise = new Promise(resolve =>
       loadData.onProgress = ({ currentTarget }) => {
         if (currentTarget.buffered.length === 0) return
@@ -17,7 +22,7 @@ const usePreload = canAutoPlay => {
           setVidLoadData(prev => _.omit(prev, [src]))
         }
       })
-    setVidLoadData(prev => ({ ...prev, [src]: loadData }))
+    setVidLoadData(prev => ({ ...prev, [src]: loadData as LoadDataInterface }))
     return loadData.promise
   }
 

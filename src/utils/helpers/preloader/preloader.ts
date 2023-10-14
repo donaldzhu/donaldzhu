@@ -23,7 +23,7 @@ export class ImgPreloader extends MediaPreloader {
     if (this.isLoaded) return Promise.resolve()
     const loadPromise = new Promise((resolve, reject) => {
       this.img.onload = () => resolve(this.isLoaded = true)
-      this.img.onerror = err => reject(`${this.src}: ${err}`)
+      this.img.onerror = () => reject(this)
     })
     this.img.src = this.src
     return loadPromise

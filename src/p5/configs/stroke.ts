@@ -11,7 +11,7 @@ const { primary, secondary } = sketchSizes.panto.brush
 const config = {
   PRIMARY_BRUSH: {
     ...defaultConfig,
-    fill: 175,
+    fill: '#AFAFAF',
     sizeReductionFactor: 0.05,
     maxSize: primary.max,
     minSize: primary.min

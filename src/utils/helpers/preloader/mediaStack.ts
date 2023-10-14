@@ -73,6 +73,10 @@ export class MediaStack {
     const breakptKey = getBreakptKey()
     return this.stack[breakptKey].preload()
       .then(() => this.onFinished())
+      .catch(err => {
+        console.log(this)
+        throw err
+      })
   }
 
   preloadMax() {
@@ -97,8 +101,8 @@ export class MediaStack {
   }
 
   get loadedSizes() {
-    const loadedMedia = _.pickBy(this.stack,
-      media => isImg(media) ?
+    const loadedMedia: Partial<Record<PreloadBreakpt, ImgPreloader | VidPreloader>> =
+      _.pickBy(this.stack, media => isImg(media) ?
         media.isLoaded : media.loadCount >= 1)
     return typedKeys(loadedMedia)
   }
