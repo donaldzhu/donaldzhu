@@ -6,17 +6,9 @@ import { FileExt, MediaFileType } from '../../utils/helpers/preloader/preloadUti
 import Anchor from '../common/anchor'
 import { getBreakptKey } from '../../utils/queryUtil'
 import { PageContextProps } from '../pageWrappers/pageTypes'
-import { WorkDataInterface } from './workIndex'
-import { MutableRefObject } from 'react'
+import { WorkAnchorProps } from './workTypes'
 
-interface WorkThumbnailInterface {
-  data: WorkDataInterface
-  isHighlighted: boolean
-  highlightedRef: MutableRefObject<HTMLAnchorElement | null>
-  handleHover: (projectTitle: string) => void
-}
-
-const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }: WorkThumbnailInterface) => {
+const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }: WorkAnchorProps) => {
   const { title, id, animatedThumbnail } = data
   const { preloadManager } = useOutletContext<PageContextProps>()
 

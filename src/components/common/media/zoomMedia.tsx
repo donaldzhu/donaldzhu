@@ -11,10 +11,6 @@ import { MediaRef, ZoomMediaProps } from './mediaTypes'
 import { PageContextProps } from '../../pageWrappers/pageTypes'
 import { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
 
-interface StyledZoomMediaProps {
-  $width: string
-}
-
 const ZoomMedia = forwardRef(ZoomMediaWithRef)
 
 function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
@@ -57,7 +53,7 @@ function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
   )
 }
 
-const MediaContainer = styled.div<StyledZoomMediaProps>`
+const MediaContainer = styled.div<{ $width: string | number | undefined }>`
   ${mixins.flex('initial', 'center')}
 
   img, video {

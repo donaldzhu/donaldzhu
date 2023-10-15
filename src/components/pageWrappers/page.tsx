@@ -14,12 +14,12 @@ import { MediaFileType } from '../../utils/helpers/preloader/preloadUtils'
 import useCanAutoPlay from '../../hooks/useCanAutoPlay'
 import AutoPlayPopUp from '../common/autoPlayPopUp'
 import { typedKeys } from '../../utils/commonUtils'
-import { PageContextProps, handleUnzoom } from './pageTypes'
-import { ZoomMediaProps } from '../common/media/mediaTypes'
+import { PageContextProps, handleZoomType } from './pageTypes'
+import { RequiredZoomMediaProps } from '../common/media/mediaTypes'
 
 const Page = () => {
   const [sidebar, setSidebar] = useState<ReactNode | undefined>()
-  const [zoomMedia, setZoomMedia] = useState<ZoomMediaProps | undefined>()
+  const [zoomMedia, setZoomMedia] = useState<RequiredZoomMediaProps | undefined>()
   const location = useLocation()
 
   const canvasStateRefs = {
@@ -30,7 +30,7 @@ const Page = () => {
   const canAutoPlay = useCanAutoPlay()
   const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
 
-  const handleZoomMedia: handleUnzoom = media => setZoomMedia(media)
+  const handleZoomMedia: handleZoomType = media => setZoomMedia(media)
   const canvasRef = useGlobalCanvas()
 
   useCanvas(drawCursor, { canvasRef, canvasStateRefs })

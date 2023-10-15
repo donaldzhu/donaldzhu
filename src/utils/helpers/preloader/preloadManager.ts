@@ -1,7 +1,7 @@
-import _ from 'lodash'
+import _, { extend } from 'lodash'
 import toSpaceCase from 'to-space-case'
 import Queue from '../queue'
-import { ImgStack, MediaStack, VidStack } from './mediaStack'
+import { ImgStack, VidStack } from './mediaStack'
 import { capitalize, filterFalsy, loopObject, mapObject, partition, typedKeys, validateString } from '../../commonUtils'
 import { getBreakptKey } from '../../queryUtil'
 import { MediaSize, MediaType, VerboseLevel, isImg, fileIsImg, isImgSize } from './preloadUtils'
@@ -17,11 +17,17 @@ const LOG_COLORS = {
   [MediaSize.Max]: 'red',
 }
 
+const enum MainQueue {
+  DefaultPreload = 'defaultPreload',
+  PagePreload = 'pagePreload'
+}
+
 class PreloadManager {
   thumbnails: (ImgStack | VidStack)[]
   workPages: Record<string, Partial<Record<MediaType, (ImgStack | VidStack)[]>>>
   mainQueue: Queue
-  mainQueueName?: string
+  mainQueueName?: MainQueue
+  mainQueuePageId?: string
   subqueues: Queue[]
   isComplete: boolean
   enabled: boolean
@@ -35,6 +41,7 @@ class PreloadManager {
 
     this.mainQueue = new Queue(0)
     this.mainQueueName = undefined
+    this.mainQueuePageId = undefined
 
     this.subqueues = []
 
@@ -103,13 +110,14 @@ class PreloadManager {
       callback: this.logGroup('all pages', size)
     }))
 
-    this.preloadMain('defaultPreload', [
+    this.preloadMain(MainQueue.DefaultPreload, [
       this.getPreloadThumbnails(),
       ...Object.values(allPagePreloaders)
     ])
   }
 
-  pagePreload(pageId: string) {
+  pagePreload(pageId?: string) {
+    if (!pageId) return this.defaultPreload()
     const pagePreloaders = this.createPagePreloaders((size: MediaSize) => ({
       run: () => this.preloadPageMedia(pageId, size),
       callback: this.logGroup(`current page (${pageId})`, size)
@@ -122,7 +130,8 @@ class PreloadManager {
       }
     })
 
-    this.preloadMain('pagePreload', [
+    this.mainQueuePageId = pageId
+    this.preloadMain(MainQueue.PagePreload, [
       pagePreloaders.DesktopFallback,
       pagePreloaders.Preview,
       pagePreloaders.Full,
@@ -132,7 +141,7 @@ class PreloadManager {
     ])
   }
 
-  private preloadMain<T>(preloaderName: string, queueFunctions: queueArgType<T>) {
+  private preloadMain<T>(preloaderName: MainQueue, queueFunctions: queueArgType<T>) {
     if (!this.enabled || this.isComplete) return
     this.mainQueueName = preloaderName
     this.mainQueue.create(queueFunctions)
@@ -241,12 +250,12 @@ class PreloadManager {
   }
 
   //-----preload helpers-----//
-  private prefixPreload(size: MediaSize): `preload${Capitalize<MediaSize>}` {
+  private prefixPreload<T extends MediaSize>(size: T): `preload${Capitalize<T>}` {
     return `preload${capitalize(size)}`
   }
 
   private preloadMediaType(
-    mediaTypeStacks: MediaStack[] | undefined,
+    mediaTypeStacks: (ImgStack | VidStack)[] | undefined,
     size: MediaSize,
     isPoster?: boolean
   ) {
@@ -254,8 +263,13 @@ class PreloadManager {
     const preloadFunctionName = this.prefixPreload(size)
     const queueFunctions: (() => (Promise<void> | undefined))[] =
       mediaTypeStacks.map(stack => {
-        const targetStack = isPoster ? (stack as VidStack).posterStack : stack
-        return targetStack[preloadFunctionName].bind(targetStack)
+        const targetStack = isPoster && stack instanceof VidStack ? stack.posterStack : stack
+        // Type-guarding redundancy
+        if (targetStack instanceof ImgStack)
+          return targetStack[preloadFunctionName].bind(targetStack)
+        else if (preloadFunctionName === 'preloadFull' || preloadFunctionName === 'preloadMax')
+          return targetStack[preloadFunctionName].bind(targetStack)
+        return () => Promise.resolve()
       })
 
     return this.addToSubqueue(queueFunctions)
@@ -285,7 +299,7 @@ class PreloadManager {
     if (!this.mainQueueName) return
     this.abort()
     this.isComplete = false
-    this[this.mainQueueName]()
+    this[this.mainQueueName](this.mainQueuePageId)
   }
 
   private onFinish() {

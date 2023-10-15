@@ -4,7 +4,10 @@ import Anchor from '../common/anchor'
 import useSidebar from '../../hooks/useSidebar'
 import usePortfolioQuery from '../../hooks/usePortfolioQuery'
 
-const Home = () => useSidebar(<HomeSidebar />)
+const Home = () => {
+  useSidebar(<HomeSidebar />)
+  return undefined
+}
 
 const HomeSidebar = () => {
   const { portfolioData } = usePortfolioQuery()

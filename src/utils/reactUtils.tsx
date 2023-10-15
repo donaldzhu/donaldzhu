@@ -3,8 +3,9 @@ import SmallText from '../components/common/styled/smallText'
 import Anchor from '../components/common/anchor'
 
 export const addEventListener = <
-  T extends Element | Document | Window,
+  T extends Element | HTMLElement | Document | Window,
   K extends (
+    T extends HTMLElement ? keyof HTMLElementEventMap :
     T extends Element ? keyof ElementEventMap :
     T extends Document ? keyof DocumentEventMap :
     T extends Window ? keyof WindowEventMap : never
@@ -15,13 +16,12 @@ export const addEventListener = <
       this: T,
       ev: (
         K extends keyof ElementEventMap ? ElementEventMap[K] :
+        K extends keyof HTMLElementEventMap ? HTMLElementEventMap[K] :
         K extends keyof DocumentEventMap ? DocumentEventMap[K] :
         K extends keyof WindowEventMap ? WindowEventMap[K] : never
       )
     ) => any,
-    options?: T extends Element ?
-      (boolean | AddEventListenerOptions) :
-      (boolean | EventListenerOptions)
+    options?: boolean | AddEventListenerOptions
   ) => {
   target.addEventListener(type, listener as () => any, options)
   return () => target.removeEventListener(type, listener as () => any, options)

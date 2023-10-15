@@ -7,16 +7,23 @@ import usePreloadQueue from '../../hooks/usePreloadQueue'
 import { WorkPageContext } from '../../contexts/context'
 import drawToolTip from '../../p5/sketches/drawToolTip'
 import { parseHtml } from '../../utils/reactUtils'
-import { capitalize } from '../../utils/commonUtils.ts'
+import { capitalize } from '../../utils/commonUtils'
 import { fontSizes, fontLineHeights } from '../../styles/fonts'
 import { domSizes } from '../../styles/sizes'
 import mixins from '../../styles/mixins'
-import workDescriptions from '../../data/work/workDescriptions'
+import workDescriptions from '../../data/work/workDescriptions.json'
 import TextContainer from '../common/styled/textContainer'
+import { WorkDataInterface } from './workIndex'
 
-const WorkPage = ({ data, Content }) => {
-  const toolTipRef = useRef()
-  const popUpRef = useRef()
+interface WorkPageProps {
+  data: WorkDataInterface
+  Content: () => JSX.Element
+}
+
+const typedWorkDescriptions: Record<string, string> = workDescriptions
+const WorkPage = ({ data, Content }: WorkPageProps) => {
+  const toolTipRef = useRef<HTMLDivElement>(null)
+  const popUpRef = useRef<HTMLDivElement>(null)
   const setupDone = useCanvas(() =>
     drawToolTip({ toolTipRef, popUpRef }))
   usePreloadQueue(setupDone, preloadManager =>
@@ -35,7 +42,7 @@ const WorkPage = ({ data, Content }) => {
   )
 }
 
-const WorkPageSidebar = ({ title, id, date, tags, medium }) =>
+const WorkPageSidebar = ({ title, id, date, tags, medium }: WorkDataInterface) =>
   <div>
     <h1>{title}</h1>
     <Details>
@@ -43,7 +50,7 @@ const WorkPageSidebar = ({ title, id, date, tags, medium }) =>
       <p>{capitalize(tags.join('/').toLocaleLowerCase())}</p>
       <p>{capitalize(medium.join(', ').toLocaleLowerCase())}</p>
     </Details>
-    <TextContainer>{parseHtml(workDescriptions[id])}</TextContainer>
+    <TextContainer>{parseHtml(typedWorkDescriptions[id])}</TextContainer>
   </div>
 
 const ContentContainer = styled.div`

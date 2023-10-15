@@ -15,17 +15,17 @@ import colors from '../../styles/colors'
 import { VideoIframeType } from '../common/media/mediaTypes'
 
 const PageStroke = () => {
-  const [hoveringCard, setHoveringCard] = useState(null)
-  const placeholderRef = useRef()
+  const [hoveringCard, setHoveringCard] = useState<number | null>(null)
+  const placeholderRef = useRef<HTMLDivElement>(null)
   const isClearingRef = useRef(false)
-  const cardRefs = [useRef(), useRef(), useRef()]
+  const cardRefs = [useRef<HTMLImageElement>(null), useRef<HTMLImageElement>(null), useRef<HTMLImageElement>(null)]
 
   useCanvas(() => drawElemBorders({ elemRefs: [placeholderRef, ...cardRefs] }))
   useCanvas(() => drawPanto({ placeholderRef, isClearingRef }))
 
   const handleClear = () => isClearingRef.current = true
 
-  const handleOnHover = (i, isOver) => setHoveringCard(isOver ? i : null)
+  const handleOnHover = (i: number, isOver: boolean) => setHoveringCard(isOver ? i : null)
   return (
     <>
       <RowContainer>

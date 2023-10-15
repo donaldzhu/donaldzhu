@@ -5,11 +5,11 @@ import { Breakpt } from '../queryUtil'
 import { getRem } from '../sizeUtils'
 import Size from './size'
 
-type mobileBreakptSizesType = { s: number, m: number }
-type tabletBreakptSizesType = { m: number, l: number }
-type desktopBreakptSizesType = { l: number, xxl: number, xxlSm?: number }
-export type breakptSizesType = mobileBreakptSizesType | tabletBreakptSizesType | desktopBreakptSizesType
-
+type MobileBreakptSizesType = { s: number, m: number }
+type TabletBreakptSizesType = { m: number, l: number }
+type DesktopBreakptSizesType = { l: number, xxl: number, xxlSm?: number }
+export type BreakptSizesType = MobileBreakptSizesType | TabletBreakptSizesType | DesktopBreakptSizesType
+export type RequiredBreakptSizesType = MobileBreakptSizesType | TabletBreakptSizesType | Required<DesktopBreakptSizesType>
 
 type slopeType = {
   vw: number,
@@ -21,15 +21,16 @@ const xxlHeight = 1200
 const xxlSmHeight = 800
 
 export class BreakptSizer {
-  breakptSizes: Required<breakptSizesType>
-  lowerBreakpt: string
-  upperBreakpt: string
+  breakptSizes: MobileBreakptSizesType | TabletBreakptSizesType | Required<DesktopBreakptSizesType>
+  lowerBreakpt: Breakpt
+  upperBreakpt: Breakpt
 
-  constructor(breakptSizes: breakptSizesType) {
+  constructor(breakptSizes: BreakptSizesType) {
     this.breakptSizes = !(Breakpt.xxl in breakptSizes) ? breakptSizes : {
       ...breakptSizes,
       xxlSm: breakptSizes.xxlSm !== undefined ? breakptSizes.xxlSm : breakptSizes.xxl
     }
+
     const [lowerBreakpt, upperBreakpt] = sortLike(
       typedKeys(_.omit(this.breakptSizes, 'xxlSm')),
       typedKeys<Breakpt>(Breakpt)
@@ -57,11 +58,13 @@ export class BreakptSizer {
   }
 
   private get lowerSize() {
-    return this.breakptSizes[this.lowerBreakpt]
+    // theoretically could be done without typecast
+    // but would be significantly more complex
+    return this.breakptSizes[this.lowerBreakpt as keyof typeof this.breakptSizes] as number
   }
 
   private get upperSize() {
-    return this.breakptSizes[this.upperBreakpt]
+    return this.breakptSizes[this.upperBreakpt as keyof typeof this.breakptSizes] as number
   }
 
   private get lowerBreakptWidth() {

@@ -26,7 +26,7 @@ export const shuffleTo = <T>(array: T[], index: number) => {
   return [...array.splice(index), ...array]
 }
 
-export const sortLike = <T>(array: T[], modelArray: T[]) =>
+export const sortLike = <T>(array: T[], modelArray: T[]): T[] =>
   array.sort((a, b) =>
     modelArray.indexOf(a) - modelArray.indexOf(b))
 

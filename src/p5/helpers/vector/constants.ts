@@ -1,7 +1,7 @@
 import * as easing from 'easing-utils'
-import { map } from '../../../utils/commonUtils'
+import { loopObject, map, typedKeys } from '../../../utils/commonUtils'
 import spacingsData from '../../../data/vector/spacings.json'
-import { VectorSetting } from './vectorTypes'
+import { Easing, VectorSetting } from './vectorTypes'
 import p5 from 'p5'
 import { getVh, getVw } from '../../../utils/sizeUtils'
 import Size from '../../../utils/helpers/size'
@@ -11,9 +11,12 @@ export const enum Mode {
   Corner
 }
 
-export const AXES = ['x', 'y']
+export enum Axes {
+  x = 'x',
+  y = 'y'
+}
 export const X_HEIGHT = 44
-export const GLYPH_NAMES = Object.keys(spacingsData).filter(char => char.length === 1)
+export const GLYPH_NAMES = typedKeys(spacingsData).filter(char => char.length === 1)
 
 export const enum XPosition {
   Left,
@@ -52,7 +55,7 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
   volumeWeight: new Size(1),
   volumeColor: 0,
   correctVolumeStroke: false,
-  easing: 'linear',
+  easing: Easing.Linear,
   squareMap: true,
   getRanges: function () {
     return {
@@ -64,14 +67,13 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
     const results = { x: 0, y: 0 }
     const distVector = mouseVector.sub(('mouseOrigin' in this && this.mouseOrigin) ?
       this.mouseOrigin : stillVector)
-    for (let i = 0; i < AXES.length; i++) {
-      const axis = AXES[i]
+    loopObject(Axes, axis => {
       const dist = distVector[axis]
       const [min, max] = this.getRanges()[axis]
       const eased = easing[this.easing](Math.abs(dist) / (max - min))
       results[axis] = stillVector[axis] +
         map(eased, 0, 1, 0, this.maxStretch * this.scale.value) * Math.sign(dist)
-    }
+    })
     return results
   }
 }

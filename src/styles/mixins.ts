@@ -41,7 +41,7 @@ const flex = (
   align-items: ${alignItems};
 `
 
-const squared = (size: string) => `
+const squared = (size: string | number) => `
   width: ${size};
   height: ${size};
 `

@@ -14,19 +14,20 @@ import { ReactComponent as CSvg } from '../../assets/work/vector-struct/c.svg'
 import { ReactComponent as TSvg } from '../../assets/work/vector-struct/t.svg'
 import { ReactComponent as OSvg } from '../../assets/work/vector-struct/o.svg'
 import { ReactComponent as RSvg } from '../../assets/work/vector-struct/r.svg'
+import { validateRef } from '../../utils/typeUtils'
 
 const PageVectorStruct = () => {
   const [displayedGlyph, setDisplayedGlyph] = useState(0)
-  const displayedGlyphRef = useRef()
-  const vidRef = useRef()
+  const displayedGlyphRef = useRef<SVGSVGElement>(null)
+  const vidRef = useRef<HTMLVideoElement>(null)
 
   const glyphs = 'vector'
   const VectorSvgs = [VSvg, ESvg, CSvg, TSvg, OSvg, RSvg]
 
-  const handleClick = i => setDisplayedGlyph(i)
+  const handleClick = (i: number) => setDisplayedGlyph(i)
   useCanvas(() => drawElemBorders({ elemRefs: [displayedGlyphRef] }))
   useEffect(() => {
-    if (!vidRef.current) return
+    if (!validateRef(vidRef)) return
     vidRef.current.load()
   }, [displayedGlyph])
 

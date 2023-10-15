@@ -10,7 +10,7 @@ import Size from '../../../utils/helpers/size'
 class Vector {
   setting: VectorSetting
   p5: p5 | p5.Graphics
-  rawData: [number, number][][]
+  rawData: number[][][]
   vectors: p5.Vector[][]
   position: p5.Vector
   scale: Size
@@ -20,7 +20,7 @@ class Vector {
     h: number
   }
 
-  constructor(p5: p5 | p5.Graphics, name: string, setting: VectorSetting) {
+  constructor(p5: p5 | p5.Graphics, name: keyof typeof vectorsData, setting: VectorSetting) {
     const { x, y, scale, mode = Mode.Corner } = setting
     this.setting = setting
     this.p5 = p5

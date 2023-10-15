@@ -86,7 +86,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
     drawVectors(p5, hideCursorRef, shouldDrawMarks)
   }
 
-  const cleanup = ({ hideCursorRef }) => {
+  const cleanup = ({ hideCursorRef }: CanvasState) => {
     hideCursorRef.current = false
     // @ts-ignore
     graphic && graphic.canvas.remove()

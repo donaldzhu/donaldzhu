@@ -9,9 +9,9 @@ class Glyph {
   setting: VectorSetting
   still: Vector
   active: Vector
-  nativeBearings: [number, number]
+  nativeBearings: number[]
 
-  constructor(p5: p5 | p5.Graphics, name: string, setting: VectorSetting) {
+  constructor(p5: p5 | p5.Graphics, name: keyof typeof bearingsData, setting: VectorSetting) {
     this.p5 = p5
     this.setting = setting
     this.still = new Vector(p5, name, setting)

@@ -1,13 +1,13 @@
 import colors from '../../styles/colors'
 import { getSize } from '../../utils/sizeUtils'
 import { DEFAULT_SETTING, XPosition, YPosition } from '../helpers/vector/constants'
-import { VectorDrawMethod, VectorSetting } from '../helpers/vector/vectorTypes'
+import { Easing, VectorDrawMethod, VectorSetting } from '../helpers/vector/vectorTypes'
 
 const mainSketchConfigs = {
   scale: getSize({ l: 1.15, xxl: 2.5 }),
   tracking: 4,
   leading: 70,
-  easing: 'easeOutQuad',
+  easing: Easing.EaseOutQuad,
   maxStretch: 18.5,
   glyphColor: colors.homeSketch,
   linkColor: colors.homeSketch,
@@ -42,7 +42,7 @@ const configs: Record<string, Partial<VectorSetting>> = {
     glyphColor: colors.homeIcon,
     linkColor: colors.homeIcon,
     volumeColor: colors.homeIcon,
-    easing: 'easeOutCubic',
+    easing: Easing.EaseOutCubic,
     drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawVolume],
     maxStretch: 8,
   },

@@ -7,15 +7,24 @@ import { domSizes } from '../../styles/sizes'
 import mixins from '../../styles/mixins'
 import { fontFamilies, fontSizes } from '../../styles/fonts'
 import { appendQuery, validateString } from '../../utils/commonUtils'
+import { WorkDataInterface } from './workIndex'
+import { MutableRefObject } from 'react'
 
-const WorkIndexSidebar = ({ workData, highlighted, sidebarRef, handleHover }) => {
+interface WorkIndexSidebarProps {
+  workData: WorkDataInterface[]
+  highlighted: string | undefined
+  sidebarRef: MutableRefObject<HTMLAnchorElement | null>
+  handleHover: (projectTitle: string) => void
+}
+
+const WorkIndexSidebar = ({ workData, highlighted, sidebarRef, handleHover }: WorkIndexSidebarProps) => {
   const storageKey = 'pid'
   const pid = usePortfolioQuery().pid
   const cachedPid = sessionStorage.getItem(storageKey)
   const portfolioNavText = pid ? 'See all work (to main site) +' : 'Return to portfolio -'
 
   return (
-    <SideBarContainer width={domSizes.sidebar.width.css} as='ul'>
+    <SideBarContainer as='ul'>
       {workData.map(project => project.enabled && project.listed &&
         <WorkSideBarItem
           key={project.title}

@@ -17,6 +17,9 @@ const ProcessSidebar = () => {
   )
 }
 
-const Process = () => useSidebar(<ProcessSidebar />)
+const Process = () => {
+  useSidebar(<ProcessSidebar />)
+  return undefined
+}
 
 export default Process

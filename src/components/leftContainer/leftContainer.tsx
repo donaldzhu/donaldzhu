@@ -1,13 +1,18 @@
-import { useEffect, useRef } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
 import { styled } from 'styled-components'
 import Header from './header/header'
 import Footer from './footer/footer'
 import SvgBorder from '../common/svgBorder'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
+import { GlobalCanvasStates } from '../canvas/canvasTypes'
 
-const LeftContainer = ({ sidebar, canvasRef, canvasStateRefs }) => {
-  const sidebarRef = useRef()
+type LeftContainerProps = {
+  sidebar: ReactNode | undefined
+} & GlobalCanvasStates
+
+const LeftContainer = ({ sidebar, canvasRef, canvasStateRefs }: LeftContainerProps) => {
+  const sidebarRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const sidebar = sidebarRef.current
     if (sidebar) sidebar.scroll(0, 0)

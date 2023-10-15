@@ -14,7 +14,7 @@ import PageVectorString from '../../components/workPages/pageVectorString'
 import PageVectorStruct from '../../components/workPages/pageVectorStruct'
 import PageVectorSpinStroke from '../../components/workPages/pageVectorSpinStroke'
 
-const workPages = {
+const workPages: Record<string, () => JSX.Element> = {
   'vector-spin-stroke': PageVectorSpinStroke,
   'vector-struct': PageVectorStruct,
   'vector-string': PageVectorString,

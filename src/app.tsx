@@ -14,7 +14,7 @@ import { domSizes } from './styles/sizes'
 import colorConfig from './styles/colors'
 import { fontFamilies, fontSizes } from './styles/fonts'
 import mixins from './styles/mixins'
-import workData from './data/work/workData'
+import workData from './data/work/workData.json'
 import workPages from './data/work/workPagesMap'
 
 const App = () => {

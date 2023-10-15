@@ -31,9 +31,6 @@ class Rect {
       x: paddingArray[0],
       y: paddingArray[1] === undefined ? paddingArray[0] : paddingArray[1]
     }
-
-    this.padding[0] = this.padding.x
-    this.padding[1] = this.padding.y
   }
 
   rectAround(p5: p5) {

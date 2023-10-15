@@ -4,11 +4,11 @@ import { VideoIframeType } from './mediaTypes'
 
 interface VideoIframeProps {
   type: VideoIframeType,
-  aspectRatio: string
+  aspectRatio?: string
 }
 
 interface StyledVideoIframeProps {
-  $aspectRatio: string
+  $aspectRatio: string | undefined
 }
 
 const VideoIframe = ({ src, type, aspectRatio, ...rest }: IframeHTMLAttributes<HTMLIFrameElement> & VideoIframeProps) => {

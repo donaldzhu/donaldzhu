@@ -30,8 +30,8 @@ const ToolTip = ({ children }: ToolTipProps) => {
   const { zoomMedia, canvasStateRefs } = useOutletContext<PageContextProps>()
   const { mousePositionRef } = canvasStateRefs
 
-  const handleHover = ({ currentTarget }) => {
-    if (toolTipRef) toolTipRef.current = currentTarget
+  const handleHover = ({ currentTarget }: { currentTarget: HTMLDivElement }) => {
+    if (validateRef(toolTipRef)) toolTipRef.current = currentTarget
     setIsShown(true)
   }
 
@@ -42,11 +42,11 @@ const ToolTip = ({ children }: ToolTipProps) => {
         const toolTip = new ElemRect(toolTipRef, sketchSizes.toolTip.padding.value)
         const popUp = new ElemRect(popUpRef)
 
+        if (!validateRef(mousePositionRef)) return
         const mousePosition = mousePositionRef.current
         if (
-          (mousePosition &&
-            (toolTip.mouseIsOver(mousePosition) ||
-              popUp.mouseIsOver(mousePosition))) ||
+          toolTip.mouseIsOver(mousePosition) ||
+          popUp.mouseIsOver(mousePosition) ||
           zoomMedia
         ) return
 

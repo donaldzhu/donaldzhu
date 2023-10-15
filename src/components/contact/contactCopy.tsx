@@ -3,7 +3,7 @@ import { styled } from 'styled-components'
 import mixins from '../../styles/mixins'
 import { fontParams, fontSizes } from '../../styles/fonts'
 
-const ContactCopy = ({ content }) => {
+const ContactCopy = ({ content }: { content: string }) => {
   const [isCopied, setIsCopied] = useState(false)
 
   const handleClick = () => {

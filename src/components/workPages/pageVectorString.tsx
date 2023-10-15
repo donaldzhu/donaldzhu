@@ -7,16 +7,19 @@ import drawVectorString from '../../p5/sketches/drawVectorString'
 import { addEventListener } from '../../utils/reactUtils'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import { VideoIframeType } from '../common/media/mediaTypes'
+import { validateRef } from '../../utils/typeUtils'
 
 const PageVectorString = () => {
   const [translateImgSrc, setTranslateImgSrc] = useState(1)
-  const translateContainerRef = useRef()
-  const translatePlaceholderRef = useRef()
+  const translateContainerRef = useRef<HTMLDivElement | null>(null)
+  const translatePlaceholderRef = useRef<HTMLDivElement | null>(null)
   const tranlsateImgCount = 20
 
   useEffect(() => {
+    let translateContainer: ElemRect<HTMLDivElement>
     return addEventListener(document.body, 'mousemove', ({ clientX, clientY }) => {
-      const translateContainer = new ElemRect(translateContainerRef)
+      if (!validateRef(translateContainerRef)) return
+      translateContainer ??= new ElemRect(translateContainerRef)
       let angle = Math.atan2(clientY - translateContainer.cy, clientX - translateContainer.cx)
       if (angle <= 0) angle = Math.PI * 2 + angle
       const src = Math.ceil(angle / (Math.PI * 2 / tranlsateImgCount))

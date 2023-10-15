@@ -27,7 +27,7 @@ const FooterLink = ({ path, children }: FooterLinkProps) => {
   )
 }
 
-const linkColorMixin = ({ $isHighlighted }) => $isHighlighted ? colors.activeElem : colors.footer
+const linkColorMixin = ({ $isHighlighted }: StyledFooterLinkProps) => $isHighlighted ? colors.activeElem : colors.footer
 const FooterAnchor = styled(Anchor) <StyledFooterLinkProps>`
   height: 1em;
   padding: ${domSizes.footer.link.padding.css};

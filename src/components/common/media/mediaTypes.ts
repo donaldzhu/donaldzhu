@@ -15,7 +15,7 @@ export interface StyledMediaProps {
 export type ImgProps = MediaProps
 
 export type VidProps = {
-  alt?: string,
+  alt?: string | undefined,
 } & MediaProps
 
 export enum VideoIframeType {
@@ -50,16 +50,27 @@ export type PreloadImgProps = ImgIntrinsicProps
 export type PreloadVidProps = VidIntrinsicProps
 export type PreloadMediaProps = (PreloadImgProps | PreloadVidProps) & PreloadMediaBaseProps
 
-export type ZoomMediaBaseProps = {
+export type ZoomMediaBaseProps<R extends boolean = false> = R extends true ? {
   src: string,
-  width: string,
-  isToolTip: boolean,
+  width?: string,
+  isToolTip?: boolean,
   mediaStack?: ImgStack | VidStack
   fallbackPath: string
   getCurrentTime: () => number
-  maxSize: string
+  maxSize?: string | number | undefined
+} : {
+  src: string,
+  width?: string,
+  isToolTip?: boolean,
+  mediaStack?: ImgStack | VidStack
+  fallbackPath?: string
+  getCurrentTime?: () => number
+  maxSize?: string | number
 }
 
-export type ZoomImgProps = ZoomMediaBaseProps & ImgIntrinsicProps
-export type ZoomVidProps = ZoomMediaBaseProps & VidIntrinsicProps
-export type ZoomMediaProps = ZoomImgProps | ZoomVidProps
+export type ZoomImgProps<R extends boolean = false> = ZoomMediaBaseProps<R> & ImgIntrinsicProps
+export type ZoomVidProps<R extends boolean = false> = ZoomMediaBaseProps<R> & VidIntrinsicProps
+export type ZoomMediaProps<R extends boolean = false> = ZoomImgProps<R> | ZoomVidProps<R>
+export type RequiredZoomMediaProps = ZoomMediaProps<true>
+export type WorkImgProps = Omit<ZoomImgProps, 'type'>
+export type WorkVidProps = Omit<ZoomVidProps, 'type'>

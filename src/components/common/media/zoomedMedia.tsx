@@ -7,16 +7,12 @@ import { toPercent } from '../../../utils/sizeUtils'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
 import PopUpContainer from '../popUpContainer'
-import { handleUnzoom } from '../../pageWrappers/pageTypes'
-import { ZoomMediaProps } from './mediaTypes'
+import { handleZoomType } from '../../pageWrappers/pageTypes'
+import { RequiredZoomMediaProps } from './mediaTypes'
 
 interface ZoomedMediaProps {
-  readonly zoomMedia: ZoomMediaProps
-  readonly handleUnzoom: handleUnzoom
-}
-
-interface StyledZoomedMediaProps {
-  readonly $maxSize: string
+  readonly zoomMedia: RequiredZoomMediaProps
+  readonly handleUnzoom: handleZoomType
 }
 
 const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
@@ -56,7 +52,7 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
   )
 }
 
-const ZoomedContainer = styled(PopUpContainer) <StyledZoomedMediaProps>`
+const ZoomedContainer = styled(PopUpContainer) <{ $maxSize: string | number | undefined }>`
   background-color: rgba(0, 0, 0, 0.85);
   cursor: zoom-out;
 

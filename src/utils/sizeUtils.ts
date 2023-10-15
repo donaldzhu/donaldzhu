@@ -1,4 +1,4 @@
-import { BreakptSizer, breakptSizesType } from './helpers/breakptSizer'
+import { BreakptSizer, BreakptSizesType } from './helpers/breakptSizer'
 
 export const enum Unit {
   Vw = 'vw',
@@ -31,10 +31,10 @@ export const getNativeResolution = () => [
 
 export const toPercent = (decimal: number) => percent(decimal * 100)
 
-export const getSize = (breakptSizes: breakptSizesType) =>
+export const getSize = (breakptSizes: BreakptSizesType) =>
   new BreakptSizer(breakptSizes).getSize(false)
 
-export const getRemSize = (breakptSizes: breakptSizesType) =>
+export const getRemSize = (breakptSizes: BreakptSizesType) =>
   new BreakptSizer(breakptSizes).getSize(true)
 
 

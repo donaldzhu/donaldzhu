@@ -21,7 +21,7 @@ const Footer = () => {
         size={domSizes.sidebar.width}
         isVertical={false} />
       <FooterLinkContainer>
-        {typedKeys<NameText>(NameText).map((name, i) =>
+        {typedKeys(NameText).map((name, i) =>
           <Fragment key={name}>
             {!!i && <FooterDelimiter>●</FooterDelimiter>}
             <FooterLink path={`/${name}`}>{NameText[name]}</FooterLink>

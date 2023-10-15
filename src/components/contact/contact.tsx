@@ -50,6 +50,8 @@ const Contact = () => {
       handleHover={handleQrHover} />,
     [shownQr]
   )
+
+  return undefined
 }
 
 interface ContactSidebarProps {

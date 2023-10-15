@@ -5,8 +5,9 @@ import { em } from '../../utils/sizeUtils'
 import mixins from '../../styles/mixins'
 import { fontSizes, fontLineHeights } from '../../styles/fonts'
 import colors from '../../styles/colors'
+import { WorkAnchorProps } from './workTypes'
 
-const WorkSideBarItem = ({ data, isHighlighted, highlightedRef, handleHover }) => {
+const WorkSideBarItem = ({ data, isHighlighted, highlightedRef, handleHover }: WorkAnchorProps) => {
   const { title, abbr, tags, id } = data
   const location = useLocation()
   return (
@@ -31,7 +32,7 @@ const LinkContainer = styled(Anchor)`
 `
 
 const negativeIndent = em(1.5)
-const ItemContainer = styled.li`
+const ItemContainer = styled.li<{ $isHighlighted: boolean }>`
   font-size: ${fontSizes.workIndex.mono.css};
   color: ${({ $isHighlighted }) => $isHighlighted ? colors.activeElem : colors.workIndex};
   position: relative;
