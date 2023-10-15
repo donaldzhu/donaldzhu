@@ -6,7 +6,7 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/stylistic-type-checked",
-    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "plugin:import/recommended"
   ],
@@ -25,13 +25,14 @@
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "never"],
+    "max-len": ["warn", { "code": 100 }],
+    "no-multiple-empty-lines": "warn",
     "no-irregular-whitespace": "off",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
       { "argsIgnorePattern": "^_" }
     ],
-    "react/react-in-jsx-scope": "off",
     "react-hooks/exhaustive-deps": "off",
     "import/no-named-as-default": "off",
     "import/order": [
@@ -49,6 +50,7 @@
         ]
       }
     ],
+    "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/ban-ts-comment": "off",

@@ -21,6 +21,7 @@ function PreloadMediaWithRef(props: PreloadMediaProps, ref: MediaRef) {
     if (!isZoomed) sizes.without(MediaSize.Max)
     let size = _.last(sizes.value())
 
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const hasLoaded = mediaIsVid || !!size
 
     if (mediaIsVid)
@@ -57,7 +58,7 @@ function PreloadMediaWithRef(props: PreloadMediaProps, ref: MediaRef) {
   }, [mediaStack, fallbackPath])
 
 
-  const [nativeW, nativeH] = mediaStack?.nativeDimension || []
+  const [nativeW, nativeH] = mediaStack?.nativeDimension ?? []
 
   return <Media
     {...rest}

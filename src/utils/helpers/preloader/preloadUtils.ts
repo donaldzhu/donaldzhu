@@ -44,13 +44,11 @@ export const isImgSize = (size: MediaSize) => [MediaSize.DesktopFallback, MediaS
 export const fileIsImg = (fileName: string) => {
   const imgRegex = new RegExp('.(gif|webp|png)$', 'i')
   const vidRegex = new RegExp('.webm$', 'i')
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   if (fileName.match(imgRegex) || fileName.match(/\*$/)) return true
   if (fileName.match(vidRegex)) return false
   throw new Error(`${fileName} is neither an image nor a video.`)
 }
-
-export const isThumbnail = (type: MediaType): type is MediaType.Thumbnails => type === MediaType.Thumbnails
-export const isPoster = (type: MediaType): type is MediaType.Posters => type === MediaType.Posters
 
 export const getPreviewBreakptKey = () => {
   const breakpt = getBreakptKey()

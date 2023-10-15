@@ -5,7 +5,7 @@ import { Breakpt, getBreakptKey } from '../../queryUtil'
 import { coorTuple } from '../../utilTypes'
 import { ImgPreloader, VidPreloader } from './preloader'
 import { MediaStackProps, PreloadBreakpt } from './preloaderTypes'
-import { FileExt, getPreviewBreakptKey, isImg,isThumbnail, MediaFileType, MediaSize, MediaType } from './preloadUtils'
+import { FileExt, getPreviewBreakptKey, isImg, MediaFileType, MediaSize, MediaType } from './preloadUtils'
 
 export class MediaStack {
   private mediaType: MediaType
@@ -97,7 +97,7 @@ export class MediaStack {
   }
 
   get isThumbnail() {
-    return isThumbnail(this.mediaType)
+    return this.mediaType === MediaType.Thumbnails
   }
 
   get loadedSizes() {

@@ -1,4 +1,4 @@
-import parse, { domToReact,HTMLReactParserOptions } from 'html-react-parser'
+import parse, { domToReact, HTMLReactParserOptions } from 'html-react-parser'
 import Anchor from '../components/common/anchor'
 import SmallText from '../components/common/styled/smallText'
 
