@@ -68,7 +68,8 @@ const PageVectorString = () => {
       </RowContainer>
       <RowContainer toolTip={
         <p>
-          <b>Varied Forms S</b> —  using slightly different letterforms for the two connected glyphs.
+          <b>Varied Forms S</b> —
+          using slightly different letterforms for the two connected glyphs.
         </p>
       }>
         <WorkImg src='8.webp' />
@@ -83,7 +84,8 @@ const PageVectorString = () => {
       </RowContainer>
       <RowContainer toolTip={
         <p>
-          <b>Three-Layered G</b> —  Using three layers of vellum; the resulting output appears a lot more structural.
+          <b>Three-Layered G</b> —
+          using three layers of vellum; the resulting output appears a lot more structural.
         </p>
       }>
         <WorkImg src='13.webp' />

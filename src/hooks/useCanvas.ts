@@ -2,7 +2,12 @@ import _ from 'lodash'
 import p5 from 'p5'
 import { DependencyList, useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import { GlobalCanvasStates, p5Callback, sketchEventCallback, SketchEventHandler } from '../components/canvas/canvasTypes'
+import {
+  GlobalCanvasStates,
+  p5Callback,
+  sketchEventCallback,
+  SketchEventHandler
+} from '../components/canvas/canvasTypes'
 import { loopObject } from '../utils/commonUtils'
 import { P5Event } from '../utils/p5Utils'
 import { validateRef } from '../utils/typeUtils'
@@ -19,7 +24,8 @@ const useCanvas = (
   const outletContext = useOutletContext()
   const { canvasRef, canvasStateRefs } = _.defaults(config, outletContext)
 
-  if (!validateRef(canvasRef) || !canvasStateRefs) throw new Error('No canvasRef or canvasStateRefs is passed to canvas.')
+  if (!validateRef(canvasRef) || !canvasStateRefs)
+    throw new Error('No canvasRef or canvasStateRefs is passed to canvas.')
 
   const { setup, draw, cleanup, ...callbacks } = useMemo(createSketch, dependencies)
 

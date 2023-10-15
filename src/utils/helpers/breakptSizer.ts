@@ -8,7 +8,10 @@ import Size from './size'
 export interface MobileBreakptSizesType { s: number, m: number }
 export interface TabletBreakptSizesType { m: number, l: number }
 export interface DesktopBreakptSizesType { l: number, xxl: number, xxlSm?: number }
-export type BreakptSizesType = MobileBreakptSizesType | TabletBreakptSizesType | DesktopBreakptSizesType
+export type BreakptSizesType =
+  MobileBreakptSizesType |
+  TabletBreakptSizesType |
+  DesktopBreakptSizesType
 
 interface slopeType {
   vw: number,
@@ -81,8 +84,8 @@ export class BreakptSizer {
   }
 
   private get vh() {
-    return !(Breakpt.xxl in this.breakptSizes && this.breakptSizes.xxl && this.breakptSizes.xxlSm) ? 0 :
-      (this.breakptSizes.xxl - this.breakptSizes.xxlSm) / (xxlHeight - xxlSmHeight)
+    return Breakpt.xxl in this.breakptSizes && this.breakptSizes.xxl && this.breakptSizes.xxlSm ?
+      (this.breakptSizes.xxl - this.breakptSizes.xxlSm) / (xxlHeight - xxlSmHeight) : 0
   }
 }
 

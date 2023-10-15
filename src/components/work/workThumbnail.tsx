@@ -20,17 +20,21 @@ const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }: Wor
       ref={isHighlighted ? highlightedRef : null}
       onMouseOver={() => handleHover(title)}>
       <PreloadMedia
-        mediaStack={preloadManager?.enabled ? preloadManager.thumbnails.find(stack => stack.pageId === id) : undefined}
+        mediaStack={
+          preloadManager?.enabled ?
+            preloadManager.thumbnails.find(stack => stack.pageId === id) :
+            undefined
+        }
         fallbackPath={fallbackPath}
         type={animatedThumbnail ? MediaFileType.Video : MediaFileType.Image} />
     </ThumbnailLink>
   )
 }
 
-const ThumbnailLink = styled(Anchor)` 
+const ThumbnailLink = styled(Anchor)`
   display: block;
    img, video {
-    width: 100%; 
+    width: 100%;
   }
 `
 

@@ -171,7 +171,11 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
     return [pivotIndex, pivotIndex ^ 1].map(index => p5.createVector(...intersections[index]))
   }
 
-  const drawVectors = (p5: p5, hideCursorRef: MutableRefObject<boolean>, shouldDrawMarks: boolean) => {
+  const drawVectors = (
+    p5: p5,
+    hideCursorRef: MutableRefObject<boolean>,
+    shouldDrawMarks: boolean
+  ) => {
     wrapDrawingContext(p5, () => {
       p5.stroke(0)
 

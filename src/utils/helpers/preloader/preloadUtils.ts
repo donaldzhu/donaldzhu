@@ -39,7 +39,8 @@ export enum VerboseLevel {
 export function isImg(media: MediaPreloader | MediaStack): media is ImgPreloader | ImgStack {
   return media.fileType === MediaFileType.Image
 }
-export const isImgSize = (size: MediaSize) => [MediaSize.DesktopFallback, MediaSize.Preview].includes(size)
+export const isImgSize = (size: MediaSize) =>
+  [MediaSize.DesktopFallback, MediaSize.Preview].includes(size)
 
 export const fileIsImg = (fileName: string) => {
   const imgRegex = new RegExp('.(gif|webp|png)$', 'i')

@@ -39,7 +39,9 @@ const PageVectorStruct = () => {
       </RowContainer>
       <RowContainer toolTip={
         <p>
-          <b>Open-back A</b> — this glyph only has one of its ends attached to a wooden letter, making its behavior more akin to that of a flag through swaying motions. As such, physical forces, such as drag and gravity, also play a role in its performance.
+          <b>Open-back A</b> — this glyph only has one of its ends attached to a wooden letter,
+          making its behavior more akin to that of a flag through swaying motions.
+          As such, physical forces, such as drag and gravity, also play a role in its performance.
         </p>
       }>
         <WorkVid src='1.webm' />
@@ -66,7 +68,9 @@ const PageVectorStruct = () => {
       </RowContainer>
       <RowContainer cols={[1, 2]} toolTip={
         <p>
-          <b>Varied Forms G/S</b> —  using slightly different letterforms for the two connected glyphs. Not only does varying this parameter add another layer to the system, but it sometimes also emulates the non-parallel nature of handwriting.
+          <b>Varied Forms G/S</b> — using slightly different letterforms for the two
+          connected glyphs. Not only does varying this parameter add another layer to
+          the system, but it sometimes also emulates the non-parallel nature of handwriting.
         </p>
       }>
         <ColumnContainer>
@@ -103,7 +107,6 @@ const SvgOuterContainer = styled.div`
 
 
 `
-
 
 
 export default PageVectorStruct

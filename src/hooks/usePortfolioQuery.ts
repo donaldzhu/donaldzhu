@@ -11,7 +11,8 @@ const TypedPortfolioData: Record<string, PortfolioDataInterface> = allPortfolioD
 const usePortfolioQuery = () => {
   const [searchParams] = useSearchParams()
   const pid = searchParams.get('pid')
-  const portfolioData: PortfolioDataInterface | undefined = useMemo(() => { if (pid) return TypedPortfolioData[pid] }, [searchParams])
+  const portfolioData: PortfolioDataInterface | undefined =
+    useMemo(() => { if (pid) return TypedPortfolioData[pid] }, [searchParams])
   useEffect(() => {
     if (pid && portfolioData)
       sessionStorage.setItem('pid', pid)

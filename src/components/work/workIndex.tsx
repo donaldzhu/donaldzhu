@@ -43,7 +43,8 @@ const WorkIndex = () => {
   const { portfolioData } = usePortfolioQuery()
   const portfolioProjects = portfolioData ? filterFalsy(portfolioData?.projects
     .map(projectId => workData.find(work => work.id === projectId))) : []
-  const filteredWorkData: WorkDataInterface[] = portfolioProjects.length ? portfolioProjects : workData
+  const filteredWorkData: WorkDataInterface[] =
+    portfolioProjects.length ? portfolioProjects : workData
 
   useSidebar(<WorkIndexSidebar
     workData={filteredWorkData}
@@ -70,7 +71,8 @@ const WorkIndex = () => {
 
 const ThumbnailContainer = styled(MainContainer) <{ $columns: number }>`
   a {
-    width: ${({ $columns }) => `calc(100% / ${$columns} - ${domSizes.workIndex.thumbnail.gap.css} * 2)`};
+    width: ${({ $columns }) =>
+    `calc(100% / ${$columns} - ${domSizes.workIndex.thumbnail.gap.css} * 2)`};
     margin: ${domSizes.workIndex.thumbnail.gap.css};
   }
 `

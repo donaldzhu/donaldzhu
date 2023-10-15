@@ -11,7 +11,12 @@ interface StyledVideoIframeProps {
   $aspectRatio: string | undefined
 }
 
-const VideoIframe = ({ src, type, aspectRatio, ...rest }: IframeHTMLAttributes<HTMLIFrameElement> & VideoIframeProps) => {
+const VideoIframe = ({
+  src,
+  type,
+  aspectRatio,
+  ...rest
+}: IframeHTMLAttributes<HTMLIFrameElement> & VideoIframeProps) => {
   const prefix = type === VideoIframeType.Youtube ? 'https://www.youtube.com/embed/' :
     type === VideoIframeType.Vimeo ? 'https://player.vimeo.com/video/' : ''
   return <Iframe

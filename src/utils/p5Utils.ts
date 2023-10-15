@@ -25,10 +25,11 @@ export enum P5Event {
 }
 
 export const parseVector = (vector: p5.Vector): [number, number] => [vector.x, vector.y]
-export const parsePoints = (...vectors: p5.Vector[]) => vectors.reduce<number[]>((result, vector) => {
-  result.push(vector.x, vector.y)
-  return result
-}, [])
+export const parsePoints = (...vectors: p5.Vector[]) =>
+  vectors.reduce<number[]>((result, vector) => {
+    result.push(vector.x, vector.y)
+    return result
+  }, [])
 
 
 export const styleDashedRect = (p5: p5) => {
@@ -39,7 +40,12 @@ export const styleDashedRect = (p5: p5) => {
 }
 
 
-export const intersectTwoCircles = (center1: p5.Vector, r1: number, center2: p5.Vector, r2: number) => {
+export const intersectTwoCircles = (
+  center1: p5.Vector,
+  r1: number,
+  center2: p5.Vector,
+  r2: number
+) => {
   const { x: x1, y: y1 } = center1
   const { x: x2, y: y2 } = center2
   const R = center1.dist(center2)

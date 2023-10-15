@@ -35,7 +35,8 @@ const GlobalCanvas = ({ canvasRef, canvasStateRefs }: GlobalCanvasStates) => {
     )
   }
 
-  const handlers = mapObject<Record<P5Event, string>, p5EventCallback>(P5Event, eventName => (p5: p5) => { handleEvent(p5, eventName) })
+  const handlers = mapObject<Record<P5Event, string>, p5EventCallback>(
+    P5Event, eventName => (p5: p5) => { handleEvent(p5, eventName) })
   const otherHandlers = _.omit(handlers, [P5Event.draw, P5Event.mouseMoved, P5Event.windowResized])
 
   return (

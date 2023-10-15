@@ -9,7 +9,9 @@ const AutoPlayPopUp = () => {
   return (
     <FullScreenContainer>
       <Container>
-        <Message>Your browser has blocked autoplay; dismiss this dialog to activate the website</Message>
+        <Message>
+          Your browser has blocked autoplay; dismiss this dialog to activate the website
+        </Message>
         <Instruction>(Click anywhere to dismiss)</Instruction>
       </Container>
     </FullScreenContainer>

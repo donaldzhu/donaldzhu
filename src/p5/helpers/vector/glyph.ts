@@ -91,7 +91,8 @@ class Glyph {
   }
 
   getBearings() {
-    return this.nativeBearings.map(bearing => (bearing + this.setting.tracking) * this.still.scale.value)
+    return this.nativeBearings.map(bearing =>
+      (bearing + this.setting.tracking) * this.still.scale.value)
   }
 
   loopVectors(callback: (vectorData: {

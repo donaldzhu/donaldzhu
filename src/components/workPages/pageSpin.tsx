@@ -15,7 +15,11 @@ const PageSpin = () => {
       </RowContainer>
       <RowContainer toolTip={
         <>
-          <p>This apparatus consists of mostly 3D-printed parts. Driven by separate mechanical motors, the four cylinders in the center can rotate independently.</p>
+          <p>
+            This apparatus consists of mostly 3D-printed parts.
+            Driven by separate mechanical motors, the four cylinders
+            in the center can rotate independently.
+          </p>
           <RowContainer>
             <WorkImg src='1.webp' isToolTip />
             <WorkImg src='2.webp' isToolTip />
@@ -32,9 +36,15 @@ const PageSpin = () => {
       </RowContainer>
       <RowContainer cols={[1, 2]} toolTip={
         <>
-          <p>Prints (i.e. acetates, stencils) can be inserted into the holders at the base of the cylinders, allowing the inputs of the system to be variable.</p>
+          <p>
+            Prints (i.e. acetates, stencils) can be inserted into the holders at the
+            base of the cylinders, allowing the inputs of the system to be variable.
+          </p>
           <WorkImg src='3.webp' isToolTip />
-          <p>Similarly, changing the number of rolls and their rotation cycles make the outputs combinatoric and multiplicative.</p>
+          <p>
+            Similarly, changing the number of rolls and their rotation cycles make the
+            outputs combinatoric and multiplicative.
+          </p>
         </>
       }>
         <WorkVid src='2.webm' />
@@ -45,9 +55,18 @@ const PageSpin = () => {
         prefix='outputs'
         toolTip={
           <>
-            <p><b>Combinatorics</b> — combining Chinese radicals cyclically to make existent and non-existent characters.</p>
-            <p><b>Occlusion</b> — physically obscuring typography under different lighting and optical conditions.</p>
-            <p><b>Halation</b> — using different backlighting to affect the legibility of type in motion; relevant for highway signages and people with astigmatism.</p>
+            <p>
+              <b>Combinatorics</b> — combining Chinese radicals cyclically
+              to make existent and non-existent characters.
+            </p>
+            <p>
+              <b>Occlusion</b> — physically obscuring typography under
+              different lighting and optical conditions.
+            </p>
+            <p>
+              <b>Halation</b> — using different backlighting to affect the legibility
+              of type in motion; relevant for highway signages and people with astigmatism.
+            </p>
           </>
         } />
     </>

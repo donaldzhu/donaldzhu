@@ -23,7 +23,9 @@ function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
   const { maxSize, width, isToolTip, ...rest } = props
   const { type } = rest
 
-  const mediaType = isToolTip ? MediaType.ToolTips : type === MediaFileType.Image ? MediaType.Images : MediaType.Videos
+  const mediaType = isToolTip ?
+    MediaType.ToolTips : type === MediaFileType.Image ?
+      MediaType.Images : MediaType.Videos
 
   src = isToolTip ? joinPaths(MediaType.ToolTips, src) : src
   const fallbackPath = joinPaths('/assets/work', pageId, MediaSize.Max, src)

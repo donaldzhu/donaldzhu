@@ -25,7 +25,14 @@
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "never"],
-    "max-len": ["off", { "code": 100 }],
+    "max-len": [
+      "warn",
+      {
+        "code": 100,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
     "no-multiple-empty-lines": "off",
     "no-irregular-whitespace": "off",
     "no-unused-vars": "off",
@@ -52,7 +59,7 @@
     ],
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "@typescript-eslint/no-empty-function": "off",
-    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-unsafe-declaration-merging": "off"
   },

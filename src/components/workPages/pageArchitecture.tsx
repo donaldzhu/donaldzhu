@@ -8,7 +8,10 @@ const PageArchitecture = () => {
     <>
       <RowContainer toolTip={
         <>
-          <p>Layers of type and images successively collaged together using wheatpaste. The wetness of the prints allows the process to be subtractive as well as additive.</p>
+          <p>
+            Layers of type and images successively collaged together using wheatpaste.
+            The wetness of the prints allows the process to be subtractive as well as additive.
+          </p>
           <RowContainer>
             <WorkImg src='1.webp' isToolTip />
             <WorkImg src='2.webp' isToolTip />
@@ -19,7 +22,10 @@ const PageArchitecture = () => {
       </RowContainer>
       <RowContainer toolTip={
         <>
-          <p>Applying gel medium on printed text turns the print into a flexible, translucent material, allowing it to be hand-manipulated.</p>
+          <p>
+            Applying gel medium on printed text turns the print into a flexible,
+            translucent material, allowing it to be hand-manipulated.
+          </p>
           <WorkImg src='3.webp' isToolTip />
           <WorkImg src='4.webp' isToolTip />
         </>

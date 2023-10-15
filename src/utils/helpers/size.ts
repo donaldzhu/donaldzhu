@@ -38,7 +38,10 @@ class Size {
     return this.calcWithNum(dividend, (a: number, b: number) => a / b)
   }
 
-  private calcWithSize(targetSize: Size, operation: (thisUnit: number, targetUnit: number) => number) {
+  private calcWithSize(
+    targetSize: Size,
+    operation: (thisUnit: number, targetUnit: number) => number
+  ) {
     return new Size({
       vw: operation(this.vw, targetSize.vw),
       vh: operation(this.vh, targetSize.vh),
@@ -46,7 +49,10 @@ class Size {
     })
   }
 
-  private calcWithNum(targetNumber: number, operation: (thisUnit: number, targetUnit: number) => number) {
+  private calcWithNum(
+    targetNumber: number,
+    operation: (thisUnit: number, targetUnit: number) => number
+  ) {
     return new Size({
       vw: operation(this.vw, targetNumber),
       vh: operation(this.vh, targetNumber),

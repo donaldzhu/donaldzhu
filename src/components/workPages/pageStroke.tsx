@@ -18,7 +18,11 @@ const PageStroke = () => {
   const [hoveringCard, setHoveringCard] = useState<number | null>(null)
   const placeholderRef = useRef<HTMLDivElement>(null)
   const isClearingRef = useRef(false)
-  const cardRefs = [useRef<HTMLImageElement>(null), useRef<HTMLImageElement>(null), useRef<HTMLImageElement>(null)]
+  const cardRefs = [
+    useRef<HTMLImageElement>(null),
+    useRef<HTMLImageElement>(null),
+    useRef<HTMLImageElement>(null)
+  ]
 
   useCanvas(() => drawElemBorders({ elemRefs: [placeholderRef, ...cardRefs] }))
   useCanvas(() => drawPanto({ placeholderRef, isClearingRef }))
@@ -42,14 +46,26 @@ const PageStroke = () => {
             <br />
             <b>Bottom:</b> primary stylus;
           </p>
-          <p>Due to the simultaneity with which both styluses write, there is no clear logical order: the letterform is derived from the gesture as much as the gesture is derived from the letterform. The consequent mark-making system investigates the relationship between the two.</p>
+          <p>
+            Due to the simultaneity with which both styluses write,there is no clear
+            logical order: the letterform is derived from the gesture as much as the
+            gesture is derived from the letterform. The consequent mark-making system
+            investigates the relationship between the two.
+          </p>
         </>
       }>
         <WorkImg src='2.webp' />
         <WorkImg src='3.webp' />
         <WorkImg src='4.webp' />
       </RowContainer>
-      <RowContainer toolTip={<p>A simulated recreation of the pantograph in-use with a flat-tipped marker. In this configuration, marks made with the primary stylus will be replicated at a size ratio of <b>2:1</b>. With the physical tool, the placement of the secondary holder can be changed to modify the <b>scale, proportion, and slant</b> of the output.</p>}>
+      <RowContainer toolTip={
+        <p>
+          A simulated recreation of the pantograph in-use with a flat-tipped marker.
+          In this configuration, marks made with the primary stylus will be replicated at a size
+          ratio of <b>2:1</b>. With the physical tool, the placement of the secondary holder can
+          be changed to modify the <b>scale, proportion, and slant</b> of the output.
+        </p>
+      }>
         <CanvasPlaceholder ref={placeholderRef}>
           <CanvasCaption>DEMO - Drawing Area</CanvasCaption>
           <ClearButton onClick={handleClear}> CLEAR </ClearButton>
@@ -92,7 +108,7 @@ ${mixins
   }
 `
 
-const CanvasCaption = styled.p` 
+const CanvasCaption = styled.p`
   pointer-events: none;
 `
 

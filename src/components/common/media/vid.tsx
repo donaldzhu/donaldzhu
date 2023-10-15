@@ -1,5 +1,5 @@
 import { usePrevious } from '@uidotdev/usehooks'
-import { forwardRef, useEffect,VideoHTMLAttributes } from 'react'
+import { forwardRef, useEffect, VideoHTMLAttributes } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import styled from 'styled-components'
 import mixins from '../../../styles/mixins'
@@ -8,7 +8,16 @@ import { StyledMediaProps, VidProps } from './mediaTypes'
 
 
 const Vid = forwardRef<HTMLVideoElement, VideoHTMLAttributes<HTMLVideoElement> & VidProps>(
-  function Vid({ src, alt, poster, loop = true, hasLoaded, aspectRatio, autoPlay = true, ...props }, ref) {
+  function Vid({
+    src,
+    alt,
+    poster,
+    loop = true,
+    hasLoaded,
+    aspectRatio,
+    autoPlay = true,
+    ...props
+  }, ref) {
     const canAutoPlay: boolean | undefined = useOutletContext<PageContextProps>()?.canAutoPlay
     const prevCanAutoPlay = usePrevious(canAutoPlay)
 

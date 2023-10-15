@@ -52,7 +52,8 @@ const QRSvg = styled(Qr) <StyledQrSvgProps>`
   ${mixins.squared(em(1))}
   display: inline-block;
   margin-left: 0.25em;
-  color: ${({ $isHighlighted }) => $isHighlighted ? colorConfig.activeElem : colorConfig.defaultText}; 
+  color: ${({ $isHighlighted }) => $isHighlighted ?
+    colorConfig.activeElem : colorConfig.defaultText};
 `
 
 export default ContactItem

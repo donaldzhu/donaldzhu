@@ -17,7 +17,12 @@ interface WorkIndexSidebarProps {
   handleHover: (projectTitle: string) => void
 }
 
-const WorkIndexSidebar = ({ workData, highlighted, sidebarRef, handleHover }: WorkIndexSidebarProps) => {
+const WorkIndexSidebar = ({
+  workData,
+  highlighted,
+  sidebarRef,
+  handleHover
+}: WorkIndexSidebarProps) => {
   const storageKey = 'pid'
   const pid = usePortfolioQuery().pid
   const cachedPid = sessionStorage.getItem(storageKey)
@@ -49,7 +54,7 @@ const SideBarContainer = styled(TextContainer)`
 const linkPositionOffset = domSizes.footer.link.padding.mult(-1).css
 const ToMainSiteLink = styled(Anchor)`
   padding: ${domSizes.footer.link.padding.css};
-  font-family: ${fontFamilies.sansFont}; 
+  font-family: ${fontFamilies.sansFont};
   font-size: ${fontSizes.footer.link.css};
   position: absolute;
   left: ${linkPositionOffset};

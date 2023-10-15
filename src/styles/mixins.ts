@@ -63,12 +63,13 @@ const fontVar = (config: FontVarConfigProps) => {
     CRSV: 0.5,
     ...config
   }
-  return `font-variation-settings: ${Object.entries(config).map(([key, value]) => `"${key}" ${value}`).join(',')};`
+  return `font-variation-settings: ${Object.entries(config).map(([key, value]) =>
+    `"${key}" ${value}`).join(',')};`
 }
 
 const slant = () => fontVar({ slnt: -5, CRSV: 1, MONO: fontParams.monoVariable })
 const underline = () => `
-  text-decoration: underline; 
+  text-decoration: underline;
   text-underline-offset: 0.125em;
 `
 

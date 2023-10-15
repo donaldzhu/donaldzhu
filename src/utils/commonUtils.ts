@@ -20,7 +20,8 @@ export const repeatMap = <T>(repetition: number, callback: (i: number) => T) => 
 
 export const repeat = <T>(repetition: number, value: T) => Array(repetition).fill(value)
 
-export const arrayify = <T>(possibleArray: T | T[]) => Array.isArray(possibleArray) ? possibleArray : [possibleArray]
+export const arrayify = <T>(possibleArray: T | T[]) =>
+  Array.isArray(possibleArray) ? possibleArray : [possibleArray]
 export const shuffleTo = <T>(array: T[], index: number) => {
   array = [...array]
   return [...array.splice(index), ...array]
@@ -67,8 +68,9 @@ export const keysToObject = <T extends PropertyKey, V>(array: T[], callback: (
 
 // util
 export const joinPaths = (...paths: string[]) => paths.filter(p => p).join('/')
-export const appendQuery = (...queries: [string, string | null | undefined][]) => queries.reduce((string, [queryKey, queryValue], i) =>
-  string += i ? '&' : '' + `${queryKey}=${queryValue}`, '?')
+export const appendQuery = (...queries: [string, string | null | undefined][]) =>
+  queries.reduce((string, [queryKey, queryValue], i) =>
+    string += i ? '&' : '' + `${queryKey}=${queryValue}`, '?')
 
 export const getToolTipPoints = <T extends Element>(toolTip: ElemRect<T>, popUp: ElemRect<T>):
   [coorTuple, coorTuple, coorTuple, coorTuple] => {
@@ -109,4 +111,4 @@ export const partition = <T, F>(
   const trueArray: T[] = array.filter(filterTrue)
   const falseArray: F[] = array.filter(filterFalse)
   return [trueArray, falseArray]
-} 
+}

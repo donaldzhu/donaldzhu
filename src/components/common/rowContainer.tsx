@@ -19,7 +19,13 @@ interface StyledRowContainerProps {
   $cols: number[]
 }
 
-const RowContainer = forwardRef<HTMLDivElement, RowContainerProps>(function RowContainer({ className, cols, width, children, toolTip }, ref) {
+const RowContainer = forwardRef<HTMLDivElement, RowContainerProps>(function RowContainer({
+  className,
+  cols,
+  width,
+  children,
+  toolTip
+}, ref) {
   const childrenLength = arrayify(children).flat().length
   return (
     <Container className={className} ref={ref}>

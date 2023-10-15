@@ -70,7 +70,10 @@ const drawMainSketch = ({ placeholderRef }: DrawMainSketchProps) => {
         return result
       })
     const anchors = getCoors([x1, x2], [y1, y2])
-    const cursorCoors = getCoors([mouseX - halfCursorSize, mouseX + halfCursorSize], [mouseY - halfCursorSize, mouseY + halfCursorSize])
+    const cursorCoors = getCoors(
+      [mouseX - halfCursorSize, mouseX + halfCursorSize],
+      [mouseY - halfCursorSize, mouseY + halfCursorSize]
+    )
 
     wrapDrawingContext(p5, () => {
       p5.noStroke()

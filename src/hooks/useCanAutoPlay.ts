@@ -1,9 +1,10 @@
 import _ from 'lodash'
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 import { addEventListener } from '../utils/reactUtils'
 
 const useCanAutoPlay = () => {
-  const activationEvents: (keyof DocumentEventMap)[] = ['keydown', 'mousedown', 'pointerdown', 'pointerup', 'touchend']
+  const activationEvents: (keyof DocumentEventMap)[] =
+    ['keydown', 'mousedown', 'pointerdown', 'pointerup', 'touchend']
   const [canAutoPlay, setCanAutoPlay] = useState<boolean | undefined>()
 
   useEffect(() => {
