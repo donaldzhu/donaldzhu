@@ -34,7 +34,7 @@ const getBreakptConfig = (breakpt: Breakpt, sizes: breakptSize[], debugOnly: boo
     breakptWidth: BREAKPT_WIDTHS[breakpt],
     sizes,
     blur: breakpt === Breakpt.desktopFallback ? BLUR : undefined,
-    exclude: breakpt === Breakpt.desktopFallback ? [MediaType.video] : undefined,
+    exclude: breakpt === Breakpt.desktopFallback ? [MediaType.Video] : undefined,
     debugOnly
   }
 }
@@ -101,7 +101,7 @@ const resize = async (config?: ConfigType) => {
       sizes: pageConfigs.xxl.sizes,
       noResize: true,
       maxDimension: 2500 * 3000,
-      exclude: [MediaType.poster],
+      exclude: [MediaType.Poster],
       debugOnly
     }
 

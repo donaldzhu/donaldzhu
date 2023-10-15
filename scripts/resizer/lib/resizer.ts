@@ -66,14 +66,14 @@ class Resizer<K extends string> {
 
   private createPosterFolder() {
     const hasVid = !!this.allFileEntries.find(fileName =>
-      parseMediaType(fileName) === MediaType.video)
+      parseMediaType(fileName) === MediaType.Video)
     if (hasVid && this.exportPoster) this.createFolder(POSTER_SUBFOLDER)
   }
 
   private async resizeMedia(fileName: string, fileEntry: string) {
     const type = parseMediaType(fileName)
-    if (type === MediaType.image) await this.resizeImg(fileName, fileEntry)
-    else if (type === MediaType.video) await this.resizeVid(fileName, fileEntry)
+    if (type === MediaType.Image) await this.resizeImg(fileName, fileEntry)
+    else if (type === MediaType.Video) await this.resizeVid(fileName, fileEntry)
     else throw new Error(`${fileName} is not an approved file type.`)
   }
 
@@ -81,11 +81,12 @@ class Resizer<K extends string> {
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig): Promise<void>
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig) {
     const imgPath = posterConfig ? fileName : this.getSubpath(fileName)
-    const animated = getExtension(imgPath) === ImgExtention.gif
+    const animated = getExtension(imgPath) === ImgExtention.Gif
     const imgObj = sharp(imgPath, { animated })
     const size = posterConfig ? posterConfig.vidSize :
       this.throwNoWidth(await imgObj.metadata(), fileName)
 
+    if (imgPath.match(/\.gif$/)) console.log(size)
     await this.mapBreakpts(async resizer => await resizer.resizeImg(imgObj, {
       size,
       fileName: posterConfig ? posterConfig.vidFileName : fileName,
@@ -161,7 +162,7 @@ class Resizer<K extends string> {
   }
 
   private log(fileName: string) {
-    const color = parseMediaType(fileName) === MediaType.image ? 'green' : 'cyan'
+    const color = parseMediaType(fileName) === MediaType.Image ? 'green' : 'cyan'
     console.log(`${chalk.gray('Resized: ')}${chalk[color](fileName)}`)
   }
 
@@ -169,18 +170,18 @@ class Resizer<K extends string> {
     return joinPaths(
       path.dirname(filename),
       POSTER_SUBFOLDER,
-      path.basename(filename).replace(VidExtension.webm, ImgExtention.png)
+      path.basename(filename).replace(VidExtension.Webm, ImgExtention.Png)
     )
   }
 
   private getPosterPath(filename: string) {
-    return filename.replace(ImgExtention.png, ImgExtention.webp)
+    return filename.replace(ImgExtention.Png, ImgExtention.Webp)
   }
 
   private throwNoWidth(metadata: Partial<dimensionType>, fileName: string) {
-    const { width, height } = metadata
+    const { width, height, pageHeight } = metadata
     if (!width || !height) throw new Error(`Cannot read dimensions of ${fileName}.`)
-    return { width, height }
+    return { width, height: pageHeight ?? height }
   }
 }
 

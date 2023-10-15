@@ -13,6 +13,10 @@ import PreloadMedia from './preloadMedia'
 
 const ZoomMedia = forwardRef(ZoomMediaWithRef)
 
+interface StyledZoomMedia {
+  $width: string | number | undefined
+}
+
 function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
   const { preloadManager, handleZoomMedia } = useOutletContext<PageContextProps>()
   const { pageId } = useContext(WorkPageContext)
@@ -55,7 +59,7 @@ function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
   )
 }
 
-const MediaContainer = styled.div<{ $width: string | number | undefined }>`
+const MediaContainer = styled.div<StyledZoomMedia>`
   ${mixins.flex('initial', 'center')}
 
   img, video {

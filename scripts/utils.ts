@@ -41,10 +41,10 @@ export const removeFile = (path: string) => {
 }
 
 export const parseMediaType = (fileName: string) => {
-  const imgRegex = new RegExp(`.(${ImgExtention.gif}|${ImgExtention.webp}|${ImgExtention.png})$`, 'i')
-  const vidRegex = new RegExp(`.${VidExtension.webm}$`, 'i')
-  if (fileName.match(imgRegex) || fileName.match(/\*$/)) return MediaType.image
-  if (fileName.match(vidRegex)) return MediaType.video
+  const imgRegex = new RegExp(`.(${ImgExtention.Gif}|${ImgExtention.Webp}|${ImgExtention.Png})$`, 'i')
+  const vidRegex = new RegExp(`.${VidExtension.Webm}$`, 'i')
+  if (fileName.match(imgRegex) || fileName.match(/\*$/)) return MediaType.Image
+  if (fileName.match(vidRegex)) return MediaType.Video
   throw new Error(`${fileName} is neither an image nor a video.`)
 }
 

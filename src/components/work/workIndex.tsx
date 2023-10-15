@@ -27,6 +27,10 @@ export interface WorkDataInterface {
   listed: boolean
 }
 
+interface StyledWorkIndex {
+  $columns: number
+}
+
 const WorkIndex = () => {
   const [highlighted, setHighlighted] = useState<string>()
   const sidebarRef = useRef<HTMLAnchorElement>(null)
@@ -69,7 +73,7 @@ const WorkIndex = () => {
   )
 }
 
-const ThumbnailContainer = styled(MainContainer) <{ $columns: number }>`
+const ThumbnailContainer = styled(MainContainer) <StyledWorkIndex>`
   a {
     width: ${({ $columns }) =>
     `calc(100% / ${$columns} - ${domSizes.workIndex.thumbnail.gap.css} * 2)`};

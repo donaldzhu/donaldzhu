@@ -31,7 +31,7 @@ const ToolTip = ({ children }: ToolTipProps) => {
   const { mousePositionRef } = canvasStateRefs
 
   const handleHover = ({ currentTarget }: { currentTarget: HTMLDivElement }) => {
-    if (validateRef(toolTipRef)) toolTipRef.current = currentTarget
+    if (toolTipRef) toolTipRef.current = currentTarget
     setIsShown(true)
   }
 
@@ -103,8 +103,8 @@ const ToolTipContainer = styled.div<StyledToolTipProps>`
   outline: ${domSizes.toolTip.border.css} currentColor solid;
 
   ${({ $isHighlighted }) => validateString($isHighlighted, `
-    color:${colors.activeElem}; 
-    outline: none; 
+    color:${colors.activeElem};
+    outline: none;
   `)}
 `
 

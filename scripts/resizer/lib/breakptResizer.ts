@@ -24,7 +24,8 @@ class BreakpointResizer<K extends string> {
       mediaOptions,
       removeFilesAtDest,
       exportPoster
-    }: BreakptResizerConfig) {
+    }: BreakptResizerConfig
+  ) {
     this.source = source
     this.config = config
     this.destination = joinPaths(destination, this.config.breakpt)
@@ -56,8 +57,8 @@ class BreakpointResizer<K extends string> {
     const resizeWidth = this.getResizeWidth(fileEntry, size)
     if (
       !resizeWidth ||
-      !this.shouldExport(MediaType.image) ||
-      (isPoster && !this.shouldExport(MediaType.poster)) ||
+      !this.shouldExport(MediaType.Image) ||
+      (isPoster && !this.shouldExport(MediaType.Poster)) ||
       this.config.debugOnly
     ) return
 
@@ -71,9 +72,9 @@ class BreakpointResizer<K extends string> {
     this.prepareDest(outFile)
 
     const fileType = getExtension(fileName)
-    if (fileType === ImgExtention.gif)
+    if (fileType === ImgExtention.Gif)
       imgObjClone.gif(this.mediaOptions.gif)
-    else if (fileType === ImgExtention.webp)
+    else if (fileType === ImgExtention.Webp)
       imgObjClone.webp(this.mediaOptions.webp)
 
     return await imgObjClone.toFile(outFile)
@@ -86,7 +87,7 @@ class BreakpointResizer<K extends string> {
     const resizeWidth = this.getResizeWidth(fileEntry, size)
     if (
       !resizeWidth ||
-      !this.shouldExport(MediaType.video) ||
+      !this.shouldExport(MediaType.Video) ||
       this.config.debugOnly
     ) return
 
@@ -112,8 +113,8 @@ class BreakpointResizer<K extends string> {
     if (
       this.hasVid &&
       this.exportPoster &&
-      this.shouldExport(MediaType.video) &&
-      this.shouldExport(MediaType.poster) &&
+      this.shouldExport(MediaType.Video) &&
+      this.shouldExport(MediaType.Poster) &&
       !this.config.debugOnly
     ) this.createFolder(POSTER_SUBFOLDER)
   }
@@ -144,7 +145,7 @@ class BreakpointResizer<K extends string> {
   private getPosterPath(fileName: string) {
     return joinPaths(
       POSTER_SUBFOLDER,
-      fileName.replace(VidExtension.webm, ImgExtention.webp)
+      fileName.replace(VidExtension.Webm, ImgExtention.Webp)
     )
   }
 
@@ -153,7 +154,7 @@ class BreakpointResizer<K extends string> {
   }
 
   private get hasVid() {
-    return this.breakptTypes.includes(MediaType.video)
+    return this.breakptTypes.includes(MediaType.Video)
   }
 }
 

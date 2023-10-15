@@ -17,24 +17,24 @@ export interface BreakptResizerConfig {
 }
 
 export const enum ImgExtention {
-  gif = 'gif',
-  webp = 'webp',
-  png = 'png'
+  Gif = 'gif',
+  Webp = 'webp',
+  Png = 'png'
 }
 
 export const enum VidExtension {
-  webm = 'webm'
+  Webm = 'webm'
 }
 
 export const enum MediaType {
-  image = 'image',
-  video = 'video',
-  poster = 'poster'
+  Image = 'image',
+  Video = 'video',
+  Poster = 'poster'
 }
 
 export interface MediaOptions {
-  [ImgExtention.gif]?: sharp.GifOptions
-  [ImgExtention.webp]?: sharp.WebpOptions
+  [ImgExtention.Gif]?: sharp.GifOptions
+  [ImgExtention.Webp]?: sharp.WebpOptions
 }
 
 export interface BreakptConfig<K extends string> {
@@ -66,6 +66,7 @@ export interface ResizePosterConfig {
 export interface dimensionType {
   width: number
   height: number
+  pageHeight?: number
 }
 
 export type callbackType = (fileName: string, size: dimensionType) => void

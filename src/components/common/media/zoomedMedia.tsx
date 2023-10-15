@@ -15,6 +15,10 @@ interface ZoomedMediaProps {
   handleUnzoom: handleZoomType
 }
 
+interface StyledZoomedMediaProps {
+  $maxSize: string | number | undefined
+}
+
 const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
   const zoomedMediaRef = useRef<HTMLImageElement | HTMLVideoElement>(null)
 
@@ -52,7 +56,7 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
   )
 }
 
-const ZoomedContainer = styled(PopUpContainer) <{ $maxSize: string | number | undefined }>`
+const ZoomedContainer = styled(PopUpContainer) <StyledZoomedMediaProps>`
   background-color: rgba(0, 0, 0, 0.85);
   cursor: zoom-out;
 
