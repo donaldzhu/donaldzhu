@@ -25,8 +25,8 @@
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "never"],
-    "max-len": ["warn", { "code": 100 }],
-    "no-multiple-empty-lines": "warn",
+    "max-len": ["off", { "code": 100 }],
+    "no-multiple-empty-lines": "off",
     "no-irregular-whitespace": "off",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
