@@ -1,6 +1,6 @@
 import Masonry from '@mui/lab/Masonry'
 import { useMediaQuery } from '@uidotdev/usehooks'
-import { useRef, useState } from 'react'
+import { Suspense, useRef, useState } from 'react'
 import styled from 'styled-components'
 import workData from '../../data/work/workData.json'
 import useCanvas from '../../hooks/useCanvas'
@@ -61,14 +61,16 @@ const WorkIndex = () => {
 
   return (
     <ThumbnailContainer $columns={columns}>
-      <Masonry columns={columns}>
-        {filteredWorkData.map(project => project.enabled && project.listed && <WorkThumbnail
-          key={project.title}
-          data={project}
-          isHighlighted={highlighted === project.title}
-          highlightedRef={rosterRef}
-          handleHover={handleHover} />)}
-      </Masonry>
+      <Suspense>
+        <Masonry columns={columns}>
+          {filteredWorkData.map(project => project.enabled && project.listed && <WorkThumbnail
+            key={project.title}
+            data={project}
+            isHighlighted={highlighted === project.title}
+            highlightedRef={rosterRef}
+            handleHover={handleHover} />)}
+        </Masonry>
+      </Suspense>
     </ThumbnailContainer>
   )
 }
