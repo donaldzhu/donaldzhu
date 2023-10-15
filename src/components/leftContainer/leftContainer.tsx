@@ -49,7 +49,8 @@ const SidebarContainer = styled.div`
   flex: auto;
   padding-right: ${domSizes.sidebar.padding.right.css};
   overflow: scroll;
-  
+  position: relative;
+
   &>:first-child {
     margin-top: ${domSizes.sidebar.padding.vert.css};
   }
@@ -62,7 +63,7 @@ const Container = styled.div`
   width: ${domSizes.sidebar.width.css};
   margin-left: ${domSizes.sidebar.padding.left.css};
   z-index: 2;
-  
+
   &, & > ${ContentContainer} {
     ${mixins.flex()}
     height: 100%;

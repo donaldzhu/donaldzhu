@@ -29,20 +29,22 @@ const WorkIndexSidebar = ({
   const portfolioNavText = pid ? 'See all work (to main site) +' : 'Return to portfolio -'
 
   return (
-    <SideBarContainer as='ul'>
-      {workData.map(project => project.enabled && project.listed &&
-        <WorkSideBarItem
-          key={project.title}
-          data={project}
-          isHighlighted={highlighted === project.title}
-          highlightedRef={sidebarRef}
-          handleHover={handleHover} />)}
+    <>
+      <SideBarContainer as='ul'>
+        {workData.map(project => project.enabled && project.listed &&
+          <WorkSideBarItem
+            key={project.title}
+            data={project}
+            isHighlighted={highlighted === project.title}
+            highlightedRef={sidebarRef}
+            handleHover={handleHover} />)}
+      </SideBarContainer>
       {(pid ?? cachedPid) && <ToMainSiteLink
         to={'/work' + (validateString(!pid, appendQuery(['pid', cachedPid])))}
         noQuery>
         {portfolioNavText}
       </ToMainSiteLink>}
-    </SideBarContainer>
+    </>
   )
 }
 
@@ -51,14 +53,13 @@ const SideBarContainer = styled(TextContainer)`
   position: relative;
 `
 
-const linkPositionOffset = domSizes.footer.link.padding.mult(-1).css
 const ToMainSiteLink = styled(Anchor)`
   padding: ${domSizes.footer.link.padding.css};
   font-family: ${fontFamilies.sansFont};
   font-size: ${fontSizes.footer.link.css};
   position: absolute;
-  left: ${linkPositionOffset};
-  bottom: ${linkPositionOffset};
+  left: ${domSizes.footer.link.padding.mult(-1).css};
+  bottom:${domSizes.sidebar.padding.vert.sub(domSizes.footer.link.padding).css};
 `
 
 
