@@ -3,28 +3,27 @@ import FlatBrushMark, { FlatBrushPoint } from './flatBrushMark'
 import { repeatMap, shuffleTo } from '../../../utils/commonUtils'
 import { BrushSetting } from '../../sketches/sketchTypes'
 import p5 from 'p5'
-import { sketchSizes } from '../../../styles/sizes'
+import Size from '../../../utils/helpers/size'
 
 
 class FlatBrush extends Brush {
-  rotation: number
-  radius: number
+  private rotation: number
+  private radius: Size
   constructor(setting: BrushSetting, p5: p5, drawingContext: p5.Graphics) {
     super(setting, p5, drawingContext)
     this.rotation = Math.PI / 4
-    this.radius = 4
+    this.radius = setting.radius || new Size(4)
   }
 
   doDraw(context: p5.Graphics) {
     context.rectMode(context.CENTER)
     context.ellipseMode(context.CENTER)
     const { x, y, prevX, prevY } = this
-    const { radius } = sketchSizes.panto.brush.secondary
     if (prevX === x && prevY === y) return
 
     const brushMarks = [
-      new FlatBrushMark(context, prevX, prevY, this.prevSize, radius.value, this.rotation),
-      new FlatBrushMark(context, x, y, this.prevSize, radius.value, this.rotation)
+      new FlatBrushMark(context, prevX, prevY, this.prevSize, this.radius.value, this.rotation),
+      new FlatBrushMark(context, x, y, this.prevSize, this.radius.value, this.rotation)
     ]
 
     this.fillInShape(

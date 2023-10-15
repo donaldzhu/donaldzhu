@@ -1,6 +1,6 @@
 import sharp from 'sharp'
 
-export type ResizerConfig = {
+export interface ResizerConfig {
   destination?: string
   mediaOptions?: MediaOptions
   toParentFolder?: boolean
@@ -9,7 +9,7 @@ export type ResizerConfig = {
   callback?: callbackType
 }
 
-export type BreakptResizerConfig = {
+export interface BreakptResizerConfig {
   destination: string
   mediaOptions: MediaOptions
   removeFilesAtDest: boolean
@@ -32,15 +32,15 @@ export const enum MediaType {
   poster = 'poster'
 }
 
-export type MediaOptions = {
+export interface MediaOptions {
   [ImgExtention.gif]?: sharp.GifOptions
   [ImgExtention.webp]?: sharp.WebpOptions
 }
 
-export type BreakptConfig<K extends string> = {
+export interface BreakptConfig<K extends string> {
   breakpt: K
   breakptWidth?: number
-  sizes: BreakptSize[]
+  sizes: breakptSize[]
   noResize?: boolean
   maxDimension?: number
   blur?: number
@@ -48,9 +48,9 @@ export type BreakptConfig<K extends string> = {
   debugOnly?: boolean
 }
 
-export type BreakptSize = [string, number]
+export type breakptSize = [string, number]
 
-export type BreakptResizeConfig = {
+export interface BreakptResizeConfig {
   size: dimensionType
   fileName: string
   fileEntry: string
@@ -58,13 +58,13 @@ export type BreakptResizeConfig = {
   debugOnly?: boolean
 }
 
-export type ResizePosterConfig = {
-  vidSize: dimensionType,
+export interface ResizePosterConfig {
+  vidSize: dimensionType
   vidFileName: string
 }
 
-export type dimensionType = {
-  width: number,
+export interface dimensionType {
+  width: number
   height: number
 }
 

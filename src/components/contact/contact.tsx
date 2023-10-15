@@ -12,14 +12,14 @@ import mixins from '../../styles/mixins'
 import { domSizes, sketchSizes } from '../../styles/sizes'
 import contactData from '../../data/contactData'
 import { fontSizes } from '../../styles/fonts'
-import { handleHoverType, qrSvg } from './contactType'
+import { handleHoverType, QrSvg } from './contactType'
 import { ContactDataInterface } from '../../data/dataTypes'
 import { validateRef } from '../../utils/typeUtils'
 
 const Contact = () => {
   const [shownQr, setShownQR] = useState<ContactDataInterface>()
-  const qrToolTipRef = useRef<qrSvg | null>(null)
-  const qrPopUpRef = useRef<qrSvg | null>(null)
+  const qrToolTipRef = useRef<QrSvg | null>(null)
+  const qrPopUpRef = useRef<QrSvg | null>(null)
 
   useCanvas(() => ({
     draw: p5 => {
@@ -38,7 +38,7 @@ const Contact = () => {
     }
   }))
 
-  const handleQrHover = (elem: qrSvg, data: ContactDataInterface) => {
+  const handleQrHover = (elem: QrSvg, data: ContactDataInterface) => {
     setShownQR(data)
     qrToolTipRef.current = elem
   }
@@ -56,7 +56,7 @@ const Contact = () => {
 
 interface ContactSidebarProps {
   shownQrData?: ContactDataInterface
-  qrRef: MutableRefObject<qrSvg | null>
+  qrRef: MutableRefObject<QrSvg | null>
   handleHover: handleHoverType
 }
 

@@ -12,16 +12,16 @@ export type size = number
 export type dimension = [number, number]
 
 export type fileDataPair<T> = [string, T]
-export type fileDataCollection<T> = Record<string, fileDataPair<T>[]>
-export type fileDataJson<T> = Record<string, fileDataPair<T>[] | fileDataCollection<T>>
+export type FileDataCollection<T> = Record<string, fileDataPair<T>[]>
+export type FileDataJson<T> = Record<string, fileDataPair<T>[] | FileDataCollection<T>>
 
-export type breakptSizeCollection = Record<Breakpt, fileDataPair<size>[]>
-export type sizesJson = fileDataJson<size>
-export type dimensionsJson = fileDataJson<dimension>
+export type BreakptSizeCollection = Record<Breakpt, fileDataPair<size>[]>
+export type SizesJson = FileDataJson<size>
+export type DimensionsJson = FileDataJson<dimension>
 
-export type configType = {
-  resizeThumbnails: boolean,
-  resizeWork: boolean,
-  includePages: string[],
+export interface ConfigType {
+  resizeThumbnails: boolean
+  resizeWork: boolean
+  includePages: string[]
   includeBreakpts: Breakpt[]
 }

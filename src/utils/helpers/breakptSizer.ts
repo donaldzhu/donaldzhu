@@ -5,11 +5,10 @@ import { Breakpt } from '../queryUtil'
 import { getRem } from '../sizeUtils'
 import Size from './size'
 
-type MobileBreakptSizesType = { s: number, m: number }
-type TabletBreakptSizesType = { m: number, l: number }
-type DesktopBreakptSizesType = { l: number, xxl: number, xxlSm?: number }
+export type MobileBreakptSizesType = { s: number, m: number }
+export type TabletBreakptSizesType = { m: number, l: number }
+export type DesktopBreakptSizesType = { l: number, xxl: number, xxlSm?: number }
 export type BreakptSizesType = MobileBreakptSizesType | TabletBreakptSizesType | DesktopBreakptSizesType
-export type RequiredBreakptSizesType = MobileBreakptSizesType | TabletBreakptSizesType | Required<DesktopBreakptSizesType>
 
 type slopeType = {
   vw: number,
@@ -21,11 +20,15 @@ const xxlHeight = 1200
 const xxlSmHeight = 800
 
 export class BreakptSizer {
-  breakptSizes: MobileBreakptSizesType | TabletBreakptSizesType | Required<DesktopBreakptSizesType>
-  lowerBreakpt: Breakpt
-  upperBreakpt: Breakpt
+  private breakptSizes: Partial<Record<Breakpt | 'xxlSm', number>>
+  private lowerBreakpt: Breakpt
+  private upperBreakpt: Breakpt
 
-  constructor(breakptSizes: BreakptSizesType) {
+  constructor(breakptSizes: MobileBreakptSizesType)
+  constructor(breakptSizes: TabletBreakptSizesType)
+  constructor(breakptSizes: DesktopBreakptSizesType)
+  constructor(breakptSizes: BreakptSizesType)
+  constructor(breakptSizes: Partial<Record<Breakpt | 'xxlSm', number>>) {
     this.breakptSizes = !(Breakpt.xxl in breakptSizes) ? breakptSizes : {
       ...breakptSizes,
       xxlSm: breakptSizes.xxlSm !== undefined ? breakptSizes.xxlSm : breakptSizes.xxl
@@ -58,13 +61,15 @@ export class BreakptSizer {
   }
 
   private get lowerSize() {
-    // theoretically could be done without typecast
-    // but would be significantly more complex
-    return this.breakptSizes[this.lowerBreakpt as keyof typeof this.breakptSizes] as number
+    const size = this.breakptSizes[this.lowerBreakpt]
+    if (!size) throw new Error(`Breaktpoint (${this.lowerBreakpt}px) does not exist in setting.`)
+    return size
   }
 
   private get upperSize() {
-    return this.breakptSizes[this.upperBreakpt as keyof typeof this.breakptSizes] as number
+    const size = this.breakptSizes[this.upperBreakpt]
+    if (!size) throw new Error(`Breaktpoint (${this.upperBreakpt}px) does not exist in setting.`)
+    return size
   }
 
   private get lowerBreakptWidth() {
@@ -76,7 +81,7 @@ export class BreakptSizer {
   }
 
   private get vh() {
-    return !(Breakpt.xxl in this.breakptSizes) ? 0 :
+    return !(Breakpt.xxl in this.breakptSizes && this.breakptSizes.xxl && this.breakptSizes.xxlSm) ? 0 :
       (this.breakptSizes.xxl - this.breakptSizes.xxlSm) / (xxlHeight - xxlSmHeight)
   }
 }

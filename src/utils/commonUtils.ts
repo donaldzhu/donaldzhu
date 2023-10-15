@@ -94,7 +94,7 @@ export function typedKeys<T extends (object | string)>(object: T) {
 
 export const toPairs = <T extends object>(object: T) => {
   const keys = typedKeys<T>(object)
-  return keys.map(key => [key, object[key]] as [keyof T, T[keyof T]])
+  return keys.map(key => [key, object[key]] satisfies [keyof T, T[keyof T]])
 }
 
 export const filterFalsy = <T>(array: T[]) =>

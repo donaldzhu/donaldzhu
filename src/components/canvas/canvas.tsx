@@ -4,7 +4,7 @@ import p5 from 'p5'
 import _ from 'lodash'
 import { P5Event } from '../../utils/p5Utils'
 import { typedKeys } from '../../utils/commonUtils'
-import { p5EventHandlers } from './canvasTypes'
+import { P5EventHandlers } from './canvasTypes'
 
 
 interface CanvasProps {
@@ -15,7 +15,7 @@ interface CanvasProps {
 
 let uuid = 0
 const Canvas = ({ setup, className, children, ...eventHandlers }:
-  CanvasProps & p5EventHandlers
+  CanvasProps & P5EventHandlers
 ) => {
   const parentRef = useRef<HTMLDivElement>(null)
   const sketchRef = useRef<p5>()

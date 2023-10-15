@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { loopObject } from '../utils/commonUtils'
 import { fontParams } from './fonts'
 import { domSizes } from './sizes'
-import { fontVarConfigType, mediaPropsType, positionsType } from './types'
+import { FontVarConfigProps, MediaProps, PositionProps } from './styleTypes'
 
 const recursiveCenterText = () => `
   position: relative;
@@ -20,7 +20,7 @@ const parsePositions = <U1 extends string, U2 extends string>(
       `${unitName2}: ${unit2}`};`
 }
 
-const fixed = (positions: positionsType = {}) => `
+const fixed = (positions: PositionProps = {}) => `
   position: fixed;
   ${parsePositions(positions, 'top', 'bottom')};
   ${parsePositions(positions, 'left', 'right')};
@@ -55,7 +55,7 @@ const innerMargin = (margin: string, direction = 'top') => `
 const highZIndex = (level: number) => `z-index: ${'9'.repeat(level)};`
 const noSelect = () => 'user-select: none;'
 
-const fontVar = (config: fontVarConfigType) => {
+const fontVar = (config: FontVarConfigProps) => {
   config = {
     MONO: 0,
     CASL: 0,
@@ -72,7 +72,7 @@ const underline = () => `
   text-underline-offset: 0.125em;
 `
 
-const media = ({ $aspectRatio, $hasLoaded }: mediaPropsType) => `
+const media = ({ $aspectRatio, $hasLoaded }: MediaProps) => `
   aspect-ratio: ${$aspectRatio || 1};
   background-color: ${$hasLoaded ? '' : 'rgb(240,240,240)'};
   border-radius: ${domSizes.media.borderRadius.css};
@@ -94,12 +94,12 @@ interface MixinInterface {
 }
 
 
-type chainedMixinType<T> = {
+type chainedMixinType<R extends boolean = false> = {
   [P in keyof MixinInterface]: (...args: Parameters<MixinInterface[P]>) => (() => string) &
-    (T extends true ? Partial<chainedMixinType<T>> : chainedMixinType<T>)
+    (R extends true ? Partial<chainedMixinType<R>> : chainedMixinType<R>)
 }
 
-const mixins: MixinInterface & { chain: () => chainedMixinType<false> } = {
+const mixins: MixinInterface & { chain: () => chainedMixinType } = {
   recursiveCenterText,
   fixed,
   fullscreen,

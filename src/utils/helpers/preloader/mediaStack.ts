@@ -8,17 +8,17 @@ import { coorTuple } from '../../utilTypes'
 import { MediaStackProps, PreloadBreakpt } from './preloaderTypes'
 
 export class MediaStack {
+  private mediaType: MediaType
+  private listeners: (() => void)[]
+  private stackKeys: PreloadBreakpt[]
+  private breakpts: Breakpt[]
+
   pageId: string
   fileName: string
   fileType: MediaFileType
-  mediaType: MediaType
   isPoster: boolean
   nativeDimension: coorTuple
-
-  breakpts: Breakpt[]
-  stackKeys: PreloadBreakpt[]
   stack: Record<PreloadBreakpt, ImgPreloader | VidPreloader>
-  listeners: (() => void)[]
 
   constructor({
     pageId,

@@ -2,29 +2,31 @@ import parse, { HTMLReactParserOptions, domToReact } from 'html-react-parser'
 import SmallText from '../components/common/styled/smallText'
 import Anchor from '../components/common/anchor'
 
-export const addEventListener = <
-  T extends Element | HTMLElement | Document | Window,
-  K extends (
-    T extends HTMLElement ? keyof HTMLElementEventMap :
-    T extends Element ? keyof ElementEventMap :
-    T extends Document ? keyof DocumentEventMap :
-    T extends Window ? keyof WindowEventMap : never
-  )>(
-    target: T,
-    type: K,
-    listener: (
-      this: T,
-      ev: (
-        K extends keyof ElementEventMap ? ElementEventMap[K] :
-        K extends keyof HTMLElementEventMap ? HTMLElementEventMap[K] :
-        K extends keyof DocumentEventMap ? DocumentEventMap[K] :
-        K extends keyof WindowEventMap ? WindowEventMap[K] : never
-      )
-    ) => any,
-    options?: boolean | AddEventListenerOptions
-  ) => {
-  target.addEventListener(type, listener as () => any, options)
-  return () => target.removeEventListener(type, listener as () => any, options)
+
+type eventListenerOptions = boolean | AddEventListenerOptions
+export function addEventListener<T extends HTMLElement, K extends keyof HTMLElementEventMap>(
+  target: T, type: K, listener: (this: T, ev: HTMLElementEventMap[K]) => any, options?: eventListenerOptions
+): () => void
+export function addEventListener<T extends Element, K extends keyof ElementEventMap>(
+  target: T, type: K, listener: (this: T, ev: ElementEventMap[K]) => any, options?: eventListenerOptions
+): () => void
+export function addEventListener<T extends Document, K extends keyof DocumentEventMap>(
+  target: T, type: K, listener: (this: T, ev: DocumentEventMap[K]) => any, options?: eventListenerOptions
+): () => void
+export function addEventListener<T extends Window, K extends keyof WindowEventMap>(
+  target: T, type: K, listener: (this: T, ev: WindowEventMap[K]) => any, options?: eventListenerOptions
+): () => void
+export function addEventListener(
+  target: EventTarget,
+  type: string,
+  listener: (
+    this: EventTarget,
+    ev: Event
+  ) => any,
+  options?: boolean | AddEventListenerOptions
+): () => void {
+  target.addEventListener(type, listener, options)
+  return () => target.removeEventListener(type, listener, options)
 }
 
 

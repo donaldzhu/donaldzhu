@@ -1,4 +1,4 @@
-import _, { extend } from 'lodash'
+import _ from 'lodash'
 import toSpaceCase from 'to-space-case'
 import Queue from '../queue'
 import { ImgStack, VidStack } from './mediaStack'
@@ -23,17 +23,18 @@ const enum MainQueue {
 }
 
 class PreloadManager {
+  private mainQueue: Queue
+  private mainQueueName?: MainQueue
+  private mainQueuePageId?: string
+  private subqueues: Queue[]
+  private isComplete: boolean
+  private verboseLevel: VerboseLevel
+  private loadVid: loadVidType
+
   thumbnails: (ImgStack | VidStack)[]
   workPages: Record<string, Partial<Record<MediaType, (ImgStack | VidStack)[]>>>
-  mainQueue: Queue
-  mainQueueName?: MainQueue
-  mainQueuePageId?: string
-  subqueues: Queue[]
-  isComplete: boolean
   enabled: boolean
-  verboseLevel: VerboseLevel
   autoPlayConfig: { canAutoPlay: boolean | undefined }
-  loadVid: loadVidType
 
   constructor(canAutoPlay: boolean | undefined, loadVid: loadVidType) {
     this.thumbnails = []
@@ -86,7 +87,8 @@ class PreloadManager {
 
   private createWorkPageStacks() {
     loopObject(nativeDimensions.work, (pageId, nativeDimensions) => {
-      const workPage = this.workPages[pageId] = {} as Partial<Record<MediaType, (ImgStack | VidStack)[]>>;
+      const initialObject: Partial<Record<MediaType, (ImgStack | VidStack)[]>> = {}
+      const workPage = this.workPages[pageId] = initialObject;
       (nativeDimensions as [string, coorTuple][]).forEach(([fileName, nativeDimension]) => {
         const Stack = fileIsImg(fileName) ? ImgStack : VidStack
         const mediaType = fileName.match(/^toolTips\//) ? MediaType.ToolTips :

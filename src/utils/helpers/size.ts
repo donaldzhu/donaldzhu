@@ -3,14 +3,13 @@ import { filterFalsy, validateString } from '../commonUtils'
 import { Unit, getRem, getVh, getVw } from '../sizeUtils'
 
 type sizeTypes = Unit.Vw | Unit.Vh | Unit.Rem
-type sizeConstructor = { vw?: number, vh?: number, rem?: number }
 
 class Size {
   vw: number
   vh: number
   rem: number
 
-  constructor(config: number | sizeConstructor) {
+  constructor(config: number | { vw?: number, vh?: number, rem?: number }) {
     const remFactor = getRem()
     if (typeof config === 'number') {
       this.vw = 0

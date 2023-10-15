@@ -3,6 +3,8 @@ import breakpts from '../data/breakpoints'
 import { getNativeResolution } from './sizeUtils'
 
 export enum Breakpt {
+  s = 's',
+  m = 'm',
   l = 'l',
   xl = 'xl',
   xxl = 'xxl'

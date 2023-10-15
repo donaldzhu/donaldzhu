@@ -22,6 +22,7 @@ const config = {
     sizeReductionFactor: 0.4,
     maxSize: secondary.max,
     minSize: secondary.max,
+    radius: secondary.radius
   }
 }
 

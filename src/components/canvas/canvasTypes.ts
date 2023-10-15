@@ -10,16 +10,16 @@ export interface CanvasState {
 
 export type p5Callback = (p5: p5) => void
 export type p5EventCallback = (p5: p5, evt?: Event | UIEvent) => void
-export type p5EventHandlers = Record<P5Event, p5EventCallback>
+export type P5EventHandlers = Record<P5Event, p5EventCallback>
 
 export type sketchEventCallback = (p5: p5, canvasStateRefs: CanvasState) => void
-export type sketchEventHandler = Record<P5Event | 'setup', sketchEventCallback> & {
+export type SketchEventHandler = Record<P5Event | 'setup', sketchEventCallback> & {
   cleanup: (canvasStateRefs: CanvasState) => void
 }
 
 
-export type canvasRefType = ReturnType<typeof useGlobalCanvas>
+export type CanvasRefType = ReturnType<typeof useGlobalCanvas>
 export interface GlobalCanvasStates {
-  canvasRef: canvasRefType
+  canvasRef: CanvasRefType
   canvasStateRefs: CanvasState
 }

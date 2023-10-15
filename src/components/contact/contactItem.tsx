@@ -16,7 +16,7 @@ interface ContactItemProps {
   isQrShown: boolean
 }
 
-interface StyledQrSvg {
+interface StyledQrSvgProps {
   $isHighlighted: boolean
 }
 
@@ -48,7 +48,7 @@ const LinkContainer = styled(Anchor)`
   text-decoration-thickness: 0.0765em;
 `
 
-const QRSvg = styled(Qr) <StyledQrSvg>`
+const QRSvg = styled(Qr) <StyledQrSvgProps>`
   ${mixins.squared(em(1))}
   display: inline-block;
   margin-left: 0.25em;

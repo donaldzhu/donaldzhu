@@ -2,8 +2,8 @@ import { loadVidType } from './preloadTypes'
 import { MediaFileType } from './preloadUtils'
 
 export class MediaPreloader {
-  readonly src: string
-  readonly fileType: MediaFileType
+  src: string
+  fileType: MediaFileType
   constructor(src: string, fileType: MediaFileType) {
     this.src = src
     this.fileType = fileType
@@ -35,8 +35,8 @@ export class VidPreloader extends MediaPreloader {
     canAutoPlay: boolean | undefined
   }
   private loadVid: loadVidType
-  loadCount: number
   private threshold: number
+  loadCount: number
 
   constructor(
     src: string,

@@ -7,11 +7,11 @@ interface PortfolioDataInterface {
   projects: string[]
 }
 
-const typedPortfolioData: Record<string, PortfolioDataInterface> = allPortfolioData
+const TypedPortfolioData: Record<string, PortfolioDataInterface> = allPortfolioData
 const usePortfolioQuery = () => {
   const [searchParams] = useSearchParams()
   const pid = searchParams.get('pid')
-  const portfolioData: PortfolioDataInterface | undefined = useMemo(() => { if (pid) return typedPortfolioData[pid] }, [searchParams])
+  const portfolioData: PortfolioDataInterface | undefined = useMemo(() => { if (pid) return TypedPortfolioData[pid] }, [searchParams])
   useEffect(() => {
     if (pid && portfolioData)
       sessionStorage.setItem('pid', pid)

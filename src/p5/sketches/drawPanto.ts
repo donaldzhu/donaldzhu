@@ -45,7 +45,6 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
 
   let brushes: [Brush, FlatBrush] | [] = []
 
-  // TODO
   let graphic: p5.Graphics
   let armLength: number
 
@@ -88,7 +87,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
 
   const cleanup = ({ hideCursorRef }: CanvasState) => {
     hideCursorRef.current = false
-    // @ts-ignore
+    // @ts-expect-error
     graphic && graphic.canvas.remove()
   }
 
@@ -96,7 +95,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
     const { w, h } = placeholder
     armLength = w / 1.985
 
-    // @ts-ignore
+    // @ts-expect-error
     if (graphic) graphic.canvas.remove()
     graphic = p5.createGraphics(w, h)
     brushes = [
@@ -194,12 +193,18 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
   }
 
   const drawPanto = (p5: p5) => {
+    const validateVectors = function (vectorValidatee: typeof vectors):
+      vectorValidatee is Record<keyof typeof vectors, p5.Vector> {
+      return _.every(vectorValidatee, Boolean)
+    }
+
+    if (!validateVectors(vectors))
+      throw new Error(`Incomplete vectors: ${vectors}`)
+
     const { anchor, primary, topRight, leftBot, leftMid, rightMid } = vectors
     p5.stroke(colors.strokePanto)
     p5.strokeWeight(sketchSizes.panto.lineWeight.value)
     wrapDrawingContext(p5, () => {
-      if (!anchor || !leftBot || !leftMid || !rightMid || !topRight || !primary)
-        throw new Error(`Incomplete vectors: ${vectors}`)
       p5.line(...parseVector(anchor), ...parseVector(leftBot))
       p5.line(...parseVector(leftMid), ...parseVector(rightMid))
       p5.line(...parseVector(topRight), ...parseVector(primary))
@@ -208,7 +213,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
 
     p5.strokeWeight(getVw(0.35))
     p5.fill(255)
-    loopObject(vectors as Record<string, p5.Vector>,
+    loopObject(vectors,
       (vectorKey, { x, y }) => {
         const drawingVectors = ['primary', 'secondary']
         if (drawingVectors.includes(vectorKey)) {

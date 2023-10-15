@@ -8,4 +8,5 @@ export interface BrushSetting {
   sizeReductionFactor: number
   maxSize: Size
   minSize: Size
+  radius?: Size
 }

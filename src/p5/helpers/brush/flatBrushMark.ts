@@ -2,11 +2,11 @@ import p5 from 'p5'
 
 class FlatBrushMark {
   private p5: p5 | p5.Graphics
-  vector: p5.Vector
-  w: number
+  private vector: p5.Vector
+  private w: number
+  private rotation: number
   radius: number
-  rotation: number
-  readonly brushPoints: FlatBrushPoint[]
+  brushPoints: FlatBrushPoint[]
 
   constructor(p5: p5 | p5.Graphics, x: number, y: number, w: number, h: number, rotation = 0) {
     this.p5 = p5

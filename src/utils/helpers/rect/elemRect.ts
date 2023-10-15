@@ -3,8 +3,8 @@ import Rect from './rect'
 import { coorTuple } from '../../utilTypes'
 
 class ElemRect<T extends Element> extends Rect {
-  ref: MutableRefObject<T>
-  isRelative?: boolean
+  private ref: MutableRefObject<T>
+  private isRelative?: boolean
 
   constructor(ref: MutableRefObject<T>, padding?: number | coorTuple, isRelative?: boolean) {
     super({ padding })

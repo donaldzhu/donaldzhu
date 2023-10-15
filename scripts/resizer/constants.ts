@@ -1,4 +1,4 @@
-import { Breakpt, configType } from './resizeTypes'
+import { Breakpt, ConfigType } from './resizeTypes'
 import breakpoints from '../../src/data/breakpoints'
 import { joinPaths } from '../utils'
 
@@ -25,7 +25,7 @@ export const BREAKPT_WIDTHS: Record<Breakpt, number> = {
   [Breakpt.xxl]: breakpoints.xxl
 }
 
-export const DEFAULT_CONFIG: configType = {
+export const DEFAULT_CONFIG: ConfigType = {
   resizeThumbnails: true,
   resizeWork: true,
   includePages: [],

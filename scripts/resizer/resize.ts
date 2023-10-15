@@ -2,9 +2,9 @@ import fs from 'fs'
 import path from 'path'
 import _ from 'lodash'
 import Resizer from './lib/resizer'
-import { BreakptConfig, BreakptSize, MediaType, dimensionType } from './lib/resizerTypes'
+import { BreakptConfig, breakptSize, MediaType, dimensionType } from './lib/resizerTypes'
 import { joinPaths, mapObject, mapObjectPromises, readJsonSync } from '../utils'
-import { BreakptExports, Breakpt, breakptSizeCollection, sizesJson, fileDataPair, size, dimensionsJson, dimension, fileDataCollection, configType } from './resizeTypes'
+import { BreakptExports, Breakpt, BreakptSizeCollection, SizesJson, fileDataPair, size, DimensionsJson, dimension, FileDataCollection, ConfigType } from './resizeTypes'
 import { BLUR, BREAKPT_WIDTHS, DESTINATION_ROOT, MAX_FOLDER, ROOT_PATH, THUMBNAIL_FOLDER, WORK_FOLDER, DEFAULT_CONFIG, NATIVE_DIMENSIONS_PATH, SRC_WORK_PATH, SRC_THUMBNAIL_PATH, SIZE_PATH, TOOL_TIP_PERCENTAGE, MAIN_RESIZE_PERCENTAGE } from './constants'
 
 const createBreakptMap = <T, V>(
@@ -23,10 +23,10 @@ const createBreakptMap = <T, V>(
   return map as Record<Breakpt, T>
 }
 
-const getNoSizesError = (sizes: sizesJson, sizeType: string) =>
+const getNoSizesError = (sizes: SizesJson, sizeType: string) =>
   new Error(`Breakpoint size has no ${sizeType} sizes: ${sizes[sizeType]}`)
 
-const getBreakptConfig = (breakpt: Breakpt, sizes: BreakptSize[], debugOnly: boolean) => {
+const getBreakptConfig = (breakpt: Breakpt, sizes: breakptSize[], debugOnly: boolean) => {
   sizes.map((size) => size[1] *= size[0].match(/^toolTips\//) ?
     TOOL_TIP_PERCENTAGE : MAIN_RESIZE_PERCENTAGE)
   return {
@@ -49,7 +49,7 @@ const getResizeCallback = (array: fileDataPair<dimension>[], rootPath: string) =
 const workFolder = SRC_WORK_PATH
 const destination = joinPaths(ROOT_PATH, DESTINATION_ROOT)
 
-const resize = async (config?: configType) => {
+const resize = async (config?: ConfigType) => {
   const {
     resizeThumbnails,
     resizeWork,
@@ -58,21 +58,21 @@ const resize = async (config?: configType) => {
   } = { ...DEFAULT_CONFIG, ...config }
 
   const breakptWidths = includeBreakpts.length ? _.pick(BREAKPT_WIDTHS, includeBreakpts) : BREAKPT_WIDTHS
-  const allBreakptSizes = createBreakptMap<sizesJson, number>(breakptWidths, breakpt =>
+  const allBreakptSizes = createBreakptMap<SizesJson, number>(breakptWidths, breakpt =>
     readJsonSync(joinPaths(SIZE_PATH, `${breakpt}.json`)))
 
-  const pageSizes: Record<string, breakptSizeCollection> = {}
+  const pageSizes: Record<string, BreakptSizeCollection> = {}
   mapObject(allBreakptSizes, (breakpt, allSizes) => {
     const { work } = allSizes
     if (!work || Array.isArray(work)) throw getNoSizesError(allSizes, 'work')
 
     mapObject(work, (pageId, sizes) =>
-      (pageSizes[pageId] ||= {} as breakptSizeCollection)[breakpt] = sizes)
+      (pageSizes[pageId] ||= {} as BreakptSizeCollection)[breakpt] = sizes)
   })
 
-  const nativeDimensions: dimensionsJson = {}
+  const nativeDimensions: DimensionsJson = {}
 
-  const thumbnailConfigs = createBreakptMap<BreakptConfig<Breakpt>, sizesJson>(
+  const thumbnailConfigs = createBreakptMap<BreakptConfig<Breakpt>, SizesJson>(
     allBreakptSizes, (breakpt, sizes) => {
       const { thumbnails } = sizes
       if (!thumbnails || !Array.isArray(thumbnails)) throw getNoSizesError(sizes, 'thumbnails')
@@ -90,7 +90,7 @@ const resize = async (config?: configType) => {
   ).init()
   nativeDimensions.thumbnails = thumbnails
 
-  const work: fileDataCollection<dimension> = {}
+  const work: FileDataCollection<dimension> = {}
   await mapObjectPromises(pageSizes, async (pageId, breakptSizes) => {
     const includePage = !includePages.length || includePages.includes(pageId)
     const debugOnly = !resizeWork || !includePage

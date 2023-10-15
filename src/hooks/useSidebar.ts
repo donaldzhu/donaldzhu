@@ -1,9 +1,9 @@
-import { DependencyList, Dispatch, ReactNode, SetStateAction, useEffect } from 'react'
+import { DependencyList, ReactNode, useEffect } from 'react'
 import { useLocation, useOutletContext } from 'react-router-dom'
+import { PageContextProps } from '../components/pageWrappers/pageTypes'
 
 const useSidebar = (sidebar: ReactNode, dependencies: DependencyList = []) => {
-  // TODO
-  const { setSidebar } = useOutletContext() as { setSidebar: Dispatch<SetStateAction<any>> }
+  const { setSidebar } = useOutletContext<PageContextProps>()
   const location = useLocation()
   useEffect(() => {
     setSidebar(sidebar)

@@ -3,7 +3,7 @@ import { wrapDrawingContext } from '../../../utils/p5Utils'
 import { BrushSetting } from '../../sketches/sketchTypes'
 
 class Brush {
-  readonly setting: BrushSetting
+  setting: BrushSetting
   private p5: p5
   private drawingContext: p5.Graphics
   x: number

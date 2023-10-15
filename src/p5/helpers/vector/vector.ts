@@ -8,17 +8,18 @@ import { SetTransformProps, VectorSetting } from './vectorTypes'
 import Size from '../../../utils/helpers/size'
 
 class Vector {
-  setting: VectorSetting
-  p5: p5 | p5.Graphics
-  rawData: number[][][]
-  vectors: p5.Vector[][]
-  position: p5.Vector
-  scale: Size
-  mode: Mode
+  private setting: VectorSetting
+  private p5: p5 | p5.Graphics
+  private rawData: number[][][]
+  private mode: Mode
   private nativeDimension: {
     w: number,
     h: number
   }
+
+  vectors: p5.Vector[][]
+  position: p5.Vector
+  scale: Size
 
   constructor(p5: p5 | p5.Graphics, name: keyof typeof vectorsData, setting: VectorSetting) {
     const { x, y, scale, mode = Mode.Corner } = setting

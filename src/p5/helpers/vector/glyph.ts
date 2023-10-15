@@ -5,11 +5,11 @@ import p5 from 'p5'
 import { VectorSetting } from './vectorTypes'
 
 class Glyph {
-  p5: p5 | p5.Graphics
+  private p5: p5 | p5.Graphics
+  private nativeBearings: number[]
   setting: VectorSetting
   still: Vector
   active: Vector
-  nativeBearings: number[]
 
   constructor(p5: p5 | p5.Graphics, name: keyof typeof bearingsData, setting: VectorSetting) {
     this.p5 = p5

@@ -11,8 +11,8 @@ import { handleZoomType } from '../../pageWrappers/pageTypes'
 import { RequiredZoomMediaProps } from './mediaTypes'
 
 interface ZoomedMediaProps {
-  readonly zoomMedia: RequiredZoomMediaProps
-  readonly handleUnzoom: handleZoomType
+  zoomMedia: RequiredZoomMediaProps
+  handleUnzoom: handleZoomType
 }
 
 const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {

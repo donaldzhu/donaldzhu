@@ -4,7 +4,7 @@ import { loopObject, keysToObject } from '../../../utils/commonUtils'
 import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT, YPosition } from './constants'
 import p5 from 'p5'
 import { SetTransformProps, VectorSetting } from './vectorTypes'
-import { coorObject, coorTuple } from '../../../utils/utilTypes'
+import { CoorObject, coorTuple } from '../../../utils/utilTypes'
 
 interface BoundsInterface {
   x1: number
@@ -19,9 +19,9 @@ interface BoundsInterface {
 }
 
 class Text {
+  private glyphs: Record<string, Glyph>
+  private cachedBounds: Map<string, BoundsInterface>
   setting: VectorSetting
-  glyphs: Record<string, Glyph>
-  cachedBounds: Map<string, BoundsInterface>
 
   constructor(p5: p5 | p5.Graphics, setting: Partial<VectorSetting>) {
     this.setting = _.defaults(
@@ -114,7 +114,7 @@ class Text {
     })
   }
 
-  setMouseOrigin(newOrigin: coorTuple | coorObject) {
+  setMouseOrigin(newOrigin: coorTuple | CoorObject) {
     if (!Array.isArray(newOrigin))
       newOrigin = [newOrigin.x, newOrigin.y]
     this.setting.mouseOrigin.set(...newOrigin)
