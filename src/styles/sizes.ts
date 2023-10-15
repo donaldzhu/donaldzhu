@@ -1,7 +1,7 @@
+import { homeIconScales } from '../p5/configs/vector'
 import Size from '../utils/helpers/size'
 import { getSize } from '../utils/sizeUtils'
 import { fontSizes } from './fonts'
-import { homeIconScales } from '../p5/configs/vector'
 
 const homeIconBaseSize = [43, 44]
 const homeIconInnerPadding = getSize({ l: 30, xxl: 40 })

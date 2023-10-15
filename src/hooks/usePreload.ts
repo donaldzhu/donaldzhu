@@ -1,5 +1,5 @@
-import { ReactEventHandler, useEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
+import { ReactEventHandler, useEffect, useMemo, useState } from 'react'
 import PreloadManager from '../utils/helpers/preloader/preloadManager'
 
 interface LoadDataInterface {

@@ -1,10 +1,10 @@
-import Text from '../helpers/vector/text'
-import ElemRect from '../../utils/helpers/rect/elemRect'
-import configs from '../configs/vector'
-import { MutableRefObject } from 'react'
-import { validateRef } from '../../utils/typeUtils'
 import p5 from 'p5'
+import { MutableRefObject } from 'react'
+import ElemRect from '../../utils/helpers/rect/elemRect'
 import Size from '../../utils/helpers/size'
+import { validateRef } from '../../utils/typeUtils'
+import configs from '../configs/vector'
+import Text from '../helpers/vector/text'
 
 interface DrawVectorStringProps {
   containerRef: MutableRefObject<HTMLDivElement | null>

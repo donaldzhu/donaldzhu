@@ -1,9 +1,9 @@
 import p5 from 'p5'
+import { ToolTipProps } from '../../components/work/workTypes'
+import { sketchSizes } from '../../styles/sizes'
 import { getToolTipPoints } from '../../utils/commonUtils'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
-import { sketchSizes } from '../../styles/sizes'
-import { ToolTipProps } from '../../components/work/workTypes'
 import { validateRef } from '../../utils/typeUtils'
 
 

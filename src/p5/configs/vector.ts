@@ -56,13 +56,13 @@ const configs: Record<string, Partial<VectorSetting>> = {
     linkColor: colors.vectorStringSketch,
     drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawPoints],
     mapFunction: function (stillVector, mouseVector) {
-      const distVector = mouseVector.sub(this.mouseOrigin || stillVector)
+      const distVector = mouseVector.sub(this.mouseOrigin ?? stillVector)
       const segmentation = 20
       const segmentSize = Math.PI * 2 / segmentation
       const segmentedHeading = Math.floor(distVector.heading() / segmentSize) * segmentSize
       distVector
         .setHeading(segmentedHeading)
-        .setMag(this.maxStretch || DEFAULT_SETTING.maxStretch)
+        .setMag(this.maxStretch ?? DEFAULT_SETTING.maxStretch)
         .add(stillVector)
       return distVector
     }

@@ -1,8 +1,8 @@
-import { forwardRef, useEffect, useState } from 'react'
 import _ from 'lodash'
-import Media from './media'
+import { forwardRef, useEffect, useState } from 'react'
 import { MediaFileType, MediaSize } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
+import Media from './media'
 import { MediaRef, PreloadMediaProps } from './mediaTypes'
 
 const PreloadMedia = forwardRef(PreloadMediaWithRef)
@@ -65,7 +65,7 @@ function PreloadMediaWithRef(props: PreloadMediaProps, ref: MediaRef) {
       { poster: posterSrc } : {})}
     src={loadState.src}
     hasLoaded={loadState.hasLoaded}
-    aspectRatio={((nativeW || 1) / (nativeH || 1))}
+    aspectRatio={((nativeW ?? 1) / (nativeH ?? 1))}
     ref={ref} />
 }
 

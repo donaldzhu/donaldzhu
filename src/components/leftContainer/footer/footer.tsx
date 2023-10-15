@@ -1,12 +1,12 @@
 import { Fragment } from 'react'
-import { styled } from 'styled-components'
-import FooterLink from './footerLink'
+import styled from 'styled-components'
+import colors from '../../../styles/colors'
+import { fontSizes } from '../../../styles/fonts'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
-import { fontSizes } from '../../../styles/fonts'
-import colors from '../../../styles/colors'
-import SvgBorder from '../../common/svgBorder'
 import { typedKeys } from '../../../utils/commonUtils'
+import SvgBorder from '../../common/svgBorder'
+import FooterLink from './footerLink'
 
 enum NameText {
   work = 'WORK',

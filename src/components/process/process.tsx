@@ -1,8 +1,8 @@
-import Text from '../common/styled/text'
 import useSidebar from '../../hooks/useSidebar'
-import TextContainer from '../common/styled/textContainer'
-import SmallText from '../common/styled/smallText'
 import Anchor from '../common/anchor'
+import SmallText from '../common/styled/smallText'
+import Text from '../common/styled/text'
+import TextContainer from '../common/styled/textContainer'
 
 const ProcessSidebar = () => {
   return (

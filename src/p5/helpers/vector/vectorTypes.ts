@@ -1,6 +1,6 @@
+import p5 from 'p5'
 import Size from '../../../utils/helpers/size'
 import { Mode, XPosition, YPosition } from './constants'
-import p5 from 'p5'
 
 export enum VectorDrawMethod {
   DrawLinks = 'drawLinks',

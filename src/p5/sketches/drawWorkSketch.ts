@@ -1,8 +1,8 @@
 import p5 from 'p5'
+import { MutableRefObject } from 'react'
+import { sketchSizes } from '../../styles/sizes'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
-import { sketchSizes } from '../../styles/sizes'
-import { MutableRefObject } from 'react'
 import { validateRef } from '../../utils/typeUtils'
 
 interface DrawWorkSketchProps {

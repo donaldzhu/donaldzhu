@@ -5,12 +5,12 @@ import { Breakpt } from '../queryUtil'
 import { getRem } from '../sizeUtils'
 import Size from './size'
 
-export type MobileBreakptSizesType = { s: number, m: number }
-export type TabletBreakptSizesType = { m: number, l: number }
-export type DesktopBreakptSizesType = { l: number, xxl: number, xxlSm?: number }
+export interface MobileBreakptSizesType { s: number, m: number }
+export interface TabletBreakptSizesType { m: number, l: number }
+export interface DesktopBreakptSizesType { l: number, xxl: number, xxlSm?: number }
 export type BreakptSizesType = MobileBreakptSizesType | TabletBreakptSizesType | DesktopBreakptSizesType
 
-type slopeType = {
+interface slopeType {
   vw: number,
   rem: number
 }
@@ -31,7 +31,7 @@ export class BreakptSizer {
   constructor(breakptSizes: Partial<Record<Breakpt | 'xxlSm', number>>) {
     this.breakptSizes = !(Breakpt.xxl in breakptSizes) ? breakptSizes : {
       ...breakptSizes,
-      xxlSm: breakptSizes.xxlSm !== undefined ? breakptSizes.xxlSm : breakptSizes.xxl
+      xxlSm: breakptSizes.xxlSm ?? breakptSizes.xxl
     }
 
     const [lowerBreakpt, upperBreakpt] = sortLike(

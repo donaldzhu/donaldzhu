@@ -1,7 +1,7 @@
-import { MutableRefObject } from 'react'
 import p5 from 'p5'
-import { P5Event } from '../../utils/p5Utils'
+import { MutableRefObject } from 'react'
 import useGlobalCanvas from '../../hooks/useGlobalCanvas'
+import { P5Event } from '../../utils/p5Utils'
 
 export interface CanvasState {
   mousePositionRef: MutableRefObject<null | [number, number]>

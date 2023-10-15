@@ -1,20 +1,20 @@
 import { MutableRefObject, useRef, useState } from 'react'
-import { styled } from 'styled-components'
-import ContactItem from './contactItem'
-import TextContainer from '../common/styled/textContainer'
-import Text from '../common/styled/text'
+import styled from 'styled-components'
+import contactData from '../../data/contactData'
+import { ContactDataInterface } from '../../data/dataTypes'
 import useCanvas from '../../hooks/useCanvas'
 import useSidebar from '../../hooks/useSidebar'
-import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
-import ElemRect from '../../utils/helpers/rect/elemRect'
 import colorConfig from '../../styles/colors'
+import { fontSizes } from '../../styles/fonts'
 import mixins from '../../styles/mixins'
 import { domSizes, sketchSizes } from '../../styles/sizes'
-import contactData from '../../data/contactData'
-import { fontSizes } from '../../styles/fonts'
-import { handleHoverType, QrSvg } from './contactType'
-import { ContactDataInterface } from '../../data/dataTypes'
+import ElemRect from '../../utils/helpers/rect/elemRect'
+import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
 import { validateRef } from '../../utils/typeUtils'
+import Text from '../common/styled/text'
+import TextContainer from '../common/styled/textContainer'
+import ContactItem from './contactItem'
+import { handleHoverType, QrSvg } from './contactType'
 
 const Contact = () => {
   const [shownQr, setShownQR] = useState<ContactDataInterface>()
@@ -61,7 +61,7 @@ interface ContactSidebarProps {
 }
 
 const ContactSidebar = ({ shownQrData, qrRef, handleHover }: ContactSidebarProps) => {
-  const { SvgComponent } = shownQrData || {}
+  const { SvgComponent } = shownQrData ?? {}
   return (
     <TextContainerWithQr>
       <Text><b>Feel free to contact for inquiry -</b> Toronto, Canada [In person/Remote]</Text>

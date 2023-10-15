@@ -1,5 +1,5 @@
-import RowContainer from '../common/rowContainer'
 import WorkImg from '../common/media/workImg'
+import RowContainer from '../common/rowContainer'
 
 const PageDm2020 = () => {
   return (

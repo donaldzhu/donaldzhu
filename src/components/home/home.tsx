@@ -1,8 +1,8 @@
+import usePortfolioQuery from '../../hooks/usePortfolioQuery'
+import useSidebar from '../../hooks/useSidebar'
+import Anchor from '../common/anchor'
 import Text from '../common/styled/text'
 import TextContainer from '../common/styled/textContainer'
-import Anchor from '../common/anchor'
-import useSidebar from '../../hooks/useSidebar'
-import usePortfolioQuery from '../../hooks/usePortfolioQuery'
 
 const Home = () => {
   useSidebar(<HomeSidebar />)

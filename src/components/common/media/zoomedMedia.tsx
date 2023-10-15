@@ -1,14 +1,14 @@
-import { useEffect, useRef } from 'react'
-import { styled } from 'styled-components'
 import _ from 'lodash'
-import PreloadMedia from './preloadMedia'
-import { addEventListener } from '../../../utils/reactUtils'
-import { toPercent } from '../../../utils/sizeUtils'
+import { useEffect, useRef } from 'react'
+import styled from 'styled-components'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
-import PopUpContainer from '../popUpContainer'
+import { addEventListener } from '../../../utils/reactUtils'
+import { toPercent } from '../../../utils/sizeUtils'
 import { handleZoomType } from '../../pageWrappers/pageTypes'
+import PopUpContainer from '../popUpContainer'
 import { RequiredZoomMediaProps } from './mediaTypes'
+import PreloadMedia from './preloadMedia'
 
 interface ZoomedMediaProps {
   zoomMedia: RequiredZoomMediaProps
@@ -58,7 +58,7 @@ const ZoomedContainer = styled(PopUpContainer) <{ $maxSize: string | number | un
 
   img, video {
     object-fit: contain;
-    ${({ $maxSize }) => mixins.squared($maxSize || toPercent(domSizes.media.zoomPercentage))}
+    ${({ $maxSize }) => mixins.squared($maxSize ?? toPercent(domSizes.media.zoomPercentage))}
   }
 `
 

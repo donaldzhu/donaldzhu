@@ -1,15 +1,15 @@
-import Text from '../helpers/vector/text'
-import { repeat, repeatMap } from '../../utils/commonUtils'
-import { wrapDrawingContext } from '../../utils/p5Utils'
-import ElemRect from '../../utils/helpers/rect/elemRect'
+import p5 from 'p5'
+import { MutableRefObject } from 'react'
+import { CanvasState } from '../../components/canvas/canvasTypes'
 import colors from '../../styles/colors'
 import { sketchSizes } from '../../styles/sizes'
-import configs from '../configs/vector'
-import { MutableRefObject } from 'react'
+import { repeat, repeatMap } from '../../utils/commonUtils'
+import ElemRect from '../../utils/helpers/rect/elemRect'
+import { wrapDrawingContext } from '../../utils/p5Utils'
 import { validateRef } from '../../utils/typeUtils'
 import { coorTuple } from '../../utils/utilTypes'
-import p5 from 'p5'
-import { CanvasState } from '../../components/canvas/canvasTypes'
+import configs from '../configs/vector'
+import Text from '../helpers/vector/text'
 
 interface DrawMainSketchProps {
   placeholderRef: MutableRefObject<HTMLDivElement | null>

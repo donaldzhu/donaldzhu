@@ -1,7 +1,7 @@
-import { styled } from 'styled-components'
-import Text from './text'
-import { fontSizes, fontLineHeights } from '../../../styles/fonts'
+import styled from 'styled-components'
+import { fontLineHeights, fontSizes } from '../../../styles/fonts'
 import { domSizes } from '../../../styles/sizes'
+import Text from './text'
 
 const SmallText = styled(Text)`
   font-size: ${fontSizes.smallText.css};

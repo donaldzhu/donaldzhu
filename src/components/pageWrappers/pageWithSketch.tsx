@@ -4,8 +4,8 @@ import styled from 'styled-components'
 import useCanvas from '../../hooks/useCanvas'
 import usePreloadQueue from '../../hooks/usePreloadQueue'
 import drawMainSketch from '../../p5/sketches/drawMainSketch'
-import { domSizes } from '../../styles/sizes'
 import mixins from '../../styles/mixins'
+import { domSizes } from '../../styles/sizes'
 import Size from '../../utils/helpers/size'
 
 const PageWithMainSketch = () => {

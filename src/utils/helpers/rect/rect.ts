@@ -1,7 +1,8 @@
-import type p5 from 'p5'
+
 import { arrayify } from '../../commonUtils'
 import { styleDashedRect, wrapDrawingContext } from '../../p5Utils'
 import { coorTuple } from '../../utilTypes'
+import type p5 from 'p5'
 
 type parseCoorsType = [{ x: number, y: number }] | coorTuple
 
@@ -29,7 +30,7 @@ class Rect {
     this._h = h
     this.padding = {
       x: paddingArray[0],
-      y: paddingArray[1] === undefined ? paddingArray[0] : paddingArray[1]
+      y: paddingArray[1] ?? paddingArray[0]
     }
   }
 

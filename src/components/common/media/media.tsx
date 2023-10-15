@@ -1,9 +1,9 @@
-import { ForwardedRef, forwardRef } from 'react'
 import _ from 'lodash'
-import Vid from './vid'
-import Img from './img'
+import { ForwardedRef, forwardRef } from 'react'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
+import Img from './img'
 import { MediaIntrinsicProps, MediaRef } from './mediaTypes'
+import Vid from './vid'
 
 const Media = forwardRef(MediaWithRef)
 

@@ -1,8 +1,8 @@
-import { styled } from 'styled-components'
-import HomeIcon from './homeIcon'
+import styled from 'styled-components'
 import { domSizes } from '../../../styles/sizes'
-import SvgBorder from '../../common/svgBorder'
 import { GlobalCanvasStates } from '../../canvas/canvasTypes'
+import SvgBorder from '../../common/svgBorder'
+import HomeIcon from './homeIcon'
 
 const Header = ({ canvasRef, canvasStateRefs }: GlobalCanvasStates) => {
   return (

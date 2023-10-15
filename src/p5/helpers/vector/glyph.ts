@@ -1,7 +1,7 @@
-import Vector from './vector'
-import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
-import bearingsData from '../../../data/vector/spacings.json'
 import p5 from 'p5'
+import bearingsData from '../../../data/vector/spacings.json'
+import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
+import Vector from './vector'
 import { VectorSetting } from './vectorTypes'
 
 class Glyph {

@@ -1,11 +1,11 @@
 import _ from 'lodash'
-import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
-import { MaxNumber } from '../../../utils/helpers/number'
-import vectorsData from '../../../data/vector/glyphs.json'
-import { Mode } from './constants'
 import p5 from 'p5'
-import { SetTransformProps, VectorSetting } from './vectorTypes'
+import vectorsData from '../../../data/vector/glyphs.json'
+import { MaxNumber } from '../../../utils/helpers/number'
 import Size from '../../../utils/helpers/size'
+import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
+import { Mode } from './constants'
+import { SetTransformProps, VectorSetting } from './vectorTypes'
 
 class Vector {
   private setting: VectorSetting

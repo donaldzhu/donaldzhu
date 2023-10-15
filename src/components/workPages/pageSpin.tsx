@@ -1,9 +1,9 @@
-import RowContainer from '../common/rowContainer'
+import { VideoIframeType } from '../common/media/mediaTypes'
 import VideoIframe from '../common/media/videoIframe'
 import WorkImg from '../common/media/workImg'
-import WorkVid from '../common/media/workVid'
 import WorkImgGroup from '../common/media/workImgGroup'
-import { VideoIframeType } from '../common/media/mediaTypes'
+import WorkVid from '../common/media/workVid'
+import RowContainer from '../common/rowContainer'
 
 
 const PageSpin = () => {

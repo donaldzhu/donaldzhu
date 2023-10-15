@@ -1,5 +1,5 @@
-import { styled } from 'styled-components'
-import { fontParams, fontSizes, fontLineHeights } from '../../../styles/fonts'
+import styled from 'styled-components'
+import { fontLineHeights, fontParams, fontSizes } from '../../../styles/fonts'
 import mixins from '../../../styles/mixins'
 
 const Text = styled.p`

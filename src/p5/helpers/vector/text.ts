@@ -1,10 +1,11 @@
 import _ from 'lodash'
-import Glyph from './glyph'
-import { loopObject, keysToObject } from '../../../utils/commonUtils'
-import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT, YPosition } from './constants'
 import p5 from 'p5'
-import { SetTransformProps, VectorSetting } from './vectorTypes'
+import { keysToObject, loopObject } from '../../../utils/commonUtils'
 import { CoorObject, coorTuple } from '../../../utils/utilTypes'
+import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT, YPosition } from './constants'
+import Glyph from './glyph'
+import { SetTransformProps, VectorSetting } from './vectorTypes'
+
 
 interface BoundsInterface {
   x1: number
@@ -41,8 +42,7 @@ class Text {
     const { scale, position, align, leading } = this.setting
     const wordArray = text.split('\n')
 
-    const bounds = this.cachedBounds.get(text) ||
-      this.getBounds(text)
+    const bounds = this.cachedBounds.get(text) ?? this.getBounds(text)
     let { y1 } = bounds
     const { x1, wordWidths, w } = bounds
 

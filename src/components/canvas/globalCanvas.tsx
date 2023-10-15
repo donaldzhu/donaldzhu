@@ -1,11 +1,11 @@
-import { styled } from 'styled-components'
 import _ from 'lodash'
 import p5 from 'p5'
-import Canvas from './canvas'
-import { mousePosition, P5Event, wrapDrawingContext } from '../../utils/p5Utils'
-import { mapObject } from '../../utils/commonUtils'
+import styled from 'styled-components'
 import mixins from '../../styles/mixins'
+import { mapObject } from '../../utils/commonUtils'
+import { mousePosition, P5Event, wrapDrawingContext } from '../../utils/p5Utils'
 import { getVh, getVw } from '../../utils/sizeUtils'
+import Canvas from './canvas'
 import { GlobalCanvasStates, p5EventCallback } from './canvasTypes'
 
 const GlobalCanvas = ({ canvasRef, canvasStateRefs }: GlobalCanvasStates) => {

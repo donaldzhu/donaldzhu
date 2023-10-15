@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import RowContainer from '../common/rowContainer'
-import VideoIframe from '../common/media/videoIframe'
-import WorkImg from '../common/media/workImg'
 import useCanvas from '../../hooks/useCanvas'
 import drawVectorString from '../../p5/sketches/drawVectorString'
-import { addEventListener } from '../../utils/reactUtils'
 import ElemRect from '../../utils/helpers/rect/elemRect'
-import { VideoIframeType } from '../common/media/mediaTypes'
+import { addEventListener } from '../../utils/reactUtils'
 import { validateRef } from '../../utils/typeUtils'
+import { VideoIframeType } from '../common/media/mediaTypes'
+import VideoIframe from '../common/media/videoIframe'
+import WorkImg from '../common/media/workImg'
+import RowContainer from '../common/rowContainer'
 
 const PageVectorString = () => {
   const [translateImgSrc, setTranslateImgSrc] = useState(1)

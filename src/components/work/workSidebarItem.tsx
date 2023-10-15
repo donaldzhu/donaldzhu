@@ -1,10 +1,10 @@
 import { useLocation } from 'react-router-dom'
-import { styled } from 'styled-components'
-import Anchor from '../common/anchor'
-import { em } from '../../utils/sizeUtils'
-import mixins from '../../styles/mixins'
-import { fontSizes, fontLineHeights } from '../../styles/fonts'
+import styled from 'styled-components'
 import colors from '../../styles/colors'
+import { fontLineHeights, fontSizes } from '../../styles/fonts'
+import mixins from '../../styles/mixins'
+import { em } from '../../utils/sizeUtils'
+import Anchor from '../common/anchor'
 import { WorkAnchorProps } from './workTypes'
 
 const WorkSideBarItem = ({ data, isHighlighted, highlightedRef, handleHover }: WorkAnchorProps) => {
@@ -16,7 +16,7 @@ const WorkSideBarItem = ({ data, isHighlighted, highlightedRef, handleHover }: W
         to={`${location.pathname}/${id}`}
         ref={isHighlighted ? highlightedRef : null}
         onMouseOver={() => handleHover(title)} >
-        <Title>{abbr || title}</Title>
+        <Title>{abbr ?? title}</Title>
         <ItemDelimiter>●</ItemDelimiter>
         <p>{tags.join(' + ')}</p>
       </LinkContainer>

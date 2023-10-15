@@ -1,7 +1,7 @@
-import RowContainer from '../common/rowContainer'
-import ColumnContainer from '../common/styled/columnContainer'
 import WorkImg from '../common/media/workImg'
 import WorkImgGroup from '../common/media/workImgGroup'
+import RowContainer from '../common/rowContainer'
+import ColumnContainer from '../common/styled/columnContainer'
 
 
 const PageAcogito = () => {

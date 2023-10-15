@@ -1,18 +1,17 @@
 import _ from 'lodash'
-import Brush from '../helpers/brush/brush'
-import FlatBrush from '../helpers/brush/flatBrush'
-import { loopObject } from '../../utils/commonUtils'
-
-import { intersectTwoCircles, parseVector, wrapDrawingContext } from '../../utils/p5Utils'
-import ElemRect from '../../utils/helpers/rect/elemRect'
+import p5 from 'p5'
+import { MutableRefObject } from 'react'
+import { CanvasState } from '../../components/canvas/canvasTypes'
 import colors from '../../styles/colors'
 import { sketchSizes } from '../../styles/sizes'
-import config from '../configs/stroke'
-import p5 from 'p5'
-import { CanvasState } from '../../components/canvas/canvasTypes'
-import { MutableRefObject } from 'react'
+import { loopObject } from '../../utils/commonUtils'
+import ElemRect from '../../utils/helpers/rect/elemRect'
+import { intersectTwoCircles, parseVector, wrapDrawingContext } from '../../utils/p5Utils'
 import { getVw } from '../../utils/sizeUtils'
 import { validateRef } from '../../utils/typeUtils'
+import config from '../configs/stroke'
+import Brush from '../helpers/brush/brush'
+import FlatBrush from '../helpers/brush/flatBrush'
 
 interface DrawPantoProps {
   isClearingRef: MutableRefObject<boolean>

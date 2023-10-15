@@ -1,5 +1,5 @@
-import { mapObject, toPairs } from './commonUtils'
 import breakpts from '../data/breakpoints'
+import { mapObject, toPairs } from './commonUtils'
 import { getNativeResolution } from './sizeUtils'
 
 export enum Breakpt {

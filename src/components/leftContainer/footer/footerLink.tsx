@@ -1,11 +1,11 @@
 import { ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
-import { styled } from 'styled-components'
-import Anchor from '../../common/anchor'
-import { fontFamilies } from '../../../styles/fonts'
+import styled from 'styled-components'
 import colors from '../../../styles/colors'
+import { fontFamilies } from '../../../styles/fonts'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
+import Anchor from '../../common/anchor'
 
 interface FooterLinkProps {
   path: string,

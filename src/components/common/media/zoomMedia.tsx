@@ -1,15 +1,15 @@
 import { forwardRef, useContext, useRef } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import { styled } from 'styled-components'
-import PreloadMedia from './preloadMedia'
+import styled from 'styled-components'
 import { WorkPageContext } from '../../../contexts/context'
-import { percent, toPercent } from '../../../utils/sizeUtils'
-import { joinPaths } from '../../../utils/commonUtils'
-import { MediaFileType, MediaSize, MediaType } from '../../../utils/helpers/preloader/preloadUtils'
 import mixins from '../../../styles/mixins'
-import { MediaRef, ZoomMediaProps } from './mediaTypes'
-import { PageContextProps } from '../../pageWrappers/pageTypes'
+import { joinPaths } from '../../../utils/commonUtils'
 import { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
+import { MediaFileType, MediaSize, MediaType } from '../../../utils/helpers/preloader/preloadUtils'
+import { percent, toPercent } from '../../../utils/sizeUtils'
+import { PageContextProps } from '../../pageWrappers/pageTypes'
+import { MediaRef, ZoomMediaProps } from './mediaTypes'
+import PreloadMedia from './preloadMedia'
 
 const ZoomMedia = forwardRef(ZoomMediaWithRef)
 
@@ -17,7 +17,7 @@ function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
   const { preloadManager, handleZoomMedia } = useOutletContext<PageContextProps>()
   const { pageId } = useContext(WorkPageContext)
   const placeholderRef = useRef<HTMLImageElement | HTMLVideoElement>(null)
-  const mediaRef = ref || placeholderRef
+  const mediaRef = ref ?? placeholderRef
 
   let { src } = props
   const { maxSize, width, isToolTip, ...rest } = props
@@ -37,7 +37,7 @@ function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
       mediaStack,
       fallbackPath,
       getCurrentTime: () => (('current' in mediaRef && mediaRef.current && 'currentTime' in mediaRef.current) ?
-        mediaRef.current?.currentTime : undefined) || 0,
+        mediaRef.current?.currentTime : undefined) ?? 0,
       maxSize: typeof maxSize === 'number' ? toPercent(maxSize) : maxSize
     })
 
@@ -58,7 +58,7 @@ const MediaContainer = styled.div<{ $width: string | number | undefined }>`
 
   img, video {
     cursor: zoom-in;
-    width: ${({ $width }) => $width || percent(100)};
+    width: ${({ $width }) => $width ?? percent(100)};
     object-fit: cover;
   }
 `

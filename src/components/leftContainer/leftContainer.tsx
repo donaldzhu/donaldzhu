@@ -1,11 +1,11 @@
 import { ReactNode, useEffect, useRef } from 'react'
-import { styled } from 'styled-components'
-import Header from './header/header'
-import Footer from './footer/footer'
-import SvgBorder from '../common/svgBorder'
+import styled from 'styled-components'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import { GlobalCanvasStates } from '../canvas/canvasTypes'
+import SvgBorder from '../common/svgBorder'
+import Footer from './footer/footer'
+import Header from './header/header'
 
 type LeftContainerProps = {
   sidebar: ReactNode | undefined
@@ -26,7 +26,7 @@ const LeftContainer = ({ sidebar, canvasRef, canvasStateRefs }: LeftContainerPro
           canvasRef={canvasRef}
           canvasStateRefs={canvasStateRefs} />
         <SidebarContainer ref={sidebarRef}>
-          {sidebar || <div />}
+          {sidebar ?? <div />}
         </SidebarContainer>
         <Footer />
       </ContentContainer>

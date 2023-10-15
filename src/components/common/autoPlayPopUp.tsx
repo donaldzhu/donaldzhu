@@ -1,9 +1,9 @@
 import styled from 'styled-components'
-import mixins from '../../styles/mixins'
 import colors from '../../styles/colors'
-import PopUpContainer from './popUpContainer'
 import { fontSizes } from '../../styles/fonts'
+import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
+import PopUpContainer from './popUpContainer'
 
 const AutoPlayPopUp = () => {
   return (

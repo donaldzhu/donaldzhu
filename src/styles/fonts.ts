@@ -1,4 +1,4 @@
-import { getRemSize, em } from '../utils/sizeUtils'
+import { em,getRemSize } from '../utils/sizeUtils'
 
 export const fontFamilies = {
   monoFont: '"Recursive", "Helvetica Neue", sans-serif;',

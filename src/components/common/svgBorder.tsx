@@ -1,10 +1,10 @@
-import styled from 'styled-components'
-import { domSizes } from '../../styles/sizes'
-import Size from '../../utils/helpers/size'
 import { useWindowSize } from '@uidotdev/usehooks'
 import { useMemo } from 'react'
-import Svg from './svg'
+import styled from 'styled-components'
 import colors from '../../styles/colors'
+import { domSizes } from '../../styles/sizes'
+import Size from '../../utils/helpers/size'
+import Svg from './svg'
 
 interface SvgBorderProps {
   className?: string

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
 import _ from 'lodash'
+import { useEffect,useState } from 'react'
 import { addEventListener } from '../utils/reactUtils'
 
 const useCanAutoPlay = () => {

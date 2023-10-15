@@ -1,6 +1,6 @@
-import parse, { HTMLReactParserOptions, domToReact } from 'html-react-parser'
-import SmallText from '../components/common/styled/smallText'
+import parse, { domToReact,HTMLReactParserOptions } from 'html-react-parser'
 import Anchor from '../components/common/anchor'
+import SmallText from '../components/common/styled/smallText'
 
 
 type eventListenerOptions = boolean | AddEventListenerOptions

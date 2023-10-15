@@ -1,6 +1,6 @@
-import RowContainer from '../common/rowContainer'
-import WorkImg from '../common/media/workImg'
 import { percent } from '../../utils/sizeUtils'
+import WorkImg from '../common/media/workImg'
+import RowContainer from '../common/rowContainer'
 
 const PageArchitecture = () => {
   const width = percent(90)

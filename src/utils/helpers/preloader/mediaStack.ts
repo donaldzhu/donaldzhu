@@ -1,11 +1,11 @@
 import _ from 'lodash'
-import { ImgPreloader, VidPreloader } from './preloader'
+import breakpts from '../../../data/breakpoints'
 import { joinPaths, keysToObject, typedKeys } from '../../commonUtils'
 import { Breakpt, getBreakptKey } from '../../queryUtil'
-import { FileExt, MediaSize, MediaType, MediaFileType, getPreviewBreakptKey, isThumbnail, isImg } from './preloadUtils'
-import breakpts from '../../../data/breakpoints'
 import { coorTuple } from '../../utilTypes'
+import { ImgPreloader, VidPreloader } from './preloader'
 import { MediaStackProps, PreloadBreakpt } from './preloaderTypes'
+import { FileExt, getPreviewBreakptKey, isImg,isThumbnail, MediaFileType, MediaSize, MediaType } from './preloadUtils'
 
 export class MediaStack {
   private mediaType: MediaType

@@ -1,10 +1,10 @@
 import { forwardRef } from 'react'
 import { Link } from 'react-router-dom'
-import type { LinkProps } from 'react-router-dom'
 import styled from 'styled-components'
 import usePortfolioQuery from '../../hooks/usePortfolioQuery'
-import { appendQuery, validateString } from '../../utils/commonUtils'
 import colors from '../../styles/colors'
+import { appendQuery, validateString } from '../../utils/commonUtils'
+import type { LinkProps } from 'react-router-dom'
 
 const Anchor = forwardRef<HTMLAnchorElement, LinkProps & { noQuery?: boolean }>(
   function Anchor({ to, target, noQuery, ...props }, ref) {

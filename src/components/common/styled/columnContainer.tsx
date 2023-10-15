@@ -1,4 +1,4 @@
-import { styled } from 'styled-components'
+import styled from 'styled-components'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
 

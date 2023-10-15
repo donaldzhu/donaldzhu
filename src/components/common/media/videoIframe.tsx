@@ -1,5 +1,5 @@
 import { IframeHTMLAttributes } from 'react'
-import { styled } from 'styled-components'
+import styled from 'styled-components'
 import { VideoIframeType } from './mediaTypes'
 
 interface VideoIframeProps {
@@ -24,7 +24,7 @@ const VideoIframe = ({ src, type, aspectRatio, ...rest }: IframeHTMLAttributes<H
 
 const Iframe = styled.iframe<StyledVideoIframeProps>`
   width: 100%;
-  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio || '16 / 9'};
+  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio ?? '16 / 9'};
 `
 
 export default VideoIframe

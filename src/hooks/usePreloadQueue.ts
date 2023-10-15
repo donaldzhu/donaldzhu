@@ -1,8 +1,8 @@
+import _ from 'lodash'
 import { DependencyList, useEffect } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import _ from 'lodash'
-import PreloadManager from '../utils/helpers/preloader/preloadManager'
 import { PageContextProps } from '../components/pageWrappers/pageTypes'
+import PreloadManager from '../utils/helpers/preloader/preloadManager'
 
 const usePreloadQueue = (
   setupDone: boolean,

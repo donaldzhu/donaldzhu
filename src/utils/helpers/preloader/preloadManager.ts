@@ -1,14 +1,14 @@
 import _ from 'lodash'
 import toSpaceCase from 'to-space-case'
-import Queue from '../queue'
-import { ImgStack, VidStack } from './mediaStack'
-import { capitalize, filterFalsy, loopObject, mapObject, partition, typedKeys, validateString } from '../../commonUtils'
-import { getBreakptKey } from '../../queryUtil'
-import { MediaSize, MediaType, VerboseLevel, isImg, fileIsImg, isImgSize } from './preloadUtils'
 import nativeDimensions from '../../../data/media/nativeDimensions.json'
 import workData from '../../../data/work/workData.json'
-import { loadVidType } from './preloadTypes'
+import { capitalize, filterFalsy, loopObject, mapObject, partition, typedKeys, validateString } from '../../commonUtils'
+import { getBreakptKey } from '../../queryUtil'
 import { coorTuple, queueArgType, queueFunctionType } from '../../utilTypes'
+import Queue from '../queue'
+import { ImgStack, VidStack } from './mediaStack'
+import { loadVidType } from './preloadTypes'
+import { fileIsImg, isImg, isImgSize,MediaSize, MediaType, VerboseLevel } from './preloadUtils'
 
 const LOG_COLORS = {
   [MediaSize.DesktopFallback]: 'yellow',

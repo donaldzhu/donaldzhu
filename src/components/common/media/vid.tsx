@@ -1,10 +1,10 @@
-import { VideoHTMLAttributes, forwardRef, useEffect } from 'react'
-import { useOutletContext } from 'react-router-dom'
 import { usePrevious } from '@uidotdev/usehooks'
+import { forwardRef, useEffect,VideoHTMLAttributes } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import styled from 'styled-components'
 import mixins from '../../../styles/mixins'
-import { StyledMediaProps, VidProps } from './mediaTypes'
 import { PageContextProps } from '../../pageWrappers/pageTypes'
+import { StyledMediaProps, VidProps } from './mediaTypes'
 
 
 const Vid = forwardRef<HTMLVideoElement, VideoHTMLAttributes<HTMLVideoElement> & VidProps>(

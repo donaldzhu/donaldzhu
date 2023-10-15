@@ -8,8 +8,8 @@ export interface MediaProps {
 }
 
 export interface StyledMediaProps {
-  readonly $hasLoaded?: boolean
-  readonly $aspectRatio?: string | number
+  $hasLoaded?: boolean
+  $aspectRatio?: string | number
 }
 
 export type ImgProps = MediaProps

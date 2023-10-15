@@ -1,10 +1,10 @@
-import { ReactNode, forwardRef } from 'react'
-import { styled } from 'styled-components'
 import _ from 'lodash'
-import ToolTip from './toolTip'
-import { arrayify, validateString } from '../../utils/commonUtils'
-import { domSizes } from '../../styles/sizes'
+import { forwardRef, ReactNode } from 'react'
+import styled from 'styled-components'
 import mixins from '../../styles/mixins'
+import { domSizes } from '../../styles/sizes'
+import { arrayify, validateString } from '../../utils/commonUtils'
+import ToolTip from './toolTip'
 
 interface RowContainerProps {
   className?: string
@@ -26,7 +26,7 @@ const RowContainer = forwardRef<HTMLDivElement, RowContainerProps>(function RowC
       {toolTip && <ToolTip>{toolTip}</ToolTip>}
       <Row
         $width={width}
-        $cols={cols || Array(childrenLength).fill(1)}>
+        $cols={cols ?? Array(childrenLength).fill(1)}>
         {children}
       </Row>
     </Container>

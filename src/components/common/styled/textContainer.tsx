@@ -1,7 +1,7 @@
-import { styled } from 'styled-components'
+import styled from 'styled-components'
+import { fontParams } from '../../../styles/fonts'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
-import { fontParams } from '../../../styles/fonts'
 
 const TextContainer = styled.div`
   ${mixins

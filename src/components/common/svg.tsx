@@ -1,6 +1,6 @@
 import { ReactNode, SVGProps } from 'react'
 
-type SvgPropsType = {
+interface SvgPropsType {
   w: number,
   h: number,
   children: ReactNode,

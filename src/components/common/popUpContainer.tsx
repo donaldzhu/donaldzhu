@@ -1,8 +1,8 @@
 import { HTMLAttributes, ReactNode, useEffect } from 'react'
 import styled from 'styled-components'
-import mixins from '../../styles/mixins'
 import colors from '../../styles/colors'
 import { fontLineHeights } from '../../styles/fonts'
+import mixins from '../../styles/mixins'
 
 type PopUpContainerProps = {
   className?: string,

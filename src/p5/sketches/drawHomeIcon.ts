@@ -1,11 +1,11 @@
-import { MutableRefObject } from 'react'
 import p5 from 'p5'
-import Text from '../helpers/vector/text'
-import ElemRect from '../../utils/helpers/rect/elemRect'
+import { MutableRefObject } from 'react'
 import colors from '../../styles/colors'
 import { domSizes } from '../../styles/sizes'
-import configs from '../configs/vector'
+import ElemRect from '../../utils/helpers/rect/elemRect'
 import { validateRef } from '../../utils/typeUtils'
+import configs from '../configs/vector'
+import Text from '../helpers/vector/text'
 
 interface DrawHomeIconProps {
   placeholderRef: MutableRefObject<HTMLDivElement | null>

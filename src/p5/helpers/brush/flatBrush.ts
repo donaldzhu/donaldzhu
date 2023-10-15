@@ -1,9 +1,9 @@
+import p5 from 'p5'
+import { repeatMap, shuffleTo } from '../../../utils/commonUtils'
+import Size from '../../../utils/helpers/size'
+import { BrushSetting } from '../../sketches/sketchTypes'
 import Brush from './brush'
 import FlatBrushMark, { FlatBrushPoint } from './flatBrushMark'
-import { repeatMap, shuffleTo } from '../../../utils/commonUtils'
-import { BrushSetting } from '../../sketches/sketchTypes'
-import p5 from 'p5'
-import Size from '../../../utils/helpers/size'
 
 
 class FlatBrush extends Brush {
@@ -12,7 +12,7 @@ class FlatBrush extends Brush {
   constructor(setting: BrushSetting, p5: p5, drawingContext: p5.Graphics) {
     super(setting, p5, drawingContext)
     this.rotation = Math.PI / 4
-    this.radius = setting.radius || new Size(4)
+    this.radius = setting.radius ?? new Size(4)
   }
 
   doDraw(context: p5.Graphics) {

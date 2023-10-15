@@ -1,4 +1,4 @@
-import { styled } from 'styled-components'
+import styled from 'styled-components'
 import { domSizes } from '../../../styles/sizes'
 
 const MainContainer = styled.div`

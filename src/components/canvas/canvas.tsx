@@ -1,9 +1,9 @@
-import { ReactNode, useEffect, useRef } from 'react'
-import { styled } from 'styled-components'
-import p5 from 'p5'
 import _ from 'lodash'
-import { P5Event } from '../../utils/p5Utils'
+import p5 from 'p5'
+import { ReactNode, useEffect, useRef } from 'react'
+import styled from 'styled-components'
 import { typedKeys } from '../../utils/commonUtils'
+import { P5Event } from '../../utils/p5Utils'
 import { P5EventHandlers } from './canvasTypes'
 
 

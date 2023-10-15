@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { filterFalsy, validateString } from '../commonUtils'
-import { Unit, getRem, getVh, getVw } from '../sizeUtils'
+import { getRem, getVh, getVw, Unit } from '../sizeUtils'
 
 type sizeTypes = Unit.Vw | Unit.Vh | Unit.Rem
 
@@ -16,9 +16,9 @@ class Size {
       this.vh = 0
       this.rem = config / remFactor
     } else {
-      this.vw = config.vw || 0
-      this.vh = config.vh || 0
-      this.rem = config.rem || 0
+      this.vw = config.vw ?? 0
+      this.vh = config.vh ?? 0
+      this.rem = config.rem ?? 0
     }
   }
 

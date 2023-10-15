@@ -1,14 +1,14 @@
-import { styled } from 'styled-components'
-import WorkSideBarItem from './workSidebarItem'
-import TextContainer from '../common/styled/textContainer'
-import Anchor from '../common/anchor'
-import usePortfolioQuery from '../../hooks/usePortfolioQuery'
-import { domSizes } from '../../styles/sizes'
-import mixins from '../../styles/mixins'
-import { fontFamilies, fontSizes } from '../../styles/fonts'
-import { appendQuery, validateString } from '../../utils/commonUtils'
-import { WorkDataInterface } from './workIndex'
 import { MutableRefObject } from 'react'
+import styled from 'styled-components'
+import usePortfolioQuery from '../../hooks/usePortfolioQuery'
+import { fontFamilies, fontSizes } from '../../styles/fonts'
+import mixins from '../../styles/mixins'
+import { domSizes } from '../../styles/sizes'
+import { appendQuery, validateString } from '../../utils/commonUtils'
+import Anchor from '../common/anchor'
+import TextContainer from '../common/styled/textContainer'
+import { WorkDataInterface } from './workIndex'
+import WorkSideBarItem from './workSidebarItem'
 
 interface WorkIndexSidebarProps {
   workData: WorkDataInterface[]
@@ -32,7 +32,7 @@ const WorkIndexSidebar = ({ workData, highlighted, sidebarRef, handleHover }: Wo
           isHighlighted={highlighted === project.title}
           highlightedRef={sidebarRef}
           handleHover={handleHover} />)}
-      {(pid || cachedPid) && <ToMainSiteLink
+      {(pid ?? cachedPid) && <ToMainSiteLink
         to={'/work' + (validateString(!pid, appendQuery(['pid', cachedPid])))}
         noQuery>
         {portfolioNavText}

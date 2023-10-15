@@ -1,10 +1,10 @@
 import * as easing from 'easing-utils'
-import { loopObject, map, typedKeys } from '../../../utils/commonUtils'
-import spacingsData from '../../../data/vector/spacings.json'
-import { Easing, VectorSetting } from './vectorTypes'
 import p5 from 'p5'
-import { getVh, getVw } from '../../../utils/sizeUtils'
+import spacingsData from '../../../data/vector/spacings.json'
+import { loopObject, map, typedKeys } from '../../../utils/commonUtils'
 import Size from '../../../utils/helpers/size'
+import { getVh, getVw } from '../../../utils/sizeUtils'
+import { Easing, VectorSetting } from './vectorTypes'
 
 export const enum Mode {
   Center,

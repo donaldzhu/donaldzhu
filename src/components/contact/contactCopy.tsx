@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { styled } from 'styled-components'
-import mixins from '../../styles/mixins'
+import styled from 'styled-components'
 import { fontParams, fontSizes } from '../../styles/fonts'
+import mixins from '../../styles/mixins'
 
 const ContactCopy = ({ content }: { content: string }) => {
   const [isCopied, setIsCopied] = useState(false)

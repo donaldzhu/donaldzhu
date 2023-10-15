@@ -1,6 +1,6 @@
 import { Dispatch, ReactNode, SetStateAction } from 'react'
-import { GlobalCanvasStates } from '../canvas/canvasTypes'
 import PreloadManager from '../../utils/helpers/preloader/preloadManager'
+import { GlobalCanvasStates } from '../canvas/canvasTypes'
 import { RequiredZoomMediaProps } from '../common/media/mediaTypes'
 
 export type PageContextProps = {

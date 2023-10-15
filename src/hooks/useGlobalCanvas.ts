@@ -1,7 +1,7 @@
 import { useRef } from 'react'
-import { P5Event } from '../utils/p5Utils'
-import { typedKeys } from '../utils/commonUtils'
 import { p5EventCallback } from '../components/canvas/canvasTypes'
+import { typedKeys } from '../utils/commonUtils'
+import { P5Event } from '../utils/p5Utils'
 
 const useGlobalCanvas = () => {
   const entries = typedKeys<P5Event>(P5Event)

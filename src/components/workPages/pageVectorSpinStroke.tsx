@@ -1,6 +1,6 @@
-import RowContainer from '../common/rowContainer'
 import WorkImg from '../common/media/workImg'
 import WorkVid from '../common/media/workVid'
+import RowContainer from '../common/rowContainer'
 
 const PageVectorSpinStroke = () => {
   return (

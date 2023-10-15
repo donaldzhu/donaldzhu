@@ -36,11 +36,11 @@ export const loopObject = <T extends object>(
   callback: (key: keyof T, value: T[keyof T], object: T) => any
 ) => {
   const keys = typedKeys(object)
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
+  keys.forEach(key => {
     const value = object[key]
     callback(key, value, object)
-  }
+  })
+
   return object
 }
 
@@ -50,11 +50,11 @@ export const mapObject = <T extends object, R>(
 ) => {
   const newObject: Partial<Record<keyof T, R>> = {}
   const keys = typedKeys(object)
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
+  keys.forEach(key => {
     const value = object[key]
     newObject[key] = callback(key, value)
-  }
+  })
+
   return newObject as Record<keyof T, R>
 }
 
