@@ -20,7 +20,7 @@ interface StyledZoomMedia {
 
 function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
   const { preloadManager, handleZoomMedia } = useOutletContext<PageContextProps>()
-  const { pageId } = useContext(WorkPageContext)
+  const { pageId, previewLoaded } = useContext(WorkPageContext)
   const mediaRef = useForwardedRef(ref)
 
   let { src } = props
@@ -51,6 +51,7 @@ function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
     <MediaContainer $width={width}>
       <PreloadMedia
         {...rest}
+        {...(rest.type === MediaFileType.Video ? { canAutoPlay: previewLoaded } : {})}
         mediaStack={mediaStack satisfies ImgStack | VidStack | undefined}
         fallbackPath={fallbackPath}
         ref={mediaRef}

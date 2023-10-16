@@ -8,6 +8,7 @@ export interface ToolTipProps {
 
 export type WorkPageContextProps = {
   pageId: string
+  previewLoaded: boolean
 } & ToolTipProps
 
 export interface WorkAnchorProps {

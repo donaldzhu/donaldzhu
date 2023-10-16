@@ -56,7 +56,7 @@ class PreloadManager {
 
     this.isComplete = false
     this.enabled = true
-    this.verboseLevel = VerboseLevel.Normal
+    this.verboseLevel = VerboseLevel.Quiet
 
     this.autoPlayConfig = { canAutoPlay }
     this.loadVid = loadVid
@@ -203,7 +203,6 @@ class PreloadManager {
     const getPreload = (type: MediaType, size: MediaSize) => ({
       run: () => this.preloadMediaType(
         type === MediaType.Images ? imgStacks : vidStacks, size,
-        type === MediaType.Posters
       ),
       callback: this.log(3, getType(type), size)
     })
@@ -247,12 +246,6 @@ class PreloadManager {
       callback: this.log(3, type, size, pageId)
     }))
 
-    // if (size !== MediaSize.Max)
-    //   queueFunctions.push({
-    //     run: () => this.preloadMediaType(mediaStacks.videos, size, true),
-    //     callback: this.log(3, MediaType.Posters, size, pageId)
-    //   })
-
     return this.addToSubqueue(queueFunctions)
   }
 
@@ -263,19 +256,17 @@ class PreloadManager {
 
   private preloadMediaType(
     mediaTypeStacks: (ImgStack | VidStack)[] | undefined,
-    size: MediaSize,
-    isPoster?: boolean
+    size: MediaSize
   ) {
     if (!mediaTypeStacks) return Promise.resolve()
     const preloadFunctionName = this.prefixPreload(size)
     const queueFunctions: (() => (Promise<void> | undefined))[] =
       mediaTypeStacks.map(stack => {
-        const targetStack = isPoster && stack instanceof VidStack ? stack.posterStack : stack
         // Type-guarding redundancy
-        if (targetStack instanceof ImgStack)
-          return targetStack[preloadFunctionName].bind(targetStack)
+        if (stack instanceof ImgStack)
+          return stack[preloadFunctionName].bind(stack)
         else if (preloadFunctionName === 'preloadFull' || preloadFunctionName === 'preloadMax')
-          return targetStack[preloadFunctionName].bind(targetStack)
+          return stack[preloadFunctionName].bind(stack)
         return () => Promise.resolve()
       })
 

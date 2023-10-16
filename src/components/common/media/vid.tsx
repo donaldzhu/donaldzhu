@@ -21,10 +21,12 @@ const Vid = forwardRef<HTMLVideoElement, VideoHTMLAttributes<HTMLVideoElement> &
     aspectRatio,
     autoPlay = true,
     canAutoPlay,
+    useNativeControl,
     ...props
   }, ref) {
+    const contextCanAutoPlay = useOutletContext<PageContextProps>()?.canAutoPlay
     const vidCanAutoPlay: boolean | undefined =
-      useOutletContext<PageContextProps>()?.canAutoPlay ?? canAutoPlay
+      canAutoPlay ?? contextCanAutoPlay
 
     const forwardedRef = useForwardedRef(ref)
     const [mediaRef, entry] = useIntersectionObserver<HTMLVideoElement>({ threshold: 0 })
@@ -34,19 +36,20 @@ const Vid = forwardRef<HTMLVideoElement, VideoHTMLAttributes<HTMLVideoElement> &
     }, [mediaRef])
 
     const video = useMemoRef(() => {
+      if (useNativeControl) return
       if (!validateRef(mediaRef)) throw new Error('Video’s ref.current is unexpectedly null')
       return new Video(mediaRef, vidCanAutoPlay)
     }, [])
 
     useEffect(() => {
-      if (!validateRef(video)) return _.noop
+      if (!!useNativeControl || !validateRef(video)) return _.noop
       video.current.canAutoPlay = vidCanAutoPlay
       video.current.play()
     }, [vidCanAutoPlay])
 
 
     useEffect(() => {
-      if (!validateRef(video) || !entry) return _.noop
+      if (!!useNativeControl || !validateRef(video) || !entry) return _.noop
       if (!entry.isIntersecting) video.current.pause()
       else video.current?.play()
     }, [entry])
@@ -59,7 +62,7 @@ const Vid = forwardRef<HTMLVideoElement, VideoHTMLAttributes<HTMLVideoElement> &
         poster={poster}
         $hasLoaded={hasLoaded}
         $aspectRatio={aspectRatio}
-        autoPlay={canAutoPlay !== false && autoPlay}
+        autoPlay={useNativeControl && (canAutoPlay !== false && autoPlay)}
         {...props}>
         {alt}
       </StyledVid>

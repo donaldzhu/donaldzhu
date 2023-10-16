@@ -6,7 +6,6 @@ import { coorTuple } from '../../utilTypes'
 import { ImgPreloader, VidPreloader } from './preloader'
 import { MediaStackProps, PreloadBreakpt } from './preloaderTypes'
 import {
-  FileExt,
   getPreviewBreakptKey,
   isImg,
   MediaFileType,
@@ -23,7 +22,6 @@ export class MediaStack {
   pageId: string
   fileName: string
   fileType: MediaFileType
-  isPoster: boolean
   nativeDimension: coorTuple
   stack: Record<PreloadBreakpt, ImgPreloader | VidPreloader>
 
@@ -32,7 +30,6 @@ export class MediaStack {
     fileName,
     fileType,
     mediaType,
-    isPoster,
     autoPlayConfig,
     loadVid,
     preloaderType,
@@ -45,7 +42,6 @@ export class MediaStack {
     this.fileName = fileName
     this.fileType = fileType
     this.mediaType = mediaType
-    this.isPoster = !!isPoster
     this.nativeDimension = nativeDimension
 
     this.breakpts = typedKeys<Breakpt>(breakpts)
@@ -67,11 +63,7 @@ export class MediaStack {
 
     let paths: string[]
     if (this.isThumbnail)
-      paths = !this.isPoster ?
-        [...thumbnailRootPath, this.fileName] :
-        [...thumbnailRootPath, MediaType.Posters, this.fileName]
-    else if (this.isPoster)
-      paths = [pagePath, MediaType.Posters, this.fileName]
+      paths = [...thumbnailRootPath, this.fileName]
     else paths = [pagePath, this.fileName]
     return joinPaths(...paths)
   }
@@ -138,20 +130,11 @@ export class ImgStack extends MediaStack {
 }
 
 export class VidStack extends MediaStack {
-  posterStack: ImgStack
   constructor(props: MediaStackProps) {
     super({
       ...props,
       fileType: MediaFileType.Video,
       preloaderType: MediaFileType.Video
-    })
-
-    this.posterStack = new ImgStack({
-      ...props,
-      fileName: this.isThumbnail ? `${this.pageId}.webp` :
-        this.fileName.replace(FileExt.Webm, FileExt.Webp),
-      mediaType: this.isThumbnail ? MediaType.Thumbnails : MediaType.Images,
-      isPoster: true
     })
   }
 }

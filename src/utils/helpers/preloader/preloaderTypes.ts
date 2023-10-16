@@ -7,7 +7,6 @@ export interface MediaStackProps {
   pageId: string
   fileName: string
   mediaType: MediaType
-  isPoster?: boolean
   autoPlayConfig: { canAutoPlay: boolean | undefined },
   loadVid: loadVidType,
   nativeDimension: coorTuple

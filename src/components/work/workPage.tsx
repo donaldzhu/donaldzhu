@@ -1,5 +1,6 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { useOutletContext } from 'react-router-dom'
 import { WorkPageContext } from '../../contexts/context'
 import workDescriptions from '../../data/work/workDescriptions.json'
 import useCanvas from '../../hooks/useCanvas'
@@ -13,6 +14,8 @@ import { capitalize } from '../../utils/commonUtils'
 import { parseHtml } from '../../utils/reactUtils'
 import MainContainer from '../common/styled/mainContainer'
 import TextContainer from '../common/styled/textContainer'
+import { PageContextProps } from '../pageWrappers/pageTypes'
+import { MediaSize, getPreviewBreakptKey } from '../../utils/helpers/preloader/preloadUtils'
 import { WorkDataInterface } from './workIndex'
 
 interface WorkPageProps {
@@ -29,10 +32,21 @@ const WorkPage = ({ data, Content }: WorkPageProps) => {
   usePreloadQueue(setupDone, preloadManager =>
     preloadManager.pagePreload(data.id), [data])
   useSidebar(<WorkPageSidebar {...data} />)
+  const [previewLoaded, setPreviewLoaded] = useState(false)
 
   const pageId = data.id
+
+  const { preloadManager } = useOutletContext<PageContextProps>()
+  const imageSizes = preloadManager.workPages[pageId].images?.map(imgStack => imgStack.loadedSizes)
+  useEffect(() => {
+    if (!imageSizes) return setPreviewLoaded(true)
+    const previewKey = getPreviewBreakptKey()
+    setPreviewLoaded(imageSizes?.every(sizes =>
+      sizes.includes(previewKey ?? MediaSize.DesktopFallback)))
+  }, [imageSizes])
+
   return (
-    <WorkPageContext.Provider value={{ toolTipRef, popUpRef, pageId }}>
+    <WorkPageContext.Provider value={{ toolTipRef, popUpRef, pageId, previewLoaded }}>
       <MainContainer>
         <ContentContainer>
           <Content />

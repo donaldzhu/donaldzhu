@@ -38,6 +38,7 @@ class Video {
 
   pause() {
     if (!this.playState.future) return
+    console.log(this.ref.current.src)
     this.addToQueue(new VideoPlayCommand(
       false, () => {
         this.playQueueList.shift()

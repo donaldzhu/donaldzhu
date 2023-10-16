@@ -15,8 +15,7 @@ export enum MediaType {
   Images = 'images',
   Videos = 'videos',
   ToolTips = 'toolTips',
-  Thumbnails = 'thumbnails',
-  Posters = 'posters'
+  Thumbnails = 'thumbnails'
 }
 
 export enum MediaFileType {
@@ -55,5 +54,5 @@ export const getPreviewBreakptKey = () => {
   const breakptPairs = toPairs(breakpts)
   const breakptIndex = breakptPairs.findIndex(
     ([breakptKey]) => breakptKey === breakpt)
-  return breakptIndex <= 1 ? breakptPairs[breakptIndex - 2][0] : undefined
+  return breakptIndex > 1 ? breakptPairs[breakptIndex - 2][0] : undefined
 }

@@ -13,6 +13,7 @@ import AutoPlayPopUp from '../common/autoPlayPopUp'
 import { RequiredZoomMediaProps } from '../common/media/mediaTypes'
 import ZoomedMedia from '../common/media/zoomedMedia'
 import LeftContainer from '../leftContainer/leftContainer'
+import Vid from '../common/media/vid'
 import { handleZoomType, PageContextProps } from './pageTypes'
 
 const Page = () => {
@@ -66,11 +67,13 @@ const Page = () => {
         <VidLoadContainer>
           {typedKeys(vidLoadData).map(src => {
             const { onProgress } = vidLoadData[src]
-            return <video
+            return <Vid
               key={src}
               src={src}
               preload='true'
-              autoPlay={canAutoPlay !== false}
+              autoPlay={true}
+              canAutoPlay={canAutoPlay}
+              useNativeControl={true}
               onProgress={onProgress}
               onCanPlayThrough={onProgress}
               onTimeUpdate={onProgress} />

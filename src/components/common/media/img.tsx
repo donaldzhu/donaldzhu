@@ -1,5 +1,4 @@
-import _ from 'lodash'
-import { forwardRef,ImgHTMLAttributes } from 'react'
+import { forwardRef, ImgHTMLAttributes } from 'react'
 import styled from 'styled-components'
 import mixins from '../../../styles/mixins'
 import { ImgProps, StyledMediaProps } from './mediaTypes'
@@ -13,7 +12,7 @@ const Img = forwardRef<HTMLImageElement, ImgHTMLAttributes<HTMLImageElement> & I
         ref={ref}
         $hasLoaded={hasLoaded}
         $aspectRatio={aspectRatio}
-        {..._.omit(props, ['poster'])} />
+        {...props} />
     )
   })
 
