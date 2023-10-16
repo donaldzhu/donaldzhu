@@ -21,7 +21,6 @@ const Vid = forwardRef<HTMLVideoElement, VideoHTMLAttributes<HTMLVideoElement> &
     aspectRatio,
     autoPlay = true,
     canAutoPlay,
-    useNativeControl,
     ...props
   }, ref) {
     const vidCanAutoPlay: boolean | undefined =
@@ -35,21 +34,20 @@ const Vid = forwardRef<HTMLVideoElement, VideoHTMLAttributes<HTMLVideoElement> &
     }, [mediaRef])
 
     const video = useMemoRef(() => {
-      if (useNativeControl) return
       if (!validateRef(mediaRef)) throw new Error('Video’s ref.current is unexpectedly null')
       return new Video(mediaRef, vidCanAutoPlay)
     }, [])
 
     useEffect(() => {
-      if (!!useNativeControl || !validateRef(video)) return _.noop
+      if (!validateRef(video)) return _.noop
       video.current.canAutoPlay = vidCanAutoPlay
       video.current.play()
     }, [vidCanAutoPlay])
 
 
     useEffect(() => {
-      if (!!useNativeControl || !validateRef(video)) return _.noop
-      if (!entry?.isIntersecting) video.current.pause()
+      if (!validateRef(video) || !entry) return _.noop
+      if (!entry.isIntersecting) video.current.pause()
       else video.current?.play()
     }, [entry])
 
@@ -61,7 +59,7 @@ const Vid = forwardRef<HTMLVideoElement, VideoHTMLAttributes<HTMLVideoElement> &
         poster={poster}
         $hasLoaded={hasLoaded}
         $aspectRatio={aspectRatio}
-        autoPlay={useNativeControl && (canAutoPlay !== false && autoPlay)}
+        autoPlay={canAutoPlay !== false && autoPlay}
         {...props}>
         {alt}
       </StyledVid>

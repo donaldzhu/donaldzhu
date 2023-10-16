@@ -10,7 +10,6 @@ import mixins from '../../styles/mixins'
 import { typedKeys } from '../../utils/commonUtils'
 import GlobalCanvas from '../canvas/globalCanvas'
 import AutoPlayPopUp from '../common/autoPlayPopUp'
-import Vid from '../common/media/vid'
 import { RequiredZoomMediaProps } from '../common/media/mediaTypes'
 import ZoomedMedia from '../common/media/zoomedMedia'
 import LeftContainer from '../leftContainer/leftContainer'
@@ -67,13 +66,11 @@ const Page = () => {
         <VidLoadContainer>
           {typedKeys(vidLoadData).map(src => {
             const { onProgress } = vidLoadData[src]
-            return <Vid
+            return <video
               key={src}
               src={src}
               preload='true'
-              autoPlay={true}
-              canAutoPlay={canAutoPlay}
-              useNativeControl={true}
+              autoPlay={canAutoPlay !== false}
               onProgress={onProgress}
               onCanPlayThrough={onProgress}
               onTimeUpdate={onProgress} />

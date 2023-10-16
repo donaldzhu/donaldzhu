@@ -56,7 +56,7 @@ class PreloadManager {
 
     this.isComplete = false
     this.enabled = true
-    this.verboseLevel = VerboseLevel.Normal
+    this.verboseLevel = VerboseLevel.Quiet
 
     this.autoPlayConfig = { canAutoPlay }
     this.loadVid = loadVid
@@ -210,7 +210,9 @@ class PreloadManager {
 
     return this.addToSubqueue([
       getPreload(MediaType.Images, MediaSize.DesktopFallback),
+      getPreload(MediaType.Posters, MediaSize.DesktopFallback),
       getPreload(MediaType.Images, MediaSize.Full),
+      getPreload(MediaType.Posters, MediaSize.Full),
       getPreload(MediaType.Videos, MediaSize.Full),
     ])
   }
@@ -231,6 +233,7 @@ class PreloadManager {
 
     return this.addToSubqueue([
       getPreload(MediaType.Images),
+      size !== MediaSize.Max && getPreload(MediaType.Posters),
       getPreload(MediaType.ToolTips),
       !isImgSize(size) && getPreload(MediaType.Videos)
     ])
@@ -247,11 +250,11 @@ class PreloadManager {
       callback: this.log(3, type, size, pageId)
     }))
 
-    // if (size !== MediaSize.Max)
-    //   queueFunctions.push({
-    //     run: () => this.preloadMediaType(mediaStacks.videos, size, true),
-    //     callback: this.log(3, MediaType.Posters, size, pageId)
-    //   })
+    if (size !== MediaSize.Max)
+      queueFunctions.push({
+        run: () => this.preloadMediaType(mediaStacks.videos, size, true),
+        callback: this.log(3, MediaType.Posters, size, pageId)
+      })
 
     return this.addToSubqueue(queueFunctions)
   }

@@ -33,14 +33,23 @@ function PreloadMediaWithRef(props: PreloadMediaProps, ref: MediaRef) {
     }
   }
 
+  const getPosterSrc = () => mediaStack && 'posterStack' in mediaStack ?
+    getLoadState(mediaStack.posterStack).src :
+    undefined
+
   const [loadState, setLoadState] = useState(getLoadState())
+  const [posterSrc, setPosterSrc] = useState(mediaIsVid ? getPosterSrc() : undefined)
 
   useEffect(() => {
     setLoadState(getLoadState())
+    setPosterSrc(getPosterSrc())
     if (!mediaStack) return _.noop
     const handleStackLoad = () => {
       const newSrc = getLoadState()
-      if (!(isZoomed && mediaIsVid)) setLoadState(newSrc)
+      const newPosterSrc = getPosterSrc()
+      if (!(isZoomed && mediaIsVid))
+        setLoadState(newSrc)
+      if (mediaIsVid) setPosterSrc(newPosterSrc)
     }
 
     mediaStack.addLoadListener(handleStackLoad)
@@ -52,6 +61,8 @@ function PreloadMediaWithRef(props: PreloadMediaProps, ref: MediaRef) {
 
   return <Media
     {...rest}
+    {...(rest.type === MediaFileType.Video ?
+      { poster: posterSrc } : {})}
     src={loadState.src}
     hasLoaded={loadState.hasLoaded}
     aspectRatio={((nativeW ?? 1) / (nativeH ?? 1))}

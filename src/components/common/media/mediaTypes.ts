@@ -17,7 +17,6 @@ export type ImgProps = MediaProps
 export type VidProps = {
   alt?: string | undefined,
   canAutoPlay?: boolean | undefined
-  useNativeControl?: boolean
 } & MediaProps
 
 export enum VideoIframeType {
