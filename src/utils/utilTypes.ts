@@ -4,7 +4,7 @@ export type coorTuple = [number, number]
 export interface CoorObject { x: number, y: number }
 export type queueFunctionType<T> = (() => T) | {
   run: () => T,
-  callback: () => void
+  callback?: () => void
 }
 
 export type optionalQueueFunctionType<T = void> = queueFunctionType<T> | Falsey

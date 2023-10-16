@@ -1,9 +1,10 @@
-import { forwardRef, useContext, useRef } from 'react'
+import { forwardRef, useContext } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import styled from 'styled-components'
 import { WorkPageContext } from '../../../contexts/context'
 import mixins from '../../../styles/mixins'
 import { joinPaths } from '../../../utils/commonUtils'
+import useForwardedRef from '../../../hooks/useForwaredRef'
 import { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
 import { MediaFileType, MediaSize, MediaType } from '../../../utils/helpers/preloader/preloadUtils'
 import { percent, toPercent } from '../../../utils/sizeUtils'
@@ -20,8 +21,7 @@ interface StyledZoomMedia {
 function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
   const { preloadManager, handleZoomMedia } = useOutletContext<PageContextProps>()
   const { pageId } = useContext(WorkPageContext)
-  const placeholderRef = useRef<HTMLImageElement | HTMLVideoElement>(null)
-  const mediaRef = ref ?? placeholderRef
+  const mediaRef = useForwardedRef(ref)
 
   let { src } = props
   const { maxSize, width, isToolTip, ...rest } = props

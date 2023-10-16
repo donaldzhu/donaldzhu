@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as CSvg } from '../../assets/work/vector-struct/c.svg'
 import { ReactComponent as ESvg } from '../../assets/work/vector-struct/e.svg'
@@ -9,7 +9,6 @@ import { ReactComponent as VSvg } from '../../assets/work/vector-struct/v.svg'
 import useCanvas from '../../hooks/useCanvas'
 import drawElemBorders from '../../p5/sketches/drawElemBorders'
 import mixins from '../../styles/mixins'
-import { validateRef } from '../../utils/typeUtils'
 import WorkImg from '../common/media/workImg'
 import WorkImgGroup from '../common/media/workImgGroup'
 import WorkVid from '../common/media/workVid'
@@ -19,17 +18,12 @@ import ColumnContainer from '../common/styled/columnContainer'
 const PageVectorStruct = () => {
   const [displayedGlyph, setDisplayedGlyph] = useState(0)
   const displayedGlyphRef = useRef<SVGSVGElement>(null)
-  const vidRef = useRef<HTMLVideoElement>(null)
 
   const glyphs = 'vector'
   const VectorSvgs = [VSvg, ESvg, CSvg, TSvg, OSvg, RSvg]
 
   const handleClick = (i: number) => setDisplayedGlyph(i)
   useCanvas(() => drawElemBorders({ elemRefs: [displayedGlyphRef] }))
-  useEffect(() => {
-    if (!validateRef(vidRef)) return
-    vidRef.current.load()
-  }, [displayedGlyph])
 
   return (
     <>
@@ -60,7 +54,7 @@ const PageVectorStruct = () => {
         <ColumnContainer>
           <WorkImgGroup grid={[3, 3]} prefix={glyphs[displayedGlyph]} />
         </ColumnContainer>
-        <WorkVid ref={vidRef} src={`${displayedGlyph + 4}.webm`} key={displayedGlyph}
+        <WorkVid src={`${displayedGlyph + 4}.webm`} key={displayedGlyph}
           onChange={console.log} />
       </RowContainer>
       <RowContainer>

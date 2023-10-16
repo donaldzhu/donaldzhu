@@ -56,7 +56,7 @@ class PreloadManager {
 
     this.isComplete = false
     this.enabled = true
-    this.verboseLevel = VerboseLevel.Minimal
+    this.verboseLevel = VerboseLevel.Quiet
 
     this.autoPlayConfig = { canAutoPlay }
     this.loadVid = loadVid

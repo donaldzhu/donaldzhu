@@ -8,14 +8,13 @@ import usePreload from '../../hooks/usePreload'
 import drawCursor from '../../p5/sketches/drawCursor'
 import mixins from '../../styles/mixins'
 import { typedKeys } from '../../utils/commonUtils'
-import { MediaFileType } from '../../utils/helpers/preloader/preloadUtils'
 import GlobalCanvas from '../canvas/globalCanvas'
 import AutoPlayPopUp from '../common/autoPlayPopUp'
-import Media from '../common/media/media'
+import Vid from '../common/media/vid'
 import { RequiredZoomMediaProps } from '../common/media/mediaTypes'
 import ZoomedMedia from '../common/media/zoomedMedia'
 import LeftContainer from '../leftContainer/leftContainer'
-import { handleZoomType,PageContextProps } from './pageTypes'
+import { handleZoomType, PageContextProps } from './pageTypes'
 
 const Page = () => {
   const [sidebar, setSidebar] = useState<ReactNode | undefined>()
@@ -68,12 +67,13 @@ const Page = () => {
         <VidLoadContainer>
           {typedKeys(vidLoadData).map(src => {
             const { onProgress } = vidLoadData[src]
-            return <Media
+            return <Vid
               key={src}
               src={src}
-              type={MediaFileType.Video}
               preload='true'
               autoPlay={true}
+              canAutoPlay={canAutoPlay}
+              useNativeControl={true}
               onProgress={onProgress}
               onCanPlayThrough={onProgress}
               onTimeUpdate={onProgress} />

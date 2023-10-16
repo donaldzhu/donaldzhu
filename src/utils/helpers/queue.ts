@@ -1,21 +1,23 @@
 import { arrayify, filterFalsy } from '../commonUtils'
-import { queueArgType } from '../utilTypes'
+import { queueArgType, queueFunctionType } from '../utilTypes'
 
-class Queue {
+class Queue<T = any> {
   private currentId: undefined | number
   private interval: undefined | number
+  queueList: queueFunctionType<T>[]
   constructor(interval?: number) {
     this.currentId = undefined
     this.interval = interval
+    this.queueList = []
   }
 
-  create<T>(queueArgs: queueArgType<T>) {
-    const queueFunctions = filterFalsy(arrayify(queueArgs))
+  create(queueArgs: queueArgType<T>) {
+    this.queueList = filterFalsy(arrayify(queueArgs))
     return new Promise<void>((resolve, reject) => {
       const id = this.currentId = Date.now()
       const serve = () => {
-        const queueArg = queueFunctions[0]
-        queueFunctions.shift()
+        const queueArg = this.queueList[0]
+        this.queueList.shift()
         let queueFunction = queueArg
 
         if (queueFunction && typeof queueFunction !== 'function')
@@ -28,7 +30,7 @@ class Queue {
           const callback = typeof queueArg === 'object' ? queueArg.callback : null
           if (callback) callback()
           if (id !== this.currentId) return reject()
-          if (queueFunctions.length) {
+          if (this.queueList.length) {
             if (this.interval !== undefined)
               setTimeout(() => serve(), this.interval)
             else serve()
@@ -39,9 +41,9 @@ class Queue {
     })
   }
 
-  private promisify<T>(promiseLike: T) {
+  private promisify<P>(promiseLike: P) {
     return Array.isArray(promiseLike) ?
-      Promise.all<T>(promiseLike) :
+      Promise.all<P>(promiseLike) :
       Promise.resolve(promiseLike)
   }
 
