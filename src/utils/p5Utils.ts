@@ -25,12 +25,6 @@ export enum P5Event {
 }
 
 export const parseVector = (vector: p5.Vector): [number, number] => [vector.x, vector.y]
-export const parsePoints = (...vectors: p5.Vector[]) =>
-  vectors.reduce<number[]>((result, vector) => {
-    result.push(vector.x, vector.y)
-    return result
-  }, [])
-
 
 export const styleDashedRect = (p5: p5) => {
   p5.drawingContext.setLineDash(repeat(2, sketchSizes.line.dash.value))

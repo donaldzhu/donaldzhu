@@ -7,6 +7,6 @@ export type queueFunctionType<T> = (() => T) | {
   callback?: () => void
 }
 
-export type optionalQueueFunctionType<T = void> = queueFunctionType<T> | Falsey
+type optionalQueueFunctionType<T = void> = queueFunctionType<T> | Falsey
 
 export type queueArgType<T = void> = optionalQueueFunctionType<T> | optionalQueueFunctionType<T>[]

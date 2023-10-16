@@ -18,7 +18,7 @@ export type SketchEventHandler = Record<P5Event | 'setup', sketchEventCallback> 
 }
 
 
-export type CanvasRefType = ReturnType<typeof useGlobalCanvas>
+type CanvasRefType = ReturnType<typeof useGlobalCanvas>
 export interface GlobalCanvasStates {
   canvasRef: CanvasRefType
   canvasStateRefs: CanvasState

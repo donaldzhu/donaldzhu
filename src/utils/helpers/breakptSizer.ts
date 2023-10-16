@@ -5,9 +5,9 @@ import { Breakpt } from '../queryUtil'
 import { getRem } from '../sizeUtils'
 import Size from './size'
 
-export interface MobileBreakptSizesType { s: number, m: number }
-export interface TabletBreakptSizesType { m: number, l: number }
-export interface DesktopBreakptSizesType { l: number, xxl: number, xxlSm?: number }
+interface MobileBreakptSizesType { s: number, m: number }
+interface TabletBreakptSizesType { m: number, l: number }
+interface DesktopBreakptSizesType { l: number, xxl: number, xxlSm?: number }
 export type BreakptSizesType =
   MobileBreakptSizesType |
   TabletBreakptSizesType |

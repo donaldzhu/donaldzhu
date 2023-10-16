@@ -57,7 +57,6 @@
         ]
       }
     ],
-    "import/no-unused-modules": [1, { "unusedExports": true }],
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-explicit-any": "off",

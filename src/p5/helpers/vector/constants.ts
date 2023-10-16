@@ -11,10 +11,11 @@ export const enum Mode {
   Corner
 }
 
-export enum Axes {
+enum Axes {
   x = 'x',
   y = 'y'
 }
+
 export const X_HEIGHT = 44
 export const GLYPH_NAMES = typedKeys(spacingsData).filter(char => char.length === 1)
 

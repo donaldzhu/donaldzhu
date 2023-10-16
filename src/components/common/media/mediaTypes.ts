@@ -2,7 +2,7 @@ import { ForwardedRef, ImgHTMLAttributes, SyntheticEvent, VideoHTMLAttributes } 
 import { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 
-export interface MediaProps {
+interface MediaProps {
   hasLoaded?: boolean
   aspectRatio?: string | number
 }
@@ -25,13 +25,13 @@ export enum VideoIframeType {
   Vimeo
 }
 
-export type ImgIntrinsicProps =
+type ImgIntrinsicProps =
   Partial<ImgHTMLAttributes<HTMLImageElement>> &
   Partial<SyntheticEvent<HTMLImageElement>> &
   ImgProps &
   { type: MediaFileType.Image }
 
-export type VidIntrinsicProps =
+type VidIntrinsicProps =
   Partial<VideoHTMLAttributes<HTMLVideoElement>> &
   Partial<SyntheticEvent<HTMLVideoElement>> &
   VidProps &
@@ -39,20 +39,20 @@ export type VidIntrinsicProps =
 
 export type MediaIntrinsicProps = ImgIntrinsicProps | VidIntrinsicProps
 
-export type MediaElement = HTMLImageElement | HTMLVideoElement
+type MediaElement = HTMLImageElement | HTMLVideoElement
 export type MediaRef = ForwardedRef<MediaElement>
 
-export interface PreloadMediaBaseProps {
+interface PreloadMediaBaseProps {
   mediaStack?: ImgStack | VidStack
   fallbackPath: string
   isZoomed?: boolean
   autoPlay?: boolean
 }
-export type PreloadImgProps = ImgIntrinsicProps
-export type PreloadVidProps = VidIntrinsicProps
+type PreloadImgProps = ImgIntrinsicProps
+type PreloadVidProps = VidIntrinsicProps
 export type PreloadMediaProps = (PreloadImgProps | PreloadVidProps) & PreloadMediaBaseProps
 
-export type ZoomMediaBaseProps<R extends boolean = false> = R extends true ? {
+type ZoomMediaBaseProps<R extends boolean = false> = R extends true ? {
   src: string,
   width?: string,
   isToolTip?: boolean,
@@ -70,8 +70,8 @@ export type ZoomMediaBaseProps<R extends boolean = false> = R extends true ? {
   maxSize?: string | number
 }
 
-export type ZoomImgProps<R extends boolean = false> = ZoomMediaBaseProps<R> & ImgIntrinsicProps
-export type ZoomVidProps<R extends boolean = false> = ZoomMediaBaseProps<R> & VidIntrinsicProps
+type ZoomImgProps<R extends boolean = false> = ZoomMediaBaseProps<R> & ImgIntrinsicProps
+type ZoomVidProps<R extends boolean = false> = ZoomMediaBaseProps<R> & VidIntrinsicProps
 export type ZoomMediaProps<R extends boolean = false> = ZoomImgProps<R> | ZoomVidProps<R>
 export type RequiredZoomMediaProps = ZoomMediaProps<true>
 export type WorkImgProps = Omit<ZoomImgProps, 'type'>
