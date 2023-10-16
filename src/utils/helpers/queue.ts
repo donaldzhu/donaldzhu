@@ -13,8 +13,9 @@ class Queue {
     const queueFunctions = filterFalsy(arrayify(queueArgs))
     return new Promise<void>((resolve, reject) => {
       const id = this.currentId = Date.now()
-      const serve = (i: number) => {
-        const queueArg = queueFunctions[i]
+      const serve = () => {
+        const queueArg = queueFunctions[0]
+        queueFunctions.shift()
         let queueFunction = queueArg
 
         if (queueFunction && typeof queueFunction !== 'function')
@@ -27,14 +28,14 @@ class Queue {
           const callback = typeof queueArg === 'object' ? queueArg.callback : null
           if (callback) callback()
           if (id !== this.currentId) return reject()
-          if (i + 1 <= queueFunctions.length) {
+          if (queueFunctions.length) {
             if (this.interval !== undefined)
-              setTimeout(() => serve(i + 1), this.interval)
-            else serve(i + 1)
+              setTimeout(() => serve(), this.interval)
+            else serve()
           } else resolve()
         })
       }
-      serve(0)
+      serve()
     })
   }
 
