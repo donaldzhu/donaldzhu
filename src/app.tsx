@@ -26,10 +26,10 @@ const App = () => {
       <HashRouter>
         <Routes>
           {isMobile ?
-            <Route path='/' element={<PageMobile />}>
-              <Route path='' element={<HomeMobile />} />
-            </Route>
-            // <Route path='/' element={<MobileBlocker />} />
+            // <Route path='/' element={<PageMobile />}>
+            //   <Route path='' element={<HomeMobile />} />
+            // </Route>
+            <Route path='/' element={<MobileBlocker />} />
             :
             <Route path='/' element={<Page />}>
               <Route path='' element={<PageWithMainSketch />}>
