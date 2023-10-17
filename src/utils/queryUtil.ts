@@ -13,15 +13,15 @@ export const queries = mapObject(breakpts, (_, breakpt) =>
   `only screen and (min-width: ${breakpt + 1}px)`)
 
 export const getBreakptKey = () => {
+  if (window.screen.width >= breakpts.xxl)
+    return Breakpt.xxl
   const breakptPairs = toPairs(breakpts)
     .sort((a, b) => a[1] - b[1])
-  const breakptIndex = breakptPairs
-    .findIndex(([_, breakptWidth]) => breakptWidth >= window.screen.width) - 1
-  const breakptPair = breakptPairs[breakptIndex]
+  const breakptPair = breakptPairs
+    .find(([_, breakptWidth]) => breakptWidth >= window.screen.width)
   if (!breakptPair) return breakptPairs[0][0]
   return breakptPair[0]
 }
-
 
 // TODO
 export const getPreloadBreakpt = () => {

@@ -17,8 +17,8 @@ function PreloadMediaWithRef(props: PreloadMediaProps, ref: MediaRef) {
       hasLoaded: true
     }
 
-    const sizes = _.chain(mediaStack.loadedSizes)
-    if (!isZoomed) sizes.without(MediaSize.Max)
+    let sizes = _.chain(mediaStack.loadedSizes)
+    if (!isZoomed) sizes = sizes.without(MediaSize.Max)
     let size = _.last(sizes.value())
 
     const hasLoaded = mediaIsVid || !!size
