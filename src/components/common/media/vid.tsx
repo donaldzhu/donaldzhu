@@ -9,6 +9,7 @@ import useForwardedRef from '../../../hooks/useForwaredRef'
 import { PageContextProps } from '../../pageWrappers/pageTypes'
 import { validateRef } from '../../../utils/typeUtils'
 import useMemoRef from '../../../hooks/useMemoRef'
+import useMergedRef from '../../../hooks/useMergedRef'
 import { StyledMediaProps, VidProps } from './mediaTypes'
 
 
@@ -30,15 +31,12 @@ const Vid = forwardRef<HTMLVideoElement, VideoHTMLAttributes<HTMLVideoElement> &
 
     const forwardedRef = useForwardedRef(ref)
     const [mediaRef, entry] = useIntersectionObserver<HTMLVideoElement>({ threshold: 0 })
-
-    useEffect(() => {
-      forwardedRef.current = mediaRef.current
-    }, [mediaRef])
+    const mergedRef = useMergedRef(forwardedRef, mediaRef)
 
     const video = useMemoRef(() => {
       if (useNativeControl) return
-      if (!validateRef(mediaRef)) throw new Error('Video’s ref.current is unexpectedly null')
-      return new Video(mediaRef, vidCanAutoPlay)
+      if (!validateRef(mergedRef)) throw new Error('Video’s ref.current is unexpectedly null')
+      return new Video(mergedRef, vidCanAutoPlay)
     }, [])
 
     useEffect(() => {
@@ -58,7 +56,7 @@ const Vid = forwardRef<HTMLVideoElement, VideoHTMLAttributes<HTMLVideoElement> &
       <StyledVid
         muted
         loop={loop}
-        ref={mediaRef}
+        ref={mergedRef}
         poster={poster}
         $hasLoaded={hasLoaded}
         $aspectRatio={aspectRatio}

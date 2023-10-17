@@ -5,11 +5,11 @@ import Size from '../../utils/helpers/size'
 import { validateRef } from '../../utils/typeUtils'
 import configs from '../configs/vector'
 import Text from '../helpers/vector/text'
+import { PlaceholderProp } from './sketchTypes'
 
-interface DrawVectorStringProps {
+type DrawVectorStringProps = {
   containerRef: MutableRefObject<HTMLDivElement | null>
-  placeholderRef: MutableRefObject<HTMLDivElement | null>
-}
+} & PlaceholderProp
 
 
 const drawVectorString = ({ containerRef, placeholderRef }: DrawVectorStringProps) => {

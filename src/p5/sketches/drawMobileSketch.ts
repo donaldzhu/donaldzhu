@@ -1,10 +1,6 @@
 import p5 from 'p5'
-import { CanvasState } from '../../components/canvas/canvasTypes'
-import colors from '../../styles/colors'
 import { sketchSizes } from '../../styles/sizes'
-import { repeat, repeatMap } from '../../utils/commonUtils'
 import ElemRect from '../../utils/helpers/rect/elemRect'
-import { wrapDrawingContext } from '../../utils/p5Utils'
 import { validateRef } from '../../utils/typeUtils'
 import { coorTuple } from '../../utils/utilTypes'
 import configs from '../configs/vector'
@@ -49,44 +45,9 @@ const drawMainSketch = ({ placeholderRef }: PlaceholderProp) => {
     createVectors(p5)
   }
 
-  const draw = (p5: p5, { mousePositionRef }: CanvasState) => {
-    const { CENTER, ROUND, mouseX, mouseY } = p5
-    const halfCursorSize = sketchSizes.cursor.value / 2
-
+  const draw = () => {
     upperText.write(UPPER_TEXT_CONTENT)
     lowerText.write(LOWER_TEXT_CONTENT)
-
-    if (!mousePositionRef?.current) return
-    const anchorSize = sketchSizes.main.anchor.size.value
-    const { x1, y1, x2, y2 } = placeholder
-
-    const getCoors = (xCoors: coorTuple, yCoors: coorTuple) =>
-      repeatMap(4, i => {
-        const result: coorTuple = [xCoors[Math.floor(i / 2)], yCoors[i % 2]]
-        return result
-      })
-    const anchors = getCoors([x1, x2], [y1, y2])
-    const cursorCoors = getCoors(
-      [mouseX - halfCursorSize, mouseX + halfCursorSize],
-      [mouseY - halfCursorSize, mouseY + halfCursorSize]
-    )
-
-    wrapDrawingContext(p5, () => {
-      p5.noStroke()
-      p5.fill(colors.homeSketch)
-      p5.ellipseMode(CENTER)
-
-      anchors.forEach(anchor =>
-        p5.ellipse(...anchor, anchorSize, anchorSize))
-
-      p5.drawingContext.setLineDash(repeat(2, sketchSizes.line.dash.value))
-      p5.stroke(colors.dashLine)
-      p5.strokeCap(ROUND)
-      p5.strokeWeight(sketchSizes.line.weight.value)
-
-      anchors.forEach((anchor, i) =>
-        p5.line(...anchor, ...cursorCoors[i]))
-    })
   }
 
   const windowResized = createVectors

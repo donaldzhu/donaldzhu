@@ -7,7 +7,7 @@ import { wrapDrawingContext } from '../../utils/p5Utils'
 
 const drawCursor = () => {
   const draw = (p5: p5, { mousePositionRef, hideCursorRef }: CanvasState) => {
-    if (!mousePositionRef.current || hideCursorRef.current) return
+    if (!mousePositionRef?.current || hideCursorRef?.current) return
 
     wrapDrawingContext(p5, () => {
       p5.rectMode(p5.CENTER)

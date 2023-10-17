@@ -6,11 +6,11 @@ import ElemRect from '../../utils/helpers/rect/elemRect'
 import { validateRef } from '../../utils/typeUtils'
 import configs from '../configs/vector'
 import Text from '../helpers/vector/text'
+import { PlaceholderProp } from './sketchTypes'
 
-interface DrawHomeIconProps {
-  placeholderRef: MutableRefObject<HTMLDivElement | null>
+type DrawHomeIconProps = {
   isHoveringRef: MutableRefObject<boolean>
-}
+} & PlaceholderProp
 
 const drawHomeIcon = ({ placeholderRef, isHoveringRef }: DrawHomeIconProps) => {
   let text: Text

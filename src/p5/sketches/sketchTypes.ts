@@ -1,3 +1,4 @@
+import { MutableRefObject } from 'react'
 import Size from '../../utils/helpers/size'
 
 export interface BrushSetting {
@@ -9,4 +10,8 @@ export interface BrushSetting {
   maxSize: Size
   minSize: Size
   radius?: Size
+}
+
+export interface PlaceholderProp<T extends Element = HTMLDivElement> {
+  placeholderRef: MutableRefObject<T | null>
 }

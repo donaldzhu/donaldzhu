@@ -12,11 +12,11 @@ import { validateRef } from '../../utils/typeUtils'
 import config from '../configs/stroke'
 import Brush from '../helpers/brush/brush'
 import FlatBrush from '../helpers/brush/flatBrush'
+import { PlaceholderProp } from './sketchTypes'
 
-interface DrawPantoProps {
+type DrawPantoProps = {
   isClearingRef: MutableRefObject<boolean>
-  placeholderRef: MutableRefObject<HTMLDivElement | null>
-}
+} & PlaceholderProp
 
 const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
   const vectors: {
@@ -65,6 +65,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
   }
 
   const draw = (p5: p5, { hideCursorRef }: CanvasState) => {
+    if (!hideCursorRef) throw new Error('hideCursorRef is undefined.')
     const isClearing = isClearingRef.current
     if (isClearing) clear()
 
@@ -85,6 +86,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
   }
 
   const cleanup = ({ hideCursorRef }: CanvasState) => {
+    if (!hideCursorRef) throw new Error('hideCursorRef is undefined.')
     hideCursorRef.current = false
     // @ts-expect-error
     graphic && graphic.canvas.remove()

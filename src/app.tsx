@@ -5,6 +5,7 @@ import Contact from './components/contact/contact'
 import Home from './components/home/home'
 import MobileBlocker from './components/mobileBlocker'
 import Page from './components/pageWrappers/page'
+import PageMobile from './components/mobile/pageMobile'
 import PageWithMainSketch from './components/pageWrappers/pageWithSketch'
 import Process from './components/process/process'
 import WorkIndex from './components/work/workIndex'
@@ -16,6 +17,7 @@ import { fontFamilies, fontSizes } from './styles/fonts'
 import mixins from './styles/mixins'
 import { domSizes } from './styles/sizes'
 import { queries } from './utils/queryUtil'
+import HomeMobile from './components/mobile/homeMobile'
 
 const App = () => {
   const isMobile = !useMediaQuery(queries.l)
@@ -23,22 +25,28 @@ const App = () => {
     <StyledGlobal>
       <HashRouter>
         <Routes>
-          <Route path='/' element={isMobile ? <MobileBlocker /> : <Page />}>
-            <Route path='' element={<PageWithMainSketch />}>
-              <Route path='' element={<Home />} />
-              <Route path='contact' element={<Contact />} />
-              <Route path='process' element={<Process />} />
+          {isMobile ?
+            <Route path='/' element={<PageMobile />}>
+              <Route path='' element={<HomeMobile />} />
             </Route>
-            <Route path='work' >
-              <Route path='' element={<WorkIndex />} />
-              {workData.map(page => page.enabled &&
-                <Route key={page.id} path={page.id} element={
-                  <WorkPage
-                    data={page}
-                    Content={workPages[page.id]} />} />)}
-            </Route >
-            <Route path='*' element={<Navigate to='/' replace />} />
-          </Route>
+            :
+            <Route path='/' element={<Page />}>
+              <Route path='' element={<PageWithMainSketch />}>
+                <Route path='' element={<Home />} />
+                <Route path='contact' element={<Contact />} />
+                <Route path='process' element={<Process />} />
+              </Route>
+              <Route path='work' >
+                <Route path='' element={<WorkIndex />} />
+                {workData.map(page => page.enabled &&
+                  <Route key={page.id} path={page.id} element={
+                    <WorkPage
+                      data={page}
+                      Content={workPages[page.id]} />} />)}
+              </Route >
+              <Route path='*' element={<Navigate to='/' replace />} />
+            </Route>
+          }
         </Routes>
       </HashRouter>
     </StyledGlobal>
@@ -58,7 +66,6 @@ const StyledGlobal = styled.main`
 
   > div {
     flex: none;
-    height: 100%;
   }
 
   img {

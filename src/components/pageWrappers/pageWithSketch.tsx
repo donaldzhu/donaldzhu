@@ -27,6 +27,7 @@ const leftContainerWidth = domSizes.sidebar.width.add(domSizes.sidebar.padding.l
 const MainSketchPlaceHolder = styled.div`
   ${mixins.fixed({ left: leftContainerWidth.css })}
   width: ${Size.subFromFullWidth(leftContainerWidth).css};
+  height: 100%;
 `
 
 export default PageWithMainSketch

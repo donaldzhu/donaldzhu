@@ -4,8 +4,8 @@ import useGlobalCanvas from '../../hooks/useGlobalCanvas'
 import { P5Event } from '../../utils/p5Utils'
 
 export interface CanvasState {
-  mousePositionRef: MutableRefObject<null | [number, number]>
-  hideCursorRef: MutableRefObject<boolean>
+  mousePositionRef?: MutableRefObject<null | [number, number]>
+  hideCursorRef?: MutableRefObject<boolean>
 }
 
 export type p5Callback = (p5: p5) => void
@@ -22,4 +22,9 @@ type CanvasRefType = ReturnType<typeof useGlobalCanvas>
 export interface GlobalCanvasStates {
   canvasRef: CanvasRefType
   canvasStateRefs: CanvasState
+}
+
+export interface PartialGlobalCanvasStates {
+  canvasRef: CanvasRefType
+  canvasStateRefs?: CanvasState
 }

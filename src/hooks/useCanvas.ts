@@ -24,7 +24,7 @@ const useCanvas = (
   const outletContext = useOutletContext()
   const { canvasRef, canvasStateRefs } = _.defaults(config, outletContext)
 
-  if (!validateRef(canvasRef) || !canvasStateRefs)
+  if (!validateRef(canvasRef))
     throw new Error('No canvasRef or canvasStateRefs is passed to canvas.')
 
   const { setup, draw, cleanup, ...callbacks } = useMemo(createSketch, dependencies)
@@ -40,20 +40,20 @@ const useCanvas = (
   useEffect(() => {
     const setupOnce = _.once(setup ?? _.noop)
     const drawFunction = (p5: p5) => {
-      setupOnce(p5, canvasStateRefs)
-      draw(p5, canvasStateRefs)
+      setupOnce(p5, canvasStateRefs ?? {})
+      draw(p5, canvasStateRefs ?? {})
       setSetupDone(true)
     }
 
     registerCallback(P5Event.draw, drawFunction)
     loopObject(callbacks, (eventName, callback) =>
       registerCallback(eventName, (p5: p5) => {
-        if (callback) callback(p5, canvasStateRefs)
+        if (callback) callback(p5, canvasStateRefs ?? {})
       }))
 
     return () => {
       unregisterCallbacks()
-      if (cleanup) cleanup(canvasStateRefs)
+      if (cleanup) cleanup(canvasStateRefs ?? {})
     }
   }, dependencies)
 

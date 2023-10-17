@@ -6,9 +6,9 @@ import { mapObject } from '../../utils/commonUtils'
 import { mousePosition, P5Event, wrapDrawingContext } from '../../utils/p5Utils'
 import { getVh, getVw } from '../../utils/sizeUtils'
 import Canvas from './canvas'
-import { GlobalCanvasStates, p5EventCallback } from './canvasTypes'
+import { p5EventCallback, PartialGlobalCanvasStates } from './canvasTypes'
 
-const GlobalCanvas = ({ canvasRef, canvasStateRefs }: GlobalCanvasStates) => {
+const GlobalCanvas = ({ canvasRef, canvasStateRefs = {} }: PartialGlobalCanvasStates) => {
   const setup = (p5: p5, canvasParent: HTMLDivElement) =>
     p5.createCanvas(getVw(), getVh()).parent(canvasParent)
 
@@ -18,8 +18,8 @@ const GlobalCanvas = ({ canvasRef, canvasStateRefs }: GlobalCanvasStates) => {
   }
 
   const mouseMoved = (p5: p5) => {
-    const { mousePositionRef } = canvasStateRefs
-    mousePositionRef.current = mousePosition(p5)
+    if (canvasStateRefs?.mousePositionRef)
+      canvasStateRefs.mousePositionRef.current = mousePosition(p5)
     handleEvent(p5, P5Event.mouseMoved)
   }
 
