@@ -10,7 +10,7 @@ export enum Breakpt {
 }
 
 export const queries = mapObject(breakpts, (_, breakpt) =>
-  `only screen and (min-width: ${breakpt + 1}px)`)
+  `only screen and (min-width: ${breakpt}px)`)
 
 export const getBreakptKey = () => {
   if (window.screen.width >= breakpts.xxl)
