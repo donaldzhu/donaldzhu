@@ -2,7 +2,7 @@ import { useOutletContext } from 'react-router-dom'
 import styled from 'styled-components'
 import { joinPaths } from '../../utils/commonUtils'
 import { FileExt, MediaFileType } from '../../utils/helpers/preloader/preloadUtils'
-import { getBreakptKey } from '../../utils/queryUtil'
+import { getPreloadBreakpt } from '../../utils/queryUtil'
 import Anchor from '../common/anchor'
 import PreloadMedia from '../common/media/preloadMedia'
 import { PageContextProps } from '../pageWrappers/pageTypes'
@@ -12,7 +12,7 @@ const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }: Wor
   const { title, id, animatedThumbnail } = data
   const { preloadManager } = useOutletContext<PageContextProps>()
 
-  const fallbackPath = joinPaths('/assets/thumbnails/', getBreakptKey(), id) + '.' +
+  const fallbackPath = joinPaths('/assets/thumbnails/', getPreloadBreakpt(), id) + '.' +
     (animatedThumbnail ? FileExt.Webm : FileExt.Webp)
   return (
     <ThumbnailLink

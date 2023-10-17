@@ -54,8 +54,7 @@ const PageVectorStruct = () => {
         <ColumnContainer>
           <WorkImgGroup grid={[3, 3]} prefix={glyphs[displayedGlyph]} />
         </ColumnContainer>
-        <WorkVid src={`${displayedGlyph + 4}.webm`} key={displayedGlyph}
-          onChange={console.log} />
+        <WorkVid src={`${displayedGlyph + 4}.webm`} key={displayedGlyph} />
       </RowContainer>
       <RowContainer>
         <WorkImg src='4.webp' />

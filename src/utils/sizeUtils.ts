@@ -24,11 +24,6 @@ export const getVh = (percentage = 100) => window.innerHeight / 100 * percentage
 export const getRem = (multiplier = 1) => parseFloat(getComputedStyle(
   document.documentElement).fontSize) * multiplier
 
-export const getNativeResolution = () => [
-  window.screen.width * window.devicePixelRatio,
-  window.screen.height * window.devicePixelRatio,
-]
-
 export const toPercent = (decimal: number) => percent(decimal * 100)
 
 export const getSize = (breakptSizes: BreakptSizesType) =>

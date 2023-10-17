@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import breakpts from '../../../data/breakpoints'
 import { joinPaths, keysToObject, typedKeys } from '../../commonUtils'
-import { Breakpt, getBreakptKey } from '../../queryUtil'
+import { Breakpt, getPreloadBreakpt } from '../../queryUtil'
 import { coorTuple } from '../../utilTypes'
 import { ImgPreloader, VidPreloader } from './preloader'
 import { MediaStackProps, PreloadBreakpt } from './preloaderTypes'
@@ -69,7 +69,7 @@ export class MediaStack {
   }
 
   preloadFull() {
-    const breakptKey = getBreakptKey()
+    const breakptKey = getPreloadBreakpt()
     return this.stack[breakptKey].preload()
       .then(() => this.onFinished())
       .catch(err => {

@@ -86,6 +86,10 @@ const StyledGlobal = styled.main`
     font-size: ${fontSizes.title.css};
     margin-bottom: 1em;
   }
+
+  a:hover {
+    color: ${colorConfig.activeElem};
+  }
 `
 
 

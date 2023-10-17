@@ -27,7 +27,7 @@ const Anchor = forwardRef<HTMLAnchorElement, LinkProps & { noQuery?: boolean }>(
 
 const HoverLink = styled(Link)`
     &:hover {
-    color:${colors.activeElem}; 
+    color:${colors.activeElem};
   }
 `
 

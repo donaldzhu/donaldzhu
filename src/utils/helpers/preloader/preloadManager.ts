@@ -11,7 +11,7 @@ import {
   typedKeys,
   validateString
 } from '../../commonUtils'
-import { getBreakptKey } from '../../queryUtil'
+import { getPreloadBreakpt } from '../../queryUtil'
 import { coorTuple, queueArgType, queueFunctionType } from '../../utilTypes'
 import Queue from '../queue'
 import { ImgStack, VidStack } from './mediaStack'
@@ -56,7 +56,7 @@ class PreloadManager {
 
     this.isComplete = false
     this.enabled = true
-    this.verboseLevel = VerboseLevel.Quiet
+    this.verboseLevel = VerboseLevel.Normal
 
     this.autoPlayConfig = { canAutoPlay }
     this.loadVid = loadVid
@@ -66,8 +66,10 @@ class PreloadManager {
       this.createWorkPageStacks()
     } else this.verboseLevel = VerboseLevel.Quiet
 
-    if (this.verboseLevel >= VerboseLevel.Normal)
+    if (this.verboseLevel >= VerboseLevel.Normal) {
+      console.log(`Breakpoint: ${getPreloadBreakpt().toLocaleUpperCase()}`)
       console.log(this)
+    }
   }
 
   private createThumbnailStacks() {
@@ -371,7 +373,7 @@ class PreloadManager {
   private decorateLog(messages: string[], styles: string[], size?: MediaSize, isFullVid?: boolean) {
     const extraMessages = [
       ` ${size}${size === MediaSize.Full ?
-        ` (${getBreakptKey().toLocaleUpperCase()})` : ''}`,
+        ` (${getPreloadBreakpt().toLocaleUpperCase()})` : ''}`,
       ` - ${validateString(isFullVid, 'full vid ')}preloaded!`
     ]
     const extraStyles = [

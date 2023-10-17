@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { forwardRef, useEffect, useState } from 'react'
 import { MediaFileType, MediaSize } from '../../../utils/helpers/preloader/preloadUtils'
-import { getBreakptKey } from '../../../utils/queryUtil'
+import { getPreloadBreakpt } from '../../../utils/queryUtil'
 import Media from './media'
 import { MediaRef, PreloadMediaProps } from './mediaTypes'
 
@@ -24,7 +24,7 @@ function PreloadMediaWithRef(props: PreloadMediaProps, ref: MediaRef) {
     const hasLoaded = mediaIsVid || !!size
 
     if (mediaIsVid)
-      size = isZoomed ? MediaSize.Max : getBreakptKey()
+      size = isZoomed ? MediaSize.Max : getPreloadBreakpt()
     else size ||= MediaSize.DesktopFallback
 
     return {

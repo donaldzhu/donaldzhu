@@ -46,11 +46,10 @@ export const parseHtml = (string: string) => {
   string = string.replace(/—/g, ' — ')
   const options: HTMLReactParserOptions = {
     trim: true,
-    replace: (domNode) => {
+    replace: domNode => {
       if (!('attribs' in domNode)) return
       const { href, target } = domNode.attribs
-      return 'name' in domNode && domNode.name === 'a' &&
-        href && target ?
+      return 'name' in domNode && domNode.name === 'a' && href ?
         <Anchor
           to={href}
           target={target}>

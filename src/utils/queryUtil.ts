@@ -1,6 +1,5 @@
 import breakpts from '../data/breakpoints'
 import { mapObject, toPairs } from './commonUtils'
-import { getNativeResolution } from './sizeUtils'
 
 export enum Breakpt {
   s = 's',
@@ -14,12 +13,19 @@ export const queries = mapObject(breakpts, (_, breakpt) =>
   `only screen and (min-width: ${breakpt}px)`)
 
 export const getBreakptKey = () => {
-  const [width] = getNativeResolution()
   const breakptPairs = toPairs(breakpts)
     .sort((a, b) => a[1] - b[1])
-  const breakptPair = breakptPairs
-    .find(([_, breakptWidth]) => breakptWidth >= width)
+  const breakptIndex = breakptPairs
+    .findIndex(([_, breakptWidth]) => breakptWidth >= window.screen.width) - 1
+  const breakptPair = breakptPairs[breakptIndex]
   if (!breakptPair) return breakptPairs[0][0]
   return breakptPair[0]
 }
 
+
+// TODO
+export const getPreloadBreakpt = () => {
+  const breakpt = getBreakptKey()
+  return breakpt === Breakpt.m || breakpt === Breakpt.s ?
+    Breakpt.l : breakpt
+}
