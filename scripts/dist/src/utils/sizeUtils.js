@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRemSize = exports.getSize = exports.toPercent = exports.getNativeResolution = exports.getRem = exports.getVh = exports.getVw = exports.rem = exports.em = exports.percent = exports.vh = exports.vw = exports.px = void 0;
+exports.getRemSize = exports.getSize = exports.toPercent = exports.getRem = exports.getVh = exports.getVw = exports.rem = exports.em = exports.percent = exports.vh = exports.vw = exports.px = void 0;
 var breakptSizer_1 = require("./helpers/breakptSizer");
 var createSuffixFunction = function (suffix) {
     return function (quantity) { return "".concat(quantity).concat(suffix); };
@@ -26,11 +26,6 @@ var getRem = function (multiplier) {
     return parseFloat(getComputedStyle(document.documentElement).fontSize) * multiplier;
 };
 exports.getRem = getRem;
-var getNativeResolution = function () { return [
-    window.screen.width * window.devicePixelRatio,
-    window.screen.height * window.devicePixelRatio,
-]; };
-exports.getNativeResolution = getNativeResolution;
 var toPercent = function (decimal) { return (0, exports.percent)(decimal * 100); };
 exports.toPercent = toPercent;
 var getSize = function (breakptSizes) {

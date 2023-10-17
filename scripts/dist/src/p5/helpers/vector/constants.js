@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DEFAULT_SETTING = exports.GLYPH_NAMES = exports.X_HEIGHT = exports.Axes = void 0;
+exports.DEFAULT_SETTING = exports.GLYPH_NAMES = exports.X_HEIGHT = void 0;
 var easing = __importStar(require("easing-utils"));
 var spacings_json_1 = __importDefault(require("../../../data/vector/spacings.json"));
 var commonUtils_1 = require("../../../utils/commonUtils");
@@ -36,7 +36,7 @@ var Axes;
 (function (Axes) {
     Axes["x"] = "x";
     Axes["y"] = "y";
-})(Axes || (exports.Axes = Axes = {}));
+})(Axes || (Axes = {}));
 exports.X_HEIGHT = 44;
 exports.GLYPH_NAMES = (0, commonUtils_1.typedKeys)(spacings_json_1.default).filter(function (char) { return char.length === 1; });
 exports.DEFAULT_SETTING = {

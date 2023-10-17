@@ -6,11 +6,6 @@ export interface ToolTipProps {
   popUpRef?: MutableRefObject<HTMLDivElement | null>,
 }
 
-export type WorkPageContextProps = {
-  pageId: string
-  previewLoaded: boolean
-} & ToolTipProps
-
 export interface WorkAnchorProps {
   data: WorkDataInterface
   isHighlighted: boolean
