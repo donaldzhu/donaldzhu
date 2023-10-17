@@ -14,7 +14,8 @@ import { addEventListener } from '../../utils/reactUtils'
 import { em } from '../../utils/sizeUtils'
 import { validateRef } from '../../utils/typeUtils'
 import { PageContextProps } from '../pageWrappers/pageTypes'
-import { WorkPageContextProps } from '../work/workTypes'
+import { WorkPageContextProps } from '../../contexts/contextTypes'
+
 
 interface ToolTipProps {
   children?: ReactNode

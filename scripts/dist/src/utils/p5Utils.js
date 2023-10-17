@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.wrapDrawingContext = exports.mousePosition = exports.intersectTwoCircles = exports.styleDashedRect = exports.parsePoints = exports.parseVector = exports.P5Event = void 0;
+exports.wrapDrawingContext = exports.mousePosition = exports.intersectTwoCircles = exports.styleDashedRect = exports.parseVector = exports.P5Event = void 0;
 var colors_1 = __importDefault(require("../styles/colors"));
 var sizes_1 = require("../styles/sizes");
 var commonUtils_1 = require("./commonUtils");
@@ -30,17 +30,6 @@ var P5Event;
 })(P5Event || (exports.P5Event = P5Event = {}));
 var parseVector = function (vector) { return [vector.x, vector.y]; };
 exports.parseVector = parseVector;
-var parsePoints = function () {
-    var vectors = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        vectors[_i] = arguments[_i];
-    }
-    return vectors.reduce(function (result, vector) {
-        result.push(vector.x, vector.y);
-        return result;
-    }, []);
-};
-exports.parsePoints = parsePoints;
 var styleDashedRect = function (p5) {
     p5.drawingContext.setLineDash((0, commonUtils_1.repeat)(2, sizes_1.sketchSizes.line.dash.value));
     p5.noFill();
