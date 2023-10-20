@@ -8,18 +8,21 @@ export enum VectorDrawMethod {
   DrawVolume = 'drawVolume'
 }
 
+export type VectorPosition = [XPosition, YPosition]
+
 export interface VectorSetting {
   x: number
   y: number
   scale: Size
   mode?: Mode
-  position: [XPosition, YPosition]
+  position: VectorPosition
   mouseOrigin: p5.Vector
   align: XPosition
+  isMobile: boolean
   spaceDelimiter: string
-  spaceWidth: number
-  tracking: number
-  leading: number
+  spaceWidth: Size
+  tracking: Size
+  leading: Size
   drawingSequence: VectorDrawMethod[]
   maxStretch: number
   glyphWeight: Size
@@ -45,11 +48,21 @@ export interface VectorSetting {
   }
 }
 
-export interface SetTransformProps {
+export interface SetTransformScaleProps {
   x?: number,
   y?: number,
   scale?: Size
 }
+
+export interface SetTransformWidthProps {
+  x?: number,
+  y?: number,
+  w: number,
+  text: string
+}
+
+export type SetTransformProps = SetTransformScaleProps | SetTransformWidthProps
+
 
 export const enum Easing {
   Linear = 'linear',

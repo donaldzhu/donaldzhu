@@ -1,10 +1,10 @@
-import { homeIconScales } from '../p5/configs/vector'
 import Size from '../utils/helpers/size'
 import { getSize } from '../utils/sizeUtils'
 import { fontSizes } from './fonts'
 
 const homeIconBaseSize = [43, 44]
 const homeIconInnerPadding = getSize({ l: 30, xxl: 40 })
+const homeIconScales = { l: 0.75, xxl: 1.15 }
 const homeIconSizes = homeIconBaseSize.map(baseSize =>
   getSize(homeIconScales).mult(baseSize).add(homeIconInnerPadding))
 const homeIconPaddingVert = getSize({ l: 8.125, xxl: 24, xxlSm: 19.5 })
@@ -117,7 +117,34 @@ export const sketchSizes = {
     anchor: {
       size: getSize({ l: 37.5, xxl: 50 }),
       offset: getSize({ l: 55, xxl: 70 })
-    }
+    },
+    scale: getSize({ l: 1.15, xxl: 2.5 }),
+    weight: {
+      lower: getSize({ l: 6, xxl: 10 }),
+      glyph: getSize({ l: 4, xxl: 7 }),
+      link: getSize({ l: 3, xxl: 5 })
+    },
+    pointSize: getSize({ l: 8, xxl: 16 }),
+    tracking: getSize({ l: 4, xxl: 4 }),
+    leading: getSize({ l: 70, xxl: 70 })
+  },
+  mobile: {
+    top: getSize({ s: 56, l: 120 }),
+    centerPadding: getSize({ s: 32, l: 68 }),
+    scale: getSize({ s: 1.1, l: 2.55 }),
+    weight: {
+      lower: getSize({ s: 4, l: 8 }),
+      glyph: getSize({ s: 2.5, l: 7 }),
+      link: getSize({ s: 1.75, l: 4.5 })
+    },
+    pointSize: getSize({ s: 7, l: 17.5 }),
+    leading: getSize({ s: 28, l: 48 }),
+    tracking: {
+      workIn: new Size(2.75),
+      process: new Size(0.75),
+      lower: new Size(1.75)
+    },
+    spaceWidth: new Size(10)
   },
   cursor: getSize({ l: 40, xxl: 65 }),
   line: {
@@ -125,11 +152,20 @@ export const sketchSizes = {
     dash: getSize({ l: 5, xxl: 8 })
   },
   homeIcon: {
-    height: getSize(homeIconScales).mult(homeIconBaseSize[1]).add(homeIconInnerPadding)
+    height: getSize(homeIconScales).mult(homeIconBaseSize[1]).add(homeIconInnerPadding),
+    weight: getSize({ l: 4, xxl: 6 }),
+    scale: getSize(homeIconScales),
   },
   workIndex: {
     listPadding: getSize({ l: 6, xxl: 8 }),
     thumbnailPadding: getSize({ l: 10, xxl: 15 })
+  },
+  string: {
+    weight: {
+      glyph: getSize({ l: 2, xxl: 3 }),
+      link: getSize({ l: 2, xxl: 3 }),
+    },
+    pointSize: getSize({ l: 7, xxl: 10 }),
   },
   panto: {
     hoverPadding: getSize({ l: 15, xxl: 20 }),

@@ -12,7 +12,6 @@ import { loopObject } from '../utils/commonUtils'
 import { P5Event } from '../utils/p5Utils'
 import { validateRef } from '../utils/typeUtils'
 
-
 const useCanvas = (
   createSketch: () => Partial<SketchEventHandler> & {
     draw: sketchEventCallback
@@ -25,7 +24,7 @@ const useCanvas = (
   const { canvasRef, canvasStateRefs } = _.defaults(config, outletContext)
 
   if (!validateRef(canvasRef))
-    throw new Error('No canvasRef or canvasStateRefs is passed to canvas.')
+    throw new Error('No canvasRef is passed to canvas.')
 
   const { setup, draw, cleanup, ...callbacks } = useMemo(createSketch, dependencies)
 

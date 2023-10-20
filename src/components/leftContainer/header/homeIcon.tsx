@@ -33,7 +33,7 @@ const HomeButtonContainer = styled.div`
   ${mixins.flex('center', 'center')}
   width: ${domSizes.homeIcon.width.css};
   height: ${domSizes.homeIcon.height.css};
-  position: relative; 
+  position: relative;
   left: ${domSizes.homeIcon.padding.left.div(-2).css};
   margin-bottom: ${domSizes.homeIcon.padding.vert.css};
 `

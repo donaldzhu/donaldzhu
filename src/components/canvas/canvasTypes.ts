@@ -2,10 +2,14 @@ import p5 from 'p5'
 import { MutableRefObject } from 'react'
 import useGlobalCanvas from '../../hooks/useGlobalCanvas'
 import { P5Event } from '../../utils/p5Utils'
+import { MotionSettingInterface } from '../../hooks/useMotion'
+import { CoorObject3D } from '../../utils/utilTypes'
 
 export interface CanvasState {
   mousePositionRef?: MutableRefObject<null | [number, number]>
   hideCursorRef?: MutableRefObject<boolean>
+  motionSettingsRef?: MutableRefObject<MotionSettingInterface | undefined>,
+  motionRef?: MutableRefObject<CoorObject3D>
 }
 
 export type p5Callback = (p5: p5) => void

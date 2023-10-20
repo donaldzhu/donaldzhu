@@ -2,6 +2,7 @@ import _ from 'lodash'
 import p5 from 'p5'
 import { keysToObject, loopObject } from '../../../utils/commonUtils'
 import { CoorObject, coorTuple } from '../../../utils/utilTypes'
+import Size from '../../../utils/helpers/size'
 import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT, YPosition } from './constants'
 import Glyph from './glyph'
 import { SetTransformProps, VectorSetting } from './vectorTypes'
@@ -21,35 +22,44 @@ interface BoundsInterface {
 
 class Text {
   private glyphs: Record<string, Glyph>
-  private cachedBounds: Map<string, BoundsInterface>
   setting: VectorSetting
+  text: string
+  bounds: BoundsInterface
 
-  constructor(p5: p5 | p5.Graphics, setting: Partial<VectorSetting>) {
-    this.setting = _.defaults(
-      setting,
-      DEFAULT_SETTING,
-      { mouseOrigin: p5.createVector(setting.x, setting.y) }
-    )
+  constructor(
+    p5: p5 | p5.Graphics,
+    text: string,
+    setting: Partial<VectorSetting> & { w?: Size }
+  ) {
+    if ('w' in setting) setting.scale = new Size(1)
 
+    this.setting = _.defaults(setting, DEFAULT_SETTING, {
+      mouseOrigin: p5.createVector(setting.x, setting.y)
+    })
+
+    this.text = text.toLocaleUpperCase()
     this.glyphs = keysToObject(GLYPH_NAMES,
       name => new Glyph(p5, name, this.setting))
 
-    this.cachedBounds = new Map<string, BoundsInterface>()
+    if ('w' in setting && setting.w) {
+      const bounds = this.getBounds()
+      this.setTransform({ scale: setting.w.div(bounds.w) })
+    }
+
+    this.bounds = this.getBounds()
   }
 
-  write(text: string) {
-    text = text.toLocaleUpperCase()
+  write() {
     const { scale, position, align, leading } = this.setting
-    const wordArray = text.split('\n')
+    const wordArray = this.text.split('\n')
 
-    const bounds = this.cachedBounds.get(text) ?? this.getBounds(text)
-    let { y1 } = bounds
-    const { x1, wordWidths, w } = bounds
+    let { y1 } = this.bounds
+    const { x1, wordWidths, w } = this.bounds
 
     wordArray.forEach((word, i) => {
       const wordX = x1 + align / 2 * (w - wordWidths[i])
       this.writeWord(word, wordX, y1)
-      const scaledLeading = leading * scale.value
+      const scaledLeading = leading.value * scale.value
       if (position[1] === YPosition.Bottom) y1 -= scaledLeading
       else y1 += scaledLeading
     })
@@ -59,25 +69,26 @@ class Text {
     const { scale, spaceWidth, spaceDelimiter } = this.setting
     const charArray = Array.from(word)
     charArray.forEach((char, i) => {
+      const nextGlyph = this.glyphs[charArray[i + 1]]
+      const lsb = nextGlyph?.getBearings()[0] || 0
+
       if (char === spaceDelimiter)
-        return x += spaceWidth * scale.value
+        return x += spaceWidth.value * scale.value + lsb
 
       const glyph = this.glyphs[char]
       glyph.still.setTransform({ x, y })
       glyph.draw()
 
-      const nextGlyph = this.glyphs[charArray[i + 1]]
+
       const rsb = glyph.getBearings()[1]
-      const lsb = nextGlyph?.getBearings()[0] || 0
       x += glyph.w + rsb + lsb
     })
   }
 
-  getBounds(text: string) {
-    text = text.toLocaleUpperCase()
+  getBounds() {
     const { position, x, y } = this.setting
     const [xPosition, yPosition] = position
-    const wordArray = text.split('\n')
+    const wordArray = this.text.split('\n')
 
     const textHeight = this.getTextHeight(wordArray.length)
     const wordWidths = this.getWordWidths(wordArray)
@@ -97,15 +108,13 @@ class Text {
       wordWidths
     }
 
-    this.cachedBounds.set(text, bounds)
-
     return bounds
   }
 
   setTransform(newTransform: SetTransformProps) {
     const { x, y, scale } =
-      Object.assign(this.setting, _.defaults(newTransform, this.setting))
-    this.cachedBounds.clear()
+      Object.assign(this.setting, _.defaults({ ...newTransform }, this.setting))
+    this.bounds = this.getBounds()
 
     loopObject(this.glyphs, (_, glyph) => {
       Object.assign(glyph.setting, this.setting)
@@ -122,14 +131,14 @@ class Text {
 
   private getTextHeight(wordCount: number) {
     const { scale, leading } = this.setting
-    return ((wordCount - 1) * leading + X_HEIGHT) * scale.value
+    return ((wordCount - 1) * leading.value + X_HEIGHT) * scale.value
   }
 
   private getWordWidths(wordArray: string[]) {
     const { scale, spaceWidth, spaceDelimiter } = this.setting
     return wordArray.map(charArray =>
       Array.from(charArray).reduce((sum, char, i) => {
-        if (char === spaceDelimiter) return sum + spaceWidth * scale.value
+        if (char === spaceDelimiter) return sum + spaceWidth.value * scale.value
         const glyph = this.glyphs[char]
         const [lsb, rsb] = glyph.getBearings()
         return sum + glyph.w +

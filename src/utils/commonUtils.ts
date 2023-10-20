@@ -1,6 +1,6 @@
 import { Falsey } from 'lodash'
 import ElemRect from './helpers/rect/elemRect'
-import { coorTuple } from './utilTypes'
+import { CoorObject, CoorObject3D, coorTuple } from './utilTypes'
 
 // string
 export const capitalize = <T extends string>(string: T) => string.charAt(0)
@@ -111,4 +111,11 @@ export const partition = <T, F>(
   const trueArray: T[] = array.filter(filterTrue)
   const falseArray: F[] = array.filter(filterFalse)
   return [trueArray, falseArray]
+}
+
+export function getBlankCoors(withZ: false): CoorObject
+export function getBlankCoors(withZ: true): CoorObject3D
+export function getBlankCoors(withZ = false) {
+  const withoutZ = { x: 0, y: 0 }
+  return withZ ? { ...withoutZ, z: 0 } : withoutZ
 }

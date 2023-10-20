@@ -92,7 +92,7 @@ class Glyph {
 
   getBearings() {
     return this.nativeBearings.map(bearing =>
-      (bearing + this.setting.tracking) * this.still.scale.value)
+      (bearing + this.setting.tracking.value) * this.still.scale.value)
   }
 
   loopVectors(callback: (vectorData: {
@@ -129,6 +129,8 @@ class Glyph {
 
   get mouseVector() {
     const { p5 } = this
+    if (this.setting.isMobile)
+      return p5.createVector(p5.rotationX, p5.rotationY)
     return p5.createVector(p5.mouseX, p5.mouseY)
   }
 }

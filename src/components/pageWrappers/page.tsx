@@ -1,7 +1,6 @@
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import useCanAutoPlay from '../../hooks/useCanAutoPlay'
 import useCanvas from '../../hooks/useCanvas'
 import useGlobalCanvas from '../../hooks/useGlobalCanvas'
 import usePreload from '../../hooks/usePreload'
@@ -14,9 +13,9 @@ import { RequiredZoomMediaProps } from '../common/media/mediaTypes'
 import ZoomedMedia from '../common/media/zoomedMedia'
 import LeftContainer from '../leftContainer/leftContainer'
 import Vid from '../common/media/vid'
-import { handleZoomType, PageContextProps } from './pageTypes'
+import { handleZoomType, PageContextProps, PageProps } from './pageTypes'
 
-const Page = () => {
+const Page = ({ canAutoPlay }: PageProps) => {
   const [sidebar, setSidebar] = useState<ReactNode | undefined>()
   const [zoomMedia, setZoomMedia] = useState<RequiredZoomMediaProps | undefined>()
   const location = useLocation()
@@ -26,7 +25,6 @@ const Page = () => {
     hideCursorRef: useRef(false)
   }
 
-  const canAutoPlay = useCanAutoPlay()
   const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
 
   const handleZoomMedia: handleZoomType = media => setZoomMedia(media)

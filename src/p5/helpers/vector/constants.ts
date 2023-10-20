@@ -1,7 +1,7 @@
 import * as easing from 'easing-utils'
 import p5 from 'p5'
 import spacingsData from '../../../data/vector/spacings.json'
-import { loopObject, map, typedKeys } from '../../../utils/commonUtils'
+import { getBlankCoors, loopObject, map, typedKeys } from '../../../utils/commonUtils'
 import Size from '../../../utils/helpers/size'
 import { getVh, getVw } from '../../../utils/sizeUtils'
 import { Easing, VectorSetting } from './vectorTypes'
@@ -39,10 +39,11 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
   scale: new Size(1),
   position: [XPosition.Center, YPosition.Center],
   align: XPosition.Center,
+  isMobile: false,
   spaceDelimiter: ' ',
-  spaceWidth: 25,
-  tracking: 3,
-  leading: 85,
+  spaceWidth: new Size(25),
+  tracking: new Size(3),
+  leading: new Size(85),
   drawingSequence: [],
   maxStretch: 4,
   glyphWeight: new Size(1),
@@ -65,7 +66,7 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
     }
   },
   mapFunction: function (stillVector, mouseVector) {
-    const results = { x: 0, y: 0 }
+    const results = getBlankCoors(false)
     const distVector = mouseVector.sub(('mouseOrigin' in this && this.mouseOrigin) ?
       this.mouseOrigin : stillVector)
     loopObject(Axes, axis => {
