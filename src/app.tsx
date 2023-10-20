@@ -30,7 +30,7 @@ const App = () => {
       <HashRouter>
         <Routes>
           {isMobile ?
-            (process.env.NODE_ENV === 'development' ?
+            (process.env.NODE_ENV === 'development' && false ?
               <Route path='/' element={<PageMobile canAutoPlay={canAutoPlay} />}>
                 <Route path='' element={<HomeMobile />} />
                 <Route path='*' element={<Navigate to='/' replace />} />

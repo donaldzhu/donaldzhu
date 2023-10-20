@@ -3,9 +3,10 @@ import p5 from 'p5'
 import { keysToObject, loopObject } from '../../../utils/commonUtils'
 import { CoorObject, coorTuple } from '../../../utils/utilTypes'
 import Size from '../../../utils/helpers/size'
+import { CanvasState } from '../../../components/canvas/canvasTypes'
 import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT, YPosition } from './constants'
 import Glyph from './glyph'
-import { SetTransformProps, VectorSetting } from './vectorTypes'
+import { MotionSettings, SetTransformProps, VectorSetting } from './vectorTypes'
 
 
 interface BoundsInterface {
@@ -29,7 +30,8 @@ class Text {
   constructor(
     p5: p5 | p5.Graphics,
     text: string,
-    setting: Partial<VectorSetting> & { w?: Size }
+    setting: Partial<VectorSetting> & { w?: Size },
+    motionSettings?: MotionSettings
   ) {
     if ('w' in setting) setting.scale = new Size(1)
 
@@ -39,7 +41,7 @@ class Text {
 
     this.text = text.toLocaleUpperCase()
     this.glyphs = keysToObject(GLYPH_NAMES,
-      name => new Glyph(p5, name, this.setting))
+      name => new Glyph(p5, name, this.setting, motionSettings))
 
     if ('w' in setting && setting.w) {
       const bounds = this.getBounds()
@@ -77,6 +79,7 @@ class Text {
 
       const glyph = this.glyphs[char]
       glyph.still.setTransform({ x, y })
+      glyph.active.setTransform({ x, y })
       glyph.draw()
 
 

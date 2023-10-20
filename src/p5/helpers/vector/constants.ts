@@ -1,5 +1,6 @@
 import * as easing from 'easing-utils'
 import p5 from 'p5'
+import _ from 'lodash'
 import spacingsData from '../../../data/vector/spacings.json'
 import { getBlankCoors, loopObject, map, typedKeys } from '../../../utils/commonUtils'
 import Size from '../../../utils/helpers/size'
@@ -65,9 +66,9 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
       y: [0, this.squareMap ? getVw() : getVh()],
     }
   },
-  mapFunction: function (stillVector, mouseVector) {
+  mapFunction: function (stillVector, directionVector) {
     const results = getBlankCoors(false)
-    const distVector = mouseVector.sub(('mouseOrigin' in this && this.mouseOrigin) ?
+    const distVector = directionVector.sub(('mouseOrigin' in this && this.mouseOrigin) ?
       this.mouseOrigin : stillVector)
     loopObject(Axes, axis => {
       const dist = distVector[axis]
@@ -77,6 +78,23 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
         map(eased, 0, 1, 0, this.maxStretch * this.scale.value) * Math.sign(dist)
     })
     return results
+  },
+
+  maxAcceleration: 100000,
+  mapMotionFunction: function (stillVector, velocity, rotationVector, lastTimeStamp, debug) {
+
+
+    const result = {
+      x: stillVector.x + map(Math.abs(rotationVector.x), 0, 180,
+        0, this.maxStretch * this.scale.value * 3) * Math.sign(rotationVector.x),
+      y: stillVector.y + map(Math.abs(rotationVector.y), 0, 180,
+        0, this.maxStretch * this.scale.value * 3) * Math.sign(rotationVector.y),
+    }
+    if (debug.name === 'Z') {
+      debug.p5.text(`${_.round(result.x, 3)} ${_.round(result.y, 3)}`, 10, 10)
+      debug.p5.text(`${_.round(rotationVector.x, 3)} ${_.round(rotationVector.y, 3)}`, 10, 40)
+    }
+    return result
   }
 }
 

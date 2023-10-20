@@ -1,5 +1,4 @@
 import p5 from 'p5'
-import _ from 'lodash'
 import { sketchSizes } from '../../styles/sizes'
 import { validateRef } from '../../utils/typeUtils'
 import { coorTuple } from '../../utils/utilTypes'
@@ -13,7 +12,7 @@ import { loopObject } from '../../utils/commonUtils'
 const drawMobileSketch = () => {
   let texts: Record<string, Text>
 
-  const createVectors = (p5: p5) => {
+  const createVectors = (p5: p5, canvasState: CanvasState) => {
     const x = getVw(50)
 
     const workIn = new Text(p5, 'WORK IN', {
@@ -21,23 +20,23 @@ const drawMobileSketch = () => {
       y: sketchSizes.mobile.top.value,
       spaceWidth: sketchSizes.mobile.spaceWidth,
       tracking: sketchSizes.mobile.tracking.workIn
-    })
+    }, canvasState)
 
     const process = new Text(p5, 'PROCESS', {
       ...configs.MOBILE_UPPER, x,
       y: workIn.bounds.y2 + sketchSizes.mobile.leading.value,
       tracking: sketchSizes.mobile.tracking.process
-    })
+    }, canvasState)
 
     const donald = new Text(p5, 'DONALD', {
       ...configs.MOBILE_LOWER, x,
       y: process.bounds.y2 + sketchSizes.mobile.centerPadding.value,
-    })
+    }, canvasState)
 
     const zhu = new Text(p5, 'ZHU', {
       ...configs.MOBILE_LOWER, x,
       y: donald.bounds.y2 + sketchSizes.mobile.leading.value,
-    })
+    }, canvasState)
 
     const mouseOrigin: coorTuple =
       [x, (donald.bounds.y1 - process.bounds.y2) / 2]
@@ -45,8 +44,8 @@ const drawMobileSketch = () => {
     loopObject(texts, (_, text) => text.setMouseOrigin(mouseOrigin))
   }
 
-  const setup = (p5: p5) => {
-    createVectors(p5)
+  const setup = (p5: p5, canvasState: CanvasState) => {
+    createVectors(p5, canvasState)
   }
 
   const draw = (p5: p5, { motionSettingsRef, motionRef }: CanvasState) => {
@@ -54,11 +53,11 @@ const drawMobileSketch = () => {
     loopObject(texts, (_, text) => text.write())
 
     if (!validateRef(motionSettingsRef) || !validateRef(motionRef)) return
-    p5.text(`${motionSettingsRef.current.isUsable}`, 10, 10)
-    p5.text(`${motionSettingsRef.current.needsPermission}`, 10, 20)
-    p5.text(`x: ${motionRef.current.x}`, 10, 30)
-    p5.text(`y: ${motionRef.current.y}`, 10, 40)
-    p5.text(`z: ${motionRef.current.z}`, 10, 50)
+    // p5.text(`${motionSettingsRef.current.isUsable}`, 10, 10)
+    // p5.text(`${motionSettingsRef.current.needsPermission}`, 10, 20)
+    // p5.text(`x: ${motionRef.current.x}`, 10, 30)
+    // p5.text(`y: ${motionRef.current.y}`, 10, 40)
+    // p5.text(`z: ${motionRef.current.z}`, 10, 50)
   }
 
   const windowResized = createVectors

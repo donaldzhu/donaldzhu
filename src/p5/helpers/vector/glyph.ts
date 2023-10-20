@@ -1,8 +1,9 @@
 import p5 from 'p5'
 import bearingsData from '../../../data/vector/spacings.json'
 import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
+import { validateRef } from '../../../utils/typeUtils'
 import Vector from './vector'
-import { VectorSetting } from './vectorTypes'
+import { MotionSettings, VectorSetting } from './vectorTypes'
 
 class Glyph {
   private p5: p5 | p5.Graphics
@@ -11,17 +12,47 @@ class Glyph {
   still: Vector
   active: Vector
 
-  constructor(p5: p5 | p5.Graphics, name: keyof typeof bearingsData, setting: VectorSetting) {
+  motionSettings: MotionSettings | undefined
+  velocity: p5.Vector
+  lastTimeStamp: number | undefined
+
+  name: string
+  constructor(
+    p5: p5 | p5.Graphics,
+    name: keyof typeof bearingsData,
+    setting: VectorSetting,
+    motionSettings?: MotionSettings
+  ) {
     this.p5 = p5
     this.setting = setting
     this.still = new Vector(p5, name, setting)
     this.active = new Vector(p5, name, setting)
     this.nativeBearings = bearingsData[name]
+
+    // mobile motion
+    this.motionSettings = motionSettings
+    this.velocity = p5.createVector(0, 0)
+    this.lastTimeStamp = undefined
+
+    this.name = name
   }
 
   draw() {
-    const { drawingSequence, mapFunction } = this.setting
-    this.active.setTransform(mapFunction.call(
+    const { drawingSequence, mapFunction, mapMotionFunction } = this.setting
+
+    const motionVector = this.motionVector
+    if (this.setting.isMobile && motionVector) {
+      this.active.setTransform(mapMotionFunction.call(
+        this.setting,
+        this.still.position,
+        this.velocity,
+        motionVector,
+        this.lastTimeStamp ?? Date.now(),
+        { p5: this.p5, name: this.name }
+      ))
+      this.lastTimeStamp = Date.now()
+    }
+    else this.active.setTransform(mapFunction.call(
       this.setting,
       this.still.position,
       this.mouseVector
@@ -129,9 +160,19 @@ class Glyph {
 
   get mouseVector() {
     const { p5 } = this
-    if (this.setting.isMobile)
-      return p5.createVector(p5.rotationX, p5.rotationY)
     return p5.createVector(p5.mouseX, p5.mouseY)
+  }
+
+  get motionVector() {
+    const { p5 } = this
+    if (
+      !this.motionSettings ||
+      !validateRef(this.motionSettings.motionSettingsRef) ||
+      !validateRef(this.motionSettings.motionRef) ||
+      !this.motionSettings.motionSettingsRef.current.isUsable
+    ) return p5.createVector(0, 0)
+    const { motionRef } = this.motionSettings
+    return p5.createVector(motionRef.current.y, motionRef.current.x,)
   }
 }
 

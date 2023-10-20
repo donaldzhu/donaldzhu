@@ -1,5 +1,7 @@
 import p5 from 'p5'
 import Size from '../../../utils/helpers/size'
+import { CanvasState } from '../../../components/canvas/canvasTypes'
+import { CoorObject } from '../../../utils/utilTypes'
 import { Mode, XPosition, YPosition } from './constants'
 
 export enum VectorDrawMethod {
@@ -42,10 +44,16 @@ export interface VectorSetting {
     x: [number, number]
     y: [number, number]
   },
-  mapFunction: (stillVector: p5.Vector, mouseVector: p5.Vector) => {
-    x: number,
-    y: number
-  }
+  mapFunction: (stillVector: p5.Vector, directionVector: p5.Vector) => CoorObject,
+
+  maxAcceleration: number,
+  mapMotionFunction: (
+    activeVector: p5.Vector,
+    velocity: p5.Vector,
+    rotationVector: p5.Vector,
+    lastTimeStamp: number,
+    debug?: any
+  ) => CoorObject
 }
 
 export interface SetTransformScaleProps {
@@ -97,3 +105,5 @@ export const enum Easing {
   EaseInBounce = 'easeInBounce',
   EaseInOutBounce = 'easeInOutBounce',
 }
+
+export type MotionSettings = Pick<CanvasState, 'motionSettingsRef' | 'motionRef'>
