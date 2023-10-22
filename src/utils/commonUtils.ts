@@ -119,3 +119,6 @@ export function getBlankCoors(withZ = false) {
   const withoutZ = { x: 0, y: 0 }
   return withZ ? { ...withoutZ, z: 0 } : withoutZ
 }
+
+export const lerp = (a: number, b: number, alpha: number) =>
+  a + alpha * (b - a)

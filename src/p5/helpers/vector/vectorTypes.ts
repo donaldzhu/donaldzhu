@@ -12,6 +12,11 @@ export enum VectorDrawMethod {
 
 export type VectorPosition = [XPosition, YPosition]
 
+interface MoitonDataInterface {
+  vector: p5.Vector,
+  sign: 1 | -1
+}
+
 export interface VectorSetting {
   x: number
   y: number
@@ -26,7 +31,7 @@ export interface VectorSetting {
   tracking: Size
   leading: Size
   drawingSequence: VectorDrawMethod[]
-  maxStretch: number
+  maxStretch: number | CoorObject
   glyphWeight: Size
   glyphColor: number | string
   linkWeight: Size
@@ -40,18 +45,14 @@ export interface VectorSetting {
   correctVolumeStroke: boolean
   easing: Easing
   squareMap: true
-  getRanges: () => {
-    x: [number, number]
-    y: [number, number]
-  },
-  mapFunction: (stillVector: p5.Vector, directionVector: p5.Vector) => CoorObject,
-
-  maxAcceleration: number,
+  mapFunction: (
+    stillVector: p5.Vector,
+    mouseVector: p5.Vector
+  ) => CoorObject,
   mapMotionFunction: (
+    stillVector: p5.Vector,
     activeVector: p5.Vector,
-    velocity: p5.Vector,
-    rotationVector: p5.Vector,
-    lastTimeStamp: number,
+    rotationData: MoitonDataInterface,
     debug?: any
   ) => CoorObject
 }

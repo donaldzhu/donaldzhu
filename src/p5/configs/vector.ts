@@ -1,6 +1,6 @@
 import colors from '../../styles/colors'
 import { sketchSizes } from '../../styles/sizes'
-import { DEFAULT_SETTING, XPosition, YPosition } from '../helpers/vector/constants'
+import { XPosition, YPosition } from '../helpers/vector/constants'
 import { Easing, VectorDrawMethod, VectorPosition, VectorSetting } from '../helpers/vector/vectorTypes'
 
 const mainSketchConfigs: Partial<VectorSetting> = {
@@ -16,8 +16,9 @@ const mainSketchConfigs: Partial<VectorSetting> = {
 const mobileSketchConfigs: Partial<VectorSetting> = {
   isMobile: true,
   scale: sketchSizes.mobile.scale,
+  maxStretch: { x: 10, y: 5.4 },
   position: [XPosition.Center, YPosition.Top] satisfies VectorPosition,
-  easing: Easing.EaseOutQuad,
+  easing: Easing.EaseOutQuart,
   glyphColor: colors.homeSketch,
   linkColor: colors.homeSketch,
 }
@@ -42,7 +43,6 @@ const configs: Record<string, Partial<VectorSetting>> = {
   },
   MOBILE_UPPER: {
     ...mobileSketchConfigs,
-    maxStretch: 10,
     glyphWeight: sketchSizes.mobile.weight.glyph,
     linkWeight: sketchSizes.mobile.weight.link,
     pointSize: sketchSizes.mobile.pointSize,
@@ -52,7 +52,6 @@ const configs: Record<string, Partial<VectorSetting>> = {
   },
   MOBILE_LOWER: {
     ...mobileSketchConfigs,
-    maxStretch: 8.5,
     leading: sketchSizes.mobile.leading,
     tracking: sketchSizes.mobile.tracking.lower,
     glyphWeight: sketchSizes.mobile.weight.lower,
@@ -86,9 +85,12 @@ const configs: Record<string, Partial<VectorSetting>> = {
       const segmentation = 20
       const segmentSize = Math.PI * 2 / segmentation
       const segmentedHeading = Math.floor(distVector.heading() / segmentSize) * segmentSize
+      const maxStretch = typeof this.maxStretch === 'object' ?
+        this.maxStretch.x :
+        this.maxStretch
       distVector
         .setHeading(segmentedHeading)
-        .setMag(this.maxStretch ?? DEFAULT_SETTING.maxStretch)
+        .setMag(maxStretch ?? 1)
         .add(stillVector)
       return distVector
     }

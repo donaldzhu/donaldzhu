@@ -2,10 +2,11 @@ import * as easing from 'easing-utils'
 import p5 from 'p5'
 import _ from 'lodash'
 import spacingsData from '../../../data/vector/spacings.json'
-import { getBlankCoors, loopObject, map, typedKeys } from '../../../utils/commonUtils'
+import { getBlankCoors, lerp, loopObject, map, mapObject, typedKeys } from '../../../utils/commonUtils'
 import Size from '../../../utils/helpers/size'
 import { getVh, getVw } from '../../../utils/sizeUtils'
 import { Easing, VectorSetting } from './vectorTypes'
+
 
 export const enum Mode {
   Center,
@@ -60,39 +61,59 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
   correctVolumeStroke: false,
   easing: Easing.Linear,
   squareMap: true,
-  getRanges: function () {
-    return {
+  mapFunction: function (stillVector, mouseVector) {
+    const results = getBlankCoors(false)
+    const distVector = mouseVector.sub(('mouseOrigin' in this && this.mouseOrigin) ?
+      this.mouseOrigin : stillVector)
+    const ranges = {
       x: [0, getVw()],
       y: [0, this.squareMap ? getVw() : getVh()],
     }
-  },
-  mapFunction: function (stillVector, directionVector) {
-    const results = getBlankCoors(false)
-    const distVector = directionVector.sub(('mouseOrigin' in this && this.mouseOrigin) ?
-      this.mouseOrigin : stillVector)
+
     loopObject(Axes, axis => {
       const dist = distVector[axis]
-      const [min, max] = this.getRanges()[axis]
+      const [min, max] = ranges[axis]
       const eased = easing[this.easing](Math.abs(dist) / (max - min))
+      const maxStretch = typeof this.maxStretch === 'object' ? this.maxStretch[axis] : this.maxStretch
       results[axis] = stillVector[axis] +
-        map(eased, 0, 1, 0, this.maxStretch * this.scale.value) * Math.sign(dist)
+        map(eased, 0, 1, 0, maxStretch * this.scale.value) * Math.sign(dist)
     })
     return results
   },
 
-  maxAcceleration: 100000,
-  mapMotionFunction: function (stillVector, velocity, rotationVector, lastTimeStamp, debug) {
+  mapMotionFunction: function (stillVector, activeVector, rotationData, debug) {
+    const rotationVector = rotationData.vector
+    const { x, y } = rotationVector
+    const maxStretch = typeof this.maxStretch === 'object' ?
+      this.maxStretch :
+      {
+        x: this.maxStretch,
+        y: this.maxStretch
+      }
 
-
-    const result = {
-      x: stillVector.x + map(Math.abs(rotationVector.x), 0, 180,
-        0, this.maxStretch * this.scale.value * 3) * Math.sign(rotationVector.x),
-      y: stillVector.y + map(Math.abs(rotationVector.y), 0, 180,
-        0, this.maxStretch * this.scale.value * 3) * Math.sign(rotationVector.y),
+    let result = {
+      x: map(
+        Math.abs(x),
+        0, 180,
+        0, maxStretch.x * this.scale.value
+      ) * rotationData.sign,
+      y: map(
+        Math.abs(Math.abs(y) - 180),
+        180, 0,
+        0, maxStretch.y * this.scale.value
+      ),
     }
+
+    result = mapObject(result, (axis, uneasedValue) => {
+      const easedValue = stillVector[axis] + easing[this.easing](
+        Math.abs(uneasedValue) / 180) * Math.sign(uneasedValue * rotationVector[axis]) * 180
+      return lerp(activeVector[axis], easedValue, 0.7)
+    })
+
     if (debug.name === 'Z') {
-      debug.p5.text(`${_.round(result.x, 3)} ${_.round(result.y, 3)}`, 10, 10)
-      debug.p5.text(`${_.round(rotationVector.x, 3)} ${_.round(rotationVector.y, 3)}`, 10, 40)
+      const { p5 } = debug
+      p5.text(`${_.round(result.x, 0)} ${_.round(result.y, 0)}`, 10, 10)
+      p5.text(`${_.round(rotationVector.x, 0)} ${_.round(rotationVector.y, 0)} ${_.round(rotationVector.z, 0)}`, 10, 20)
     }
     return result
   }

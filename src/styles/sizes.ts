@@ -130,15 +130,15 @@ export const sketchSizes = {
   },
   mobile: {
     top: getSize({ s: 56, l: 120 }),
-    centerPadding: getSize({ s: 32, l: 68 }),
-    scale: getSize({ s: 1.1, l: 2.55 }),
+    centerPadding: getSize({ s: 35, l: 70 }),
+    scale: getSize({ s: 1.15, l: 2.75 }),
     weight: {
       lower: getSize({ s: 4, l: 8 }),
-      glyph: getSize({ s: 2.5, l: 7 }),
-      link: getSize({ s: 1.75, l: 4.5 })
+      glyph: getSize({ s: 3, l: 7 }),
+      link: getSize({ s: 1.5, l: 4.5 })
     },
     pointSize: getSize({ s: 7, l: 17.5 }),
-    leading: getSize({ s: 28, l: 48 }),
+    leading: getSize({ s: 32, l: 50 }),
     tracking: {
       workIn: new Size(2.75),
       process: new Size(0.75),

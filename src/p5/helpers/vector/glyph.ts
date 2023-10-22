@@ -12,9 +12,11 @@ class Glyph {
   still: Vector
   active: Vector
 
-  motionSettings: MotionSettings | undefined
-  velocity: p5.Vector
-  lastTimeStamp: number | undefined
+  private motionSettings: MotionSettings | undefined
+  private xMotionSign: 1 | -1
+  private prevMotion: p5.Vector
+  private currentMotion: p5.Vector
+  private signChangingAccel: p5.Vector
 
   name: string
   constructor(
@@ -31,8 +33,11 @@ class Glyph {
 
     // mobile motion
     this.motionSettings = motionSettings
-    this.velocity = p5.createVector(0, 0)
-    this.lastTimeStamp = undefined
+    this.xMotionSign = 1
+    this.prevMotion = p5.createVector()
+    this.currentMotion = p5.createVector()
+
+    this.signChangingAccel = p5.createVector()
 
     this.name = name
   }
@@ -40,17 +45,15 @@ class Glyph {
   draw() {
     const { drawingSequence, mapFunction, mapMotionFunction } = this.setting
 
-    const motionVector = this.motionVector
-    if (this.setting.isMobile && motionVector) {
+    const motionData = this.motionData
+    if (this.setting.isMobile && motionData) {
       this.active.setTransform(mapMotionFunction.call(
         this.setting,
         this.still.position,
-        this.velocity,
-        motionVector,
-        this.lastTimeStamp ?? Date.now(),
+        this.active.position,
+        motionData,
         { p5: this.p5, name: this.name }
       ))
-      this.lastTimeStamp = Date.now()
     }
     else this.active.setTransform(mapFunction.call(
       this.setting,
@@ -163,16 +166,43 @@ class Glyph {
     return p5.createVector(p5.mouseX, p5.mouseY)
   }
 
-  get motionVector() {
+  get motionData() {
     const { p5 } = this
     if (
       !this.motionSettings ||
       !validateRef(this.motionSettings.motionSettingsRef) ||
       !validateRef(this.motionSettings.motionRef) ||
       !this.motionSettings.motionSettingsRef.current.isUsable
-    ) return p5.createVector(0, 0)
+    ) return undefined
     const { motionRef } = this.motionSettings
-    return p5.createVector(motionRef.current.y, motionRef.current.x,)
+
+    const { x, z } = motionRef.current
+    const y = x >= 170 && x <= 190 ?
+      this.prevMotion.x : motionRef.current.y
+
+    const currentMotion = p5.createVector(y, x, z)
+
+    this.prevMotion = this.currentMotion
+    this.currentMotion = currentMotion
+
+
+    if (
+      Math.abs(currentMotion.x - this.prevMotion.x) >= 345 &&
+      Math.abs(currentMotion.z - this.prevMotion.z) >= 345
+    ) {
+      this.xMotionSign *= -1
+
+      this.signChangingAccel = this.p5.createVector(
+        this.p5.accelerationY,
+        this.p5.accelerationX,
+        this.p5.accelerationZ
+      )
+    }
+
+    return {
+      vector: currentMotion,
+      sign: this.xMotionSign
+    }
   }
 }
 

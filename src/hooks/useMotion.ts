@@ -78,7 +78,6 @@ const useMotion = () => {
     const removeMotionListener = addEventListener(window, 'devicemotion', e => {
       const rotationData = rotationRef.current
       const deviceMotion = motionRef.current
-
       if (e.acceleration) {
         // TODO test assignWith
         deviceMotion.x = rotationData.x * 2
