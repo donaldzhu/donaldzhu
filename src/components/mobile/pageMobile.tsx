@@ -5,7 +5,7 @@ import useGlobalCanvas from '../../hooks/useGlobalCanvas'
 import GlobalCanvas from '../canvas/globalCanvas'
 import { addEventListener } from '../../utils/reactUtils'
 import { PageProps } from '../pageWrappers/pageTypes'
-import useMotion from '../../hooks/useMotion'
+import useMotion from '../../hooks/useMotion copy'
 import { PageMobileContext } from './mobileType'
 
 const PageMobile = ({ canAutoPlay }: PageProps) => {
@@ -14,14 +14,14 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
   const {
     motionSettings,
     motionSettingsRef,
-    motionRef,
+    gimbalRef,
     getPermission
   } = useMotion()
 
   const { isUsable, needsPermission } = motionSettings
   const canvasStateRefs = {
     motionSettingsRef,
-    motionRef,
+    gimbalRef,
   }
   useEffect(() => {
     if (isUsable === false || !needsPermission) return _.noop

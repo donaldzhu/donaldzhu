@@ -12,11 +12,6 @@ export enum VectorDrawMethod {
 
 export type VectorPosition = [XPosition, YPosition]
 
-interface MoitonDataInterface {
-  vector: p5.Vector,
-  sign: 1 | -1
-}
-
 export interface VectorSetting {
   x: number
   y: number
@@ -52,7 +47,7 @@ export interface VectorSetting {
   mapMotionFunction: (
     stillVector: p5.Vector,
     activeVector: p5.Vector,
-    rotationData: MoitonDataInterface,
+    rotationVector: p5.Vector,
     debug?: any
   ) => CoorObject
 }
@@ -107,4 +102,4 @@ export const enum Easing {
   EaseInOutBounce = 'easeInOutBounce',
 }
 
-export type MotionSettings = Pick<CanvasState, 'motionSettingsRef' | 'motionRef'>
+export type MotionSettings = Pick<CanvasState, 'motionSettingsRef' | 'gimbalRef'>

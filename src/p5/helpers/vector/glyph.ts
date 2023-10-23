@@ -1,9 +1,12 @@
 import p5 from 'p5'
+import * as THREE from 'three'
+import { radToDeg } from 'three/src/math/MathUtils'
 import bearingsData from '../../../data/vector/spacings.json'
 import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
 import { validateRef } from '../../../utils/typeUtils'
 import Vector from './vector'
 import { MotionSettings, VectorSetting } from './vectorTypes'
+
 
 class Glyph {
   private p5: p5 | p5.Graphics
@@ -13,12 +16,8 @@ class Glyph {
   active: Vector
 
   private motionSettings: MotionSettings | undefined
-  private xMotionSign: 1 | -1
-  private prevMotion: p5.Vector
-  private currentMotion: p5.Vector
-  private signChangingAccel: p5.Vector
 
-  name: string
+  private name: string
   constructor(
     p5: p5 | p5.Graphics,
     name: keyof typeof bearingsData,
@@ -33,11 +32,6 @@ class Glyph {
 
     // mobile motion
     this.motionSettings = motionSettings
-    this.xMotionSign = 1
-    this.prevMotion = p5.createVector()
-    this.currentMotion = p5.createVector()
-
-    this.signChangingAccel = p5.createVector()
 
     this.name = name
   }
@@ -171,38 +165,19 @@ class Glyph {
     if (
       !this.motionSettings ||
       !validateRef(this.motionSettings.motionSettingsRef) ||
-      !validateRef(this.motionSettings.motionRef) ||
+      !validateRef(this.motionSettings.gimbalRef) ||
       !this.motionSettings.motionSettingsRef.current.isUsable
     ) return undefined
-    const { motionRef } = this.motionSettings
 
-    const { x, z } = motionRef.current
-    const y = x >= 170 && x <= 190 ?
-      this.prevMotion.x : motionRef.current.y
+    const { gimbalRef } = this.motionSettings
 
-    const currentMotion = p5.createVector(y, x, z)
+    const gimbal = gimbalRef.current
+    const { x, z } = new THREE.Euler().setFromQuaternion(gimbal.quaternion)
 
-    this.prevMotion = this.currentMotion
-    this.currentMotion = currentMotion
-
-
-    if (
-      Math.abs(currentMotion.x - this.prevMotion.x) >= 345 &&
-      Math.abs(currentMotion.z - this.prevMotion.z) >= 345
-    ) {
-      this.xMotionSign *= -1
-
-      this.signChangingAccel = this.p5.createVector(
-        this.p5.accelerationY,
-        this.p5.accelerationX,
-        this.p5.accelerationZ
-      )
-    }
-
-    return {
-      vector: currentMotion,
-      sign: this.xMotionSign
-    }
+    return p5.createVector(
+      radToDeg(z),
+      radToDeg(-(x - Math.PI / 2)),
+    )
   }
 }
 

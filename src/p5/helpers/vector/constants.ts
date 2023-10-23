@@ -1,8 +1,10 @@
 import * as easing from 'easing-utils'
 import p5 from 'p5'
 import _ from 'lodash'
+import { radToDeg } from 'three/src/math/MathUtils'
+import KalmanFilter from '../kalman'
 import spacingsData from '../../../data/vector/spacings.json'
-import { getBlankCoors, lerp, loopObject, map, mapObject, typedKeys } from '../../../utils/commonUtils'
+import { getBlankCoors, loopObject, map, mapObject, typedKeys } from '../../../utils/commonUtils'
 import Size from '../../../utils/helpers/size'
 import { getVh, getVw } from '../../../utils/sizeUtils'
 import { Easing, VectorSetting } from './vectorTypes'
@@ -33,6 +35,17 @@ export const enum YPosition {
   Bottom
 }
 
+const kalmanSettings = {
+  R: 0.01,
+  Q: 100,
+  A: 1.0225,
+  B: 0,
+  C: 1.75
+}
+const kalmanFilters = {
+  x: new KalmanFilter(kalmanSettings),
+  y: new KalmanFilter(kalmanSettings)
+}
 
 export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
 { mouseOrigin?: p5.Vector } = {
@@ -81,39 +94,32 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
     return results
   },
 
-  mapMotionFunction: function (stillVector, activeVector, rotationData, debug) {
-    const rotationVector = rotationData.vector
-    const { x, y } = rotationVector
+  mapMotionFunction: function (stillVector, activeVector, rotationVector, debug) {
     const maxStretch = typeof this.maxStretch === 'object' ?
-      this.maxStretch :
-      {
+      this.maxStretch : {
         x: this.maxStretch,
         y: this.maxStretch
       }
 
-    let result = {
-      x: map(
-        Math.abs(x),
-        0, 180,
-        0, maxStretch.x * this.scale.value
-      ) * rotationData.sign,
-      y: map(
-        Math.abs(Math.abs(y) - 180),
-        180, 0,
-        0, maxStretch.y * this.scale.value
-      ),
+    const unmappedValues = {
+      x: rotationVector.x,
+      y: 90 - Math.abs(Math.abs((rotationVector.y % 180)) - 90)
     }
-
-    result = mapObject(result, (axis, uneasedValue) => {
-      const easedValue = stillVector[axis] + easing[this.easing](
-        Math.abs(uneasedValue) / 180) * Math.sign(uneasedValue * rotationVector[axis]) * 180
-      return lerp(activeVector[axis], easedValue, 0.7)
+    const result = mapObject(unmappedValues, (axis, unmapped) => {
+      const unfiltered = map(unmapped, 0, 90)
+      const eased = easing[this.easing](Math.abs(unfiltered))
+      const sign = Math.sign(unfiltered) * (axis === 'y' ? (rotationVector.y < 0 || rotationVector.y > 180 ? -1 : 1) : 1)
+      const filtered = kalmanFilters[axis].filter(eased * sign)
+      const multiplier = maxStretch[axis] * this.scale.value
+      return stillVector[axis] + filtered * multiplier
     })
 
     if (debug.name === 'Z') {
       const { p5 } = debug
-      p5.text(`${_.round(result.x, 0)} ${_.round(result.y, 0)}`, 10, 10)
-      p5.text(`${_.round(rotationVector.x, 0)} ${_.round(rotationVector.y, 0)} ${_.round(rotationVector.z, 0)}`, 10, 20)
+      const coors = [rotationVector.x, rotationVector.y]
+        .map(coor => _.round(coor, 1))
+      p5.text('x: ' + coors[0], 10, 20)
+      p5.text('y: ' + coors[1], 10, 30)
     }
     return result
   }

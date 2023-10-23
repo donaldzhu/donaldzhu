@@ -48,16 +48,11 @@ const drawMobileSketch = () => {
     createVectors(p5, canvasState)
   }
 
-  const draw = (p5: p5, { motionSettingsRef, motionRef }: CanvasState) => {
+  const draw = (p5: p5, { gimbalRef }: CanvasState) => {
     if (!texts) return
     loopObject(texts, (_, text) => text.write())
-
-    if (!validateRef(motionSettingsRef) || !validateRef(motionRef)) return
-    // p5.text(`${motionSettingsRef.current.isUsable}`, 10, 10)
-    // p5.text(`${motionSettingsRef.current.needsPermission}`, 10, 20)
-    // p5.text(`x: ${motionRef.current.x}`, 10, 30)
-    // p5.text(`y: ${motionRef.current.y}`, 10, 40)
-    // p5.text(`z: ${motionRef.current.z}`, 10, 50)
+    if (!validateRef(gimbalRef)) return
+    gimbalRef.current.update()
   }
 
   const windowResized = createVectors
