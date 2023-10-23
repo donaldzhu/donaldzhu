@@ -46,9 +46,12 @@ export interface VectorSetting {
   ) => CoorObject,
   mapMotionFunction: (
     stillVector: p5.Vector,
-    activeVector: p5.Vector,
     rotationVector: p5.Vector,
-    debug?: any
+    debug?: {
+      p5?: p5 | p5.Graphics,
+      name?: string,
+      doDebug?: boolean
+    }
   ) => CoorObject
 }
 

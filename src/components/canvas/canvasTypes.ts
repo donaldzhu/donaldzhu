@@ -3,7 +3,7 @@ import { MutableRefObject } from 'react'
 import useGlobalCanvas from '../../hooks/useGlobalCanvas'
 import { P5Event } from '../../utils/p5Utils'
 import { MotionSettingInterface } from '../../hooks/useMotion'
-import Gimbal from '../../p5/helpers/gimbal'
+import Gimbal from '../../utils/helpers/motion/gimbal'
 
 export interface CanvasState {
   mousePositionRef?: MutableRefObject<null | [number, number]>

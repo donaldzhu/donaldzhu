@@ -1,6 +1,5 @@
 import p5 from 'p5'
 import * as THREE from 'three'
-import { radToDeg } from 'three/src/math/MathUtils'
 import bearingsData from '../../../data/vector/spacings.json'
 import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
 import { validateRef } from '../../../utils/typeUtils'
@@ -17,6 +16,7 @@ class Glyph {
 
   private motionSettings: MotionSettings | undefined
 
+  // TODO: remove when mobile dev is finished
   private name: string
   constructor(
     p5: p5 | p5.Graphics,
@@ -44,9 +44,12 @@ class Glyph {
       this.active.setTransform(mapMotionFunction.call(
         this.setting,
         this.still.position,
-        this.active.position,
         motionData,
-        { p5: this.p5, name: this.name }
+        {
+          p5: this.p5,
+          name: this.name,
+          doDebug: false
+        }
       ))
     }
     else this.active.setTransform(mapFunction.call(
@@ -174,10 +177,8 @@ class Glyph {
     const gimbal = gimbalRef.current
     const { x, z } = new THREE.Euler().setFromQuaternion(gimbal.quaternion)
 
-    return p5.createVector(
-      radToDeg(z),
-      radToDeg(-(x - Math.PI / 2)),
-    )
+    return p5.createVector(z, -(x - Math.PI / 2))
+      .mult(180 / Math.PI)
   }
 }
 

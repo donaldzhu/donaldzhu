@@ -5,7 +5,7 @@ import useGlobalCanvas from '../../hooks/useGlobalCanvas'
 import GlobalCanvas from '../canvas/globalCanvas'
 import { addEventListener } from '../../utils/reactUtils'
 import { PageProps } from '../pageWrappers/pageTypes'
-import useMotion from '../../hooks/useMotion copy'
+import useMotion from '../../hooks/useMotion'
 import { PageMobileContext } from './mobileType'
 
 const PageMobile = ({ canAutoPlay }: PageProps) => {

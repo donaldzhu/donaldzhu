@@ -1,8 +1,7 @@
 import * as easing from 'easing-utils'
 import p5 from 'p5'
 import _ from 'lodash'
-import { radToDeg } from 'three/src/math/MathUtils'
-import KalmanFilter from '../kalman'
+import KalmanFilter from '../../../utils/helpers/motion/kalman'
 import spacingsData from '../../../data/vector/spacings.json'
 import { getBlankCoors, loopObject, map, mapObject, typedKeys } from '../../../utils/commonUtils'
 import Size from '../../../utils/helpers/size'
@@ -94,33 +93,36 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
     return results
   },
 
-  mapMotionFunction: function (stillVector, activeVector, rotationVector, debug) {
+  mapMotionFunction: function (stillVector, rotationVector, debug) {
     const maxStretch = typeof this.maxStretch === 'object' ?
       this.maxStretch : {
         x: this.maxStretch,
         y: this.maxStretch
       }
 
+    const { x, y } = rotationVector
     const unmappedValues = {
-      x: rotationVector.x,
-      y: 90 - Math.abs(Math.abs((rotationVector.y % 180)) - 90)
+      x,
+      y: 90 - Math.abs(Math.abs((y % 180)) - 90)
     }
     const result = mapObject(unmappedValues, (axis, unmapped) => {
       const unfiltered = map(unmapped, 0, 90)
       const eased = easing[this.easing](Math.abs(unfiltered))
-      const sign = Math.sign(unfiltered) * (axis === 'y' ? (rotationVector.y < 0 || rotationVector.y > 180 ? -1 : 1) : 1)
+      const sign = Math.sign(unfiltered) * (axis === 'y' ? (y < 0 || y > 180 ? -1 : 1) : 1)
       const filtered = kalmanFilters[axis].filter(eased * sign)
       const multiplier = maxStretch[axis] * this.scale.value
       return stillVector[axis] + filtered * multiplier
     })
 
-    if (debug.name === 'Z') {
-      const { p5 } = debug
-      const coors = [rotationVector.x, rotationVector.y]
-        .map(coor => _.round(coor, 1))
-      p5.text('x: ' + coors[0], 10, 20)
-      p5.text('y: ' + coors[1], 10, 30)
+    if (debug && debug.name === 'Z') {
+      const { p5, doDebug } = debug
+      if (p5 && doDebug) {
+        const coors = [x, y].map(coor => _.round(coor, 1))
+        p5.text('x: ' + coors[0], 10, 20)
+        p5.text('y: ' + coors[1], 10, 30)
+      }
     }
+
     return result
   }
 }
