@@ -7,7 +7,11 @@ body {
 p {
   hyphens: auto;
   hyphenate-limit-chars: 8 3 3;
+  -webkit-hyphenate-limit-before: 3;
+  -webkit-hyphenate-limit-after: 3;
+  -ms-hyphenate-limit-chars: 8 3 3;
 }
+
 
 a {
   text-decoration: none;

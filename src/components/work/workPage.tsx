@@ -37,7 +37,10 @@ const WorkPage = ({ data, Content }: WorkPageProps) => {
   const pageId = data.id
 
   const { preloadManager } = useOutletContext<PageContextProps>()
-  const imageSizes = preloadManager.workPages[pageId].images?.map(imgStack => imgStack.loadedSizes)
+
+  const imageSizes = preloadManager.enabled ?
+    preloadManager.workPages[pageId].images?.map(imgStack => imgStack.loadedSizes) :
+    undefined
   useEffect(() => {
     if (!imageSizes) return setPreviewLoaded(true)
     const previewKey = getPreviewBreakptKey()

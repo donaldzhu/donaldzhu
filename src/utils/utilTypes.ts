@@ -8,6 +8,14 @@ export type queueFunctionType<T> = (() => T) | {
   callback?: () => void
 }
 
+export enum BrowserType {
+  Chrome = 'Chrome',
+  Edge = 'Edge',
+  Firefox = 'Firefox',
+  Opera = 'Opera',
+  Safari = 'Safari'
+}
+
 type optionalQueueFunctionType<T = void> = queueFunctionType<T> | Falsey
 
 export type queueArgType<T = void> = optionalQueueFunctionType<T> | optionalQueueFunctionType<T>[]

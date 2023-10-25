@@ -20,14 +20,34 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.partition = exports.filterFalsy = exports.toPairs = exports.typedKeys = exports.validateString = exports.getToolTipPoints = exports.appendQuery = exports.joinPaths = exports.keysToObject = exports.mapObject = exports.loopObject = exports.sortLike = exports.shuffleTo = exports.arrayify = exports.repeat = exports.repeatMap = exports.map = exports.capitalize = void 0;
+exports.isBrowser = exports.getBlankCoors = exports.filterFalsy = exports.getToolTipPoints = exports.appendQuery = exports.toPairs = exports.keysToObject = exports.mapObject = exports.typedKeys = exports.loopObject = exports.partition = exports.sortLike = exports.shuffleTo = exports.arrayify = exports.repeat = exports.repeatMap = exports.lerp = exports.map = exports.validateString = exports.joinPaths = exports.capitalize = void 0;
 var capitalize = function (string) { return string.charAt(0)
     .toUpperCase() + string.slice(1); };
 exports.capitalize = capitalize;
+var joinPaths = function () {
+    var paths = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        paths[_i] = arguments[_i];
+    }
+    return paths.filter(function (p) { return p; }).join('/');
+};
+exports.joinPaths = joinPaths;
+function validateString(validatorOrString, string) {
+    if (!string)
+        return validatorOrString || '';
+    return validatorOrString ? string : '';
+}
+exports.validateString = validateString;
 var map = function (value, inMin, inMax, outMin, outMax) {
+    if (outMin === void 0) { outMin = 0; }
+    if (outMax === void 0) { outMax = 1; }
     return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 };
 exports.map = map;
+var lerp = function (a, b, alpha) {
+    return a + alpha * (b - a);
+};
+exports.lerp = lerp;
 var repeatMap = function (repetition, callback) {
     var accumulatedReturns = [];
     for (var i = 0; i < repetition; i++)
@@ -52,6 +72,14 @@ var sortLike = function (array, modelArray) {
     });
 };
 exports.sortLike = sortLike;
+var partition = function (array, filterCallback) {
+    var filterTrue = function (elem) { return filterCallback(elem); };
+    var filterFalse = function (elem) { return !filterCallback(elem); };
+    var trueArray = array.filter(filterTrue);
+    var falseArray = array.filter(filterFalse);
+    return [trueArray, falseArray];
+};
+exports.partition = partition;
 var loopObject = function (object, callback) {
     var keys = typedKeys(object);
     keys.forEach(function (key) {
@@ -61,6 +89,10 @@ var loopObject = function (object, callback) {
     return object;
 };
 exports.loopObject = loopObject;
+function typedKeys(object) {
+    return Object.keys(object);
+}
+exports.typedKeys = typedKeys;
 var mapObject = function (object, callback) {
     var newObject = {};
     var keys = typedKeys(object);
@@ -76,14 +108,11 @@ var keysToObject = function (array, callback) { return array.reduce(function (ob
     return (__assign(__assign({}, obj), (_a = {}, _a[key] = callback(key, obj, i), _a)));
 }, {}); };
 exports.keysToObject = keysToObject;
-var joinPaths = function () {
-    var paths = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        paths[_i] = arguments[_i];
-    }
-    return paths.filter(function (p) { return p; }).join('/');
+var toPairs = function (object) {
+    var keys = typedKeys(object);
+    return keys.map(function (key) { return [key, object[key]]; });
 };
-exports.joinPaths = joinPaths;
+exports.toPairs = toPairs;
 var appendQuery = function () {
     var queries = [];
     for (var _i = 0; _i < arguments.length; _i++) {
@@ -103,30 +132,17 @@ var getToolTipPoints = function (toolTip, popUp) {
     return [popUp.topLeft, toolTip.topLeft, toolTip.botRight, popUp.botRight];
 };
 exports.getToolTipPoints = getToolTipPoints;
-function validateString(validatorOrString, string) {
-    if (!string)
-        return validatorOrString || '';
-    return validatorOrString ? string : '';
-}
-exports.validateString = validateString;
-function typedKeys(object) {
-    return Object.keys(object);
-}
-exports.typedKeys = typedKeys;
-var toPairs = function (object) {
-    var keys = typedKeys(object);
-    return keys.map(function (key) { return [key, object[key]]; });
-};
-exports.toPairs = toPairs;
 var filterFalsy = function (array) {
     return array.filter(function (elem) { return elem; });
 };
 exports.filterFalsy = filterFalsy;
-var partition = function (array, filterCallback) {
-    var filterTrue = function (elem) { return filterCallback(elem); };
-    var filterFalse = function (elem) { return !filterCallback(elem); };
-    var trueArray = array.filter(filterTrue);
-    var falseArray = array.filter(filterFalse);
-    return [trueArray, falseArray];
-};
-exports.partition = partition;
+function getBlankCoors(withZ) {
+    if (withZ === void 0) { withZ = false; }
+    var withoutZ = { x: 0, y: 0 };
+    return withZ ? __assign(__assign({}, withoutZ), { z: 0 }) : withoutZ;
+}
+exports.getBlankCoors = getBlankCoors;
+function isBrowser(browserToMatch) {
+    return (0, exports.arrayify)(browserToMatch).some(function (browser) { return navigator.userAgent.includes(browser); });
+}
+exports.isBrowser = isBrowser;

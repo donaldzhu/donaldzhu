@@ -14,7 +14,7 @@ type Ios13MotionEvent = typeof DeviceMotionEvent & {
   requestPermission: requestPermissionType
 }
 
-const hasDeviceEvent = !!(DeviceOrientationEvent && DeviceMotionEvent)
+const hasDeviceEvent = ('DeviceOrientationEvent' in window && 'DeviceMotionEvent' in window)
 
 const useMotion = () => {
   const getInitialState = (): MotionSettingInterface => {

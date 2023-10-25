@@ -55,7 +55,7 @@ class PreloadManager {
     this.subqueues = []
 
     this.isComplete = false
-    this.enabled = true
+    this.enabled = false
     this.verboseLevel = VerboseLevel.Minimal
 
     this.autoPlayConfig = { canAutoPlay }

@@ -30,7 +30,7 @@ class Gimbal {
     this.eulerOrigin = new THREE.Euler(
       degToRad(90),
       degToRad(180),
-      degToRad(180 + screen.orientation.angle)
+      degToRad(180 + screen?.orientation?.angle ?? 0)
     )
   }
 

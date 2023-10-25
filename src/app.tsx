@@ -19,6 +19,8 @@ import { domSizes } from './styles/sizes'
 import { queries } from './utils/queryUtil'
 import HomeMobile from './components/mobile/homeMobile'
 import useCanAutoPlay from './hooks/useCanAutoPlay'
+import { isBrowser, validateString } from './utils/commonUtils'
+import { BrowserType } from './utils/utilTypes'
 
 const App = () => {
   const isMobile = !useMediaQuery(queries.l)
@@ -85,6 +87,10 @@ const StyledGlobal = styled.main`
       color: ${colorConfig.defaultTextSelectColor};
       background-color: ${colorConfig.defaultTextSelectBg};
     }
+  }
+
+  p {
+    ${validateString(isBrowser(BrowserType.Firefox), 'hyphens: none;')}
   }
 
   b,

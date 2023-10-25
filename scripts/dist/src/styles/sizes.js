@@ -4,14 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sketchSizes = exports.domSizes = void 0;
-var vector_1 = require("../p5/configs/vector");
 var size_1 = __importDefault(require("../utils/helpers/size"));
 var sizeUtils_1 = require("../utils/sizeUtils");
 var fonts_1 = require("./fonts");
 var homeIconBaseSize = [43, 44];
 var homeIconInnerPadding = (0, sizeUtils_1.getSize)({ l: 30, xxl: 40 });
+var homeIconScales = { l: 0.75, xxl: 1.15 };
 var homeIconSizes = homeIconBaseSize.map(function (baseSize) {
-    return (0, sizeUtils_1.getSize)(vector_1.homeIconScales).mult(baseSize).add(homeIconInnerPadding);
+    return (0, sizeUtils_1.getSize)(homeIconScales).mult(baseSize).add(homeIconInnerPadding);
 });
 var homeIconPaddingVert = (0, sizeUtils_1.getSize)({ l: 8.125, xxl: 24, xxlSm: 19.5 });
 var sidebarWidth = (0, sizeUtils_1.getSize)({ l: 375, xxl: 700 });
@@ -117,7 +117,34 @@ exports.sketchSizes = {
         anchor: {
             size: (0, sizeUtils_1.getSize)({ l: 37.5, xxl: 50 }),
             offset: (0, sizeUtils_1.getSize)({ l: 55, xxl: 70 })
-        }
+        },
+        scale: (0, sizeUtils_1.getSize)({ l: 1.15, xxl: 2.5 }),
+        weight: {
+            lower: (0, sizeUtils_1.getSize)({ l: 6, xxl: 10 }),
+            glyph: (0, sizeUtils_1.getSize)({ l: 4, xxl: 7 }),
+            link: (0, sizeUtils_1.getSize)({ l: 3, xxl: 5 })
+        },
+        pointSize: (0, sizeUtils_1.getSize)({ l: 8, xxl: 16 }),
+        tracking: (0, sizeUtils_1.getSize)({ l: 4, xxl: 4 }),
+        leading: (0, sizeUtils_1.getSize)({ l: 70, xxl: 70 })
+    },
+    mobile: {
+        top: (0, sizeUtils_1.getSize)({ s: 56, l: 120 }),
+        centerPadding: (0, sizeUtils_1.getSize)({ s: 35, l: 70 }),
+        scale: (0, sizeUtils_1.getSize)({ s: 1.15, l: 2.75 }),
+        weight: {
+            lower: (0, sizeUtils_1.getSize)({ s: 5, l: 8 }),
+            glyph: (0, sizeUtils_1.getSize)({ s: 3, l: 7 }),
+            link: (0, sizeUtils_1.getSize)({ s: 1.5, l: 4.5 })
+        },
+        pointSize: (0, sizeUtils_1.getSize)({ s: 7, l: 17.5 }),
+        leading: (0, sizeUtils_1.getSize)({ s: 32, l: 50 }),
+        tracking: {
+            workIn: new size_1.default(2.75),
+            process: new size_1.default(0.75),
+            lower: new size_1.default(1.75)
+        },
+        spaceWidth: new size_1.default(10)
     },
     cursor: (0, sizeUtils_1.getSize)({ l: 40, xxl: 65 }),
     line: {
@@ -125,11 +152,20 @@ exports.sketchSizes = {
         dash: (0, sizeUtils_1.getSize)({ l: 5, xxl: 8 })
     },
     homeIcon: {
-        height: (0, sizeUtils_1.getSize)(vector_1.homeIconScales).mult(homeIconBaseSize[1]).add(homeIconInnerPadding)
+        height: (0, sizeUtils_1.getSize)(homeIconScales).mult(homeIconBaseSize[1]).add(homeIconInnerPadding),
+        weight: (0, sizeUtils_1.getSize)({ l: 4, xxl: 6 }),
+        scale: (0, sizeUtils_1.getSize)(homeIconScales),
     },
     workIndex: {
         listPadding: (0, sizeUtils_1.getSize)({ l: 6, xxl: 8 }),
         thumbnailPadding: (0, sizeUtils_1.getSize)({ l: 10, xxl: 15 })
+    },
+    string: {
+        weight: {
+            glyph: (0, sizeUtils_1.getSize)({ l: 2, xxl: 3 }),
+            link: (0, sizeUtils_1.getSize)({ l: 2, xxl: 3 }),
+        },
+        pointSize: (0, sizeUtils_1.getSize)({ l: 7, xxl: 10 }),
     },
     panto: {
         hoverPadding: (0, sizeUtils_1.getSize)({ l: 15, xxl: 20 }),

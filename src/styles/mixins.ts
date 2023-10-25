@@ -74,7 +74,7 @@ const underline = () => `
 `
 
 const media = ({ $aspectRatio, $hasLoaded }: MediaProps) => `
-  aspect-ratio: ${$aspectRatio ?? 1};
+  ${$aspectRatio ? `aspect-ratio: ${$aspectRatio};` : ''}
   background-color: ${$hasLoaded ? '' : 'rgb(240,240,240)'};
   border-radius: ${domSizes.media.borderRadius.css};
 `

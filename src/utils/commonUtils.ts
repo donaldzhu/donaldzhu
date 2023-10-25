@@ -1,6 +1,6 @@
 import { Falsey } from 'lodash'
 import ElemRect from './helpers/rect/elemRect'
-import { CoorObject, CoorObject3D, coorTuple } from './utilTypes'
+import { BrowserType, CoorObject, CoorObject3D, coorTuple } from './utilTypes'
 
 // string
 export const capitalize = <T extends string>(string: T) => string.charAt(0)
@@ -131,3 +131,6 @@ export function getBlankCoors(withZ = false) {
   return withZ ? { ...withoutZ, z: 0 } : withoutZ
 }
 
+export function isBrowser(browserToMatch: BrowserType | BrowserType[]) {
+  return arrayify(browserToMatch).some(browser => navigator.userAgent.includes(browser))
+}
