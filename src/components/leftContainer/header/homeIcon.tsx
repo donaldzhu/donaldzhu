@@ -9,12 +9,12 @@ import { GlobalCanvasStates } from '../../canvas/canvasTypes'
 import Anchor from '../../common/anchor'
 
 
-const HomeIcon = ({ canvasRef, canvasStateRefs }: GlobalCanvasStates) => {
+const HomeIcon = ({ canvasRef, canvasStates }: GlobalCanvasStates) => {
   const placeholderRef = useRef<HTMLDivElement | null>(null)
   const isHoveringRef = useRef(false)
 
   useCanvas(() => drawHomeIcon({ placeholderRef, isHoveringRef }), {
-    canvasRef, canvasStateRefs
+    canvasRef, canvasStates: canvasStates
   })
 
   const handleHover = (isOver: boolean) => isHoveringRef.current = isOver

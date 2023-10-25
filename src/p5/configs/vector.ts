@@ -16,7 +16,7 @@ const mainSketchConfigs: Partial<VectorSetting> = {
 const mobileSketchConfigs: Partial<VectorSetting> = {
   isMobile: true,
   scale: sketchSizes.mobile.scale,
-  maxStretch: { x: 20, y: 14 },
+  maxStretch: { x: 20, y: 14.5 },
   position: [XPosition.Center, YPosition.Top] satisfies VectorPosition,
   easing: Easing.EaseOutCubic,
   glyphColor: colors.homeSketch,

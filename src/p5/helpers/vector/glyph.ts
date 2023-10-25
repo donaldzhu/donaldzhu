@@ -30,9 +30,7 @@ class Glyph {
     this.active = new Vector(p5, name, setting)
     this.nativeBearings = bearingsData[name]
 
-    // mobile motion
     this.motionSettings = motionSettings
-
     this.name = name
   }
 

@@ -11,7 +11,7 @@ type LeftContainerProps = {
   sidebar: ReactNode | undefined
 } & GlobalCanvasStates
 
-const LeftContainer = ({ sidebar, canvasRef, canvasStateRefs }: LeftContainerProps) => {
+const LeftContainer = ({ sidebar, canvasRef, canvasStates }: LeftContainerProps) => {
   const sidebarRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const sidebar = sidebarRef.current
@@ -24,7 +24,7 @@ const LeftContainer = ({ sidebar, canvasRef, canvasStateRefs }: LeftContainerPro
       <ContentContainer>
         <Header
           canvasRef={canvasRef}
-          canvasStateRefs={canvasStateRefs} />
+          canvasStates={canvasStates} />
         <SidebarContainer ref={sidebarRef}>
           {sidebar ?? <div />}
         </SidebarContainer>

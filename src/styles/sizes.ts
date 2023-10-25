@@ -133,7 +133,7 @@ export const sketchSizes = {
     centerPadding: getSize({ s: 35, l: 70 }),
     scale: getSize({ s: 1.15, l: 2.75 }),
     weight: {
-      lower: getSize({ s: 4, l: 8 }),
+      lower: getSize({ s: 5, l: 8 }),
       glyph: getSize({ s: 3, l: 7 }),
       link: getSize({ s: 1.5, l: 4.5 })
     },

@@ -6,6 +6,7 @@ import GlobalCanvas from '../canvas/globalCanvas'
 import { addEventListener } from '../../utils/reactUtils'
 import { PageProps } from '../pageWrappers/pageTypes'
 import useMotion from '../../hooks/useMotion'
+import usePhysics from '../../hooks/usePhysics'
 import { PageMobileContext } from './mobileType'
 
 const PageMobile = ({ canAutoPlay }: PageProps) => {
@@ -18,11 +19,15 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
     getPermission
   } = useMotion()
 
+  const engine = usePhysics()
+
   const { isUsable, needsPermission } = motionSettings
-  const canvasStateRefs = {
+  const canvasStates = {
     motionSettingsRef,
     gimbalRef,
+    engine
   }
+
   useEffect(() => {
     if (isUsable === false || !needsPermission) return _.noop
     return addEventListener(window, 'touchend', getPermission ?? _.noop)
@@ -30,11 +35,13 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
 
   return (
     <>
-      <GlobalCanvas canvasRef={canvasRef} />
+      <GlobalCanvas
+        canvasRef={canvasRef}
+        canvasStates={{ engine }} />
       <Outlet context={{
         canAutoPlay,
         canvasRef,
-        canvasStateRefs
+        canvasStates: canvasStates
       } satisfies PageMobileContext} />
     </>
   )

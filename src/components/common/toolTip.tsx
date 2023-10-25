@@ -28,8 +28,8 @@ interface StyledToolTipProps {
 const ToolTip = ({ children }: ToolTipProps) => {
   const [isShown, setIsShown] = useState(false)
   const { toolTipRef, popUpRef } = useContext<WorkPageContextProps>(WorkPageContext)
-  const { zoomMedia, canvasStateRefs } = useOutletContext<PageContextProps>()
-  const mousePositionRef = canvasStateRefs?.mousePositionRef
+  const { zoomMedia, canvasStates } = useOutletContext<PageContextProps>()
+  const mousePositionRef = canvasStates?.mousePositionRef
 
   const handleHover = ({ currentTarget }: { currentTarget: HTMLDivElement }) => {
     if (toolTipRef) toolTipRef.current = currentTarget

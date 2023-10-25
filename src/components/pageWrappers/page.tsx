@@ -20,7 +20,7 @@ const Page = ({ canAutoPlay }: PageProps) => {
   const [zoomMedia, setZoomMedia] = useState<RequiredZoomMediaProps | undefined>()
   const location = useLocation()
 
-  const canvasStateRefs = {
+  const canvasStates = {
     mousePositionRef: useRef(null),
     hideCursorRef: useRef(false)
   }
@@ -30,7 +30,7 @@ const Page = ({ canAutoPlay }: PageProps) => {
   const handleZoomMedia: handleZoomType = media => setZoomMedia(media)
   const canvasRef = useGlobalCanvas()
 
-  useCanvas(drawCursor, { canvasRef, canvasStateRefs })
+  useCanvas(drawCursor, { canvasRef, canvasStates: canvasStates })
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -41,7 +41,7 @@ const Page = ({ canAutoPlay }: PageProps) => {
     <>
       <GlobalCanvas
         canvasRef={canvasRef}
-        canvasStateRefs={canvasStateRefs} />
+        canvasStates={canvasStates} />
       {zoomMedia && <ZoomedMedia
         zoomMedia={zoomMedia}
         handleUnzoom={() => setZoomMedia(undefined)} />}
@@ -50,10 +50,10 @@ const Page = ({ canAutoPlay }: PageProps) => {
       <LeftContainer
         sidebar={sidebar}
         canvasRef={canvasRef}
-        canvasStateRefs={canvasStateRefs} />
+        canvasStates={canvasStates} />
       <Outlet context={{
         canvasRef,
-        canvasStateRefs,
+        canvasStates: canvasStates,
         sidebar,
         setSidebar,
         zoomMedia,
