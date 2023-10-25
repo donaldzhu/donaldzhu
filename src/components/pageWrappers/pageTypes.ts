@@ -13,3 +13,7 @@ export type PageContextProps = {
 } & GlobalCanvasStates
 
 export type handleZoomType = (media?: RequiredZoomMediaProps) => void
+
+export interface PageProps {
+  canAutoPlay: boolean | undefined
+}

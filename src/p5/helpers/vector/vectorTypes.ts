@@ -1,5 +1,7 @@
 import p5 from 'p5'
 import Size from '../../../utils/helpers/size'
+import { CanvasState } from '../../../components/canvas/canvasTypes'
+import { CoorObject } from '../../../utils/utilTypes'
 import { Mode, XPosition, YPosition } from './constants'
 
 export enum VectorDrawMethod {
@@ -8,20 +10,23 @@ export enum VectorDrawMethod {
   DrawVolume = 'drawVolume'
 }
 
+export type VectorPosition = [XPosition, YPosition]
+
 export interface VectorSetting {
   x: number
   y: number
   scale: Size
   mode?: Mode
-  position: [XPosition, YPosition]
+  position: VectorPosition
   mouseOrigin: p5.Vector
   align: XPosition
+  isMobile: boolean
   spaceDelimiter: string
-  spaceWidth: number
-  tracking: number
-  leading: number
+  spaceWidth: Size
+  tracking: Size
+  leading: Size
   drawingSequence: VectorDrawMethod[]
-  maxStretch: number
+  maxStretch: number | CoorObject
   glyphWeight: Size
   glyphColor: number | string
   linkWeight: Size
@@ -35,21 +40,36 @@ export interface VectorSetting {
   correctVolumeStroke: boolean
   easing: Easing
   squareMap: true
-  getRanges: () => {
-    x: [number, number]
-    y: [number, number]
-  },
-  mapFunction: (stillVector: p5.Vector, mouseVector: p5.Vector) => {
-    x: number,
-    y: number
-  }
+  mapFunction: (
+    stillVector: p5.Vector,
+    mouseVector: p5.Vector
+  ) => CoorObject,
+  mapMotionFunction: (
+    stillVector: p5.Vector,
+    rotationVector: p5.Vector,
+    debug?: {
+      p5?: p5 | p5.Graphics,
+      name?: string,
+      doDebug?: boolean
+    }
+  ) => CoorObject
 }
 
-export interface SetTransformProps {
+export interface SetTransformScaleProps {
   x?: number,
   y?: number,
   scale?: Size
 }
+
+export interface SetTransformWidthProps {
+  x?: number,
+  y?: number,
+  w: number,
+  text: string
+}
+
+export type SetTransformProps = SetTransformScaleProps | SetTransformWidthProps
+
 
 export const enum Easing {
   Linear = 'linear',
@@ -84,3 +104,5 @@ export const enum Easing {
   EaseInBounce = 'easeInBounce',
   EaseInOutBounce = 'easeInOutBounce',
 }
+
+export type MotionSettings = Pick<CanvasState, 'motionSettingsRef' | 'gimbalRef'>

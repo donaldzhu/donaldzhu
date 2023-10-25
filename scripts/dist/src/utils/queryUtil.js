@@ -20,6 +20,8 @@ exports.queries = (0, commonUtils_1.mapObject)(breakpoints_1.default, function (
 var getBreakptKey = function () {
     if (window.screen.width >= breakpoints_1.default.xxl)
         return Breakpt.xxl;
+    if (window.screen.width < breakpoints_1.default.s)
+        return Breakpt.s;
     var breakptPairs = (0, commonUtils_1.toPairs)(breakpoints_1.default)
         .sort(function (a, b) { return a[1] - b[1]; });
     var breakptPair = breakptPairs

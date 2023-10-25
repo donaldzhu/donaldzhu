@@ -1,44 +1,69 @@
 import colors from '../../styles/colors'
-import { getSize } from '../../utils/sizeUtils'
-import { DEFAULT_SETTING, XPosition, YPosition } from '../helpers/vector/constants'
-import { Easing, VectorDrawMethod, VectorSetting } from '../helpers/vector/vectorTypes'
+import { sketchSizes } from '../../styles/sizes'
+import { XPosition, YPosition } from '../helpers/vector/constants'
+import { Easing, VectorDrawMethod, VectorPosition, VectorSetting } from '../helpers/vector/vectorTypes'
 
-const mainSketchConfigs = {
-  scale: getSize({ l: 1.15, xxl: 2.5 }),
-  tracking: 4,
-  leading: 70,
+const mainSketchConfigs: Partial<VectorSetting> = {
+  scale: sketchSizes.main.scale,
+  tracking: sketchSizes.main.tracking,
+  leading: sketchSizes.main.leading,
   easing: Easing.EaseOutQuad,
   maxStretch: 18.5,
   glyphColor: colors.homeSketch,
   linkColor: colors.homeSketch,
 }
 
-const lowerWeight = getSize({ l: 6, xxl: 10 })
-export const homeIconScales = { l: 0.75, xxl: 1.15 }
-const homeIconWeight = getSize({ l: 4, xxl: 6 })
+const mobileSketchConfigs: Partial<VectorSetting> = {
+  isMobile: true,
+  scale: sketchSizes.mobile.scale,
+  maxStretch: { x: 20, y: 14.5 },
+  position: [XPosition.Center, YPosition.Top] satisfies VectorPosition,
+  easing: Easing.EaseOutCubic,
+  glyphColor: colors.homeSketch,
+  linkColor: colors.homeSketch,
+}
+
 
 const configs: Record<string, Partial<VectorSetting>> = {
   MAIN_UPPER: {
     ...mainSketchConfigs,
-    glyphWeight: getSize({ l: 4, xxl: 7 }),
-    linkWeight: getSize({ l: 3, xxl: 5 }),
-    pointSize: getSize({ l: 8, xxl: 16 }),
+    glyphWeight: sketchSizes.main.weight.glyph,
+    linkWeight: sketchSizes.main.weight.link,
+    pointSize: sketchSizes.main.pointSize,
     pointColor: colors.homeSketch,
     pointFill: colors.homeSketch,
     drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawPoints],
   },
   MAIN_LOWER: {
     ...mainSketchConfigs,
-    glyphWeight: lowerWeight,
-    linkWeight: lowerWeight,
+    glyphWeight: sketchSizes.main.weight.lower,
+    linkWeight: sketchSizes.main.weight.lower,
+    volumeColor: colors.homeSketch,
+    drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawVolume],
+  },
+  MOBILE_UPPER: {
+    ...mobileSketchConfigs,
+    glyphWeight: sketchSizes.mobile.weight.glyph,
+    linkWeight: sketchSizes.mobile.weight.link,
+    pointSize: sketchSizes.mobile.pointSize,
+    pointColor: colors.homeSketch,
+    pointFill: colors.homeSketch,
+    drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawPoints],
+  },
+  MOBILE_LOWER: {
+    ...mobileSketchConfigs,
+    leading: sketchSizes.mobile.leading,
+    tracking: sketchSizes.mobile.tracking.lower,
+    glyphWeight: sketchSizes.mobile.weight.lower,
+    linkWeight: sketchSizes.mobile.weight.lower,
     volumeColor: colors.homeSketch,
     drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawVolume],
   },
   HOME_ICON: {
-    scale: getSize(homeIconScales),
+    scale: sketchSizes.homeIcon.scale,
     position: [XPosition.Left, YPosition.Top],
-    glyphWeight: homeIconWeight,
-    linkWeight: homeIconWeight,
+    glyphWeight: sketchSizes.homeIcon.weight,
+    linkWeight: sketchSizes.homeIcon.weight,
     glyphColor: colors.homeIcon,
     linkColor: colors.homeIcon,
     volumeColor: colors.homeIcon,
@@ -47,9 +72,9 @@ const configs: Record<string, Partial<VectorSetting>> = {
     maxStretch: 8,
   },
   VECTOR_STRING_TRANSLATE: {
-    glyphWeight: getSize({ l: 2, xxl: 3 }),
-    linkWeight: getSize({ l: 2, xxl: 3 }),
-    pointSize: getSize({ l: 7, xxl: 10 }),
+    glyphWeight: sketchSizes.string.weight.glyph,
+    linkWeight: sketchSizes.string.weight.link,
+    pointSize: sketchSizes.string.pointSize,
     pointColor: colors.vectorStringSketch,
     pointFill: colors.vectorStringSketch,
     glyphColor: colors.vectorStringSketch,
@@ -60,9 +85,12 @@ const configs: Record<string, Partial<VectorSetting>> = {
       const segmentation = 20
       const segmentSize = Math.PI * 2 / segmentation
       const segmentedHeading = Math.floor(distVector.heading() / segmentSize) * segmentSize
+      const maxStretch = typeof this.maxStretch === 'object' ?
+        this.maxStretch.x :
+        this.maxStretch
       distVector
         .setHeading(segmentedHeading)
-        .setMag(this.maxStretch ?? DEFAULT_SETTING.maxStretch)
+        .setMag(maxStretch ?? 1)
         .add(stillVector)
       return distVector
     }

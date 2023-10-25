@@ -12,9 +12,6 @@ import Text from '../helpers/vector/text'
 import { PlaceholderProp } from './sketchTypes'
 
 const drawMainSketch = ({ placeholderRef }: PlaceholderProp) => {
-  const UPPER_TEXT_CONTENT = 'WORK IN\nPROGRESS'
-  const LOWER_TEXT_CONTENT = 'DONALD\nZHU'
-
   let placeholder: ElemRect<HTMLDivElement>
   let upperText: Text, lowerText: Text
   let mouseOrigin: coorTuple | [] = []
@@ -23,18 +20,18 @@ const drawMainSketch = ({ placeholderRef }: PlaceholderProp) => {
     const [x, y] = placeholder.center
     const centerPadding = sketchSizes.main.centerPadding.value
 
-    upperText = new Text(p5, {
+    upperText = new Text(p5, 'WORK IN\nPROGRESS', {
       ...configs.MAIN_UPPER, x, y
     })
 
-    const { h: upperH } = upperText.getBounds(UPPER_TEXT_CONTENT)
+    const { h: upperH } = upperText.bounds
     upperText.setTransform({ y: y - (upperH + centerPadding) / 2 })
 
-    lowerText = new Text(p5, {
+    lowerText = new Text(p5, 'DONALD\nZHU', {
       ...configs.MAIN_LOWER, x, y
     })
 
-    const { h: lowerH } = lowerText.getBounds(LOWER_TEXT_CONTENT)
+    const { h: lowerH } = lowerText.bounds
     lowerText.setTransform({ y: y + (lowerH + centerPadding) / 2 })
 
     mouseOrigin = placeholder.center
@@ -53,8 +50,8 @@ const drawMainSketch = ({ placeholderRef }: PlaceholderProp) => {
     const { CENTER, ROUND, mouseX, mouseY } = p5
     const halfCursorSize = sketchSizes.cursor.value / 2
 
-    upperText.write(UPPER_TEXT_CONTENT)
-    lowerText.write(LOWER_TEXT_CONTENT)
+    upperText.write()
+    lowerText.write()
 
     if (!mousePositionRef?.current) return
     const anchorSize = sketchSizes.main.anchor.size.value

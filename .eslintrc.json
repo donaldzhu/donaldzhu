@@ -36,6 +36,7 @@
     "no-multiple-empty-lines": "off",
     "no-irregular-whitespace": "off",
     "no-unused-vars": "off",
+    "no-constant-condition": "warn",
     "@typescript-eslint/no-unused-vars": [
       "warn",
       { "argsIgnorePattern": "^_" }

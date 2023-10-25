@@ -1,10 +1,13 @@
 import * as easing from 'easing-utils'
 import p5 from 'p5'
+import _ from 'lodash'
+import KalmanFilter from '../../../utils/helpers/motion/kalman'
 import spacingsData from '../../../data/vector/spacings.json'
-import { loopObject, map, typedKeys } from '../../../utils/commonUtils'
+import { getBlankCoors, loopObject, map, mapObject, typedKeys } from '../../../utils/commonUtils'
 import Size from '../../../utils/helpers/size'
 import { getVh, getVw } from '../../../utils/sizeUtils'
 import { Easing, VectorSetting } from './vectorTypes'
+
 
 export const enum Mode {
   Center,
@@ -31,6 +34,17 @@ export const enum YPosition {
   Bottom
 }
 
+const kalmanSettings = {
+  R: 0.01,
+  Q: 100,
+  A: 1.0225,
+  B: 0,
+  C: 1.75
+}
+const kalmanFilters = {
+  x: new KalmanFilter(kalmanSettings),
+  y: new KalmanFilter(kalmanSettings)
+}
 
 export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
 { mouseOrigin?: p5.Vector } = {
@@ -39,10 +53,11 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
   scale: new Size(1),
   position: [XPosition.Center, YPosition.Center],
   align: XPosition.Center,
+  isMobile: false,
   spaceDelimiter: ' ',
-  spaceWidth: 25,
-  tracking: 3,
-  leading: 85,
+  spaceWidth: new Size(25),
+  tracking: new Size(3),
+  leading: new Size(85),
   drawingSequence: [],
   maxStretch: 4,
   glyphWeight: new Size(1),
@@ -58,24 +73,57 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
   correctVolumeStroke: false,
   easing: Easing.Linear,
   squareMap: true,
-  getRanges: function () {
-    return {
+  mapFunction: function (stillVector, mouseVector) {
+    const results = getBlankCoors(false)
+    const distVector = mouseVector.sub(('mouseOrigin' in this && this.mouseOrigin) ?
+      this.mouseOrigin : stillVector)
+    const ranges = {
       x: [0, getVw()],
       y: [0, this.squareMap ? getVw() : getVh()],
     }
-  },
-  mapFunction: function (stillVector, mouseVector) {
-    const results = { x: 0, y: 0 }
-    const distVector = mouseVector.sub(('mouseOrigin' in this && this.mouseOrigin) ?
-      this.mouseOrigin : stillVector)
+
     loopObject(Axes, axis => {
       const dist = distVector[axis]
-      const [min, max] = this.getRanges()[axis]
+      const [min, max] = ranges[axis]
       const eased = easing[this.easing](Math.abs(dist) / (max - min))
+      const maxStretch = typeof this.maxStretch === 'object' ? this.maxStretch[axis] : this.maxStretch
       results[axis] = stillVector[axis] +
-        map(eased, 0, 1, 0, this.maxStretch * this.scale.value) * Math.sign(dist)
+        map(eased, 0, 1, 0, maxStretch * this.scale.value) * Math.sign(dist)
     })
     return results
+  },
+
+  mapMotionFunction: function (stillVector, rotationVector, debug) {
+    const maxStretch = typeof this.maxStretch === 'object' ?
+      this.maxStretch : {
+        x: this.maxStretch,
+        y: this.maxStretch
+      }
+
+    const { x, y } = rotationVector
+    const unmappedValues = {
+      x,
+      y: 90 - Math.abs(Math.abs((y % 180)) - 90)
+    }
+    const result = mapObject(unmappedValues, (axis, unmapped) => {
+      const unfiltered = map(unmapped, 0, 90)
+      const eased = easing[this.easing](Math.abs(unfiltered))
+      const sign = Math.sign(unfiltered) * (axis === 'y' ? (y < 0 || y > 180 ? -1 : 1) : 1)
+      const filtered = kalmanFilters[axis].filter(eased * sign)
+      const multiplier = maxStretch[axis] * this.scale.value
+      return stillVector[axis] + filtered * multiplier
+    })
+
+    if (debug && debug.name === 'Z') {
+      const { p5, doDebug } = debug
+      if (p5 && doDebug) {
+        const coors = [x, y].map(coor => _.round(coor, 1))
+        p5.text('x: ' + coors[0], 10, 20)
+        p5.text('y: ' + coors[1], 10, 30)
+      }
+    }
+
+    return result
   }
 }
 

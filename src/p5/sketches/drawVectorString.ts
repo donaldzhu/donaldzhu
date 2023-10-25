@@ -14,12 +14,11 @@ type DrawVectorStringProps = {
 
 const drawVectorString = ({ containerRef, placeholderRef }: DrawVectorStringProps) => {
   let text: Text
-  const TEXT_CONTENT = 'Ä'
   let placeholder: ElemRect<HTMLDivElement>
   let container: ElemRect<HTMLDivElement>
 
   const createVector = (p5: p5) =>
-    text = new Text(p5, configs.VECTOR_STRING_TRANSLATE)
+    text = new Text(p5, 'Ä', configs.VECTOR_STRING_TRANSLATE)
 
   const setup = (p5: p5) => {
     if (!validateRef(placeholderRef) || !validateRef(containerRef))
@@ -36,7 +35,7 @@ const drawVectorString = ({ containerRef, placeholderRef }: DrawVectorStringProp
     text.setTransform({ x, y, scale: new Size(size / 45) })
     text.setting.maxStretch = size / 6.25
     text.setMouseOrigin(container.center)
-    text.write(TEXT_CONTENT)
+    text.write()
   }
 
   const windowResized = createVector

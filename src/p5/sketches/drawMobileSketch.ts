@@ -1,53 +1,58 @@
 import p5 from 'p5'
 import { sketchSizes } from '../../styles/sizes'
-import ElemRect from '../../utils/helpers/rect/elemRect'
 import { validateRef } from '../../utils/typeUtils'
 import { coorTuple } from '../../utils/utilTypes'
 import configs from '../configs/vector'
 import Text from '../helpers/vector/text'
-import { PlaceholderProp } from './sketchTypes'
+import { getVw } from '../../utils/sizeUtils'
+import { CanvasState } from '../../components/canvas/canvasTypes'
+import { loopObject } from '../../utils/commonUtils'
 
-const drawMainSketch = ({ placeholderRef }: PlaceholderProp) => {
-  const UPPER_TEXT_CONTENT = 'WORK IN\nPROGRESS'
-  const LOWER_TEXT_CONTENT = 'DONALD\nZHU'
 
-  let placeholder: ElemRect<HTMLDivElement>
-  let upperText: Text, lowerText: Text
-  let mouseOrigin: coorTuple | [] = []
+const drawMobileSketch = () => {
+  let texts: Record<string, Text>
 
-  const createVectors = (p5: p5) => {
-    const [x, y] = placeholder.center
-    const centerPadding = sketchSizes.main.centerPadding.value
+  const createVectors = (p5: p5, canvasState: CanvasState) => {
+    const x = getVw(50)
 
-    upperText = new Text(p5, {
-      ...configs.MAIN_UPPER, x, y
-    })
+    const workIn = new Text(p5, 'WORK IN', {
+      ...configs.MOBILE_UPPER, x,
+      y: sketchSizes.mobile.top.value,
+      spaceWidth: sketchSizes.mobile.spaceWidth,
+      tracking: sketchSizes.mobile.tracking.workIn
+    }, canvasState)
 
-    const { h: upperH } = upperText.getBounds(UPPER_TEXT_CONTENT)
-    upperText.setTransform({ y: y - (upperH + centerPadding) / 2 })
+    const process = new Text(p5, 'PROCESS', {
+      ...configs.MOBILE_UPPER, x,
+      y: workIn.bounds.y2 + sketchSizes.mobile.leading.value,
+      tracking: sketchSizes.mobile.tracking.process
+    }, canvasState)
 
-    lowerText = new Text(p5, {
-      ...configs.MAIN_LOWER, x, y
-    })
+    const donald = new Text(p5, 'DONALD', {
+      ...configs.MOBILE_LOWER, x,
+      y: process.bounds.y2 + sketchSizes.mobile.centerPadding.value,
+    }, canvasState)
 
-    const { h: lowerH } = lowerText.getBounds(LOWER_TEXT_CONTENT)
-    lowerText.setTransform({ y: y + (lowerH + centerPadding) / 2 })
+    const zhu = new Text(p5, 'ZHU', {
+      ...configs.MOBILE_LOWER, x,
+      y: donald.bounds.y2 + sketchSizes.mobile.leading.value,
+    }, canvasState)
 
-    mouseOrigin = placeholder.center
-    upperText.setMouseOrigin(mouseOrigin)
-    lowerText.setMouseOrigin(mouseOrigin)
+    const mouseOrigin: coorTuple =
+      [x, (donald.bounds.y1 - process.bounds.y2) / 2]
+    texts = { workIn, process, donald, zhu }
+    loopObject(texts, (_, text) => text.setMouseOrigin(mouseOrigin))
   }
 
-  const setup = (p5: p5) => {
-    if (!validateRef(placeholderRef))
-      throw new Error('Main sketch has no placeholder ref.')
-    placeholder = new ElemRect(placeholderRef, -sketchSizes.main.anchor.offset.value)
-    createVectors(p5)
+  const setup = (p5: p5, canvasState: CanvasState) => {
+    createVectors(p5, canvasState)
   }
 
-  const draw = () => {
-    upperText.write(UPPER_TEXT_CONTENT)
-    lowerText.write(LOWER_TEXT_CONTENT)
+  const draw = (p5: p5, { gimbalRef }: CanvasState) => {
+    if (!texts) return
+    loopObject(texts, (_, text) => text.write())
+    if (!validateRef(gimbalRef)) return
+    gimbalRef.current.update()
   }
 
   const windowResized = createVectors
@@ -56,4 +61,5 @@ const drawMainSketch = ({ placeholderRef }: PlaceholderProp) => {
 }
 
 
-export default drawMainSketch
+export default drawMobileSketch
+

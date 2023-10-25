@@ -7,8 +7,10 @@ import Size from './size'
 
 interface MobileBreakptSizesType { s: number, m: number }
 interface TabletBreakptSizesType { m: number, l: number }
+interface NonDesktopBreakptSizesType { s: number, l: number }
 interface DesktopBreakptSizesType { l: number, xxl: number, xxlSm?: number }
 export type BreakptSizesType =
+  NonDesktopBreakptSizesType |
   MobileBreakptSizesType |
   TabletBreakptSizesType |
   DesktopBreakptSizesType
@@ -29,6 +31,7 @@ export class BreakptSizer {
 
   constructor(breakptSizes: MobileBreakptSizesType)
   constructor(breakptSizes: TabletBreakptSizesType)
+  constructor(breakptSizes: NonDesktopBreakptSizesType)
   constructor(breakptSizes: DesktopBreakptSizesType)
   constructor(breakptSizes: BreakptSizesType)
   constructor(breakptSizes: Partial<Record<Breakpt | 'xxlSm', number>>) {

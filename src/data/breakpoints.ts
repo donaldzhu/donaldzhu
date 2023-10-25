@@ -1,7 +1,7 @@
 import { Breakpt } from '../utils/queryUtil'
 
 const breakpts: Record<Breakpt, number> = {
-  s: 0,
+  s: 414,
   m: 768,
   l: 1024,
   xl: 1280,

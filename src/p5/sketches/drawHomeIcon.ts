@@ -14,12 +14,11 @@ type DrawHomeIconProps = {
 
 const drawHomeIcon = ({ placeholderRef, isHoveringRef }: DrawHomeIconProps) => {
   let text: Text
-  const TEXT_CONTENT = 'A'
   const sidebarPaddingLeft = domSizes.homeIcon.padding.left.value / 2
   let placeholder: ElemRect<HTMLDivElement>
 
   const createVector = (p5: p5) => {
-    text = new Text(p5, configs.HOME_ICON)
+    text = new Text(p5, 'A', configs.HOME_ICON)
     const { center, x, y } = placeholder
     text.setMouseOrigin(center)
     text.setTransform({ x, y })
@@ -36,7 +35,7 @@ const drawHomeIcon = ({ placeholderRef, isHoveringRef }: DrawHomeIconProps) => {
     const { setting } = text
     const color = isHoveringRef.current ? colors.homeSketch : colors.homeIcon
     setting.glyphColor = setting.linkColor = setting.volumeColor = color
-    text.write(TEXT_CONTENT)
+    text.write()
   }
 
   const windowResized = createVector

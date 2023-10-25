@@ -18,20 +18,29 @@ import mixins from './styles/mixins'
 import { domSizes } from './styles/sizes'
 import { queries } from './utils/queryUtil'
 import HomeMobile from './components/mobile/homeMobile'
+import useCanAutoPlay from './hooks/useCanAutoPlay'
+import { isBrowser, validateString } from './utils/commonUtils'
+import { BrowserType } from './utils/utilTypes'
 
 const App = () => {
   const isMobile = !useMediaQuery(queries.l)
+  const canAutoPlay = useCanAutoPlay()
+  // const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
+
   return (
     <StyledGlobal>
       <HashRouter>
         <Routes>
           {isMobile ?
-            // <Route path='/' element={<PageMobile />}>
-            //   <Route path='' element={<HomeMobile />} />
-            // </Route>
-            <Route path='/' element={<MobileBlocker />} />
-            :
-            <Route path='/' element={<Page />}>
+            (process.env.NODE_ENV === 'development' ?
+              <Route path='/' element={<PageMobile canAutoPlay={canAutoPlay} />}>
+                <Route path='' element={<HomeMobile />} />
+                <Route path='*' element={<Navigate to='/' replace />} />
+              </Route> :
+              <Route path='/' element={<MobileBlocker />} >
+                <Route path='*' element={<Navigate to='/' replace />} />
+              </Route>) :
+            <Route path='/' element={<Page canAutoPlay={canAutoPlay} />}>
               <Route path='' element={<PageWithMainSketch />}>
                 <Route path='' element={<Home />} />
                 <Route path='contact' element={<Contact />} />
@@ -78,6 +87,10 @@ const StyledGlobal = styled.main`
       color: ${colorConfig.defaultTextSelectColor};
       background-color: ${colorConfig.defaultTextSelectBg};
     }
+  }
+
+  p {
+    ${validateString(isBrowser(BrowserType.Firefox), 'hyphens: none;')}
   }
 
   b,

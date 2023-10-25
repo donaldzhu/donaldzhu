@@ -1,6 +1,7 @@
 import PageAcogito from '../../components/workPages/pageAcogito'
 import PageArchitecture from '../../components/workPages/pageArchitecture'
 import PageDm2020 from '../../components/workPages/pageDm2020'
+import PageGameStudies from '../../components/workPages/pageGameStudies'
 import PageIVoted from '../../components/workPages/pageIVoted'
 import PageMemoryOfMemories from '../../components/workPages/pageMemoryOfMemories'
 import PageObjectBulb from '../../components/workPages/pageObjectBulb'
@@ -15,6 +16,7 @@ import PageVectorString from '../../components/workPages/pageVectorString'
 import PageVectorStruct from '../../components/workPages/pageVectorStruct'
 
 const workPages: Record<string, () => JSX.Element> = {
+  'game-studies': PageGameStudies,
   'vector-spin-stroke': PageVectorSpinStroke,
   'vector-struct': PageVectorStruct,
   'vector-string': PageVectorString,

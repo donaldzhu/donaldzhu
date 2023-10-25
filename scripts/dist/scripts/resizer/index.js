@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var resize_1 = __importDefault(require("./resize"));
 var config = {
     resizeThumbnails: true,
-    resizeWork: true,
+    resizeWork: false,
     includePages: [],
     includeBreakpts: [],
 };

@@ -4,13 +4,13 @@ import { GlobalCanvasStates } from '../../canvas/canvasTypes'
 import SvgBorder from '../../common/svgBorder'
 import HomeIcon from './homeIcon'
 
-const Header = ({ canvasRef, canvasStateRefs }: GlobalCanvasStates) => {
+const Header = ({ canvasRef, canvasStates }: GlobalCanvasStates) => {
   return (
     <header>
       <HomeIconContainer>
         <HomeIcon
           canvasRef={canvasRef}
-          canvasStateRefs={canvasStateRefs} />
+          canvasStates={canvasStates} />
         <SvgBorder
           size={domSizes.sidebar.width}
           isVertical={false} />

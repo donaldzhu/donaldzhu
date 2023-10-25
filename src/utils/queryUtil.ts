@@ -15,6 +15,8 @@ export const queries = mapObject(breakpts, (_, breakpt) =>
 export const getBreakptKey = () => {
   if (window.screen.width >= breakpts.xxl)
     return Breakpt.xxl
+  if (window.screen.width < breakpts.s)
+    return Breakpt.s
   const breakptPairs = toPairs(breakpts)
     .sort((a, b) => a[1] - b[1])
   const breakptPair = breakptPairs

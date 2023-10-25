@@ -1,17 +1,17 @@
-import { useRef } from 'react'
 import styled from 'styled-components'
+
 import useCanvas from '../../hooks/useCanvas'
-import drawMainSketch from '../../p5/sketches/drawMainSketch'
+import drawMobileSketch from '../../p5/sketches/drawMobileSketch'
 import mixins from '../../styles/mixins'
 import { vw } from '../../utils/sizeUtils'
 
+
 const HomeMobile = () => {
-  const placeholderRef = useRef<HTMLDivElement>(null)
-  useCanvas(() => drawMainSketch({ placeholderRef }))
+  useCanvas(drawMobileSketch)
 
   return (
     <>
-      <MainSketchPlaceHolder ref={placeholderRef} />
+      <MainSketchPlaceHolder />
       <div>
 
       </div>
@@ -20,7 +20,6 @@ const HomeMobile = () => {
 }
 
 const MainSketchPlaceHolder = styled.div`
-  outline: red 1px solid;
   ${mixins
     .chain()
     .squared(vw(100))

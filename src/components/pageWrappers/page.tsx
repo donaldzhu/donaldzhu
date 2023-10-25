@@ -1,7 +1,6 @@
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import useCanAutoPlay from '../../hooks/useCanAutoPlay'
 import useCanvas from '../../hooks/useCanvas'
 import useGlobalCanvas from '../../hooks/useGlobalCanvas'
 import usePreload from '../../hooks/usePreload'
@@ -14,25 +13,24 @@ import { RequiredZoomMediaProps } from '../common/media/mediaTypes'
 import ZoomedMedia from '../common/media/zoomedMedia'
 import LeftContainer from '../leftContainer/leftContainer'
 import Vid from '../common/media/vid'
-import { handleZoomType, PageContextProps } from './pageTypes'
+import { handleZoomType, PageContextProps, PageProps } from './pageTypes'
 
-const Page = () => {
+const Page = ({ canAutoPlay }: PageProps) => {
   const [sidebar, setSidebar] = useState<ReactNode | undefined>()
   const [zoomMedia, setZoomMedia] = useState<RequiredZoomMediaProps | undefined>()
   const location = useLocation()
 
-  const canvasStateRefs = {
+  const canvasStates = {
     mousePositionRef: useRef(null),
     hideCursorRef: useRef(false)
   }
 
-  const canAutoPlay = useCanAutoPlay()
   const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
 
   const handleZoomMedia: handleZoomType = media => setZoomMedia(media)
   const canvasRef = useGlobalCanvas()
 
-  useCanvas(drawCursor, { canvasRef, canvasStateRefs })
+  useCanvas(drawCursor, { canvasRef, canvasStates: canvasStates })
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -43,7 +41,7 @@ const Page = () => {
     <>
       <GlobalCanvas
         canvasRef={canvasRef}
-        canvasStateRefs={canvasStateRefs} />
+        canvasStates={canvasStates} />
       {zoomMedia && <ZoomedMedia
         zoomMedia={zoomMedia}
         handleUnzoom={() => setZoomMedia(undefined)} />}
@@ -52,10 +50,10 @@ const Page = () => {
       <LeftContainer
         sidebar={sidebar}
         canvasRef={canvasRef}
-        canvasStateRefs={canvasStateRefs} />
+        canvasStates={canvasStates} />
       <Outlet context={{
         canvasRef,
-        canvasStateRefs,
+        canvasStates: canvasStates,
         sidebar,
         setSidebar,
         zoomMedia,

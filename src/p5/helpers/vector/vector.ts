@@ -45,7 +45,6 @@ class Vector {
     })()
 
     this.setTransform({ x, y, scale })
-
   }
 
   draw() {

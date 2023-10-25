@@ -54,6 +54,7 @@
     "enabled": true,
     "listed": true
   },
+
   {
     "id": "memory-of-memories",
     "title": "memory ( of memories )",
@@ -62,6 +63,17 @@
     "tags": ["Typography"],
     "medium": ["Kettle-stitched Book", "Acetate", "Inkjet print"],
     "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "game-studies",
+    "title": "UofT GAME STUDIES",
+    "abbr": null,
+    "date": "2023",
+    "tags": ["Code", "Branding"],
+    "medium": ["p5.js", "Animation", "Postcard", "Poster"],
+    "animatedThumbnail": true,
     "enabled": true,
     "listed": true
   },

@@ -1,33 +1,47 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
-import useCanAutoPlay from '../../hooks/useCanAutoPlay'
+import _ from 'lodash'
 import useGlobalCanvas from '../../hooks/useGlobalCanvas'
 import GlobalCanvas from '../canvas/globalCanvas'
-import MobileDebugger from './mobileDebugger'
+import { addEventListener } from '../../utils/reactUtils'
+import { PageProps } from '../pageWrappers/pageTypes'
+import useMotion from '../../hooks/useMotion'
+import usePhysics from '../../hooks/usePhysics'
 import { PageMobileContext } from './mobileType'
 
-const PageMobile = () => {
-  const [debuggerContent, setDebuggerContent] = useState<string[]>([])
-  const canAutoPlay = useCanAutoPlay()
+const PageMobile = ({ canAutoPlay }: PageProps) => {
   const canvasRef = useGlobalCanvas()
 
-  const mobile = {
-    log: (...content: any[]) => {
-      console.log(...content)
-      if (process.env.NODE_ENV !== 'production')
-        return setDebuggerContent(prev =>
-          [...prev, ...content.map(item => JSON.stringify(item))])
-    }
+  const {
+    motionSettings,
+    motionSettingsRef,
+    gimbalRef,
+    getPermission
+  } = useMotion()
+
+  const engine = usePhysics()
+
+  const { isUsable, needsPermission } = motionSettings
+  const canvasStates = {
+    motionSettingsRef,
+    gimbalRef,
+    engine
   }
+
+  useEffect(() => {
+    if (isUsable === false || !needsPermission) return _.noop
+    return addEventListener(window, 'touchend', getPermission ?? _.noop)
+  }, [motionSettings])
 
   return (
     <>
-      <MobileDebugger content={debuggerContent} />
-      <GlobalCanvas canvasRef={canvasRef} />
+      <GlobalCanvas
+        canvasRef={canvasRef}
+        canvasStates={{ engine }} />
       <Outlet context={{
-        mobile,
         canAutoPlay,
-        canvasRef
+        canvasRef,
+        canvasStates: canvasStates
       } satisfies PageMobileContext} />
     </>
   )

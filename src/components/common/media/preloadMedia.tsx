@@ -54,7 +54,7 @@ function PreloadMediaWithRef(props: PreloadMediaProps, ref: MediaRef) {
     {...rest}
     src={loadState.src}
     hasLoaded={loadState.hasLoaded}
-    aspectRatio={((nativeW ?? 1) / (nativeH ?? 1))}
+    aspectRatio={!nativeW || !nativeH ? undefined : nativeW / nativeH}
     ref={ref} />
 }
 

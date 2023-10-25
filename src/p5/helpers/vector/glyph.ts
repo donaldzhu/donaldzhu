@@ -1,8 +1,11 @@
 import p5 from 'p5'
+import * as THREE from 'three'
 import bearingsData from '../../../data/vector/spacings.json'
 import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
+import { validateRef } from '../../../utils/typeUtils'
 import Vector from './vector'
-import { VectorSetting } from './vectorTypes'
+import { MotionSettings, VectorSetting } from './vectorTypes'
+
 
 class Glyph {
   private p5: p5 | p5.Graphics
@@ -11,17 +14,43 @@ class Glyph {
   still: Vector
   active: Vector
 
-  constructor(p5: p5 | p5.Graphics, name: keyof typeof bearingsData, setting: VectorSetting) {
+  private motionSettings: MotionSettings | undefined
+
+  // TODO: remove when mobile dev is finished
+  private name: string
+  constructor(
+    p5: p5 | p5.Graphics,
+    name: keyof typeof bearingsData,
+    setting: VectorSetting,
+    motionSettings?: MotionSettings
+  ) {
     this.p5 = p5
     this.setting = setting
     this.still = new Vector(p5, name, setting)
     this.active = new Vector(p5, name, setting)
     this.nativeBearings = bearingsData[name]
+
+    this.motionSettings = motionSettings
+    this.name = name
   }
 
   draw() {
-    const { drawingSequence, mapFunction } = this.setting
-    this.active.setTransform(mapFunction.call(
+    const { drawingSequence, mapFunction, mapMotionFunction } = this.setting
+
+    const motionData = this.motionData
+    if (this.setting.isMobile && motionData) {
+      this.active.setTransform(mapMotionFunction.call(
+        this.setting,
+        this.still.position,
+        motionData,
+        {
+          p5: this.p5,
+          name: this.name,
+          doDebug: false
+        }
+      ))
+    }
+    else this.active.setTransform(mapFunction.call(
       this.setting,
       this.still.position,
       this.mouseVector
@@ -92,7 +121,7 @@ class Glyph {
 
   getBearings() {
     return this.nativeBearings.map(bearing =>
-      (bearing + this.setting.tracking) * this.still.scale.value)
+      (bearing + this.setting.tracking.value) * this.still.scale.value)
   }
 
   loopVectors(callback: (vectorData: {
@@ -130,6 +159,24 @@ class Glyph {
   get mouseVector() {
     const { p5 } = this
     return p5.createVector(p5.mouseX, p5.mouseY)
+  }
+
+  get motionData() {
+    const { p5 } = this
+    if (
+      !this.motionSettings ||
+      !validateRef(this.motionSettings.motionSettingsRef) ||
+      !validateRef(this.motionSettings.gimbalRef) ||
+      !this.motionSettings.motionSettingsRef.current.isUsable
+    ) return undefined
+
+    const { gimbalRef } = this.motionSettings
+
+    const gimbal = gimbalRef.current
+    const { x, z } = new THREE.Euler().setFromQuaternion(gimbal.quaternion)
+
+    return p5.createVector(z, -(x - Math.PI / 2))
+      .mult(180 / Math.PI)
   }
 }
 
