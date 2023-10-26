@@ -55,13 +55,13 @@ export interface VectorSetting {
   ) => CoorObject
 }
 
-export interface SetTransformScaleProps {
+interface SetTransformScaleProps {
   x?: number,
   y?: number,
   scale?: Size
 }
 
-export interface SetTransformWidthProps {
+interface SetTransformWidthProps {
   x?: number,
   y?: number,
   w: number,

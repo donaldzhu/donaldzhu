@@ -143,17 +143,7 @@
     "enabled": true,
     "listed": true
   },
-  {
-    "id": "acogito",
-    "title": "ACOGITO",
-    "abbr": null,
-    "date": "2022-2023",
-    "tags": ["Speculative", "Generative"],
-    "medium": ["Book", "Acrylic", "Poster", "Vellum", "Acetate Deck", "p5.js"],
-    "animatedThumbnail": true,
-    "enabled": true,
-    "listed": true
-  },
+
   {
     "id": "architecture",
     "title": "“Architecture”",
@@ -162,6 +152,17 @@
     "tags": ["Poster Design"],
     "medium": ["Paste up", "Gel medium", "Duct tape"],
     "animatedThumbnail": false,
+    "enabled": true,
+    "listed": true
+  },
+  {
+    "id": "acogito",
+    "title": "ACOGITO",
+    "abbr": null,
+    "date": "2022-2023",
+    "tags": ["Speculative", "Generative"],
+    "medium": ["Book", "Acrylic", "Poster", "Vellum", "Acetate Deck", "p5.js"],
+    "animatedThumbnail": true,
     "enabled": true,
     "listed": true
   },

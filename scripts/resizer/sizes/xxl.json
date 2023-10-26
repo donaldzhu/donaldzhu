@@ -51,7 +51,7 @@
       ["stickers/*", 0.25]
     ],
     "memory-of-memories": [
-      ["1.webp", 1],
+      ["1.webp", 1.2],
       ["2.webp", 0.5],
       ["3.webp", 0.5],
       ["4.webp", 0.333],

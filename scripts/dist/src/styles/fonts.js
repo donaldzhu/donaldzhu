@@ -17,7 +17,7 @@ exports.fontLineHeights = {
     popUp: (0, sizeUtils_1.em)(1.25)
 };
 var sansToMonoratio = 1.03;
-var monoFontSize = (0, sizeUtils_1.getRemSize)({ l: 1.325, xxl: 2.925 });
+var monoFontSize = (0, sizeUtils_1.getRemSize)({ l: 1.3, xxl: 2.875 });
 var workIndexMonoFontSize = (0, sizeUtils_1.getRemSize)({ l: 0.85, xxl: 1.7 });
 exports.fontSizes = {
     title: (0, sizeUtils_1.getRemSize)({ l: 1.6, xxl: 2.3 }),

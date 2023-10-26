@@ -37,7 +37,7 @@ exports.domSizes = {
             right: sidebarPaddingRight,
             vert: sidebarPaddingVert
         },
-        border: (0, sizeUtils_1.getSize)({ l: 4, xxl: 6 }),
+        border: (0, sizeUtils_1.getSize)({ l: 2, xxl: 4 }),
         borderHeights: {
             header: headerHeight,
             main: size_1.default.subFromFullHeight(headerHeight)
@@ -118,7 +118,7 @@ exports.sketchSizes = {
             size: (0, sizeUtils_1.getSize)({ l: 37.5, xxl: 50 }),
             offset: (0, sizeUtils_1.getSize)({ l: 55, xxl: 70 })
         },
-        scale: (0, sizeUtils_1.getSize)({ l: 1.15, xxl: 2.5 }),
+        scale: (0, sizeUtils_1.getSize)({ l: 1.5, xxl: 2.5 }),
         weight: {
             lower: (0, sizeUtils_1.getSize)({ l: 6, xxl: 10 }),
             glyph: (0, sizeUtils_1.getSize)({ l: 4, xxl: 7 }),
@@ -148,7 +148,7 @@ exports.sketchSizes = {
     },
     cursor: (0, sizeUtils_1.getSize)({ l: 40, xxl: 65 }),
     line: {
-        weight: (0, sizeUtils_1.getSize)({ l: 3, xxl: 5 }),
+        weight: (0, sizeUtils_1.getSize)({ l: 2, xxl: 4 }),
         dash: (0, sizeUtils_1.getSize)({ l: 5, xxl: 8 })
     },
     homeIcon: {

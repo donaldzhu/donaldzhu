@@ -4,12 +4,10 @@ import { Suspense, useRef, useState } from 'react'
 import styled from 'styled-components'
 import workData from '../../data/work/workData.json'
 import useCanvas from '../../hooks/useCanvas'
-import usePortfolioQuery from '../../hooks/usePortfolioQuery'
 import usePreloadQueue from '../../hooks/usePreloadQueue'
 import useSidebar from '../../hooks/useSidebar'
 import drawWorkSketch from '../../p5/sketches/drawWorkSketch'
 import { domSizes } from '../../styles/sizes'
-import { filterFalsy } from '../../utils/commonUtils'
 import { queries } from '../../utils/queryUtil'
 import MainContainer from '../common/styled/mainContainer'
 import WorkIndexSidebar from './workIndexSideBar'
@@ -44,14 +42,8 @@ const WorkIndex = () => {
   usePreloadQueue(setupDone, preloadManager =>
     preloadManager.defaultPreload())
 
-  const { portfolioData } = usePortfolioQuery()
-  const portfolioProjects = portfolioData ? filterFalsy(portfolioData?.projects
-    .map(projectId => workData.find(work => work.id === projectId))) : []
-  const filteredWorkData: WorkDataInterface[] =
-    portfolioProjects.length ? portfolioProjects : workData
-
   useSidebar(<WorkIndexSidebar
-    workData={filteredWorkData}
+    workData={workData}
     highlighted={highlighted}
     sidebarRef={sidebarRef}
     handleHover={handleHover} />, [highlighted])
@@ -63,7 +55,7 @@ const WorkIndex = () => {
     <ThumbnailContainer $columns={columns}>
       <Suspense>
         <Masonry columns={columns}>
-          {filteredWorkData.map(project => project.enabled && project.listed && <WorkThumbnail
+          {workData.map(project => project.enabled && project.listed && <WorkThumbnail
             key={project.title}
             data={project}
             isHighlighted={highlighted === project.title}

@@ -35,7 +35,7 @@ export const domSizes = {
       right: sidebarPaddingRight,
       vert: sidebarPaddingVert
     },
-    border: getSize({ l: 4, xxl: 6 }),
+    border: getSize({ l: 2, xxl: 4 }),
     borderHeights: {
       header: headerHeight,
       main: Size.subFromFullHeight(headerHeight)
@@ -118,7 +118,7 @@ export const sketchSizes = {
       size: getSize({ l: 37.5, xxl: 50 }),
       offset: getSize({ l: 55, xxl: 70 })
     },
-    scale: getSize({ l: 1.15, xxl: 2.5 }),
+    scale: getSize({ l: 1.5, xxl: 2.5 }),
     weight: {
       lower: getSize({ l: 6, xxl: 10 }),
       glyph: getSize({ l: 4, xxl: 7 }),
@@ -148,7 +148,7 @@ export const sketchSizes = {
   },
   cursor: getSize({ l: 40, xxl: 65 }),
   line: {
-    weight: getSize({ l: 3, xxl: 5 }),
+    weight: getSize({ l: 2, xxl: 4 }),
     dash: getSize({ l: 5, xxl: 8 })
   },
   homeIcon: {

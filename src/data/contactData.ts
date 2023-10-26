@@ -10,7 +10,7 @@ const contactData: ContactDataInterface[] = [
     qrName: 'email',
     text: 'email',
     displayName: 'email',
-    link: 'mailto:donaldzhu.toronto@gmail.com',
+    link: 'mailto:contact@donaldzhu.ca',
     SvgComponent: EmailSvg
   },
   {

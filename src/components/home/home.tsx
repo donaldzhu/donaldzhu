@@ -12,7 +12,7 @@ const Home = () => {
 const HomeSidebar = () => {
   const { portfolioData } = usePortfolioQuery()
   const PortfolioHeader = portfolioData ?
-    `${portfolioData.employer?.toLocaleUpperCase()}, WELCOME! Thanks for your time.` :
+    `${portfolioData.toLocaleUpperCase()}, WELCOME! Thanks for your time.` :
     'DONALD ZHU is a graphic designer based in Toronto, Canada.'
 
   return (

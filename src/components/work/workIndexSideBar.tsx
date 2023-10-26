@@ -1,11 +1,7 @@
 import { MutableRefObject } from 'react'
 import styled from 'styled-components'
-import usePortfolioQuery from '../../hooks/usePortfolioQuery'
-import { fontFamilies, fontSizes } from '../../styles/fonts'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
-import { appendQuery, validateString } from '../../utils/commonUtils'
-import Anchor from '../common/anchor'
 import TextContainer from '../common/styled/textContainer'
 import { WorkDataInterface } from './workIndex'
 import WorkSideBarItem from './workSidebarItem'
@@ -23,11 +19,6 @@ const WorkIndexSidebar = ({
   sidebarRef,
   handleHover
 }: WorkIndexSidebarProps) => {
-  const storageKey = 'pid'
-  const pid = usePortfolioQuery().pid
-  const cachedPid = sessionStorage.getItem(storageKey)
-  const portfolioNavText = pid ? 'See all work (to main site) +' : 'Return to portfolio -'
-
   return (
     <>
       <SideBarContainer as='ul'>
@@ -39,11 +30,6 @@ const WorkIndexSidebar = ({
             highlightedRef={sidebarRef}
             handleHover={handleHover} />)}
       </SideBarContainer>
-      {(pid ?? cachedPid) && <ToMainSiteLink
-        to={'/work' + (validateString(!pid, appendQuery(['pid', cachedPid])))}
-        noQuery>
-        {portfolioNavText}
-      </ToMainSiteLink>}
     </>
   )
 }
@@ -52,15 +38,5 @@ const SideBarContainer = styled(TextContainer)`
   ${mixins.innerMargin(domSizes.workIndex.innerMargin.css)}
   position: relative;
 `
-
-const ToMainSiteLink = styled(Anchor)`
-  padding: ${domSizes.footer.link.padding.css};
-  font-family: ${fontFamilies.sansFont};
-  font-size: ${fontSizes.footer.link.css};
-  position: absolute;
-  left: ${domSizes.footer.link.padding.mult(-1).css};
-  bottom:${domSizes.sidebar.padding.vert.sub(domSizes.footer.link.padding).css};
-`
-
 
 export default WorkIndexSidebar

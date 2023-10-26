@@ -1,4 +1,4 @@
-import { em,getRemSize } from '../utils/sizeUtils'
+import { em, getRemSize } from '../utils/sizeUtils'
 
 export const fontFamilies = {
   monoFont: '"Recursive", "Helvetica Neue", sans-serif;',
@@ -18,7 +18,7 @@ export const fontLineHeights = {
 }
 
 const sansToMonoratio = 1.03
-const monoFontSize = getRemSize({ l: 1.325, xxl: 2.925 })
+const monoFontSize = getRemSize({ l: 1.3, xxl: 2.875 })
 const workIndexMonoFontSize = getRemSize({ l: 0.85, xxl: 1.7 })
 export const fontSizes = {
   title: getRemSize({ l: 1.6, xxl: 2.3 }),
