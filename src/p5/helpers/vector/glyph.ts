@@ -46,7 +46,7 @@ class Glyph {
         {
           p5: this.p5,
           name: this.name,
-          doDebug: false
+          doDebug: true
         }
       ))
     }
@@ -173,10 +173,10 @@ class Glyph {
     const { gimbalRef } = this.motionSettings
 
     const gimbal = gimbalRef.current
-    const { x, z } = new THREE.Euler().setFromQuaternion(gimbal.quaternion)
-
+    const { x, z } = new THREE.Euler().setFromQuaternion(gimbal.quaternion, 'XZY')
     return p5.createVector(z, -(x - Math.PI / 2))
       .mult(180 / Math.PI)
+
   }
 }
 

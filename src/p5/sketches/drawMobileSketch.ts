@@ -48,7 +48,7 @@ const drawMobileSketch = () => {
     createVectors(p5, canvasState)
   }
 
-  const draw = (p5: p5, { gimbalRef }: CanvasState) => {
+  const draw = (_: p5, { gimbalRef }: CanvasState) => {
     if (!texts) return
     loopObject(texts, (_, text) => text.write())
     if (!validateRef(gimbalRef)) return

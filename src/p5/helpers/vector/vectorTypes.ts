@@ -50,7 +50,8 @@ export interface VectorSetting {
     debug?: {
       p5?: p5 | p5.Graphics,
       name?: string,
-      doDebug?: boolean
+      doDebug?: boolean,
+      [x: string]: any
     }
   ) => CoorObject
 }
