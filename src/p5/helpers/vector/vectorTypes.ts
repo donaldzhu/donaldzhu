@@ -1,4 +1,5 @@
 import p5 from 'p5'
+import { Constraint, Engine } from 'matter-js'
 import Size from '../../../utils/helpers/size'
 import { CanvasState } from '../../../components/canvas/canvasTypes'
 import { CoorObject } from '../../../utils/utilTypes'
@@ -47,16 +48,19 @@ export interface VectorSetting {
   mapMotionFunction: (
     stillVector: p5.Vector,
     rotationVector: p5.Vector,
+    bodies: {
+      active: Matter.Body,
+      constraint: Constraint
+    },
     debug?: {
       p5?: p5 | p5.Graphics,
       name?: string,
-      doDebug?: boolean,
-      [x: string]: any
+      enabled?: boolean,
     }
   ) => CoorObject
 }
 
-interface SetTransformScaleProps {
+export interface SetTransformScaleProps {
   x?: number,
   y?: number,
   scale?: Size
@@ -106,4 +110,4 @@ export const enum Easing {
   EaseInOutBounce = 'easeInOutBounce',
 }
 
-export type MotionSettings = Pick<CanvasState, 'motionSettingsRef' | 'gimbalRef'>
+export type MotionSettings = Pick<CanvasState, 'motionSettingsRef' | 'gimbalRef' | 'engine'>

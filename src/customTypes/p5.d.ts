@@ -7,6 +7,10 @@ declare module 'p5' {
     static VERSION: string
     static instance: p5Class
     static disableFriendlyErrors: boolean
+    Graphics: p5.Graphics & {
+      canvas: HTMLCanvasElement
+    }
+    Vector: p5.Vector
   }
 
   interface p5 extends p5InstanceExtensions {
@@ -43,10 +47,10 @@ declare module 'p5' {
 
     mouseClicked(this: p5, evt?: MouseEvent): boolean | void
     doubleClicked(this: p5, evt?: MouseEvent): boolean | void
-
     Graphics: p5.Graphics & {
       canvas: HTMLCanvasElement
     }
+    Vector: p5.Vector
   }
 
   export default p5

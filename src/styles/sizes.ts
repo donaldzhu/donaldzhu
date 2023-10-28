@@ -2,7 +2,8 @@ import Size from '../utils/helpers/size'
 import { getSize } from '../utils/sizeUtils'
 import { fontSizes } from './fonts'
 
-const homeIconBaseSize = [43, 44]
+const vectorXHeight = 44
+const homeIconBaseSize = [43, vectorXHeight]
 const homeIconInnerPadding = getSize({ l: 30, xxl: 40 })
 const homeIconScales = { l: 0.75, xxl: 1.15 }
 const homeIconSizes = homeIconBaseSize.map(baseSize =>
@@ -112,6 +113,9 @@ export const domSizes = {
 }
 
 export const sketchSizes = {
+  vector: {
+    xHeight: vectorXHeight
+  },
   main: {
     centerPadding: getSize({ l: 50, xxl: 150 }),
     anchor: {

@@ -41,10 +41,14 @@ const drawMobileSketch = () => {
     const mouseOrigin: coorTuple =
       [x, (donald.bounds.y1 - process.bounds.y2) / 2]
     texts = { workIn, process, donald, zhu }
-    loopObject(texts, (_, text) => text.setMouseOrigin(mouseOrigin))
+    loopObject(texts, (_, text) => {
+      text.setMouseOrigin(mouseOrigin)
+      text.addBodies()
+    })
   }
 
   const setup = (p5: p5, canvasState: CanvasState) => {
+    p5.frameRate(20)
     createVectors(p5, canvasState)
   }
 
@@ -57,7 +61,12 @@ const drawMobileSketch = () => {
 
   const windowResized = createVectors
 
-  return { setup, draw, windowResized }
+  const cleanup = () => {
+    if (!texts) return
+    Object.values(texts).forEach(text => text.cleanup())
+  }
+
+  return { setup, draw, windowResized, cleanup }
 }
 
 

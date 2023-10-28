@@ -1,11 +1,11 @@
 import * as easing from 'easing-utils'
 import p5 from 'p5'
 import _ from 'lodash'
-import KalmanFilter from '../../../utils/helpers/motion/kalman'
 import spacingsData from '../../../data/vector/spacings.json'
 import { getBlankCoors, loopObject, map, mapObject, typedKeys } from '../../../utils/commonUtils'
 import Size from '../../../utils/helpers/size'
 import { getVh, getVw } from '../../../utils/sizeUtils'
+import { wrapDrawingContext } from '../../../utils/p5Utils'
 import { Easing, VectorSetting } from './vectorTypes'
 
 
@@ -32,18 +32,6 @@ export const enum YPosition {
   Top,
   Center,
   Bottom
-}
-
-const kalmanSettings = {
-  R: 0.01,
-  Q: 100,
-  A: 1.0225,
-  B: 0,
-  C: 1.75
-}
-const kalmanFilters = {
-  x: new KalmanFilter(kalmanSettings),
-  y: new KalmanFilter(kalmanSettings)
 }
 
 export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
@@ -93,7 +81,7 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
     return results
   },
 
-  mapMotionFunction: function (stillVector, rotationVector, debug) {
+  mapMotionFunction: function (stillVector, rotationVector, bodies, debug) {
     const maxStretch = typeof this.maxStretch === 'object' ?
       this.maxStretch : {
         x: this.maxStretch,
@@ -109,21 +97,41 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
       const unfiltered = map(unmapped, 0, 90)
       const eased = easing[this.easing](Math.abs(unfiltered))
       const sign = Math.sign(unfiltered) * (axis === 'y' ? (y < 0 || y > 180 ? -1 : 1) : 1)
-      const filtered = kalmanFilters[axis].filter(eased * sign)
       const multiplier = maxStretch[axis] * this.scale.value
-      return stillVector[axis] + filtered * multiplier
+      return stillVector[axis] + eased * sign * multiplier
     })
 
-    if (debug && debug.name === 'Z') {
-      const { p5, doDebug } = debug
-      if (p5 && doDebug) {
-        const coors = [x, y].map(coor => _.round(coor, 1))
-        p5.text('x: ' + coors[0], 10, 20)
-        p5.text('y: ' + coors[1], 10, 30)
-      }
+    // TODO: Remove
+    if (debug && debug.enabled) {
+      const { p5, enabled } = debug
+      if (p5 && enabled)
+        wrapDrawingContext(p5, () => {
+          if (debug.name === 'Z') {
+            const coors = [x, y].map(coor => _.round(coor, 1))
+            p5.text('x: ' + coors[0], 10, 20)
+            p5.text('y: ' + coors[1], 10, 30)
+          }
+          p5.stroke(0, 255, 0)
+          p5.fill(0)
+          p5.ellipse(bodies.constraint.pointA.x, bodies.constraint.pointA.y, 10)
+          p5.fill(255, 0, 0)
+          p5.ellipse(bodies.active.position.x, bodies.active.position.y, 10)
+        })
     }
-
     return result
   }
 }
 
+
+export const mobilePhysicsSettings = {
+  active: {
+    density: 0.1,
+    frictionAir: 0.02,
+    collisionFilter: { group: -1 }
+  },
+  constraint: {
+    length: 50,
+    //damping: 0.1,
+    stiffness: 0.1,
+  }
+}

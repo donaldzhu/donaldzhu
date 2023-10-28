@@ -7,7 +7,8 @@ exports.sketchSizes = exports.domSizes = void 0;
 var size_1 = __importDefault(require("../utils/helpers/size"));
 var sizeUtils_1 = require("../utils/sizeUtils");
 var fonts_1 = require("./fonts");
-var homeIconBaseSize = [43, 44];
+var vectorXHeight = 44;
+var homeIconBaseSize = [43, vectorXHeight];
 var homeIconInnerPadding = (0, sizeUtils_1.getSize)({ l: 30, xxl: 40 });
 var homeIconScales = { l: 0.75, xxl: 1.15 };
 var homeIconSizes = homeIconBaseSize.map(function (baseSize) {
@@ -112,6 +113,9 @@ exports.domSizes = {
     }
 };
 exports.sketchSizes = {
+    vector: {
+        xHeight: vectorXHeight
+    },
     main: {
         centerPadding: (0, sizeUtils_1.getSize)({ l: 50, xxl: 150 }),
         anchor: {

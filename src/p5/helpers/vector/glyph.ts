@@ -1,10 +1,13 @@
 import p5 from 'p5'
 import * as THREE from 'three'
+import Matter, { Bodies, Body, Composite, Constraint, Engine } from 'matter-js'
 import bearingsData from '../../../data/vector/spacings.json'
 import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
 import { validateRef } from '../../../utils/typeUtils'
+import { sketchSizes } from '../../../styles/sizes'
 import Vector from './vector'
 import { MotionSettings, VectorSetting } from './vectorTypes'
+import { mobilePhysicsSettings } from './constants'
 
 
 class Glyph {
@@ -15,9 +18,13 @@ class Glyph {
   active: Vector
 
   private motionSettings: MotionSettings | undefined
+  private engine: Engine | undefined
+  bodies: {
+    active: Matter.Body,
+    constraint: Constraint
+  } | undefined
 
-  // TODO: remove when mobile dev is finished
-  private name: string
+  private name: string // TODO: remove when mobile dev is finished
   constructor(
     p5: p5 | p5.Graphics,
     name: keyof typeof bearingsData,
@@ -30,23 +37,52 @@ class Glyph {
     this.active = new Vector(p5, name, setting)
     this.nativeBearings = bearingsData[name]
 
-    this.motionSettings = motionSettings
     this.name = name
+    this.motionSettings = motionSettings
+
+    this.engine = motionSettings?.engine
+    this.bodies = undefined
+    this.addBodies()
+  }
+
+  addBodies() {
+    if (!this.engine) return
+    if (this.bodies) this.cleanup()
+
+    const { x, y } = this.bodyCoors
+
+    const active = Bodies.circle(x, y, 10, mobilePhysicsSettings.active)
+    const constraint = Constraint.create({
+      ...mobilePhysicsSettings.constraint,
+      pointA: { x, y },
+      bodyB: active
+    })
+    this.bodies = { active, constraint }
+
+    Composite.add(this.engine.world, Object.values(this.bodies))
+  }
+
+  cleanup() {
+    if (this.engine && this.bodies)
+      Composite.remove(this.engine.world, Object.values(this.bodies))
+    this.bodies = undefined
   }
 
   draw() {
     const { drawingSequence, mapFunction, mapMotionFunction } = this.setting
 
     const motionData = this.motionData
-    if (this.setting.isMobile && motionData) {
+
+    if (this.setting.isMobile && motionData && this.bodies) {
       this.active.setTransform(mapMotionFunction.call(
         this.setting,
         this.still.position,
         motionData,
+        this.bodies,
         {
           p5: this.p5,
           name: this.name,
-          doDebug: true
+          enabled: true
         }
       ))
     }
@@ -150,6 +186,23 @@ class Glyph {
         lineIndex
       })
     })
+  }
+
+  get bodyCoors() {
+    return {
+      x: this.still.x + this.still.w / 2,
+      y: this.still.y +
+        sketchSizes.vector.xHeight *
+        this.still.scale.value / 2
+    }
+  }
+
+  repositionBodies(shouldRepositionBody?: boolean) {
+    if (!this.bodies) return
+    const newCoors = this.bodyCoors
+    Object.assign(this.bodies.constraint.pointA, newCoors)
+    if (shouldRepositionBody)
+      Body.setPosition(this.bodies.active, newCoors)
   }
 
   get w() {
