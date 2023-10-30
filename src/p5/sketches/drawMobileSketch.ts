@@ -47,10 +47,7 @@ const drawMobileSketch = () => {
     })
   }
 
-  const setup = (p5: p5, canvasState: CanvasState) => {
-    p5.frameRate(20)
-    createVectors(p5, canvasState)
-  }
+  const setup = createVectors
 
   const draw = (_: p5, { gimbalRef }: CanvasState) => {
     if (!texts) return

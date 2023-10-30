@@ -118,10 +118,6 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
       if (p5 && enabled)
         wrapDrawingContext(p5, () => {
           if (debug.name === 'Z') {
-            const coors = [x, y].map(coor => _.round(coor, 1))
-            p5.text('x: ' + coors[0], 10, 20)
-            p5.text('y: ' + coors[1], 10, 30)
-
             p5.text('gravity x: ' + _.round(gravity.x, 3), 10, 40)
             p5.text('gravity y: ' + _.round(gravity.y, 3), 10, 50)
           }
@@ -139,13 +135,13 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
 
 export const mobilePhysicsSettings = {
   active: {
-    density: 0.5,
-    frictionAir: 0.02,
+    density: 2,
+    frictionAir: 0.025,
     collisionFilter: { group: -1 }
   },
   constraint: {
-    length: 0.001,
+    length: 0.05,
     damping: 0.11,
-    stiffness: 0.05,
+    stiffness: 0.02,
   }
 }

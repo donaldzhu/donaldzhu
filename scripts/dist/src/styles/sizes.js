@@ -117,20 +117,20 @@ exports.sketchSizes = {
         xHeight: vectorXHeight
     },
     main: {
-        centerPadding: (0, sizeUtils_1.getSize)({ l: 50, xxl: 150 }),
+        centerPadding: (0, sizeUtils_1.getSize)({ l: 50, xxl: 130 }),
         anchor: {
             size: (0, sizeUtils_1.getSize)({ l: 37.5, xxl: 50 }),
             offset: (0, sizeUtils_1.getSize)({ l: 55, xxl: 70 })
         },
-        scale: (0, sizeUtils_1.getSize)({ l: 1.5, xxl: 2.5 }),
+        scale: (0, sizeUtils_1.getSize)({ l: 1.5, xxl: 2.75 }),
         weight: {
             lower: (0, sizeUtils_1.getSize)({ l: 6, xxl: 10 }),
-            glyph: (0, sizeUtils_1.getSize)({ l: 4, xxl: 7 }),
+            glyph: (0, sizeUtils_1.getSize)({ l: 4, xxl: 8 }),
             link: (0, sizeUtils_1.getSize)({ l: 3, xxl: 5 })
         },
-        pointSize: (0, sizeUtils_1.getSize)({ l: 8, xxl: 16 }),
+        pointSize: (0, sizeUtils_1.getSize)({ l: 8, xxl: 18 }),
         tracking: (0, sizeUtils_1.getSize)({ l: 4, xxl: 4 }),
-        leading: (0, sizeUtils_1.getSize)({ l: 70, xxl: 70 })
+        leading: (0, sizeUtils_1.getSize)({ l: 67.5, xxl: 67.5 })
     },
     mobile: {
         top: (0, sizeUtils_1.getSize)({ s: 56, l: 120 }),

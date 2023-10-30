@@ -117,20 +117,20 @@ export const sketchSizes = {
     xHeight: vectorXHeight
   },
   main: {
-    centerPadding: getSize({ l: 50, xxl: 150 }),
+    centerPadding: getSize({ l: 50, xxl: 130 }),
     anchor: {
       size: getSize({ l: 37.5, xxl: 50 }),
       offset: getSize({ l: 55, xxl: 70 })
     },
-    scale: getSize({ l: 1.5, xxl: 2.5 }),
+    scale: getSize({ l: 1.5, xxl: 2.75 }),
     weight: {
       lower: getSize({ l: 6, xxl: 10 }),
-      glyph: getSize({ l: 4, xxl: 7 }),
+      glyph: getSize({ l: 4, xxl: 8 }),
       link: getSize({ l: 3, xxl: 5 })
     },
-    pointSize: getSize({ l: 8, xxl: 16 }),
+    pointSize: getSize({ l: 8, xxl: 18 }),
     tracking: getSize({ l: 4, xxl: 4 }),
-    leading: getSize({ l: 70, xxl: 70 })
+    leading: getSize({ l: 67.5, xxl: 67.5 })
   },
   mobile: {
     top: getSize({ s: 56, l: 120 }),
