@@ -22,7 +22,6 @@ export interface VectorSetting {
   mouseOrigin: p5.Vector
   align: XPosition
   isMobile: boolean
-  spaceDelimiter: string
   spaceWidth: Size
   tracking: Size
   leading: Size
@@ -52,6 +51,7 @@ export interface VectorSetting {
       active: Matter.Body,
       constraint: Constraint
     },
+    engine: Engine,
     debug?: {
       p5?: p5 | p5.Graphics,
       name?: string,

@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import p5 from 'p5'
-import { keysToObject, loopObject } from '../../../utils/commonUtils'
 import { CoorObject, coorTuple } from '../../../utils/utilTypes'
 import Size from '../../../utils/helpers/size'
-import { DEFAULT_SETTING, GLYPH_NAMES, X_HEIGHT, YPosition } from './constants'
+import vectorsData from '../../../data/vector/glyphs.json'
+import { DEFAULT_SETTING, SPACE_DELIMITER, X_HEIGHT, YPosition } from './constants'
 import Glyph from './glyph'
 import { MotionSettings, SetTransformProps, SetTransformScaleProps, VectorSetting } from './vectorTypes'
 
@@ -20,11 +20,12 @@ interface BoundsInterface {
   wordWidths: number[]
 }
 
+type wordGlyph = Glyph | typeof SPACE_DELIMITER
+
 class Text {
-  private glyphs: Record<string, Glyph>
+  private glyphWords: wordGlyph[][]
   private didRepositionBody: boolean
   setting: VectorSetting
-  text: string
   bounds: BoundsInterface
 
   constructor(
@@ -33,19 +34,25 @@ class Text {
     setting: Partial<VectorSetting> & { w?: Size },
     motionSettings?: MotionSettings,
   ) {
-    if ('w' in setting) setting.scale = new Size(1)
+    if (setting.w) setting.scale = new Size(1)
 
     this.setting = _.defaults(setting, DEFAULT_SETTING, {
       mouseOrigin: p5.createVector(setting.x, setting.y)
     })
 
-    this.text = text.toLocaleUpperCase()
-    this.glyphs = keysToObject(GLYPH_NAMES,
-      name => new Glyph(p5, name, this.setting, motionSettings))
+    const wordArrays = text.toLocaleUpperCase().split('\n')
+    this.glyphWords = wordArrays.map(word => {
+      const glyphWord = Array.from(word) as (keyof typeof vectorsData | typeof SPACE_DELIMITER)[]
+      return glyphWord.map(name => name !== SPACE_DELIMITER ?
+        new Glyph(p5, name, this.setting, motionSettings) :
+        SPACE_DELIMITER
+      )
+    })
+
     this.bounds = this.getBounds()
     this.didRepositionBody = false
 
-    if ('w' in setting && setting.w) {
+    if (setting.w) {
       const bounds = this.getBounds()
       this.setTransform({ scale: setting.w.div(bounds.w) })
     }
@@ -53,59 +60,63 @@ class Text {
     this.addBodies()
   }
 
-  addBodies() {
-    Object.values(this.glyphs).forEach(glyph => glyph.addBodies())
-  }
-
-  cleanup() {
-    Object.values(this.glyphs).forEach(glyph => glyph.cleanup())
-  }
-
   write() {
     const { scale, position, align, leading } = this.setting
-    const wordArray = this.text.split('\n')
 
     let { y1 } = this.bounds
     const { x1, wordWidths, w } = this.bounds
 
-    wordArray.forEach((word, i) => {
+    this.glyphWords.forEach((glyphWord, i) => {
       const wordX = x1 + align / 2 * (w - wordWidths[i])
-      this.writeWord(word, wordX, y1)
+      this.writeWord(glyphWord, wordX, y1)
       const scaledLeading = leading.value * scale.value
       if (position[1] === YPosition.Bottom) y1 -= scaledLeading
       else y1 += scaledLeading
     })
+
     this.didRepositionBody = true
   }
 
-  writeWord(word: string, x: number, y: number) {
-    const { scale, spaceWidth, spaceDelimiter } = this.setting
-    const charArray = Array.from(word)
-    const shouldRepositionBody = !this.didRepositionBody
-    charArray.forEach((char, i) => {
-      const nextGlyph = this.glyphs[charArray[i + 1]]
-      const lsb = nextGlyph?.getBearings()[0] || 0
+  addBodies() {
+    this.loopGlyphs(glyph => glyph.addBodies())
+  }
 
-      if (char === spaceDelimiter)
-        return x += spaceWidth.value * scale.value + lsb
+  cleanup() {
+    this.loopGlyphs(glyph => glyph.cleanup())
+  }
 
-      const glyph = this.glyphs[char]
+  setTransform(newTransform: SetTransformProps, shouldRepositionBody = true) {
+    const { x, y, scale } =
+      Object.assign(this.setting, _.defaults({ ...newTransform }, this.setting))
+    this.bounds = this.getBounds()
 
-      this.transformGlyph({ x, y }, glyph, shouldRepositionBody)
-      glyph.draw()
-
-      const rsb = glyph.getBearings()[1]
-      x += glyph.w + rsb + lsb
+    this.loopGlyphs(glyph => {
+      Object.assign(glyph.setting, this.setting)
+      this.transformGlyph({ x, y, scale }, glyph, shouldRepositionBody)
     })
   }
 
-  getBounds() {
-    const { position, x, y } = this.setting
-    const [xPosition, yPosition] = position
-    const wordArray = this.text.split('\n')
+  setMouseOrigin(newOrigin: coorTuple | CoorObject) {
+    if (!Array.isArray(newOrigin))
+      newOrigin = [newOrigin.x, newOrigin.y]
+    this.setting.mouseOrigin.set(...newOrigin)
+  }
 
-    const textHeight = this.getTextHeight(wordArray.length)
-    const wordWidths = this.getWordWidths(wordArray)
+  private writeWord(glyphWord: wordGlyph[], x: number, y: number) {
+    const shouldRepositionBody = !this.didRepositionBody
+    glyphWord.forEach((glyph, i) =>
+      x += this.getCurrentGlyphPosition(glyph, i, glyphWord, () => {
+        if (glyph === SPACE_DELIMITER) return
+        this.transformGlyph({ x, y }, glyph, shouldRepositionBody)
+        glyph.draw()
+      }))
+  }
+
+  private getBounds() {
+    const { setting, textHeight, wordWidths } = this
+    const { position, x, y } = setting
+    const [xPosition, yPosition] = position
+
     const textWidth = Math.max(...wordWidths)
 
     const x1 = x - xPosition / 2 * textWidth
@@ -125,15 +136,18 @@ class Text {
     return bounds
   }
 
-  setTransform(newTransform: SetTransformProps, shouldRepositionBody = true) {
-    const { x, y, scale } =
-      Object.assign(this.setting, _.defaults({ ...newTransform }, this.setting))
-    this.bounds = this.getBounds()
-
-    loopObject(this.glyphs, (_, glyph) => {
-      Object.assign(glyph.setting, this.setting)
-      this.transformGlyph({ x, y, scale }, glyph, shouldRepositionBody)
-    })
+  private loopGlyphs(callback: (
+    glyph: Glyph,
+    glyphIndex: number,
+    glyphWord: wordGlyph[],
+    glyphWordIndex: number
+  ) => void) {
+    this.glyphWords.forEach((glyphWord, glyphWordIndex) =>
+      glyphWord.forEach((glyph, glyphIndex) => {
+        if (glyph !== SPACE_DELIMITER)
+          callback(glyph, glyphIndex, glyphWord, glyphWordIndex)
+      })
+    )
   }
 
   private transformGlyph(
@@ -146,28 +160,34 @@ class Text {
     glyph.repositionBodies(shouldRepositionBody)
   }
 
-  setMouseOrigin(newOrigin: coorTuple | CoorObject) {
-    if (!Array.isArray(newOrigin))
-      newOrigin = [newOrigin.x, newOrigin.y]
-    this.setting.mouseOrigin.set(...newOrigin)
-  }
-
-  private getTextHeight(wordCount: number) {
+  private get textHeight() {
     const { scale, leading } = this.setting
-    return ((wordCount - 1) * leading.value + X_HEIGHT) * scale.value
+    return ((this.glyphWords.length - 1) * leading.value + X_HEIGHT) * scale.value
   }
 
-  private getWordWidths(wordArray: string[]) {
-    const { scale, spaceWidth, spaceDelimiter } = this.setting
-    return wordArray.map(charArray =>
-      Array.from(charArray).reduce((sum, char, i) => {
-        if (char === spaceDelimiter) return sum + spaceWidth.value * scale.value
-        const glyph = this.glyphs[char]
-        const [lsb, rsb] = glyph.getBearings()
-        return sum + glyph.w +
-          (i ? lsb : 0) +
-          (i < charArray.length - 1 ? rsb : 0)
-      }, 0))
+  private get wordWidths() {
+    return this.glyphWords.map(glyphWord =>
+      glyphWord.reduce((sum, glyph, i) =>
+        sum + this.getCurrentGlyphPosition(glyph, i, glyphWord), 0))
+  }
+
+  private getCurrentGlyphPosition(
+    glyph: wordGlyph,
+    i: number,
+    glyphWord: wordGlyph[],
+    callback?: () => void
+  ) {
+    const { scale, spaceWidth } = this.setting
+    const nextGlyph = glyphWord[i + 1]
+    const lsb = nextGlyph && nextGlyph !== SPACE_DELIMITER ?
+      nextGlyph.getBearings()[0] : 0
+
+    if (glyph === SPACE_DELIMITER)
+      return spaceWidth.value * scale.value + lsb
+
+    if (callback) callback()
+    const rsb = glyph.getBearings()[1]
+    return glyph.w + rsb + lsb
   }
 }
 

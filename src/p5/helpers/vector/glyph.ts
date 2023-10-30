@@ -73,12 +73,13 @@ class Glyph {
 
     const motionData = this.motionData
 
-    if (this.setting.isMobile && motionData && this.bodies) {
+    if (this.setting.isMobile && motionData && this.bodies && this.engine) {
       this.active.setTransform(mapMotionFunction.call(
         this.setting,
         this.still.position,
         motionData,
         this.bodies,
+        this.engine,
         {
           p5: this.p5,
           name: this.name,
