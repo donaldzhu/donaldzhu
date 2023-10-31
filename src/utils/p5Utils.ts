@@ -1,7 +1,8 @@
 import p5 from 'p5'
 import colors from '../styles/colors'
 import { sketchSizes } from '../styles/sizes'
-import { repeat } from './commonUtils'
+import { mapObject, repeat } from './commonUtils'
+import Size from './helpers/size'
 
 export enum P5Event {
   draw = 'draw',
@@ -69,8 +70,13 @@ export const intersectTwoCircles = (
 
 export const mousePosition = (p5: p5): [number, number] => [p5.mouseX, p5.mouseY]
 
-export const wrapDrawingContext = (p5: p5 | p5.Graphics, callback: () => any) => {
+export const wrapDrawingContext = (p5: p5 | p5.Graphics, callback: () => void) => {
   p5.push()
   callback()
   p5.pop()
 }
+
+export const parsePhysicsConfig = <T>(config: Record<string, T | Size>) =>
+  mapObject(config, (_, sizeLike) =>
+    sizeLike instanceof Size ? sizeLike.value : sizeLike
+  )

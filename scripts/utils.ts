@@ -52,7 +52,7 @@ export const getExtension = (fileName: string) => path.extname(fileName).slice(1
 
 export const mapObject = <K extends string, V>(
   object: Record<K, V>,
-  callback: (key: K, value: V, object: Record<K, V>) => any
+  callback: (key: K, value: V, object: Record<K, V>) => void
 ) => {
   const keys = Object.keys(object) as K[]
   for (let i = 0; i < keys.length; i++) {
@@ -79,7 +79,7 @@ export const mapPromises = async <T, R>(
 }
 export const mapObjectPromises = async <K extends string, V>(
   object: Record<K, V>,
-  callback: (key: K, value: V, object: Record<K, V>) => Promise<any>
+  callback: (key: K, value: V, object: Record<K, V>) => Promise<void>
 ) => {
   const keys = Object.keys(object) as K[]
   for await (const key of keys) {

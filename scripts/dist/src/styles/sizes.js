@@ -137,18 +137,21 @@ exports.sketchSizes = {
         centerPadding: (0, sizeUtils_1.getSize)({ s: 35, l: 70 }),
         scale: (0, sizeUtils_1.getSize)({ s: 1.15, l: 2.75 }),
         weight: {
-            lower: (0, sizeUtils_1.getSize)({ s: 5, l: 8 }),
-            glyph: (0, sizeUtils_1.getSize)({ s: 3, l: 7 }),
+            lower: (0, sizeUtils_1.getSize)({ s: 5, l: 12 }),
+            glyph: (0, sizeUtils_1.getSize)({ s: 3, l: 8 }),
             link: (0, sizeUtils_1.getSize)({ s: 1.5, l: 4.5 })
         },
-        pointSize: (0, sizeUtils_1.getSize)({ s: 7, l: 17.5 }),
-        leading: (0, sizeUtils_1.getSize)({ s: 32, l: 50 }),
+        pointSize: (0, sizeUtils_1.getSize)({ s: 7.75, l: 19.5 }),
+        leading: (0, sizeUtils_1.getSize)({ s: 32, l: 72 }),
         tracking: {
             workIn: new size_1.default(2.75),
             process: new size_1.default(0.75),
             lower: new size_1.default(1.75)
         },
-        spaceWidth: new size_1.default(10)
+        spaceWidth: new size_1.default(10),
+        physics: {
+            gravity: (0, sizeUtils_1.getSize)({ s: 5.25, l: 12.25 })
+        }
     },
     cursor: (0, sizeUtils_1.getSize)({ l: 40, xxl: 65 }),
     line: {

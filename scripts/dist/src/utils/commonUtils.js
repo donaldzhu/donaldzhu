@@ -20,7 +20,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isBrowser = exports.getBlankCoors = exports.filterFalsy = exports.getToolTipPoints = exports.appendQuery = exports.toPairs = exports.keysToObject = exports.mapObject = exports.typedKeys = exports.loopObject = exports.partition = exports.sortLike = exports.shuffleTo = exports.arrayify = exports.repeat = exports.repeatMap = exports.lerp = exports.map = exports.validateString = exports.joinPaths = exports.capitalize = void 0;
+exports.TO_DEG = exports.isBrowser = exports.getBlankCoors = exports.filterFalsy = exports.getToolTipPoints = exports.appendQuery = exports.toPairs = exports.keysToObject = exports.mapObject = exports.typedKeys = exports.loopObject = exports.partition = exports.sortLike = exports.shuffleTo = exports.arrayify = exports.repeat = exports.repeatMap = exports.lerp = exports.map = exports.validateString = exports.joinPaths = exports.capitalize = void 0;
 var capitalize = function (string) { return string.charAt(0)
     .toUpperCase() + string.slice(1); };
 exports.capitalize = capitalize;
@@ -146,3 +146,4 @@ function isBrowser(browserToMatch) {
     return (0, exports.arrayify)(browserToMatch).some(function (browser) { return navigator.userAgent.includes(browser); });
 }
 exports.isBrowser = isBrowser;
+exports.TO_DEG = 180 / Math.PI;

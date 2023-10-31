@@ -4,28 +4,28 @@ import SmallText from '../components/common/styled/smallText'
 
 
 type eventListenerOptions = boolean | AddEventListenerOptions
-export function addEventListener<T extends HTMLElement, K extends keyof HTMLElementEventMap>(
+export function addEventListener<T extends HTMLElement, K extends keyof HTMLElementEventMap, R>(
   target: T,
   type: K,
-  listener: (this: T, ev: HTMLElementEventMap[K]) => any,
+  listener: (this: T, ev: HTMLElementEventMap[K]) => R,
   options?: eventListenerOptions
 ): () => void
-export function addEventListener<T extends Element, K extends keyof ElementEventMap>(
+export function addEventListener<T extends Element, K extends keyof ElementEventMap, R>(
   target: T,
   type: K,
-  listener: (this: T, ev: ElementEventMap[K]) => any,
+  listener: (this: T, ev: ElementEventMap[K]) => R,
   options?: eventListenerOptions
 ): () => void
-export function addEventListener<T extends Document, K extends keyof DocumentEventMap>(
+export function addEventListener<T extends Document, K extends keyof DocumentEventMap, R>(
   target: T,
   type: K,
-  listener: (this: T, ev: DocumentEventMap[K]) => any,
+  listener: (this: T, ev: DocumentEventMap[K]) => R,
   options?: eventListenerOptions
 ): () => void
-export function addEventListener<T extends Window, K extends keyof WindowEventMap>(
+export function addEventListener<T extends Window, K extends keyof WindowEventMap, R>(
   target: T,
   type: K,
-  listener: (this: T, ev: WindowEventMap[K]) => any,
+  listener: (this: T, ev: WindowEventMap[K]) => R,
   options?: eventListenerOptions
 ): () => void
 export function addEventListener(

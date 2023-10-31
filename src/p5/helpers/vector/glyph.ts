@@ -2,7 +2,7 @@ import p5 from 'p5'
 import * as THREE from 'three'
 import Matter, { Bodies, Body, Composite, Constraint, Engine } from 'matter-js'
 import bearingsData from '../../../data/vector/spacings.json'
-import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
+import { parsePhysicsConfig, parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
 import { validateRef } from '../../../utils/typeUtils'
 import { sketchSizes } from '../../../styles/sizes'
 import Vector from './vector'
@@ -49,12 +49,12 @@ class Glyph {
     if (!this.engine) return
     if (this.bodies) this.cleanup()
 
-    const { x, y } = this.bodyCoors
+    const { x, y } = this.still
 
-    const active = Bodies.circle(x, y, 10, mobilePhysicsSettings.active)
+    const active = Bodies.circle(x, y, 10, parsePhysicsConfig(mobilePhysicsSettings.active))
     const constraint = Constraint.create({
       ...mobilePhysicsSettings.constraint,
-      pointA: { x, y },
+      pointA: this.still.position,
       bodyB: active
     })
     this.bodies = { active, constraint }
@@ -71,13 +71,17 @@ class Glyph {
   draw() {
     const { drawingSequence, mapFunction, mapMotionFunction } = this.setting
 
-    const motionData = this.motionData
+    const { rotationVector } = this
 
-    if (this.setting.isMobile && motionData && this.bodies && this.engine) {
+    if (this.setting.isMobile && rotationVector && this.bodies && this.engine) {
       this.active.setTransform(mapMotionFunction.call(
         this.setting,
-        this.still.position,
-        motionData,
+        rotationVector,
+        this.p5.createVector(
+          this.p5.accelerationX,
+          this.p5.accelerationY,
+          this.p5.accelerationZ
+        ),
         this.bodies,
         this.engine,
         {
@@ -161,7 +165,14 @@ class Glyph {
       (bearing + this.setting.tracking.value) * this.still.scale.value)
   }
 
-  loopVectors(callback: (vectorData: {
+  repositionBodies(shouldRepositionActive?: boolean) {
+    if (!this.bodies) return
+    Object.assign(this.bodies.constraint.pointA, this.still.position)
+    if (shouldRepositionActive)
+      Body.setPosition(this.bodies.active, this.still.position)
+  }
+
+  private loopVectors(callback: (vectorData: {
     stillPoint: p5.Vector,
     activePoint: p5.Vector,
     nextStillPoint: p5.Vector,
@@ -189,23 +200,6 @@ class Glyph {
     })
   }
 
-  get bodyCoors() {
-    return {
-      x: this.still.x + this.still.w / 2,
-      y: this.still.y +
-        sketchSizes.vector.xHeight *
-        this.still.scale.value / 2
-    }
-  }
-
-  repositionBodies(shouldRepositionBody?: boolean) {
-    if (!this.bodies) return
-    const newCoors = this.bodyCoors
-    Object.assign(this.bodies.constraint.pointA, newCoors)
-    if (shouldRepositionBody)
-      Body.setPosition(this.bodies.active, newCoors)
-  }
-
   get w() {
     return this.still.w
   }
@@ -215,22 +209,20 @@ class Glyph {
     return p5.createVector(p5.mouseX, p5.mouseY)
   }
 
-  get motionData() {
+  get rotationVector() {
     const { p5 } = this
     if (
       !this.motionSettings ||
       !validateRef(this.motionSettings.motionSettingsRef) ||
       !validateRef(this.motionSettings.gimbalRef) ||
       !this.motionSettings.motionSettingsRef.current.isUsable
-    ) return undefined
+    ) return p5.createVector(-45, -45)
 
     const { gimbalRef } = this.motionSettings
 
     const gimbal = gimbalRef.current
-    const { x, z } = new THREE.Euler().setFromQuaternion(gimbal.quaternion, 'XZY')
-    return p5.createVector(z, -(x - Math.PI / 2))
-      .mult(180 / Math.PI)
-
+    const { x, y, z } = gimbal.euler
+    return p5.createVector(x, y, z)
   }
 }
 

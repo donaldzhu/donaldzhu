@@ -10,6 +10,7 @@ import usePhysics from '../../hooks/usePhysics'
 import { PageMobileContext } from './mobileType'
 
 const PageMobile = ({ canAutoPlay }: PageProps) => {
+  const engine = usePhysics()
   const canvasRef = useGlobalCanvas()
 
   const {
@@ -18,8 +19,6 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
     gimbalRef,
     getPermission
   } = useMotion()
-
-  const engine = usePhysics()
 
   const { isUsable, needsPermission } = motionSettings
   const canvasStates = {

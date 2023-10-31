@@ -63,7 +63,7 @@ export const partition = <T, F>(
 // object
 export const loopObject = <T extends object>(
   object: T,
-  callback: (key: keyof T, value: T[keyof T], object: T) => any
+  callback: (key: keyof T, value: T[keyof T], object: T) => void
 ) => {
   const keys = typedKeys(object)
   keys.forEach(key => {
@@ -134,3 +134,5 @@ export function getBlankCoors(withZ = false) {
 export function isBrowser(browserToMatch: BrowserType | BrowserType[]) {
   return arrayify(browserToMatch).some(browser => navigator.userAgent.includes(browser))
 }
+
+export const TO_DEG = 180 / Math.PI

@@ -3,10 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.wrapDrawingContext = exports.mousePosition = exports.intersectTwoCircles = exports.styleDashedRect = exports.parseVector = exports.P5Event = void 0;
+exports.parsePhysicsConfig = exports.wrapDrawingContext = exports.mousePosition = exports.intersectTwoCircles = exports.styleDashedRect = exports.parseVector = exports.P5Event = void 0;
 var colors_1 = __importDefault(require("../styles/colors"));
 var sizes_1 = require("../styles/sizes");
 var commonUtils_1 = require("./commonUtils");
+var size_1 = __importDefault(require("./helpers/size"));
 var P5Event;
 (function (P5Event) {
     P5Event["draw"] = "draw";
@@ -68,3 +69,9 @@ var wrapDrawingContext = function (p5, callback) {
     p5.pop();
 };
 exports.wrapDrawingContext = wrapDrawingContext;
+var parsePhysicsConfig = function (config) {
+    return (0, commonUtils_1.mapObject)(config, function (_, sizeLike) {
+        return sizeLike instanceof size_1.default ? sizeLike.value : sizeLike;
+    });
+};
+exports.parsePhysicsConfig = parsePhysicsConfig;

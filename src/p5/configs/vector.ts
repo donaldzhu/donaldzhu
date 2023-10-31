@@ -1,5 +1,6 @@
 import colors from '../../styles/colors'
 import { sketchSizes } from '../../styles/sizes'
+import Size from '../../utils/helpers/size'
 import { XPosition, YPosition } from '../helpers/vector/constants'
 import { Easing, VectorDrawMethod, VectorPosition, VectorSetting } from '../helpers/vector/vectorTypes'
 
@@ -21,6 +22,7 @@ const mobileSketchConfigs: Partial<VectorSetting> = {
   easing: Easing.EaseOutCubic,
   glyphColor: colors.homeSketch,
   linkColor: colors.homeSketch,
+  spaceWidth: new Size(15)
 }
 
 

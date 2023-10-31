@@ -6,7 +6,7 @@ import PreloadManager from '../utils/helpers/preloader/preloadManager'
 
 const usePreloadQueue = (
   setupDone: boolean,
-  callback: (preloadManager: PreloadManager) => any,
+  callback: (preloadManager: PreloadManager) => void,
   dependencies: DependencyList = []
 ) => {
   const { preloadManager } = useOutletContext<PageContextProps>()

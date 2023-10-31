@@ -45,8 +45,8 @@ export interface VectorSetting {
     mouseVector: p5.Vector
   ) => CoorObject,
   mapMotionFunction: (
-    stillVector: p5.Vector,
     rotationVector: p5.Vector,
+    accelVector: p5.Vector,
     bodies: {
       active: Matter.Body,
       constraint: Constraint

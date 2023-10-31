@@ -5,6 +5,7 @@ import spacingsData from '../../../data/vector/spacings.json'
 import { getBlankCoors, loopObject, map, mapObject, typedKeys } from '../../../utils/commonUtils'
 import Size from '../../../utils/helpers/size'
 import { getVh, getVw } from '../../../utils/sizeUtils'
+import { sketchSizes } from '../../../styles/sizes'
 import { wrapDrawingContext } from '../../../utils/p5Utils'
 import { Easing, VectorSetting } from './vectorTypes'
 
@@ -82,66 +83,67 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
     return results
   },
 
-  mapMotionFunction: function (stillVector, rotationVector, bodies, engine, debug) {
-    const maxStretch = typeof this.maxStretch === 'object' ?
-      this.maxStretch : {
-        x: this.maxStretch,
-        y: this.maxStretch
-      }
-
+  mapMotionFunction: function (
+    rotationVector,
+    accelVector,
+    bodies,
+    engine,
+    debug
+  ) {
     const { x, y } = rotationVector
     const unmappedValues = {
       x,
-      y: 90 - Math.abs(Math.abs((y % 180)) - 90)
+      y: (90 - Math.abs(Math.abs((y % 180)) - 90)) *
+        (y < 0 || y > 180 ? -1 : 1)
     }
-    const result = mapObject(unmappedValues, (axis, unmapped) => {
-      const unfiltered = map(unmapped, 0, 90)
-      const eased = easing[this.easing](Math.abs(unfiltered))
-      const sign = Math.sign(unfiltered) * (axis === 'y' ? (y < 0 || y > 180 ? -1 : 1) : 1)
-      const multiplier = maxStretch[axis] * this.scale.value
-      return stillVector[axis] + eased * sign * multiplier
-    })
 
-    const gravity = mapObject(unmappedValues, (axis, unmapped) => {
-      const unfiltered = map(unmapped, 0, 90)
-      const eased = easing[this.easing](Math.abs(unfiltered))
-      const sign = Math.sign(unfiltered) * (axis === 'y' ? (y < 0 || y > 180 ? -1 : 1) : 1)
-      return eased * sign
-    })
-
-    engine.gravity.x = gravity.x * 10
-    engine.gravity.y = gravity.y * 10
+    Object.assign(engine.gravity,
+      mapObject(unmappedValues, (axis, unmapped) => {
+        const unfiltered = map(unmapped, 0, 90)
+        const eased = easing[this.easing](Math.abs(unfiltered))
+        const acceleration = map(Math.abs(unmappedValues.x), 90, 0, 0, 1) * accelVector[axis]
+        return acceleration * (axis === 'y' ? -1 : 1) +
+          eased * Math.sign(unfiltered) * sketchSizes.mobile.physics.gravity.value
+      }))
 
     // TODO: Remove
     if (debug?.enabled) {
       const { p5, enabled } = debug
       if (p5 && enabled)
         wrapDrawingContext(p5, () => {
-          if (debug.name === 'Z') {
-            p5.text('gravity x: ' + _.round(gravity.x, 3), 10, 40)
-            p5.text('gravity y: ' + _.round(gravity.y, 3), 10, 50)
+          if (debug.name === 'W') {
+            // console.log({
+            //   x: _.round(accelVector.x, 3),
+            //   y: _.round(accelVector.y, 3),
+            //   z: _.round(accelVector.z, 3)
+            // })
+            p5.text('x: ' + _.round(accelVector.x, 3), 10, 20)
+            p5.text('y: ' + _.round(accelVector.y, 3), 10, 30)
+            p5.text('z: ' + _.round(accelVector.z, 3), 10, 40)
+            p5.text('x: ' + _.round(rotationVector.x, 3), 10, 520)
+            p5.text('y: ' + _.round(unmappedValues.y, 3), 10, 530)
+            p5.text('z: ' + _.round(rotationVector.z, 3), 10, 540)
+
+            // p5.text('gravity x: ' + _.round(engine.gravity.x, 3), 10, 40)
+            // p5.text('gravity y: ' + _.round(engine.gravity.y, 3), 10, 50)
           }
-          p5.stroke(0, 255, 0)
-          p5.fill(0)
-          p5.ellipse(bodies.constraint.pointA.x, bodies.constraint.pointA.y, 10)
-          p5.fill(255, 0, 0)
-          p5.ellipse(bodies.active.position.x, bodies.active.position.y, 10)
         })
     }
-    return result
+
+    return bodies.active.position
   }
 }
 
 
 export const mobilePhysicsSettings = {
   active: {
-    density: 2,
-    frictionAir: 0.025,
+    density: 5,
+    frictionAir: 0.2,
     collisionFilter: { group: -1 }
   },
   constraint: {
-    length: 0.05,
-    damping: 0.11,
-    stiffness: 0.02,
+    length: 0.01,
+    damping: 0.1,
+    stiffness: 0.011,
   }
 }

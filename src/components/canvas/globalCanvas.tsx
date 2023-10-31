@@ -16,7 +16,7 @@ const GlobalCanvas = ({ canvasRef, canvasStates = {} }: PartialGlobalCanvasState
   const draw = (p5: p5) => {
     p5.clear(0, 0, 0, 0)
     if (canvasStates.engine)
-      Engine.update(canvasStates.engine, 1 / p5.frameRate() * 1000)
+      Engine.update(canvasStates.engine)
     handleEvent(p5, P5Event.draw)
   }
 

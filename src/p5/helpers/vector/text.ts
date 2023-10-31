@@ -24,7 +24,7 @@ type wordGlyph = Glyph | typeof SPACE_DELIMITER
 
 class Text {
   private glyphWords: wordGlyph[][]
-  private didRepositionBody: boolean
+  private didRepositionActive: boolean
   setting: VectorSetting
   bounds: BoundsInterface
 
@@ -50,7 +50,7 @@ class Text {
     })
 
     this.bounds = this.getBounds()
-    this.didRepositionBody = false
+    this.didRepositionActive = false
 
     if (setting.w) {
       const bounds = this.getBounds()
@@ -74,7 +74,7 @@ class Text {
       else y1 += scaledLeading
     })
 
-    this.didRepositionBody = true
+    this.didRepositionActive = true
   }
 
   addBodies() {
@@ -85,14 +85,14 @@ class Text {
     this.loopGlyphs(glyph => glyph.cleanup())
   }
 
-  setTransform(newTransform: SetTransformProps, shouldRepositionBody = true) {
+  setTransform(newTransform: SetTransformProps, shouldRepositionActive = true) {
     const { x, y, scale } =
       Object.assign(this.setting, _.defaults({ ...newTransform }, this.setting))
     this.bounds = this.getBounds()
 
     this.loopGlyphs(glyph => {
       Object.assign(glyph.setting, this.setting)
-      this.transformGlyph({ x, y, scale }, glyph, shouldRepositionBody)
+      this.transformGlyph({ x, y, scale }, glyph, shouldRepositionActive)
     })
   }
 
@@ -103,11 +103,11 @@ class Text {
   }
 
   private writeWord(glyphWord: wordGlyph[], x: number, y: number) {
-    const shouldRepositionBody = !this.didRepositionBody
+    const shouldRepositionActive = !this.didRepositionActive
     glyphWord.forEach((glyph, i) =>
       x += this.getCurrentGlyphPosition(glyph, i, glyphWord, () => {
         if (glyph === SPACE_DELIMITER) return
-        this.transformGlyph({ x, y }, glyph, shouldRepositionBody)
+        this.transformGlyph({ x, y }, glyph, shouldRepositionActive)
         glyph.draw()
       }))
   }
@@ -153,11 +153,11 @@ class Text {
   private transformGlyph(
     newTransform: SetTransformScaleProps,
     glyph: Glyph,
-    shouldRepositionBody?: boolean
+    shouldRepositionActive?: boolean
   ) {
     glyph.still.setTransform(newTransform)
     glyph.active.setTransform(newTransform)
-    glyph.repositionBodies(shouldRepositionBody)
+    glyph.repositionBodies(shouldRepositionActive)
   }
 
   private get textHeight() {

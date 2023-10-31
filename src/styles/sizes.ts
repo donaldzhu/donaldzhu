@@ -137,18 +137,21 @@ export const sketchSizes = {
     centerPadding: getSize({ s: 35, l: 70 }),
     scale: getSize({ s: 1.15, l: 2.75 }),
     weight: {
-      lower: getSize({ s: 5, l: 8 }),
-      glyph: getSize({ s: 3, l: 7 }),
+      lower: getSize({ s: 5, l: 12 }),
+      glyph: getSize({ s: 3, l: 8 }),
       link: getSize({ s: 1.5, l: 4.5 })
     },
-    pointSize: getSize({ s: 7, l: 17.5 }),
-    leading: getSize({ s: 32, l: 50 }),
+    pointSize: getSize({ s: 7.75, l: 19.5 }),
+    leading: getSize({ s: 32, l: 72 }),
     tracking: {
       workIn: new Size(2.75),
       process: new Size(0.75),
       lower: new Size(1.75)
     },
-    spaceWidth: new Size(10)
+    spaceWidth: new Size(10),
+    physics: {
+      gravity: getSize({ s: 5.25, l: 12.25 })
+    }
   },
   cursor: getSize({ l: 40, xxl: 65 }),
   line: {
