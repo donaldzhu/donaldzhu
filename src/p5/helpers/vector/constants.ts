@@ -6,6 +6,7 @@ import { getBlankCoors, loopObject, map, mapObject, typedKeys } from '../../../u
 import Size from '../../../utils/helpers/size'
 import { getVh, getVw } from '../../../utils/sizeUtils'
 import { sketchSizes } from '../../../styles/sizes'
+import RollingFilter from '../../../utils/helpers/rollingFilter'
 import { wrapDrawingContext } from '../../../utils/p5Utils'
 import { Easing, VectorSetting } from './vectorTypes'
 
@@ -82,12 +83,13 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
     })
     return results
   },
-
   mapMotionFunction: function (
     rotationVector,
     accelVector,
+    rollingAccelFilter,
     bodies,
     engine,
+    minFrictionAir,
     debug
   ) {
     const { x, y } = rotationVector
@@ -97,12 +99,17 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
         (y < 0 || y > 180 ? -1 : 1)
     }
 
+    rollingAccelFilter.add(Math.max(Math.abs(accelVector.x), Math.abs(accelVector.y)))
     Object.assign(engine.gravity,
       mapObject(unmappedValues, (axis, unmapped) => {
-        const unfiltered = map(unmapped, 0, 90)
+        const unfiltered = unmapped / 90
         const eased = easing[this.easing](Math.abs(unfiltered))
-        const acceleration = map(Math.abs(unmappedValues.x), 90, 0, 0, 1) * accelVector[axis]
-        return acceleration * (axis === 'y' ? -1 : 1) +
+        const acceleration = map(Math.abs(unmapped), 90, 0) * accelVector[axis]
+        bodies.active.frictionAir = map(
+          Math.min(rollingAccelFilter.mean ?? 0, 10),
+          0, 10, 0, 0.5
+        ) + minFrictionAir
+        return acceleration * (axis === 'y' ? -1 : 1) * 0.675 +
           eased * Math.sign(unfiltered) * sketchSizes.mobile.physics.gravity.value
       }))
 
@@ -112,20 +119,8 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
       if (p5 && enabled)
         wrapDrawingContext(p5, () => {
           if (debug.name === 'W') {
-            // console.log({
-            //   x: _.round(accelVector.x, 3),
-            //   y: _.round(accelVector.y, 3),
-            //   z: _.round(accelVector.z, 3)
-            // })
-            p5.text('x: ' + _.round(accelVector.x, 3), 10, 20)
-            p5.text('y: ' + _.round(accelVector.y, 3), 10, 30)
-            p5.text('z: ' + _.round(accelVector.z, 3), 10, 40)
-            p5.text('x: ' + _.round(rotationVector.x, 3), 10, 520)
-            p5.text('y: ' + _.round(unmappedValues.y, 3), 10, 530)
-            p5.text('z: ' + _.round(rotationVector.z, 3), 10, 540)
-
-            // p5.text('gravity x: ' + _.round(engine.gravity.x, 3), 10, 40)
-            // p5.text('gravity y: ' + _.round(engine.gravity.y, 3), 10, 50)
+            // p5.text('x: ' + _.round(accelVector.x, 3), 10, 20)
+            // p5.text('y: ' + _.round(accelVector.y, 3), 10, 30)
           }
         })
     }
@@ -134,16 +129,15 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
   }
 }
 
-
-export const mobilePhysicsSettings = {
+export const createMobilePhysicsSettings = () => ({
   active: {
     density: 5,
-    frictionAir: 0.2,
+    frictionAir: _.random(0.01, 0.03, true),
     collisionFilter: { group: -1 }
   },
   constraint: {
     length: 0.01,
-    damping: 0.1,
-    stiffness: 0.011,
+    damping: _.random(0.0125, 0.175, true),
+    stiffness: _.random(0.0085, 0.0125, true),
   }
-}
+})

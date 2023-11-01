@@ -150,7 +150,7 @@ export const sketchSizes = {
     },
     spaceWidth: new Size(10),
     physics: {
-      gravity: getSize({ s: 5.25, l: 12.25 })
+      gravity: getSize({ s: 5.5, l: 12.5 })
     }
   },
   cursor: getSize({ l: 40, xxl: 65 }),

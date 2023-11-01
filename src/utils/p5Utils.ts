@@ -75,8 +75,3 @@ export const wrapDrawingContext = (p5: p5 | p5.Graphics, callback: () => void) =
   callback()
   p5.pop()
 }
-
-export const parsePhysicsConfig = <T>(config: Record<string, T | Size>) =>
-  mapObject(config, (_, sizeLike) =>
-    sizeLike instanceof Size ? sizeLike.value : sizeLike
-  )

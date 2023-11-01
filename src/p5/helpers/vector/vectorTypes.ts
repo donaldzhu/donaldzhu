@@ -1,8 +1,9 @@
-import p5 from 'p5'
+import p5, { Graphics } from 'p5'
 import { Constraint, Engine } from 'matter-js'
 import Size from '../../../utils/helpers/size'
 import { CanvasState } from '../../../components/canvas/canvasTypes'
 import { CoorObject } from '../../../utils/utilTypes'
+import RollingFilter from '../../../utils/helpers/rollingFilter'
 import { Mode, XPosition, YPosition } from './constants'
 
 export enum VectorDrawMethod {
@@ -47,13 +48,15 @@ export interface VectorSetting {
   mapMotionFunction: (
     rotationVector: p5.Vector,
     accelVector: p5.Vector,
+    rollingAccelFilter: RollingFilter,
     bodies: {
       active: Matter.Body,
       constraint: Constraint
     },
     engine: Engine,
+    minFrictionAir: number,
     debug?: {
-      p5?: p5 | p5.Graphics,
+      p5?: p5 | Graphics,
       name?: string,
       enabled?: boolean,
     }

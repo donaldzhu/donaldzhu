@@ -20,7 +20,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TO_DEG = exports.isBrowser = exports.getBlankCoors = exports.filterFalsy = exports.getToolTipPoints = exports.appendQuery = exports.toPairs = exports.keysToObject = exports.mapObject = exports.typedKeys = exports.loopObject = exports.partition = exports.sortLike = exports.shuffleTo = exports.arrayify = exports.repeat = exports.repeatMap = exports.lerp = exports.map = exports.validateString = exports.joinPaths = exports.capitalize = void 0;
+exports.TO_DEG = exports.isBrowser = exports.getBlankCoors = exports.filterFalsy = exports.getToolTipPoints = exports.appendQuery = exports.toPairs = exports.keysToObject = exports.mapObject = exports.typedKeys = exports.loopObject = exports.partition = exports.sortLike = exports.shuffleTo = exports.arrayify = exports.repeat = exports.repeatMap = exports.map = exports.validateString = exports.joinPaths = exports.capitalize = void 0;
 var capitalize = function (string) { return string.charAt(0)
     .toUpperCase() + string.slice(1); };
 exports.capitalize = capitalize;
@@ -44,10 +44,6 @@ var map = function (value, inMin, inMax, outMin, outMax) {
     return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 };
 exports.map = map;
-var lerp = function (a, b, alpha) {
-    return a + alpha * (b - a);
-};
-exports.lerp = lerp;
 var repeatMap = function (repetition, callback) {
     var accumulatedReturns = [];
     for (var i = 0; i < repetition; i++)

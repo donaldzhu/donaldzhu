@@ -25,9 +25,6 @@ export const map = (
 ) =>
   (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
 
-export const lerp = (a: number, b: number, alpha: number) =>
-  a + alpha * (b - a)
-
 // array
 export const repeatMap = <T>(repetition: number, callback: (i: number) => T) => {
   const accumulatedReturns: T[] = []

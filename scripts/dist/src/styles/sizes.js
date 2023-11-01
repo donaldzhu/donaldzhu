@@ -150,7 +150,7 @@ exports.sketchSizes = {
         },
         spaceWidth: new size_1.default(10),
         physics: {
-            gravity: (0, sizeUtils_1.getSize)({ s: 5.25, l: 12.25 })
+            gravity: (0, sizeUtils_1.getSize)({ s: 5.5, l: 12.5 })
         }
     },
     cursor: (0, sizeUtils_1.getSize)({ l: 40, xxl: 65 }),

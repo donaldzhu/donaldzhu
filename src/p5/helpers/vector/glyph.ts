@@ -2,12 +2,12 @@ import p5 from 'p5'
 import * as THREE from 'three'
 import Matter, { Bodies, Body, Composite, Constraint, Engine } from 'matter-js'
 import bearingsData from '../../../data/vector/spacings.json'
-import { parsePhysicsConfig, parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
+import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
 import { validateRef } from '../../../utils/typeUtils'
-import { sketchSizes } from '../../../styles/sizes'
+import RollingFilter from '../../../utils/helpers/rollingFilter'
 import Vector from './vector'
 import { MotionSettings, VectorSetting } from './vectorTypes'
-import { mobilePhysicsSettings } from './constants'
+import { createMobilePhysicsSettings } from './constants'
 
 
 class Glyph {
@@ -19,10 +19,13 @@ class Glyph {
 
   private motionSettings: MotionSettings | undefined
   private engine: Engine | undefined
-  bodies: {
+
+  private bodies: {
     active: Matter.Body,
-    constraint: Constraint
+    constraint: Constraint,
   } | undefined
+  private minFrictionAir: number
+  private rollingAccelFilter: RollingFilter
 
   private name: string // TODO: remove when mobile dev is finished
   constructor(
@@ -42,6 +45,9 @@ class Glyph {
 
     this.engine = motionSettings?.engine
     this.bodies = undefined
+    this.minFrictionAir = Infinity
+    this.rollingAccelFilter = new RollingFilter(p5.frameRate())
+
     this.addBodies()
   }
 
@@ -51,13 +57,18 @@ class Glyph {
 
     const { x, y } = this.still
 
-    const active = Bodies.circle(x, y, 10, parsePhysicsConfig(mobilePhysicsSettings.active))
+    const setting = createMobilePhysicsSettings()
+    const active = Bodies.circle(x, y, 10, setting.active)
     const constraint = Constraint.create({
-      ...mobilePhysicsSettings.constraint,
+      ...setting.constraint,
       pointA: this.still.position,
       bodyB: active
     })
-    this.bodies = { active, constraint }
+    this.bodies = {
+      active,
+      constraint,
+    }
+    this.minFrictionAir = active.frictionAir
 
     Composite.add(this.engine.world, Object.values(this.bodies))
   }
@@ -74,16 +85,18 @@ class Glyph {
     const { rotationVector } = this
 
     if (this.setting.isMobile && rotationVector && this.bodies && this.engine) {
+      this.rollingAccelFilter.size = this.p5.frameRate()
       this.active.setTransform(mapMotionFunction.call(
         this.setting,
         rotationVector,
         this.p5.createVector(
           this.p5.accelerationX,
-          this.p5.accelerationY,
-          this.p5.accelerationZ
+          this.p5.accelerationY
         ),
+        this.rollingAccelFilter,
         this.bodies,
         this.engine,
+        this.minFrictionAir,
         {
           p5: this.p5,
           name: this.name,
@@ -110,8 +123,7 @@ class Glyph {
     p5.strokeWeight(linkWeight.value)
     p5.stroke(`${linkColor}`)
     this.loopVectors(({ stillPoint, activePoint }) =>
-      p5.line(...parseVector(stillPoint), ...parseVector(activePoint))
-    )
+      p5.line(...parseVector(stillPoint), ...parseVector(activePoint)))
   }
 
   drawPoints() {
