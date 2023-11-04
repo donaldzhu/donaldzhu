@@ -13,7 +13,7 @@ import {
   MediaType
 } from './preloadUtils'
 
-export class MediaStack {
+export abstract class MediaStack {
   private mediaType: MediaType
   private listeners: (() => void)[]
   private stackKeys: PreloadBreakpt[]

@@ -1,7 +1,7 @@
 import { loadVidType } from './preloadTypes'
 import { MediaFileType } from './preloadUtils'
 
-export class MediaPreloader {
+export abstract class MediaPreloader {
   src: string
   fileType: MediaFileType
   constructor(src: string, fileType: MediaFileType) {

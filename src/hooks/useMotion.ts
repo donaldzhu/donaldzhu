@@ -41,20 +41,20 @@ const useMotion = () => {
 
   const [motionSettings, setMotionSettings] =
     useState<MotionSettingInterface>(getInitialState())
-  const motionSettingsRef = useMemoRef(() => motionSettings, [motionSettings])
 
   const gimbalRef = useRef<Gimbal | null>(null)
-  const getPermission = !motionSettings.isUsable || !motionSettings.needsPermission ?
-    () => {
-      const promise = (DeviceMotionEvent as Ios13MotionEvent).requestPermission()
-      promise.then(value => {
-        setMotionSettings({
-          isUsable: value === 'granted',
-          needsPermission: false
+  const getPermission = motionSettings.isUsable !== false ?
+    (motionSettings.needsPermission ?
+      () => {
+        const promise = (DeviceMotionEvent as Ios13MotionEvent).requestPermission()
+        promise.then(value => {
+          setMotionSettings({
+            isUsable: value === 'granted',
+            needsPermission: false
+          })
         })
-      })
-      return promise
-    } : null
+        return promise
+      } : () => 'granted') : null
 
   useEffect(() => {
     const setUsable = _.once(() => setMotionSettings(prev => ({
@@ -74,7 +74,6 @@ const useMotion = () => {
 
   return {
     motionSettings,
-    motionSettingsRef,
     gimbalRef,
     getPermission
   }

@@ -11,16 +11,17 @@ import {
 import { loopObject } from '../utils/commonUtils'
 import { P5Event } from '../utils/p5Utils'
 import { validateRef } from '../utils/typeUtils'
+import { Device } from '../utils/queryUtil'
 
-const useCanvas = (
-  createSketch: () => Partial<SketchEventHandler> & {
-    draw: sketchEventCallback
-  },
-  config: Partial<GlobalCanvasStates> = {},
+const useCanvas = <T extends Device>(
+  createSketch: () => Partial<SketchEventHandler<T> & {
+    draw: sketchEventCallback<T>
+  }>,
+  config: Partial<GlobalCanvasStates<T>> = {},
   dependencies: DependencyList = []
 ) => {
   const [setupDone, setSetupDone] = useState(false)
-  const outletContext = useOutletContext()
+  const outletContext = useOutletContext<Partial<GlobalCanvasStates<T>>>()
   const { canvasRef, canvasStates } = _.defaults(config, outletContext)
 
   if (!validateRef(canvasRef))
@@ -40,7 +41,7 @@ const useCanvas = (
     const setupOnce = _.once(setup ?? _.noop)
     const drawFunction = (p5: p5) => {
       setupOnce(p5, canvasStates ?? {})
-      draw(p5, canvasStates ?? {})
+      if (draw) draw(p5, canvasStates ?? {})
       setSetupDone(true)
     }
 

@@ -9,6 +9,11 @@ export enum Breakpt {
   xxl = 'xxl'
 }
 
+export enum Device {
+  mobile = 'mobile',
+  desktop = 'desktop'
+}
+
 export const queries = mapObject(breakpts, (_, breakpt) =>
   `only screen and (min-width: ${breakpt + 1}px)`)
 

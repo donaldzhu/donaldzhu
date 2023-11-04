@@ -25,8 +25,14 @@ const Contact = () => {
     draw: p5 => {
       if (!validateRef(qrToolTipRef) || !validateRef(qrPopUpRef)) return
 
-      const qrTooltip = new ElemRect(qrToolTipRef, sketchSizes.contactQr.toolTipPadding.value)
-      const qrPopUp = new ElemRect(qrPopUpRef, sketchSizes.contactQr.popUpPadding.value)
+      const qrTooltip = new ElemRect(
+        qrToolTipRef,
+        sketchSizes.desktop.contactQr.toolTipPadding.value
+      )
+      const qrPopUp = new ElemRect(
+        qrPopUpRef,
+        sketchSizes.desktop.contactQr.popUpPadding.value
+      )
 
       wrapDrawingContext(p5, () => {
         qrTooltip.rectAround(p5)
@@ -79,12 +85,12 @@ const ContactSidebar = ({ shownQrData, qrRef, handleHover }: ContactSidebarProps
 }
 
 const TextContainerWithQr = styled(TextContainer)`
-  font-size: ${fontSizes.text.mono.css};
+  font-size: ${fontSizes.desktop.text.mono.css};
 
-  > svg { 
-    ${mixins.squared(domSizes.contact.qr.size.css)};
+  > svg {
+    ${mixins.squared(domSizes.desktop.contact.qr.size.css)};
     position: relative;
-    top: ${domSizes.contact.qr.top.css};
+    top: ${domSizes.desktop.contact.qr.top.css};
     color: ${colorConfig.toolTipColor};
   }
 

@@ -7,7 +7,7 @@ const defaultConfig = {
   friction: 0.45,
 }
 
-const { primary, secondary } = sketchSizes.panto.brush
+const { primary, secondary } = sketchSizes.desktop.panto.brush
 const config = {
   PRIMARY_BRUSH: {
     ...defaultConfig,

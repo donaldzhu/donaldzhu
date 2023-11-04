@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import p5 from 'p5'
 import { MutableRefObject } from 'react'
-import { CanvasState } from '../../components/canvas/canvasTypes'
+import { DesktopCanvasStates } from '../../components/canvas/canvasTypes'
 import colors from '../../styles/colors'
 import { sketchSizes } from '../../styles/sizes'
 import { loopObject } from '../../utils/commonUtils'
@@ -56,7 +56,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
       throw new Error('Pantograph sketch has no placeholder ref.')
 
     placeholder = new ElemRect(placeholderRef)
-    paddedPlaceholder = new ElemRect(placeholderRef, sketchSizes.panto.hoverPadding.value)
+    paddedPlaceholder = new ElemRect(placeholderRef, sketchSizes.desktop.panto.hoverPadding.value)
 
     p5.background(255)
     p5.ellipseMode(p5.CENTER)
@@ -64,7 +64,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
     createPanto(p5)
   }
 
-  const draw = (p5: p5, { hideCursorRef }: CanvasState) => {
+  const draw = (p5: p5, { hideCursorRef }: DesktopCanvasStates) => {
     if (!hideCursorRef) throw new Error('hideCursorRef is undefined.')
     const isClearing = isClearingRef.current
     if (isClearing) clear()
@@ -85,7 +85,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
     drawVectors(p5, hideCursorRef, shouldDrawMarks)
   }
 
-  const cleanup = ({ hideCursorRef }: CanvasState) => {
+  const cleanup = ({ hideCursorRef }: DesktopCanvasStates) => {
     if (!hideCursorRef) throw new Error('hideCursorRef is undefined.')
     hideCursorRef.current = false
     // @ts-expect-error
@@ -115,16 +115,17 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
   const updateVector = (p5: p5) => {
     const [x1, y1, x2, y2] = placeholder.sides
     const halfHeight = (y2 - y1) / 2
-    vectors.anchor = p5.createVector(...placeholder.toScreenCoors(0, halfHeight))
 
-    if (!vectors.primary)
-      vectors.primary = p5.createVector(
-        ...placeholder.toScreenCoors(armLength * 1.9, halfHeight))
+    vectors.anchor ??= p5.createVector()
+    const anchorCoors = placeholder.toScreenCoors(0, halfHeight)
+    vectors.anchor.x = anchorCoors[0]
+    vectors.anchor.y = anchorCoors[1]
 
-    const x = _.clamp(p5.mouseX, x1, x2)
-    const y = _.clamp(p5.mouseY, y1, y2)
+    vectors.primary ??= p5.createVector(
+      ...placeholder.toScreenCoors(armLength * 1.9, halfHeight))
+    vectors.primary.x = _.clamp(p5.mouseX, x1, x2)
+    vectors.primary.y = _.clamp(p5.mouseY, y1, y2)
 
-    vectors.primary = p5.createVector(x, y)
     const intersections = updatePivot(p5)
     vectors.topRight = intersections[0]
     vectors.leftBot = intersections[1]
@@ -208,7 +209,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
 
     const { anchor, primary, topRight, leftBot, leftMid, rightMid } = vectors
     p5.stroke(colors.strokePanto)
-    p5.strokeWeight(sketchSizes.panto.lineWeight.value)
+    p5.strokeWeight(sketchSizes.desktop.panto.lineWeight.value)
     wrapDrawingContext(p5, () => {
       p5.line(...parseVector(anchor), ...parseVector(leftBot))
       p5.line(...parseVector(leftMid), ...parseVector(rightMid))
@@ -228,7 +229,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
           p5.stroke(colors.strokePanto)
           p5.fill(0)
         }
-        p5.ellipse(x, y, sketchSizes.panto.pointSize.value)
+        p5.ellipse(x, y, sketchSizes.desktop.panto.pointSize.value)
       })
   }
 

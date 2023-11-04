@@ -1,8 +1,9 @@
 import p5 from 'p5'
 import colors from '../styles/colors'
 import { sketchSizes } from '../styles/sizes'
-import { mapObject, repeat } from './commonUtils'
-import Size from './helpers/size'
+import { getIsMobile, repeat } from './commonUtils'
+import { coorTuple } from './utilTypes'
+
 
 export enum P5Event {
   draw = 'draw',
@@ -28,10 +29,18 @@ export enum P5Event {
 export const parseVector = (vector: p5.Vector): [number, number] => [vector.x, vector.y]
 
 export const styleDashedRect = (p5: p5) => {
-  p5.drawingContext.setLineDash(repeat(2, sketchSizes.line.dash.value))
+  const isMobile = getIsMobile()
+  const strokeDash = isMobile ?
+    sketchSizes.mobile.line.dash.value :
+    sketchSizes.desktop.line.dash.value
+  const strokeWeight = isMobile ?
+    sketchSizes.mobile.line.weight.value :
+    sketchSizes.desktop.line.weight.value
+
+  p5.drawingContext.setLineDash(repeat(2, strokeDash))
   p5.noFill()
   p5.stroke(colors.dashLine)
-  p5.strokeWeight(sketchSizes.line.weight.value)
+  p5.strokeWeight(strokeWeight)
 }
 
 
@@ -40,7 +49,7 @@ export const intersectTwoCircles = (
   r1: number,
   center2: p5.Vector,
   r2: number
-) => {
+): [] | [coorTuple, coorTuple] => {
   const { x: x1, y: y1 } = center1
   const { x: x2, y: y2 } = center2
   const R = center1.dist(center2)

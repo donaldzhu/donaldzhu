@@ -26,16 +26,16 @@ const Container = styled.div`
   ${mixins.flex('center', 'center')}
   flex-direction: column;
 
-  width: ${domSizes.autoPlay.width.css};
+  width: ${domSizes.desktop.autoPlay.width.css};
   height: fit-content;
   padding: 1.35em 1em;
 
-  font-size: ${fontSizes.autoPlay.message.css};
+  font-size: ${fontSizes.desktop.autoPlay.message.css};
 
   background-color: ${colors.autoPlayPopUpBg};
-  border: ${domSizes.autoPlay.border.css} solid ${colors.popUpColor};
-  border-radius: ${domSizes.autoPlay.borderRadius.css};
-  box-shadow: 0 0 ${domSizes.autoPlay.borderRadius.css} ${colors.popUpColor};
+  border: ${domSizes.desktop.autoPlay.border.css} solid currentColor;
+  border-radius: ${domSizes.desktop.autoPlay.borderRadius.css};
+  box-shadow: 0 0 ${domSizes.desktop.autoPlay.borderRadius.css} currentColor;
 `
 
 const Message = styled.h2`
@@ -44,7 +44,7 @@ const Message = styled.h2`
 `
 
 const Instruction = styled.small`
-  font-size: ${fontSizes.autoPlay.instrucution.css};
+  font-size: ${fontSizes.desktop.autoPlay.instrucution.css};
 `
 
 export default AutoPlayPopUp

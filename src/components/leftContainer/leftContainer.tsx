@@ -4,12 +4,13 @@ import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import { GlobalCanvasStates } from '../canvas/canvasTypes'
 import SvgBorder from '../common/svgBorder'
+import { Device } from '../../utils/queryUtil'
 import Footer from './footer/footer'
 import Header from './header/header'
 
 type LeftContainerProps = {
   sidebar: ReactNode | undefined
-} & GlobalCanvasStates
+} & GlobalCanvasStates<Device.desktop>
 
 const LeftContainer = ({ sidebar, canvasRef, canvasStates }: LeftContainerProps) => {
   const sidebarRef = useRef<HTMLDivElement>(null)
@@ -18,7 +19,7 @@ const LeftContainer = ({ sidebar, canvasRef, canvasStates }: LeftContainerProps)
     if (sidebar) sidebar.scroll(0, 0)
   }, [sidebar])
 
-  const { borderHeights } = domSizes.sidebar
+  const { borderHeights } = domSizes.desktop.sidebar
   return (
     <Container>
       <ContentContainer>
@@ -47,12 +48,12 @@ const LeftContainer = ({ sidebar, canvasRef, canvasStates }: LeftContainerProps)
 
 const SidebarContainer = styled.div`
   flex: auto;
-  padding-right: ${domSizes.sidebar.padding.right.css};
+  padding-right: ${domSizes.desktop.sidebar.padding.right.css};
   overflow: scroll;
   position: relative;
 
   &>:first-child {
-    margin-top: ${domSizes.sidebar.padding.vert.css};
+    margin-top: ${domSizes.desktop.sidebar.padding.vert.css};
   }
 `
 
@@ -60,8 +61,8 @@ const ContentContainer = styled.div``
 
 const Container = styled.div`
   ${mixins.fixed()}
-  width: ${domSizes.sidebar.width.css};
-  margin-left: ${domSizes.sidebar.padding.left.css};
+  width: ${domSizes.desktop.sidebar.width.css};
+  margin-left: ${domSizes.desktop.sidebar.padding.left.css};
   z-index: 2;
 
   &, & > ${ContentContainer} {
@@ -80,7 +81,7 @@ const BorderContainer = styled.div`
 
 const VerticalSvgBorder = styled(SvgBorder)`
   position: relative;
-  left: ${domSizes.sidebar.border.mult(-0.5).css};
+  left: ${domSizes.desktop.sidebar.border.mult(-0.5).css};
 `
 
 export default LeftContainer

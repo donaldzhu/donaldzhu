@@ -50,11 +50,11 @@ const Row = styled.div<StyledRowContainerProps>`
   ${({ $cols }) =>
     validateString($cols, $cols.map((col, i) => `
       >:nth-child(${i + 1}){
-        width: calc((100% - ${domSizes.workPage.media.gap.css} * ${$cols.length - 1}) * ${col / _.sum($cols)});
+        width: calc((100% - ${domSizes.desktop.workPage.media.gap.css} * ${$cols.length - 1}) * ${col / _.sum($cols)});
       }`).join(''))
   }
 
-  ${mixins.innerMargin(domSizes.workPage.media.gap.css, 'left')}
+  ${mixins.innerMargin(domSizes.desktop.workPage.media.gap.css, 'left')}
 
   > svg {
     width: 100%;

@@ -14,7 +14,7 @@ type DrawHomeIconProps = {
 
 const drawHomeIcon = ({ placeholderRef, isHoveringRef }: DrawHomeIconProps) => {
   let text: Text
-  const sidebarPaddingLeft = domSizes.homeIcon.padding.left.value / 2
+  const sidebarPaddingLeft = domSizes.desktop.homeIcon.padding.left.value / 2
   let placeholder: ElemRect<HTMLDivElement>
 
   const createVector = (p5: p5) => {

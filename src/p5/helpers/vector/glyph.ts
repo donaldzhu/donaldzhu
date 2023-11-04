@@ -1,23 +1,20 @@
 import p5 from 'p5'
-import * as THREE from 'three'
 import Matter, { Bodies, Body, Composite, Constraint, Engine } from 'matter-js'
 import bearingsData from '../../../data/vector/spacings.json'
 import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
 import { validateRef } from '../../../utils/typeUtils'
 import RollingFilter from '../../../utils/helpers/rollingFilter'
+import { MobileCanvasStates } from '../../../components/canvas/canvasTypes'
 import Vector from './vector'
-import { MotionSettings, VectorSetting } from './vectorTypes'
+import { VectorSetting } from './vectorTypes'
 import { createMobilePhysicsSettings } from './constants'
 
 
 class Glyph {
   private p5: p5 | p5.Graphics
   private nativeBearings: number[]
-  setting: VectorSetting
-  still: Vector
-  active: Vector
 
-  private motionSettings: MotionSettings | undefined
+  private canvasStates: MobileCanvasStates | undefined
   private engine: Engine | undefined
 
   private bodies: {
@@ -26,13 +23,20 @@ class Glyph {
   } | undefined
   private minFrictionAir: number
   private rollingAccelFilter: RollingFilter
+  private _mouseVector: p5.Vector
+  private _rotationVector: p5.Vector
+  private _accelVector: p5.Vector
 
   private name: string // TODO: remove when mobile dev is finished
+
+  setting: VectorSetting
+  still: Vector
+  active: Vector
   constructor(
     p5: p5 | p5.Graphics,
     name: keyof typeof bearingsData,
     setting: VectorSetting,
-    motionSettings?: MotionSettings
+    canvasStates?: MobileCanvasStates
   ) {
     this.p5 = p5
     this.setting = setting
@@ -41,12 +45,15 @@ class Glyph {
     this.nativeBearings = bearingsData[name]
 
     this.name = name
-    this.motionSettings = motionSettings
+    this.canvasStates = canvasStates
 
-    this.engine = motionSettings?.engine
+    this.engine = canvasStates?.engine
     this.bodies = undefined
     this.minFrictionAir = Infinity
     this.rollingAccelFilter = new RollingFilter(p5.frameRate())
+    this._mouseVector = p5.createVector()
+    this._rotationVector = p5.createVector()
+    this._accelVector = p5.createVector()
 
     this.addBodies()
   }
@@ -80,41 +87,44 @@ class Glyph {
   }
 
   draw() {
-    const { drawingSequence, mapFunction, mapMotionFunction } = this.setting
+    const { drawingSequence } = this.setting
 
-    const { rotationVector } = this
-
-    if (this.setting.isMobile && rotationVector && this.bodies && this.engine) {
-      this.rollingAccelFilter.size = this.p5.frameRate()
-      this.active.setTransform(mapMotionFunction.call(
-        this.setting,
-        rotationVector,
-        this.p5.createVector(
-          this.p5.accelerationX,
-          this.p5.accelerationY
-        ),
-        this.rollingAccelFilter,
-        this.bodies,
-        this.engine,
-        this.minFrictionAir,
-        {
-          p5: this.p5,
-          name: this.name,
-          enabled: true
-        }
-      ))
-    }
-    else this.active.setTransform(mapFunction.call(
-      this.setting,
-      this.still.position,
-      this.mouseVector
-    ))
+    if (this.setting.isMobile)
+      this.mapMobile()
+    else this.mapDesktop()
 
     this.still.draw()
     this.active.draw()
 
     wrapDrawingContext(this.p5, () =>
       drawingSequence.forEach(methodName => this[methodName]()))
+  }
+
+  private mapMobile() {
+    if (!this.bodies || !this.engine) throw new Error('No Matter.js bodies or engines was found.')
+    this.rollingAccelFilter.size = this.p5.frameRate()
+    this.active.setTransform(this.setting.mapMotionFunction.call(
+      this.setting,
+      this.rotationVector,
+      this.accelVector,
+      this.rollingAccelFilter,
+      this.bodies,
+      this.engine,
+      this.minFrictionAir,
+      {
+        p5: this.p5,
+        name: this.name,
+        enabled: true
+      }
+    ))
+  }
+
+  private mapDesktop() {
+    this.active.setTransform(this.setting.mapFunction.call(
+      this.setting,
+      this.still.position,
+      this.mouseVector
+    ))
   }
 
   drawLinks() {
@@ -181,7 +191,7 @@ class Glyph {
     if (!this.bodies) return
     Object.assign(this.bodies.constraint.pointA, this.still.position)
     if (shouldRepositionActive)
-      Body.setPosition(this.bodies.active, this.still.position)
+      Body.setPosition(this.bodies.active, this.active.position)
   }
 
   private loopVectors(callback: (vectorData: {
@@ -218,23 +228,33 @@ class Glyph {
 
   get mouseVector() {
     const { p5 } = this
-    return p5.createVector(p5.mouseX, p5.mouseY)
+    this._mouseVector.x = p5.mouseX
+    this._mouseVector.y = p5.mouseY
+    return this._mouseVector
+  }
+
+  get accelVector() {
+    const { p5 } = this
+    if (this.canvasStates?.isGyroEnabledRef?.current) {
+      this._accelVector.x = p5.accelerationX
+      this._accelVector.y = p5.accelerationY
+      this._accelVector.z = p5.accelerationZ
+    }
+    return this._accelVector
   }
 
   get rotationVector() {
-    const { p5 } = this
+    let newRotationVector = { x: 0, y: 0, z: 0 }
     if (
-      !this.motionSettings ||
-      !validateRef(this.motionSettings.motionSettingsRef) ||
-      !validateRef(this.motionSettings.gimbalRef) ||
-      !this.motionSettings.motionSettingsRef.current.isUsable
-    ) return p5.createVector(-45, -45)
+      this.canvasStates &&
+      validateRef(this.canvasStates.motionSettingsRef) &&
+      validateRef(this.canvasStates.gimbalRef) &&
+      this.canvasStates?.isGyroEnabledRef?.current
+    ) newRotationVector = this.canvasStates.gimbalRef.current.euler
+    else newRotationVector.y = 25
 
-    const { gimbalRef } = this.motionSettings
-
-    const gimbal = gimbalRef.current
-    const { x, y, z } = gimbal.euler
-    return p5.createVector(x, y, z)
+    Object.assign(this._rotationVector, newRotationVector)
+    return this._rotationVector
   }
 }
 

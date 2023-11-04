@@ -4,8 +4,8 @@ import { domSizes } from '../../../styles/sizes'
 import Text from './text'
 
 const SmallText = styled(Text)`
-  font-size: ${fontSizes.smallText.css};
-  max-width: ${domSizes.workPage.sidebar.description.maxWidth.css};
+  font-size: ${fontSizes.desktop.smallText.css};
+  max-width: ${domSizes.desktop.workPage.sidebar.description.maxWidth.css};
   line-height: ${fontLineHeights.smallText};
 
   b {

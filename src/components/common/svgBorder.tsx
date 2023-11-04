@@ -17,7 +17,7 @@ const SvgBorder = ({ className, size, isVertical }: SvgBorderProps) => {
   const { dimension, strokeWidth } = useMemo(() => {
     return {
       dimension: size.value,
-      strokeWidth: domSizes.sidebar.border.value
+      strokeWidth: domSizes.desktop.sidebar.border.value
     }
   }, [windowSize])
 
@@ -46,7 +46,7 @@ const SvgBorder = ({ className, size, isVertical }: SvgBorderProps) => {
 
 const Container = styled.div`
   height: fit-content;
-  
+
   svg {
     overflow: visible;
     display: block;

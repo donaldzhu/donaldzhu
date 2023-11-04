@@ -22,11 +22,11 @@ const ContactCopy = ({ content }: { content: string }) => {
 
 const CopyContainer = styled.span`
   ${mixins.fontVar({ MONO: 1 })}
-  font-size: ${fontSizes.contact.copy.css};
+  font-size: ${fontSizes.desktop.contact.copy.css};
   margin-left: 0.35em;
   letter-spacing: 0.015em;
   font-weight: ${fontParams.semiBold};
-  text-transform: uppercase; 
+  text-transform: uppercase;
 `
 
 export default ContactCopy

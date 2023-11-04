@@ -4,16 +4,17 @@ import { sketchSizes } from '../../styles/sizes'
 import { getToolTipPoints } from '../../utils/commonUtils'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
-import { validateRef } from '../../utils/typeUtils'
 
 
 const drawToolTip = ({ toolTipRef, popUpRef }: Required<ToolTipProps>) => {
-  const draw = (p5: p5) => {
-    if (!validateRef(toolTipRef) || !validateRef(popUpRef)) return
-    const toolTip = new ElemRect(toolTipRef, sketchSizes.toolTip.padding.value)
-    const popUp = new ElemRect(popUpRef)
+  let toolTip: ElemRect<HTMLDivElement> | undefined
+  let popUp: ElemRect<HTMLDivElement> | undefined
 
+  const draw = (p5: p5) => {
+    toolTip = ElemRect.createUpdated(toolTip, toolTipRef, sketchSizes.desktop.toolTip.padding.value)
+    popUp = ElemRect.createUpdated(popUp, popUpRef)
     wrapDrawingContext(p5, () => {
+      if (!toolTip || !popUp) return
       toolTip.rectAround(p5)
       popUp.rectAround(p5)
 

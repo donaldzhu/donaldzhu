@@ -1,7 +1,7 @@
 import p5, { Graphics } from 'p5'
 import { Constraint, Engine } from 'matter-js'
 import Size from '../../../utils/helpers/size'
-import { CanvasState } from '../../../components/canvas/canvasTypes'
+import { MobileCanvasStates } from '../../../components/canvas/canvasTypes'
 import { CoorObject } from '../../../utils/utilTypes'
 import RollingFilter from '../../../utils/helpers/rollingFilter'
 import { Mode, XPosition, YPosition } from './constants'
@@ -113,4 +113,4 @@ export const enum Easing {
   EaseInOutBounce = 'easeInOutBounce',
 }
 
-export type MotionSettings = Pick<CanvasState, 'motionSettingsRef' | 'gimbalRef' | 'engine'>
+export type MotionSettings = Pick<MobileCanvasStates, 'motionSettingsRef' | 'gimbalRef' | 'engine'>

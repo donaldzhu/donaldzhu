@@ -70,8 +70,8 @@ const WorkIndex = () => {
 const ThumbnailContainer = styled(MainContainer) <StyledWorkIndex>`
   a {
     width: ${({ $columns }) =>
-    `calc(100% / ${$columns} - ${domSizes.workIndex.thumbnail.gap.css} * 2)`};
-    margin: ${domSizes.workIndex.thumbnail.gap.css};
+    `calc(100% / ${$columns} - ${domSizes.desktop.workIndex.thumbnail.gap.css} * 2)`};
+    margin: ${domSizes.desktop.workIndex.thumbnail.gap.css};
   }
 `
 

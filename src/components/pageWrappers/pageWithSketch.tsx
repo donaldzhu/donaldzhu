@@ -7,10 +7,11 @@ import drawMainSketch from '../../p5/sketches/drawMainSketch'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import Size from '../../utils/helpers/size'
+import { Device } from '../../utils/queryUtil'
 
 const PageWithMainSketch = () => {
   const placeholderRef = useRef<HTMLDivElement>(null)
-  const setupDone = useCanvas(() =>
+  const setupDone = useCanvas<Device.desktop>(() =>
     drawMainSketch({ placeholderRef }))
 
   usePreloadQueue(setupDone, preloadManager =>
@@ -23,7 +24,7 @@ const PageWithMainSketch = () => {
   )
 }
 
-const leftContainerWidth = domSizes.sidebar.width.add(domSizes.sidebar.padding.left)
+const leftContainerWidth = domSizes.desktop.sidebar.width.add(domSizes.desktop.sidebar.padding.left)
 const MainSketchPlaceHolder = styled.div`
   ${mixins.fixed({ left: leftContainerWidth.css })}
   width: ${Size.subFromFullWidth(leftContainerWidth).css};

@@ -76,7 +76,7 @@ const underline = () => `
 const media = ({ $aspectRatio, $hasLoaded }: MediaProps) => `
   ${$aspectRatio ? `aspect-ratio: ${$aspectRatio};` : ''}
   background-color: ${$hasLoaded ? '' : 'rgb(240,240,240)'};
-  border-radius: ${domSizes.media.borderRadius.css};
+  border-radius: ${domSizes.desktop.media.borderRadius.css};
 `
 
 interface MixinInterface {

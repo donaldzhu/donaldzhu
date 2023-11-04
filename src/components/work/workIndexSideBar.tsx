@@ -35,7 +35,7 @@ const WorkIndexSidebar = ({
 }
 
 const SideBarContainer = styled(TextContainer)`
-  ${mixins.innerMargin(domSizes.workIndex.innerMargin.css)}
+  ${mixins.innerMargin(domSizes.desktop.workIndex.innerMargin.css)}
   position: relative;
 `
 

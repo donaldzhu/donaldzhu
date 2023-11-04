@@ -1,4 +1,3 @@
-import { useMediaQuery } from '@uidotdev/usehooks'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import styled from 'styled-components'
 import Contact from './components/contact/contact'
@@ -16,14 +15,14 @@ import colorConfig from './styles/colors'
 import { fontFamilies, fontSizes } from './styles/fonts'
 import mixins from './styles/mixins'
 import { domSizes } from './styles/sizes'
-import { queries } from './utils/queryUtil'
 import HomeMobile from './components/mobile/homeMobile'
 import useCanAutoPlay from './hooks/useCanAutoPlay'
 import { isBrowser, validateString } from './utils/commonUtils'
 import { BrowserType } from './utils/utilTypes'
+import useIsMobile from './hooks/useIsMobile'
 
 const App = () => {
-  const isMobile = !useMediaQuery(queries.l)
+  const isMobile = useIsMobile()
   const canAutoPlay = useCanAutoPlay()
   // const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
 
@@ -66,7 +65,7 @@ const App = () => {
 const StyledGlobal = styled.main`
   ${mixins.flex()}
 
-  width: ${domSizes.app.width.css};
+  width: ${domSizes.desktop.app.width.css};
   height: fit-content;
 
   font-family: ${fontFamilies.monoFont};
@@ -104,7 +103,7 @@ const StyledGlobal = styled.main`
   }
 
   h1 {
-    font-size: ${fontSizes.title.css};
+    font-size: ${fontSizes.desktop.title.css};
     margin-bottom: 1em;
   }
 

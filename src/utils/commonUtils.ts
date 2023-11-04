@@ -1,4 +1,5 @@
 import { Falsey } from 'lodash'
+import breakpts from '../data/breakpoints'
 import ElemRect from './helpers/rect/elemRect'
 import { BrowserType, CoorObject, CoorObject3D, coorTuple } from './utilTypes'
 
@@ -133,3 +134,5 @@ export function isBrowser(browserToMatch: BrowserType | BrowserType[]) {
 }
 
 export const TO_DEG = 180 / Math.PI
+
+export const getIsMobile = () => window.innerWidth <= breakpts.l

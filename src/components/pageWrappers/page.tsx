@@ -13,6 +13,7 @@ import { RequiredZoomMediaProps } from '../common/media/mediaTypes'
 import ZoomedMedia from '../common/media/zoomedMedia'
 import LeftContainer from '../leftContainer/leftContainer'
 import Vid from '../common/media/vid'
+import { Device } from '../../utils/queryUtil'
 import { handleZoomType, PageContextProps, PageProps } from './pageTypes'
 
 const Page = ({ canAutoPlay }: PageProps) => {
@@ -30,7 +31,7 @@ const Page = ({ canAutoPlay }: PageProps) => {
   const handleZoomMedia: handleZoomType = media => setZoomMedia(media)
   const canvasRef = useGlobalCanvas()
 
-  useCanvas(drawCursor, { canvasRef, canvasStates: canvasStates })
+  useCanvas<Device.desktop>(drawCursor, { canvasRef, canvasStates: canvasStates })
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -53,7 +54,7 @@ const Page = ({ canAutoPlay }: PageProps) => {
         canvasStates={canvasStates} />
       <Outlet context={{
         canvasRef,
-        canvasStates: canvasStates,
+        canvasStates,
         sidebar,
         setSidebar,
         zoomMedia,

@@ -31,7 +31,7 @@ const linkColorMixin = ({ $isHighlighted }: StyledFooterLinkProps) =>
   $isHighlighted ? colors.activeElem : colors.footer
 const FooterAnchor = styled(Anchor) <StyledFooterLinkProps>`
   height: 1em;
-  padding: ${domSizes.footer.link.padding.css};
+  padding: ${domSizes.desktop.footer.link.padding.css};
   font-family: ${fontFamilies.sansFont};
   font-weight: bold;
   letter-spacing: -0.015em;

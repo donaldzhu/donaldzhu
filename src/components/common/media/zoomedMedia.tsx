@@ -62,7 +62,7 @@ const ZoomedContainer = styled(PopUpContainer) <StyledZoomedMediaProps>`
 
   img, video {
     object-fit: contain;
-    ${({ $maxSize }) => mixins.squared($maxSize ?? toPercent(domSizes.media.zoomPercentage))}
+    ${({ $maxSize }) => mixins.squared($maxSize ?? toPercent(domSizes.desktop.media.zoomPercentage))}
   }
 `
 

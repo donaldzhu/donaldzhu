@@ -40,7 +40,7 @@ const ToolTip = ({ children }: ToolTipProps) => {
     if (!isShown) return _.noop
     const mouseHandler = () => {
       if (validateRef(toolTipRef) && validateRef(popUpRef)) {
-        const toolTip = new ElemRect(toolTipRef, sketchSizes.toolTip.padding.value)
+        const toolTip = new ElemRect(toolTipRef, sketchSizes.desktop.toolTip.padding.value)
         const popUp = new ElemRect(popUpRef)
 
         if (!validateRef(mousePositionRef)) return
@@ -89,9 +89,9 @@ const Container = styled.div`
 const toolTipSize = em(1.35)
 const ToolTipContainer = styled.div<StyledToolTipProps>`
   position: absolute;
-  left: calc(${domSizes.mainContainer.margin.css} * -1 - ${toolTipSize} / 2);
+  left: calc(${domSizes.desktop.mainContainer.margin.css} * -1 - ${toolTipSize} / 2);
   background-color: ${colors.toolTipBg};
-  font-size: ${fontSizes.toolTip.icon.css};
+  font-size: ${fontSizes.desktop.toolTip.icon.css};
 
   ${mixins
     .chain()
@@ -101,7 +101,7 @@ const ToolTipContainer = styled.div<StyledToolTipProps>`
     .flex('center', 'center')}
 
   border-radius: 1px;
-  outline: ${domSizes.toolTip.border.css} currentColor solid;
+  outline: ${domSizes.desktop.toolTip.border.css} solid currentColor;
 
   ${({ $isHighlighted }) => validateString($isHighlighted, `
     color:${colors.activeElem};
@@ -110,24 +110,24 @@ const ToolTipContainer = styled.div<StyledToolTipProps>`
 `
 
 const PopUpContainer = styled.div`
-  width: ${domSizes.workPage.sidebar.description.maxWidth.mult(0.85).css};
+  width: ${domSizes.desktop.workPage.sidebar.description.maxWidth.mult(0.85).css};
   padding: 0.8em;
 
   color: ${colors.toolTipColor};
   background-color: ${colors.toolTipBg};
 
-  font-size: ${fontSizes.toolTip.popUp.css};
+  font-size: ${fontSizes.desktop.toolTip.popUp.css};
   font-weight: ${fontParams.semiLight};
   letter-spacing: -0.012em;
   word-spacing: -0.0225em;
 
   ${mixins.chain()
     .fixed({
-      left: domSizes.toolTip.left.css,
-      bottom: domSizes.toolTip.bottom.css,
+      left: domSizes.desktop.toolTip.left.css,
+      bottom: domSizes.desktop.toolTip.bottom.css,
     })
     .slant()
-    .innerMargin(domSizes.text.innerMargin.css)}
+    .innerMargin(domSizes.desktop.text.innerMargin.css)}
 
   p > b {
     font-family: inherit;

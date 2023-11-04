@@ -13,6 +13,7 @@ import WorkImg from '../common/media/workImg'
 import WorkImgGroup from '../common/media/workImgGroup'
 import WorkVid from '../common/media/workVid'
 import RowContainer from '../common/rowContainer'
+import { Device } from '../../utils/queryUtil'
 
 const PageStroke = () => {
   const [hoveringCard, setHoveringCard] = useState<number | null>(null)
@@ -25,7 +26,7 @@ const PageStroke = () => {
   ]
 
   useCanvas(() => drawElemBorders({ elemRefs: [placeholderRef, ...cardRefs] }))
-  useCanvas(() => drawPanto({ placeholderRef, isClearingRef }))
+  useCanvas<Device.desktop>(() => drawPanto({ placeholderRef, isClearingRef }))
 
   const handleClear = () => isClearingRef.current = true
 
@@ -98,7 +99,7 @@ ${mixins
     .flex('initial', 'space-between')}
   width: 100%;
   aspect-ratio: 2 / 1;
-  font-size: ${fontSizes.workPageStroke.caption.css};
+  font-size: ${fontSizes.desktop.workPageStroke.caption.css};
   font-weight: ${fontParams.semiBold};
   color: ${colors.strokeCaption};
 
@@ -115,9 +116,9 @@ const CanvasCaption = styled.p`
 const ClearButton = styled.button`
   cursor: pointer;
   color: ${colors.strokeClear};
-  border: ${domSizes.workPageStroke.button.border.css} solid ${colors.strokeClear};
+  border: ${domSizes.desktop.workPageStroke.button.border.css} solid currentColor;
   padding: 0.5em;
-  border-radius: ${domSizes.workPageStroke.button.borderRadius.css};
+  border-radius: ${domSizes.desktop.workPageStroke.button.borderRadius.css};
 
   &:hover {
     color: ${colors.activeElem};

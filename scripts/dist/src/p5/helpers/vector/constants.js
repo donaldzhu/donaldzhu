@@ -26,12 +26,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DEFAULT_SETTING = exports.GLYPH_NAMES = exports.X_HEIGHT = void 0;
+exports.createMobilePhysicsSettings = exports.DEFAULT_SETTING = exports.SPACE_DELIMITER = exports.GLYPH_NAMES = exports.X_HEIGHT = void 0;
 var easing = __importStar(require("easing-utils"));
+var lodash_1 = __importDefault(require("lodash"));
 var spacings_json_1 = __importDefault(require("../../../data/vector/spacings.json"));
 var commonUtils_1 = require("../../../utils/commonUtils");
 var size_1 = __importDefault(require("../../../utils/helpers/size"));
 var sizeUtils_1 = require("../../../utils/sizeUtils");
+var sizes_1 = require("../../../styles/sizes");
+var p5Utils_1 = require("../../../utils/p5Utils");
 var Axes;
 (function (Axes) {
     Axes["x"] = "x";
@@ -39,16 +42,17 @@ var Axes;
 })(Axes || (Axes = {}));
 exports.X_HEIGHT = 44;
 exports.GLYPH_NAMES = (0, commonUtils_1.typedKeys)(spacings_json_1.default).filter(function (char) { return char.length === 1; });
+exports.SPACE_DELIMITER = ' ';
 exports.DEFAULT_SETTING = {
     x: 0,
     y: 0,
     scale: new size_1.default(1),
     position: [1, 1],
     align: 1,
-    spaceDelimiter: ' ',
-    spaceWidth: 25,
-    tracking: 3,
-    leading: 85,
+    isMobile: false,
+    spaceWidth: new size_1.default(25),
+    tracking: new size_1.default(3),
+    leading: new size_1.default(85),
     drawingSequence: [],
     maxStretch: 4,
     glyphWeight: new size_1.default(1),
@@ -64,24 +68,67 @@ exports.DEFAULT_SETTING = {
     correctVolumeStroke: false,
     easing: "linear",
     squareMap: true,
-    getRanges: function () {
-        return {
+    mapFunction: function (stillVector, mouseVector) {
+        var _this = this;
+        var results = (0, commonUtils_1.getBlankCoors)(false);
+        var distVector = mouseVector.sub(('mouseOrigin' in this && this.mouseOrigin) ?
+            this.mouseOrigin : stillVector);
+        var ranges = {
             x: [0, (0, sizeUtils_1.getVw)()],
             y: [0, this.squareMap ? (0, sizeUtils_1.getVw)() : (0, sizeUtils_1.getVh)()],
         };
-    },
-    mapFunction: function (stillVector, mouseVector) {
-        var _this = this;
-        var results = { x: 0, y: 0 };
-        var distVector = mouseVector.sub(('mouseOrigin' in this && this.mouseOrigin) ?
-            this.mouseOrigin : stillVector);
         (0, commonUtils_1.loopObject)(Axes, function (axis) {
             var dist = distVector[axis];
-            var _a = _this.getRanges()[axis], min = _a[0], max = _a[1];
+            var _a = ranges[axis], min = _a[0], max = _a[1];
             var eased = easing[_this.easing](Math.abs(dist) / (max - min));
+            var maxStretch = typeof _this.maxStretch === 'object' ? _this.maxStretch[axis] : _this.maxStretch;
             results[axis] = stillVector[axis] +
-                (0, commonUtils_1.map)(eased, 0, 1, 0, _this.maxStretch * _this.scale.value) * Math.sign(dist);
+                (0, commonUtils_1.map)(eased, 0, 1, 0, maxStretch * _this.scale.value) * Math.sign(dist);
         });
         return results;
+    },
+    mapMotionFunction: function (rotationVector, accelVector, rollingAccelFilter, bodies, engine, minFrictionAir, debug) {
+        var _this = this;
+        var x = rotationVector.x, y = rotationVector.y;
+        var unmappedValues = {
+            x: x,
+            y: (90 - Math.abs(Math.abs((y % 180)) - 90)) *
+                (y < 0 || y > 180 ? -1 : 1)
+        };
+        rollingAccelFilter.add(Math.max(Math.abs(accelVector.x), Math.abs(accelVector.y)));
+        Object.assign(engine.gravity, (0, commonUtils_1.mapObject)(unmappedValues, function (axis, unmapped) {
+            var _a, _b;
+            var unfiltered = unmapped / 90;
+            var eased = easing[_this.easing](Math.abs(unfiltered));
+            var acceleration = (0, commonUtils_1.map)(Math.abs(unmapped), 90, 0) * accelVector[axis];
+            var accelFriction = (0, commonUtils_1.map)(Math.min((_a = rollingAccelFilter.mean) !== null && _a !== void 0 ? _a : 0, 10), 0, 10, 0, 0.5);
+            var dist = Math.hypot(bodies.constraint.pointA.x - bodies.active.position.x, bodies.constraint.pointA.y - bodies.active.position.y);
+            bodies.active.frictionAir = (0, commonUtils_1.map)(Math.min((_b = rollingAccelFilter.mean) !== null && _b !== void 0 ? _b : 0, 10), 0, 10, 0, 0.5) + minFrictionAir;
+            return acceleration * (axis === 'y' ? -1 : 1) * 0.675 +
+                eased * Math.sign(unfiltered) * sizes_1.sketchSizes.mobile.main.physics.gravity.value;
+        }));
+        if (debug === null || debug === void 0 ? void 0 : debug.enabled) {
+            var p5_1 = debug.p5, enabled = debug.enabled;
+            if (p5_1 && enabled)
+                (0, p5Utils_1.wrapDrawingContext)(p5_1, function () {
+                    if (debug.name === 'W') {
+                        p5_1.text('x: ' + lodash_1.default.round(p5_1.dist(bodies.active.position.x, bodies.active.position.y, bodies.constraint.pointA.x, bodies.constraint.pointA.y), 3), 10, 20);
+                    }
+                });
+        }
+        return bodies.active.position;
     }
 };
+var createMobilePhysicsSettings = function () { return ({
+    active: {
+        density: 5,
+        frictionAir: lodash_1.default.random(0.01, 0.03, true),
+        collisionFilter: { group: -1 }
+    },
+    constraint: {
+        length: 0.01,
+        damping: lodash_1.default.random(0.0125, 0.175, true),
+        stiffness: lodash_1.default.random(0.01, 0.0125, true),
+    }
+}); };
+exports.createMobilePhysicsSettings = createMobilePhysicsSettings;

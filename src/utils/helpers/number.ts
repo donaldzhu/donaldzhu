@@ -1,6 +1,6 @@
 type toCompareType = (newValue: number, currValue: number) => number
 
-class ExtremeNumber {
+abstract class ExtremeNumber {
   value: number
   toCompare: toCompareType
   constructor(extremum: number, toCompare: toCompareType) {

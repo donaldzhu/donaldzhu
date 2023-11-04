@@ -7,10 +7,10 @@ const TextContainer = styled.div`
   ${mixins
     .chain()
     .fontVar({ MONO: fontParams.monoVariable })
-    .innerMargin(domSizes.text.innerMargin.css)}
+    .innerMargin(domSizes.desktop.text.innerMargin.css)}
 
   &>:last-child {
-    padding-bottom: ${domSizes.sidebar.padding.vert.css};
+    padding-bottom: ${domSizes.desktop.sidebar.padding.vert.css};
   }
 `
 

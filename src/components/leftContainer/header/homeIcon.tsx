@@ -7,9 +7,10 @@ import { domSizes } from '../../../styles/sizes'
 import { percent } from '../../../utils/sizeUtils'
 import { GlobalCanvasStates } from '../../canvas/canvasTypes'
 import Anchor from '../../common/anchor'
+import { Device } from '../../../utils/queryUtil'
 
 
-const HomeIcon = ({ canvasRef, canvasStates }: GlobalCanvasStates) => {
+const HomeIcon = ({ canvasRef, canvasStates }: GlobalCanvasStates<Device.desktop>) => {
   const placeholderRef = useRef<HTMLDivElement | null>(null)
   const isHoveringRef = useRef(false)
 
@@ -31,11 +32,11 @@ const HomeIcon = ({ canvasRef, canvasStates }: GlobalCanvasStates) => {
 
 const HomeButtonContainer = styled.div`
   ${mixins.flex('center', 'center')}
-  width: ${domSizes.homeIcon.width.css};
-  height: ${domSizes.homeIcon.height.css};
+  width: ${domSizes.desktop.homeIcon.width.css};
+  height: ${domSizes.desktop.homeIcon.height.css};
   position: relative;
-  left: ${domSizes.homeIcon.padding.left.div(-2).css};
-  margin-bottom: ${domSizes.homeIcon.padding.vert.css};
+  left: ${domSizes.desktop.homeIcon.padding.left.div(-2).css};
+  margin-bottom: ${domSizes.desktop.homeIcon.padding.vert.css};
 `
 
 const HomeButtonLink = styled(Anchor)`

@@ -18,6 +18,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var typeUtils_1 = require("../../typeUtils");
 var rect_1 = __importDefault(require("./rect"));
 var ElemRect = (function (_super) {
     __extends(ElemRect, _super);
@@ -69,6 +70,14 @@ var ElemRect = (function (_super) {
         enumerable: false,
         configurable: true
     });
+    ElemRect.createUpdated = function (elemRect, ref, padding, isRelative) {
+        if (!(0, typeUtils_1.validateRef)(ref))
+            return;
+        if (!elemRect || (elemRect.ref.current !== ref.current))
+            return new ElemRect(ref, padding, isRelative);
+        else
+            return elemRect;
+    };
     return ElemRect;
 }(rect_1.default));
 exports.default = ElemRect;

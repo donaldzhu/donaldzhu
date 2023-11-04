@@ -37,7 +37,7 @@ const LinkContainer = styled(Anchor)`
 
 const negativeIndent = em(1.5)
 const ItemContainer = styled.li<StyledItemContainerProps>`
-  font-size: ${fontSizes.workIndex.mono.css};
+  font-size: ${fontSizes.desktop.workIndex.mono.css};
   color: ${({ $isHighlighted }) => $isHighlighted ? colors.activeElem : colors.workIndex};
   position: relative;
   left: ${negativeIndent};
@@ -49,7 +49,7 @@ const ItemDelimiter = styled.span`
 `
 
 const Title = styled.h3`
-  font-size: ${fontSizes.workIndex.sans.css};
+  font-size: ${fontSizes.desktop.workIndex.sans.css};
   display: inline;
 `
 

@@ -71,13 +71,13 @@ const WorkPageSidebar = ({ title, id, date, tags, medium }: WorkDataInterface) =
   </div>
 
 const ContentContainer = styled.div`
-  ${mixins.innerMargin(domSizes.workPage.media.gap.css)}
+  ${mixins.innerMargin(domSizes.desktop.workPage.media.gap.css)}
 `
 
 const Details = styled.div`
-  font-size: ${fontSizes.workPage.details.css};
+  font-size: ${fontSizes.desktop.workPage.details.css};
   line-height: ${fontLineHeights.text};
-  margin-bottom: ${domSizes.text.innerMargin.css};
+  margin-bottom: ${domSizes.desktop.text.innerMargin.css};
   font-weight: 450;
 
   :first-child{

@@ -6,7 +6,6 @@ import { getBlankCoors, loopObject, map, mapObject, typedKeys } from '../../../u
 import Size from '../../../utils/helpers/size'
 import { getVh, getVw } from '../../../utils/sizeUtils'
 import { sketchSizes } from '../../../styles/sizes'
-import RollingFilter from '../../../utils/helpers/rollingFilter'
 import { wrapDrawingContext } from '../../../utils/p5Utils'
 import { Easing, VectorSetting } from './vectorTypes'
 
@@ -105,12 +104,26 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
         const unfiltered = unmapped / 90
         const eased = easing[this.easing](Math.abs(unfiltered))
         const acceleration = map(Math.abs(unmapped), 90, 0) * accelVector[axis]
+
+        const accelFriction = map(
+          Math.min(rollingAccelFilter.mean ?? 0, 10),
+          0, 10, 0, 0.5
+        )
+
+        const dist = Math.hypot(
+          bodies.constraint.pointA.x - bodies.active.position.x,
+          bodies.constraint.pointA.y - bodies.active.position.y
+        )
+        // const positionFriction = map(
+        //   bodies.constraint.length
+        // )
+
         bodies.active.frictionAir = map(
           Math.min(rollingAccelFilter.mean ?? 0, 10),
           0, 10, 0, 0.5
         ) + minFrictionAir
         return acceleration * (axis === 'y' ? -1 : 1) * 0.675 +
-          eased * Math.sign(unfiltered) * sketchSizes.mobile.physics.gravity.value
+          eased * Math.sign(unfiltered) * sketchSizes.mobile.main.physics.gravity.value
       }))
 
     // TODO: Remove
@@ -119,6 +132,7 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
       if (p5 && enabled)
         wrapDrawingContext(p5, () => {
           if (debug.name === 'W') {
+            p5.text('x: ' + _.round(p5.dist(bodies.active.position.x, bodies.active.position.y, bodies.constraint.pointA.x, bodies.constraint.pointA.y), 3), 10, 20)
             // p5.text('x: ' + _.round(accelVector.x, 3), 10, 20)
             // p5.text('y: ' + _.round(accelVector.y, 3), 10, 30)
           }
@@ -138,6 +152,6 @@ export const createMobilePhysicsSettings = () => ({
   constraint: {
     length: 0.01,
     damping: _.random(0.0125, 0.175, true),
-    stiffness: _.random(0.0085, 0.0125, true),
+    stiffness: _.random(0.01, 0.0125, true),
   }
 })

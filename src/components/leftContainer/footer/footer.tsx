@@ -18,7 +18,7 @@ const Footer = () => {
   return (
     <FooterContainer >
       <SvgBorder
-        size={domSizes.sidebar.width}
+        size={domSizes.desktop.sidebar.width}
         isVertical={false} />
       <FooterLinkContainer>
         {typedKeys(NameText).map((name, i) =>
@@ -34,21 +34,21 @@ const Footer = () => {
 const FooterContainer = styled.footer`
   ${mixins.highZIndex(4)}
   bottom: 0;
-  font-size: ${fontSizes.footer.link.css};
+  font-size: ${fontSizes.desktop.footer.link.css};
 `
 
 const FooterLinkContainer = styled.div`
-  ${mixins.flex('center', 'space-between')} 
+  ${mixins.flex('center', 'space-between')}
   width: 100%;
   box-sizing: border-box;
- 
-  padding: ${domSizes.footer.padding.top.sub(domSizes.footer.link.padding).css} 0;
-  padding-right: ${domSizes.sidebar.padding.right.css};
- 
-  font-size: ${fontSizes.footer.link.css};
+
+  padding: ${domSizes.desktop.footer.padding.top.sub(domSizes.desktop.footer.link.padding).css} 0;
+  padding-right: ${domSizes.desktop.sidebar.padding.right.css};
+
+  font-size: ${fontSizes.desktop.footer.link.css};
 `
 
-const FooterDelimiter = styled.div` 
+const FooterDelimiter = styled.div`
   align-self: center;
   color: ${colors.footer};
   ${mixins.noSelect()}

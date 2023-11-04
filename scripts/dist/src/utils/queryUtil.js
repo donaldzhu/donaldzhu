@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPreloadBreakpt = exports.getBreakptKey = exports.queries = exports.Breakpt = void 0;
+exports.getPreloadBreakpt = exports.getBreakptKey = exports.queries = exports.Device = exports.Breakpt = void 0;
 var breakpoints_1 = __importDefault(require("../data/breakpoints"));
 var commonUtils_1 = require("./commonUtils");
 var Breakpt;
@@ -14,6 +14,11 @@ var Breakpt;
     Breakpt["xl"] = "xl";
     Breakpt["xxl"] = "xxl";
 })(Breakpt || (exports.Breakpt = Breakpt = {}));
+var Device;
+(function (Device) {
+    Device["mobile"] = "mobile";
+    Device["desktop"] = "desktop";
+})(Device || (exports.Device = Device = {}));
 exports.queries = (0, commonUtils_1.mapObject)(breakpoints_1.default, function (_, breakpt) {
     return "only screen and (min-width: ".concat(breakpt + 1, "px)");
 });

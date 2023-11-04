@@ -5,7 +5,7 @@ import mixins from '../../../styles/mixins'
 const Text = styled.p`
   margin: 0;
 
-  font-size: ${fontSizes.text.mono.css};
+  font-size: ${fontSizes.desktop.text.mono.css};
   font-weight: ${fontParams.semiLight};
   letter-spacing: -0.03em;
   line-height: ${fontLineHeights.text};
@@ -15,7 +15,7 @@ const Text = styled.p`
   }
 
   b {
-    font-size: ${fontSizes.text.sans.css};
+    font-size: ${fontSizes.desktop.text.sans.css};
     letter-spacing: 0;
   }
 
