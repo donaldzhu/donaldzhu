@@ -27,8 +27,8 @@ const fixed = (positions: PositionProps = {}) => `
 `
 
 const fullscreen = () => `
-  width: 100vw;
-  height: 100vh;
+  width: 100dvw;
+  height: 100dvh;
 `
 
 const flex = (
