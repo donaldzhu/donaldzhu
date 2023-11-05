@@ -26,8 +26,8 @@ const footerHeight = footerPaddingTop.mult(2)
 
 const mobileSketchScale = getSize({ s: 1.15, l: 2.75 })
 const mobileSketchTop = getSize({ s: 56, l: 120 })
-const mobileSketchCenterPadding = getSize({ s: 35, l: 70 })
-const mobileSketchLeading = getSize({ s: 32, l: 72 })
+const mobileSketchCenterPadding = getSize({ s: 35, l: 84 })
+const mobileSketchLeading = getSize({ s: 32, l: 80 })
 const mobileSketchLowerWeight = getSize({ s: 5, l: 12 })
 
 export const domSizes = {
@@ -129,9 +129,9 @@ export const domSizes = {
           .add(mobileSketchLeading.mult(2))
           .add(mobileSketchCenterPadding)
           .add(mobileSketchLowerWeight)
-          .sub(getSize({ s: 4, l: 4 })),
-        border: getSize({ s: 1.5, l: 1.5 }),
-        borderRadius: getSize({ s: 6, l: 6 })
+          .sub(getSize({ s: 4, l: -1 })),
+        border: getSize({ s: 1.5, l: 3.5 }),
+        borderRadius: getSize({ s: 6, l: 12 })
       }
     },
   },
@@ -224,10 +224,6 @@ export const sketchSizes = {
       physics: {
         gravity: getSize({ s: 5.75, l: 12.5 })
       }
-    },
-    line: {
-      weight: getSize({ s: 3, l: 3 }),
-      dash: getSize({ s: 6, l: 6 })
     },
   }
 }

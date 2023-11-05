@@ -55,7 +55,7 @@ const GyroButtonContainer = styled.div`
 
 const GyroButton = styled.button`
   padding: ${padding} 0.7em;
-  word-spacing: -0.3ch;
+  word-spacing: -0.05em;
 
   font-weight: ${fontParams.semiBold};
   background-color: ${colors.background};
@@ -63,7 +63,6 @@ const GyroButton = styled.button`
   transition: opacity ${transitionTime};
   transition-timing-function: ease-in-out;
   ${mixins.flex('center', 'center', true)}
-
 
 
   > svg {

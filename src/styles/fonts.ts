@@ -55,7 +55,7 @@ export const fontSizes = {
   },
   mobile: {
     home: {
-      button: getRemSize({ s: 1.075, l: 1.075 })
+      button: getRemSize({ s: 1.075, l: 2.5 })
     }
   }
 }
