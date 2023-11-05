@@ -1,9 +1,7 @@
-import { TouchEvent, useState } from 'react'
+import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
-import _ from 'lodash'
 import useGlobalCanvas from '../../hooks/useGlobalCanvas'
 import GlobalCanvas from '../canvas/globalCanvas'
-import { addEventListener } from '../../utils/reactUtils'
 import { PageProps } from '../pageWrappers/pageTypes'
 import useMotion from '../../hooks/useMotion'
 import usePhysics from '../../hooks/usePhysics'
@@ -13,7 +11,9 @@ import { PageMobileContext } from './mobileType'
 const PageMobile = ({ canAutoPlay }: PageProps) => {
   const engine = usePhysics()
   const canvasRef = useGlobalCanvas()
-  const [isGyroEnabled, setIsGyroEnabled] = useState(false)
+  const [gyroStates, setGyroStates] = useState({
+    isEnabled: false, hasRequested: false
+  })
 
   const {
     motionSettings,
@@ -22,21 +22,25 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
   } = useMotion()
 
   const motionSettingsRef = useMemoRef(() => motionSettings, [motionSettings])
-  const isGyroEnabledRef = useMemoRef(() => isGyroEnabled, [isGyroEnabled])
+  const gyroStatesRef = useMemoRef(() => gyroStates, [gyroStates])
 
-  const handleGyroButtonClick = (e: TouchEvent<HTMLButtonElement>) => {
-    if (isGyroEnabled) return e.preventDefault()
-    if (getPermission)
-      Promise.resolve(getPermission())
-        .then(status => setIsGyroEnabled(status === 'granted'))
-    else setIsGyroEnabled(false)
+  const handleGyroButtonClick = () => {
+    if (getPermission) Promise.resolve(getPermission())
+      .then(status => setGyroStates({
+        hasRequested: true,
+        isEnabled: status === 'granted'
+      }))
+    else setGyroStates({
+      hasRequested: false,
+      isEnabled: false
+    })
   }
 
   const canvasStates = {
     motionSettings,
     motionSettingsRef,
-    isGyroEnabled,
-    isGyroEnabledRef,
+    gyroStates,
+    gyroStatesRef,
     gimbalRef,
     engine
   }

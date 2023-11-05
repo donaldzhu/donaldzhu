@@ -98,30 +98,30 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
         (y < 0 || y > 180 ? -1 : 1)
     }
 
+    const dist = Math.hypot(
+      bodies.constraint.pointA.x - bodies.active.position.x,
+      bodies.constraint.pointA.y - bodies.active.position.y
+    )
+
+    const positionMax = 5
+    const positionFriction = map(
+      Math.min(dist, positionMax),
+      positionMax, 0, 0, 0.6
+    )
+
+    const accelMax = 10
+    const accelFriction = map(
+      Math.min(rollingAccelFilter.mean ?? 0, accelMax),
+      0, accelMax, 0, 0.25
+    )
+
     rollingAccelFilter.add(Math.max(Math.abs(accelVector.x), Math.abs(accelVector.y)))
     Object.assign(engine.gravity,
       mapObject(unmappedValues, (axis, unmapped) => {
         const unfiltered = unmapped / 90
         const eased = easing[this.easing](Math.abs(unfiltered))
         const acceleration = map(Math.abs(unmapped), 90, 0) * accelVector[axis]
-
-        const accelFriction = map(
-          Math.min(rollingAccelFilter.mean ?? 0, 10),
-          0, 10, 0, 0.5
-        )
-
-        const dist = Math.hypot(
-          bodies.constraint.pointA.x - bodies.active.position.x,
-          bodies.constraint.pointA.y - bodies.active.position.y
-        )
-        // const positionFriction = map(
-        //   bodies.constraint.length
-        // )
-
-        bodies.active.frictionAir = map(
-          Math.min(rollingAccelFilter.mean ?? 0, 10),
-          0, 10, 0, 0.5
-        ) + minFrictionAir
+        bodies.active.frictionAir = accelFriction + positionFriction + minFrictionAir
         return acceleration * (axis === 'y' ? -1 : 1) * 0.675 +
           eased * Math.sign(unfiltered) * sketchSizes.mobile.main.physics.gravity.value
       }))
@@ -132,7 +132,8 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
       if (p5 && enabled)
         wrapDrawingContext(p5, () => {
           if (debug.name === 'W') {
-            p5.text('x: ' + _.round(p5.dist(bodies.active.position.x, bodies.active.position.y, bodies.constraint.pointA.x, bodies.constraint.pointA.y), 3), 10, 20)
+
+            // p5.text(_.round(positionFriction, 3), 10, 30)
             // p5.text('x: ' + _.round(accelVector.x, 3), 10, 20)
             // p5.text('y: ' + _.round(accelVector.y, 3), 10, 30)
           }
@@ -146,7 +147,7 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
 export const createMobilePhysicsSettings = () => ({
   active: {
     density: 5,
-    frictionAir: _.random(0.01, 0.03, true),
+    frictionAir: _.random(0.0125, 0.03, true),
     collisionFilter: { group: -1 }
   },
   constraint: {

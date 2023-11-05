@@ -235,7 +235,7 @@ class Glyph {
 
   get accelVector() {
     const { p5 } = this
-    if (this.canvasStates?.isGyroEnabledRef?.current) {
+    if (this.canvasStates?.gyroStatesRef?.current?.isEnabled) {
       this._accelVector.x = p5.accelerationX
       this._accelVector.y = p5.accelerationY
       this._accelVector.z = p5.accelerationZ
@@ -249,7 +249,7 @@ class Glyph {
       this.canvasStates &&
       validateRef(this.canvasStates.motionSettingsRef) &&
       validateRef(this.canvasStates.gimbalRef) &&
-      this.canvasStates?.isGyroEnabledRef?.current
+      this.canvasStates?.gyroStatesRef?.current?.isEnabled
     ) newRotationVector = this.canvasStates.gimbalRef.current.euler
     else newRotationVector.y = 25
 

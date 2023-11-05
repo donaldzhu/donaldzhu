@@ -12,11 +12,16 @@ export type DesktopCanvasStates = Partial<{
   hideCursorRef: MutableRefObject<boolean>
 }>
 
+interface GyroStateInterface {
+  hasRequested: boolean,
+  isEnabled: boolean
+}
+
 export type MobileCanvasStates = Partial<{
   motionSettings: MotionSettingInterface,
   motionSettingsRef: MutableRefObject<MotionSettingInterface | undefined>
-  isGyroEnabled: boolean,
-  isGyroEnabledRef: MutableRefObject<boolean | undefined>,
+  gyroStates: GyroStateInterface,
+  gyroStatesRef: MutableRefObject<GyroStateInterface | undefined>,
   gimbalRef: MutableRefObject<Gimbal | null>
   engine: Engine
 }>

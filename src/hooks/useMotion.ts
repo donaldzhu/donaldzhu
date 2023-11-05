@@ -2,11 +2,10 @@ import _ from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 import { addEventListener } from '../utils/reactUtils'
 import Gimbal from '../utils/helpers/motion/gimbal'
-import useMemoRef from './useMemoRef'
 
 export interface MotionSettingInterface {
+  hasMotion: boolean,
   isUsable: boolean | undefined
-  needsPermission: boolean
 }
 
 type requestPermissionType = () => Promise<'granted' | 'denied'>
@@ -14,53 +13,52 @@ type Ios13MotionEvent = typeof DeviceMotionEvent & {
   requestPermission: requestPermissionType
 }
 
-const hasDeviceEvent = ('DeviceOrientationEvent' in window && 'DeviceMotionEvent' in window)
+
+const needsPermission =
+  'requestPermission' in DeviceMotionEvent &&
+  typeof DeviceMotionEvent.requestPermission === 'function' &&
+  'requestPermission' in DeviceOrientationEvent &&
+  typeof DeviceOrientationEvent.requestPermission === 'function'
 
 const useMotion = () => {
-  const getInitialState = (): MotionSettingInterface => {
-    if (!hasDeviceEvent) return {
+  const getInitialState = (): MotionSettingInterface =>
+    (!('DeviceOrientationEvent' in window && 'DeviceMotionEvent' in window)) ? {
+      hasMotion: false,
       isUsable: false,
-      needsPermission: false
+    } : needsPermission ? {
+      hasMotion: true,
+      isUsable: undefined,
+    } : {
+      hasMotion: true,
+      isUsable: true,
     }
 
-    if (
-      'requestPermission' in DeviceMotionEvent &&
-      typeof DeviceMotionEvent.requestPermission === 'function' &&
-      'requestPermission' in DeviceOrientationEvent &&
-      typeof DeviceOrientationEvent.requestPermission === 'function') {
-      return {
-        isUsable: undefined,
-        needsPermission: true
-      }
-    }
-    return {
-      isUsable: undefined,
-      needsPermission: false
-    }
-  }
+
+
 
   const [motionSettings, setMotionSettings] =
     useState<MotionSettingInterface>(getInitialState())
 
   const gimbalRef = useRef<Gimbal | null>(null)
-  const getPermission = motionSettings.isUsable !== false ?
-    (motionSettings.needsPermission ?
-      () => {
+
+  const getPermission =
+    !motionSettings.hasMotion || motionSettings.isUsable === false ? null :
+      motionSettings.isUsable ? () => 'granted' : () => {
         const promise = (DeviceMotionEvent as Ios13MotionEvent).requestPermission()
         promise.then(value => {
           setMotionSettings({
+            hasMotion: true,
             isUsable: value === 'granted',
-            needsPermission: false
           })
         })
         return promise
-      } : () => 'granted') : null
+      }
 
   useEffect(() => {
-    const setUsable = _.once(() => setMotionSettings(prev => ({
-      ...prev,
+    const setUsable = _.once(() => setMotionSettings({
+      hasMotion: true,
       isUsable: true
-    })))
+    }))
 
     const gimbal = gimbalRef.current = new Gimbal()
 

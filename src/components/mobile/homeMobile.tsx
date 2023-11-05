@@ -7,32 +7,32 @@ import { domSizes } from '../../styles/sizes'
 import colors from '../../styles/colors'
 import { fontParams, fontSizes } from '../../styles/fonts'
 import { Device } from '../../utils/queryUtil'
-import { ReactComponent as GyroSvg } from '../../assets/gyroscope/gyro_3.svg'
 
 import { em } from '../../utils/sizeUtils'
 import { PageMobileContext } from './mobileType'
 
 interface StyledGyroButtonProps {
-  $isEnabled: boolean
+  $isShown: boolean
 }
 
 const HomeMobile = () => {
   const { canvasStates, handleGyroButtonClick } = useOutletContext<PageMobileContext>()
-  const { motionSettings, isGyroEnabled } = canvasStates
-
+  const { motionSettings, gyroStates } = canvasStates
 
   useCanvas<Device.mobile>(drawMobileSketch)
   return (
     <>
-      {motionSettings?.isUsable !== false &&
+      {motionSettings.hasMotion &&
         <GyroButtonContainer>
           <GyroEnableButton
             onTouchEnd={handleGyroButtonClick}
-            $isEnabled={!!isGyroEnabled}>
+            $isShown={!!gyroStates.hasRequested}>
             Enable Gyroscope
           </GyroEnableButton>
-          <GyroToolTip $isEnabled={!!isGyroEnabled}>
-            (Tilt Your Phone)
+          <GyroToolTip $isShown={!!gyroStates.hasRequested}>
+            {gyroStates.isEnabled ?
+              '(Tilt Your Phone)' :
+              'Permission Denied :('}
           </GyroToolTip>
         </GyroButtonContainer>}
     </>
@@ -41,7 +41,7 @@ const HomeMobile = () => {
 
 const svgHeight = em(1.325)
 const padding = em(0.5)
-const transitionTime = '0.16s'
+const transitionTime = '0.125s'
 const GyroButtonContainer = styled.div`
   ${mixins.chain()
     .flex('center', 'center')
@@ -74,7 +74,7 @@ const GyroButton = styled.button`
 `
 
 const GyroEnableButton = styled(GyroButton) <StyledGyroButtonProps>`
-  opacity: ${({ $isEnabled }) => $isEnabled ? 0 : 1};
+  opacity: ${({ $isShown }) => $isShown ? 0 : 1};
   border: ${domSizes.mobile.home.button.border.css} solid currentColor;
   border-radius: ${domSizes.mobile.home.button.borderRadius.css};
 `
@@ -85,7 +85,7 @@ const GyroToolTip = styled(GyroButton) <StyledGyroButtonProps>`
   top: calc(-${svgHeight} - ${padding} * 2 - ${domSizes.mobile.home.button.border.mult(2).css});
   pointer-events: none;
   transition: opacity ${transitionTime} ${transitionTime};
-  opacity: ${({ $isEnabled }) => $isEnabled ? 1 : 0};
+  opacity: ${({ $isShown }) => $isShown ? 1 : 0};
 `
 
 export default HomeMobile
