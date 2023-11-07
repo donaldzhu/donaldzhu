@@ -34,10 +34,10 @@ const MobileConstructionBanner = ({ $shift, $y1, $y2 }: StyledBannerProps) => {
 const MobileConstruction = () => {
   return (
     <BannerContainer>
-      <MobileConstructionBanner $y1={52.5} $y2={62.5} $shift={-85} />
-      <MobileConstructionBanner $y1={22.5} $y2={5} $shift={-40} />
-      <MobileConstructionBanner $y1={37.5} $y2={35} $shift={-115} />
-      <MobileConstructionBanner $y1={5} $y2={35} $shift={-10} />
+      <MobileConstructionBanner $y1={52.5} $y2={60} $shift={-85} />
+      <MobileConstructionBanner $y1={25} $y2={10} $shift={-40} />
+      <MobileConstructionBanner $y1={40} $y2={35} $shift={-115} />
+      <MobileConstructionBanner $y1={7.5} $y2={30} $shift={-10} />
       <MobileConstructionBanner $y1={85} $y2={52.5} $shift={-175} />
       <MobileConstructionBanner $y1={70} $y2={87.5} $shift={-22.5} />
     </BannerContainer>
