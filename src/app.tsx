@@ -32,14 +32,10 @@ const App = () => {
       <HashRouter>
         <Routes>
           {isMobile ?
-            (process.env.NODE_ENV === 'development' ?
-              <Route path='/' element={<PageMobile canAutoPlay={canAutoPlay} />}>
-                <Route path='' element={<HomeMobile />} />
-                <Route path='*' element={<Navigate to='/' replace />} />
-              </Route> :
-              <Route path='/' element={<MobileBlocker />} >
-                <Route path='*' element={<Navigate to='/' replace />} />
-              </Route>) :
+            <Route path='/' element={<PageMobile canAutoPlay={canAutoPlay} />}>
+              <Route path='' element={<HomeMobile />} />
+              <Route path='*' element={<Navigate to='/' replace />} />
+            </Route> :
             <Route path='/' element={<Page canAutoPlay={canAutoPlay} />}>
               <Route path='' element={<PageWithMainSketch />}>
                 <Route path='' element={<Home />} />
