@@ -20,6 +20,7 @@ import useCanAutoPlay from './hooks/useCanAutoPlay'
 import { isBrowser, validateString } from './utils/commonUtils'
 import { BrowserType } from './utils/utilTypes'
 import useIsMobile from './hooks/useIsMobile'
+import { queries } from './utils/queryUtil'
 
 const App = () => {
   const isMobile = useIsMobile()
@@ -65,7 +66,10 @@ const App = () => {
 const StyledGlobal = styled.main`
   ${mixins.flex()}
 
-  width: ${domSizes.desktop.app.width.css};
+  @media ${queries.l} {
+    width: ${domSizes.desktop.app.width.css};
+  }
+
   height: fit-content;
 
   font-family: ${fontFamilies.monoFont};

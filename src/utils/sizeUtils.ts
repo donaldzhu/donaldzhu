@@ -3,6 +3,8 @@ import { BreakptSizer, BreakptSizesType } from './helpers/breakptSizer'
 export const enum Unit {
   Vw = 'vw',
   Vh = 'vh',
+  Dvw = 'dvw',
+  Dvh = 'dvh',
   Px = 'px',
   '%' = '%',
   Em = 'em',

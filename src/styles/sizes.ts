@@ -29,6 +29,15 @@ const mobileSketchTop = getSize({ s: 56, l: 120 })
 const mobileSketchCenterPadding = getSize({ s: 35, l: 84 })
 const mobileSketchLeading = getSize({ s: 32, l: 80 })
 const mobileSketchLowerWeight = getSize({ s: 5, l: 12 })
+const mobileGyroButtonTop = mobileSketchTop.mult(2)
+  .add(mobileSketchScale.mult(X_HEIGHT * 4))
+  .add(mobileSketchLeading.mult(2))
+  .add(mobileSketchCenterPadding)
+  .add(mobileSketchLowerWeight)
+  .sub(getSize({ s: 4, l: -1 }))
+const mobileGyroButtonBorder = getSize({ s: 1.5, l: 3.5 })
+const mobileGyroButtonPadding = fontSizes.mobile.home.button.mult(0.5)
+const mobielGyroButtonHeight = fontSizes.mobile.home.button.mult(1.2)
 
 export const domSizes = {
   desktop: {
@@ -124,14 +133,18 @@ export const domSizes = {
   mobile: {
     home: {
       button: {
-        top: mobileSketchTop.mult(2)
-          .add(mobileSketchScale.mult(X_HEIGHT * 4))
-          .add(mobileSketchLeading.mult(2))
-          .add(mobileSketchCenterPadding)
-          .add(mobileSketchLowerWeight)
-          .sub(getSize({ s: 4, l: -1 })),
-        border: getSize({ s: 1.5, l: 3.5 }),
+        top: mobileGyroButtonTop,
+        height: mobielGyroButtonHeight,
+        padding: mobileGyroButtonPadding,
+        border: mobileGyroButtonBorder,
         borderRadius: getSize({ s: 6, l: 12 })
+      },
+      blocker: {
+        border: getSize({ s: 2.5, l: 2.5 }),
+        top: mobileGyroButtonTop
+          .add(mobileGyroButtonBorder.mult(2))
+          .add(mobileGyroButtonPadding.mult(2))
+          .add(mobielGyroButtonHeight)
       }
     },
   },

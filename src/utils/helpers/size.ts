@@ -2,22 +2,22 @@ import _ from 'lodash'
 import { filterFalsy, validateString } from '../commonUtils'
 import { getRem, getVh, getVw, Unit } from '../sizeUtils'
 
-type sizeTypes = Unit.Vw | Unit.Vh | Unit.Rem
+type sizeTypes = Unit.Dvw | Unit.Dvh | Unit.Rem
 
 class Size {
-  vw: number
-  vh: number
+  dvw: number
+  dvh: number
   rem: number
 
   constructor(config: number | { vw?: number, vh?: number, rem?: number }) {
     const remFactor = getRem()
     if (typeof config === 'number') {
-      this.vw = 0
-      this.vh = 0
+      this.dvw = 0
+      this.dvh = 0
       this.rem = config / remFactor
     } else {
-      this.vw = config.vw ?? 0
-      this.vh = config.vh ?? 0
+      this.dvw = config.vw ?? 0
+      this.dvh = config.vh ?? 0
       this.rem = config.rem ?? 0
     }
   }
@@ -43,8 +43,8 @@ class Size {
     operation: (thisUnit: number, targetUnit: number) => number
   ) {
     return new Size({
-      vw: operation(this.vw, targetSize.vw),
-      vh: operation(this.vh, targetSize.vh),
+      vw: operation(this.dvw, targetSize.dvw),
+      vh: operation(this.dvh, targetSize.dvh),
       rem: operation(this.rem, targetSize.rem)
     })
   }
@@ -54,20 +54,20 @@ class Size {
     operation: (thisUnit: number, targetUnit: number) => number
   ) {
     return new Size({
-      vw: operation(this.vw, targetNumber),
-      vh: operation(this.vh, targetNumber),
+      vw: operation(this.dvw, targetNumber),
+      vh: operation(this.dvh, targetNumber),
       rem: operation(this.rem, targetNumber)
     })
   }
 
   get css() {
-    const units: sizeTypes[] = [Unit.Vw, Unit.Vh, Unit.Rem]
+    const units: sizeTypes[] = [Unit.Dvw, Unit.Dvh, Unit.Rem]
     const addends = filterFalsy(units.map(unit => this.returnUnit(unit)))
     return `calc(${addends.join(' + ')})`
   }
 
   get value() {
-    return _.round(getVw(this.vw) + getVh(this.vh) + getRem(this.rem), 3)
+    return _.round(getVw(this.dvw) + getVh(this.dvh) + getRem(this.rem), 3)
   }
 
   private returnUnit(unit: sizeTypes) {

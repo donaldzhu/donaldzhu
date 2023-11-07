@@ -10,6 +10,7 @@ import { Device } from '../../utils/queryUtil'
 
 import { em } from '../../utils/sizeUtils'
 import { PageMobileContext } from './mobileType'
+import MobileConstruction from './mobileConstruction'
 
 interface StyledGyroButtonProps {
   $isShown: boolean
@@ -21,7 +22,7 @@ const HomeMobile = () => {
 
   useCanvas<Device.mobile>(drawMobileSketch)
   return (
-    <>
+    <div>
       {motionSettings.hasMotion &&
         <GyroButtonContainer>
           <GyroEnableButton
@@ -35,31 +36,34 @@ const HomeMobile = () => {
               'Permission Denied :('}
           </GyroToolTip>
         </GyroButtonContainer>}
-    </>
+      <MobileConstruction />
+    </div>
   )
 }
 
 const svgHeight = em(1.325)
-const padding = em(0.5)
 const transitionTime = '0.125s'
+
 const GyroButtonContainer = styled.div`
   ${mixins.chain()
     .flex('center', 'center')
     .highZIndex(1)}
   flex-direction: column;
-  position: absolute;
+ 
   width: 100%;
-  font-size: ${fontSizes.mobile.home.button.css};
+  position: absolute;
   top: ${domSizes.mobile.home.button.top.css};
+ 
+  font-size: ${fontSizes.mobile.home.button.css};
 `
 
 const GyroButton = styled.button`
-  padding: ${padding} 0.7em;
+  padding: ${domSizes.mobile.home.button.padding.css} 0.7em;
   word-spacing: -0.05em;
 
   font-weight: ${fontParams.semiBold};
+  height: ${domSizes.mobile.home.button.height.css};
   background-color: ${colors.background};
-  height: ${svgHeight};
   transition: opacity ${transitionTime};
   transition-timing-function: ease-in-out;
   ${mixins.flex('center', 'center', true)}
@@ -72,6 +76,8 @@ const GyroButton = styled.button`
   }
 `
 
+
+
 const GyroEnableButton = styled(GyroButton) <StyledGyroButtonProps>`
   opacity: ${({ $isShown }) => $isShown ? 0 : 1};
   border: ${domSizes.mobile.home.button.border.css} solid currentColor;
@@ -81,7 +87,7 @@ const GyroEnableButton = styled(GyroButton) <StyledGyroButtonProps>`
 const GyroToolTip = styled(GyroButton) <StyledGyroButtonProps>`
   ${mixins.slant()}
   position: relative;
-  top: calc(-${svgHeight} - ${padding} * 2 - ${domSizes.mobile.home.button.border.mult(2).css});
+  top: calc(-${svgHeight} - ${domSizes.mobile.home.button.padding.css} * 2 - ${domSizes.mobile.home.button.border.mult(2).css});
   pointer-events: none;
   transition: opacity ${transitionTime} ${transitionTime};
   opacity: ${({ $isShown }) => $isShown ? 1 : 0};
