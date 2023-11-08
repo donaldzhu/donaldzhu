@@ -1,7 +1,7 @@
 import { useMediaQuery } from '@uidotdev/usehooks'
-import { queries } from '../utils/queryUtil'
+import { minQueries } from '../utils/queryUtil'
 
 
-const useIsMobile = () => !useMediaQuery(queries.l)
+const useIsMobile = () => !useMediaQuery(minQueries.l)
 
 export default useIsMobile

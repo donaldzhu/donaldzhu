@@ -24,20 +24,30 @@ const headerHeight = homeIconPaddingVert.mult(2)
 const footerHeight = footerPaddingTop.mult(2)
   .add(fontSizes.desktop.footer.link).sub(sidebarBorderGap)
 
+const mobileMainMargin = getSize({ s: 20, l: 20 })
 const mobileSketchScale = getSize({ s: 1.15, l: 2.75 })
-const mobileSketchTop = getSize({ s: 56, l: 120 })
+const mobileSketchTop = getSize({ s: 25, l: 120 })
 const mobileSketchCenterPadding = getSize({ s: 35, l: 84 })
 const mobileSketchLeading = getSize({ s: 32, l: 80 })
 const mobileSketchLowerWeight = getSize({ s: 5, l: 12 })
-const mobileGyroButtonTop = mobileSketchTop.mult(2)
+const mobileNavLinkPadding = fontSizes.mobile.nav.mono
+const mobileNavLinkHeight = fontSizes.mobile.nav.mono
+const mobileNavHeight =
+  mobileNavLinkPadding.mult(2)
+    .add(mobileNavLinkHeight)
+
+const mobileGyroButtonPaddingTop = getSize({ s: 56, l: 120 })
+const mobileGyroButtonTop = mobileSketchTop
+  .add(mobileGyroButtonPaddingTop)
   .add(mobileSketchScale.mult(X_HEIGHT * 4))
   .add(mobileSketchLeading.mult(2))
   .add(mobileSketchCenterPadding)
   .add(mobileSketchLowerWeight)
+  .add(mobileNavHeight)
   .sub(getSize({ s: 4, l: -1 }))
 const mobileGyroButtonBorder = getSize({ s: 1.5, l: 3.5 })
 const mobileGyroButtonPadding = fontSizes.mobile.home.button.mult(0.5)
-const mobielGyroButtonHeight = fontSizes.mobile.home.button.mult(1.2)
+const mobileGyroButtonHeight = fontSizes.mobile.home.button.mult(1.2)
 
 export const domSizes = {
   desktop: {
@@ -131,10 +141,24 @@ export const domSizes = {
     }
   },
   mobile: {
+    app: {
+      margin: mobileMainMargin,
+      padding: {
+        top: getSize({ s: 36, l: 36 }),
+      },
+      width: new Size({ vw: 100 }).sub(mobileMainMargin.mult(2))
+    },
+    nav: {
+      height: mobileNavHeight,
+      link: {
+        padding: mobileNavLinkPadding,
+        height: mobileNavLinkHeight
+      }
+    },
     home: {
       button: {
         top: mobileGyroButtonTop,
-        height: mobielGyroButtonHeight,
+        height: mobileGyroButtonHeight,
         padding: mobileGyroButtonPadding,
         border: mobileGyroButtonBorder,
         borderRadius: getSize({ s: 6, l: 12 })
@@ -144,7 +168,7 @@ export const domSizes = {
         top: mobileGyroButtonTop
           .add(mobileGyroButtonBorder.mult(2))
           .add(mobileGyroButtonPadding.mult(2))
-          .add(mobielGyroButtonHeight)
+          .add(mobileGyroButtonHeight)
       }
     },
   },

@@ -1,11 +1,10 @@
 import { ReactNode, SVGProps } from 'react'
 
-interface SvgPropsType {
+type SvgPropsType = {
   w: number,
   h: number,
   children: ReactNode,
-  props?: SVGProps<SVGSVGElement>
-}
+} & SVGProps<SVGSVGElement>
 
 const Svg = ({ w, h, children, ...props }: SvgPropsType) => {
   return (

@@ -8,6 +8,7 @@ export const fontFamilies = {
 export const fontParams = {
   monoVariable: 0.525,
   semiLight: 375,
+  demiBold: 450,
   semiBold: 575,
 }
 
@@ -17,15 +18,18 @@ export const fontLineHeights = {
   popUp: em(1.25)
 }
 
-const sansToMonoratio = 1.03
-const monoFontSize = getRemSize({ l: 1.3, xxl: 2.875 })
+const sansToMonoratio = 1.02
+const monoFontSizeDesktop = getRemSize({ l: 1.3, xxl: 2.875 })
+const monoFontSizeMobile = getRemSize({ s: 1.3, l: 1.8 })
 const workIndexMonoFontSize = getRemSize({ l: 0.85, xxl: 1.7 })
+const navMonoFontSizeMobile = getRemSize({ s: 1.15, l: 1.125 })
+
 export const fontSizes = {
   desktop: {
     title: getRemSize({ l: 1.6, xxl: 2.3 }),
     text: {
-      mono: monoFontSize,
-      sans: monoFontSize.mult(sansToMonoratio)
+      mono: monoFontSizeDesktop,
+      sans: monoFontSizeDesktop.mult(sansToMonoratio)
     },
     footer: {
       link: getRemSize({ l: 1.15, xxl: 2 })
@@ -50,10 +54,18 @@ export const fontSizes = {
       caption: getRemSize({ l: 0.7, xxl: 1.35 })
     },
     contact: {
-      copy: monoFontSize.mult(0.8)
+      copy: monoFontSizeDesktop.mult(0.8)
     }
   },
   mobile: {
+    text: {
+      mono: monoFontSizeMobile,
+      sans: monoFontSizeMobile.mult(sansToMonoratio)
+    },
+    nav: {
+      mono: navMonoFontSizeMobile,
+      sans: navMonoFontSizeMobile.mult(sansToMonoratio)
+    },
     home: {
       button: getRemSize({ s: 1.075, l: 2.5 })
     }

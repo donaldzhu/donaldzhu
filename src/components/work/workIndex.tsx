@@ -8,7 +8,7 @@ import usePreloadQueue from '../../hooks/usePreloadQueue'
 import useSidebar from '../../hooks/useSidebar'
 import drawWorkSketch from '../../p5/sketches/drawWorkSketch'
 import { domSizes } from '../../styles/sizes'
-import { queries } from '../../utils/queryUtil'
+import { minQueries } from '../../utils/queryUtil'
 import MainContainer from '../common/styled/mainContainer'
 import WorkIndexSidebar from './workIndexSideBar'
 import WorkThumbnail from './workThumbnail'
@@ -48,7 +48,7 @@ const WorkIndex = () => {
     sidebarRef={sidebarRef}
     handleHover={handleHover} />, [highlighted])
 
-  const isExtraLargeDevice = useMediaQuery(queries.xl)
+  const isExtraLargeDevice = useMediaQuery(minQueries.xl)
   const columns = isExtraLargeDevice ? 3 : 2
 
   return (

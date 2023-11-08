@@ -1,5 +1,5 @@
 import p5 from 'p5'
-import { sketchSizes } from '../../styles/sizes'
+import { domSizes, sketchSizes } from '../../styles/sizes'
 import { validateRef } from '../../utils/typeUtils'
 import { coorTuple } from '../../utils/utilTypes'
 import configs from '../configs/vector'
@@ -16,7 +16,7 @@ const drawMobileSketch = () => {
 
     const workIn = new Text(p5, 'WORK IN', {
       ...configs.MOBILE_UPPER, x,
-      y: sketchSizes.mobile.main.top.value,
+      y: sketchSizes.mobile.main.top.add(domSizes.mobile.nav.height).value,
       spaceWidth: sketchSizes.mobile.main.spaceWidth,
       tracking: sketchSizes.mobile.main.tracking.workIn
     }, canvasStates)

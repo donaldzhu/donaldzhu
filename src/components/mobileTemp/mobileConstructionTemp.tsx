@@ -31,7 +31,7 @@ const MobileConstructionBanner = ({ $shift, $y1, $y2 }: StyledBannerProps) => {
 }
 
 
-const MobileConstruction = () => {
+const MobileConstructionTemp = () => {
   return (
     <BannerContainer>
       <MobileConstructionBanner $y1={52.5} $y2={60} $shift={-85} />
@@ -52,9 +52,7 @@ const BannerContainer = styled.div`
 
   font-family: ${fontFamilies.sansFont};
   font-size: 1.25rem;
-  /* font-weight: bold; */
   font-style: italic;
-  
 `
 
 const Banner = styled.p<StyledBannerProps>`
@@ -72,4 +70,4 @@ const Banner = styled.p<StyledBannerProps>`
   padding: 0.35em 0 0.25em; 
 `
 
-export default MobileConstruction
+export default MobileConstructionTemp

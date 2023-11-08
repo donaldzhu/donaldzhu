@@ -6,17 +6,14 @@ import { PageProps } from '../pageWrappers/pageTypes'
 import useMotion from '../../hooks/useMotion'
 import usePhysics from '../../hooks/usePhysics'
 import useMemoRef from '../../hooks/useMemoRef'
-import { PageMobileContext } from './mobileType'
-import NavMobile from './navMobile'
-import MenuMobile from './menuMobile'
+import { PageMobileContextTemp } from './mobileTypeTemp'
 
-const PageMobile = ({ canAutoPlay }: PageProps) => {
+const PageMobileTemp = ({ canAutoPlay }: PageProps) => {
   const engine = usePhysics()
   const canvasRef = useGlobalCanvas()
   const [gyroStates, setGyroStates] = useState({
     isEnabled: false, hasRequested: false
   })
-  const [menuIsShown, setMenuIsShown] = useState(false)
 
   const {
     motionSettings,
@@ -39,8 +36,6 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
     })
   }
 
-  const handleMenuClick = (shouldShow?: boolean) => setMenuIsShown(shouldShow ?? !menuIsShown)
-
   const canvasStates = {
     motionSettings,
     motionSettingsRef,
@@ -55,16 +50,14 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
       <GlobalCanvas
         canvasRef={canvasRef}
         canvasStates={{ engine }} />
-      <NavMobile isShown={menuIsShown} handleClick={handleMenuClick} />
-      {menuIsShown && <MenuMobile />}
       <Outlet context={{
         canAutoPlay,
         canvasRef,
         canvasStates,
         handleGyroButtonClick
-      } satisfies PageMobileContext} />
+      } satisfies PageMobileContextTemp} />
     </>
   )
 }
 
-export default PageMobile
+export default PageMobileTemp

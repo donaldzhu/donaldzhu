@@ -72,6 +72,7 @@ const underline = () => `
   text-decoration: underline;
   text-underline-offset: 0.125em;
 `
+const textMono = () => fontVar({ MONO: fontParams.monoVariable })
 
 const media = ({ $aspectRatio, $hasLoaded }: MediaProps) => `
   ${$aspectRatio ? `aspect-ratio: ${$aspectRatio};` : ''}
@@ -91,6 +92,7 @@ interface MixinInterface {
   fontVar: typeof fontVar
   slant: typeof slant
   underline: typeof underline
+  textMono: typeof textMono
   media: typeof media
 }
 
@@ -112,6 +114,7 @@ const mixins: MixinInterface & { chain: () => chainedMixinType } = {
   fontVar,
   slant,
   underline,
+  textMono,
   media,
   chain: function () {
     const chainedObject: Partial<chainedMixinType<true>> = {}

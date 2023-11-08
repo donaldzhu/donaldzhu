@@ -7,7 +7,7 @@ import useCanvas from '../../hooks/useCanvas'
 import usePreloadQueue from '../../hooks/usePreloadQueue'
 import useSidebar from '../../hooks/useSidebar'
 import drawToolTip from '../../p5/sketches/drawToolTip'
-import { fontLineHeights, fontSizes } from '../../styles/fonts'
+import { fontLineHeights, fontParams, fontSizes } from '../../styles/fonts'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import { capitalize } from '../../utils/commonUtils'
@@ -78,7 +78,7 @@ const Details = styled.div`
   font-size: ${fontSizes.desktop.workPage.details.css};
   line-height: ${fontLineHeights.text};
   margin-bottom: ${domSizes.desktop.text.innerMargin.css};
-  font-weight: 450;
+  font-weight: ${fontParams.demiBold};
 
   :first-child{
     ${mixins.fontVar({ MONO: 1 })};

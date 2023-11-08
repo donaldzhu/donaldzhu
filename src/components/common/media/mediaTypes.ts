@@ -1,4 +1,4 @@
-import { ForwardedRef, ImgHTMLAttributes, SyntheticEvent, VideoHTMLAttributes } from 'react'
+import { DetailedHTMLProps, ForwardedRef, ImgHTMLAttributes, SyntheticEvent, VideoHTMLAttributes } from 'react'
 import { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 
@@ -30,6 +30,13 @@ type ImgIntrinsicProps =
   Partial<SyntheticEvent<HTMLImageElement>> &
   ImgProps &
   { type: MediaFileType.Image }
+
+// type ImgIntrinsicProps =
+//   DetailedHTMLProps<
+//     ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement
+//   > &
+//   ImgProps &
+//   { type: MediaFileType.Image }
 
 type VidIntrinsicProps =
   Partial<VideoHTMLAttributes<HTMLVideoElement>> &

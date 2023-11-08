@@ -17,6 +17,8 @@ const createSuffixFunction = (suffix: Unit) =>
 export const px = createSuffixFunction(Unit.Px)
 export const vw = createSuffixFunction(Unit.Vw)
 export const vh = createSuffixFunction(Unit.Vh)
+export const dvw = createSuffixFunction(Unit.Dvw)
+export const dvh = createSuffixFunction(Unit.Dvh)
 export const percent = createSuffixFunction(Unit['%'])
 export const em = createSuffixFunction(Unit.Em)
 export const rem = createSuffixFunction(Unit.Rem)

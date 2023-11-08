@@ -19,7 +19,10 @@ import useCanAutoPlay from './hooks/useCanAutoPlay'
 import { isBrowser, validateString } from './utils/commonUtils'
 import { BrowserType } from './utils/utilTypes'
 import useIsMobile from './hooks/useIsMobile'
-import { queries } from './utils/queryUtil'
+import { maxQueries, minQueries } from './utils/queryUtil'
+import PageMobileTemp from './components/mobileTemp/pageMobileTemp'
+import HomeMobileTemp from './components/mobileTemp/homeMobileTemp'
+import Size from './utils/helpers/size'
 
 const App = () => {
   const isMobile = useIsMobile()
@@ -31,10 +34,16 @@ const App = () => {
       <HashRouter>
         <Routes>
           {isMobile ?
-            <Route path='/' element={<PageMobile canAutoPlay={canAutoPlay} />}>
-              <Route path='' element={<HomeMobile />} />
-              <Route path='*' element={<Navigate to='/' replace />} />
-            </Route> :
+            (process.env.NODE_ENV === 'production' ?
+              <Route path='/' element={<PageMobileTemp canAutoPlay={canAutoPlay} />}>
+                <Route path='' element={<HomeMobileTemp />} />
+                <Route path='*' element={<Navigate to='/' replace />} />
+              </Route> :
+              <Route path='/' element={<PageMobile canAutoPlay={canAutoPlay} />}>
+                <Route path='' element={<HomeMobile />} />
+                <Route path='*' element={<Navigate to='/' replace />} />
+              </Route>
+            ) :
             <Route path='/' element={<Page canAutoPlay={canAutoPlay} />}>
               <Route path='' element={<PageWithMainSketch />}>
                 <Route path='' element={<Home />} />
@@ -61,11 +70,8 @@ const App = () => {
 const StyledGlobal = styled.main`
   ${mixins.flex()}
 
-  @media ${queries.l} {
-    width: ${domSizes.desktop.app.width.css};
-  }
-
   height: fit-content;
+  min-height: 100dvh;
 
   font-family: ${fontFamilies.monoFont};
   font-feature-settings: 'case';
@@ -106,8 +112,16 @@ const StyledGlobal = styled.main`
     margin-bottom: 1em;
   }
 
-  a:hover {
-    color: ${colorConfig.activeElem};
+  @media ${minQueries.l} {
+    width: ${domSizes.desktop.app.width.css};
+    a:hover {
+      color: ${colorConfig.activeElem};
+    }
+  }
+
+  @media ${maxQueries.l} {
+    width: ${domSizes.mobile.app.width.css};
+    padding: 0 ${domSizes.mobile.app.margin.css};
   }
 `
 

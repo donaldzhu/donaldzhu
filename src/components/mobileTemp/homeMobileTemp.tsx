@@ -7,17 +7,17 @@ import { domSizes } from '../../styles/sizes'
 import colors from '../../styles/colors'
 import { fontParams, fontSizes } from '../../styles/fonts'
 import { Device } from '../../utils/queryUtil'
+
 import { em } from '../../utils/sizeUtils'
-import TextContainer from '../common/styled/textContainer'
-import Text from '../common/styled/text'
-import { PageMobileContext } from './mobileType'
+import { PageMobileContextTemp } from './mobileTypeTemp'
+import MobileConstructionTemp from './mobileConstructionTemp'
 
 interface StyledGyroButtonProps {
   $isShown: boolean
 }
 
-const HomeMobile = () => {
-  const { canvasStates, handleGyroButtonClick } = useOutletContext<PageMobileContext>()
+const HomeMobileTemp = () => {
+  const { canvasStates, handleGyroButtonClick } = useOutletContext<PageMobileContextTemp>()
   const { motionSettings, gyroStates } = canvasStates
 
   useCanvas<Device.mobile>(drawMobileSketch)
@@ -36,16 +36,7 @@ const HomeMobile = () => {
               'Permission Denied :('}
           </GyroToolTip>
         </GyroButtonContainer>}
-      <HomeTextContainer>
-        <Text>
-          <b>DONALD ZHU is a graphic designer based in Toronto, Canada.</b>
-        </Text>
-        <Text>
-          He finished his degree at OCAD University in 2023. His work primarily focuses on
-          <i> typography, interaction, and code</i>. In his free time, he likes to work on
-          custom typefaces and side web projects.
-        </Text>
-      </HomeTextContainer>
+      <MobileConstructionTemp />
     </div>
   )
 }
@@ -59,7 +50,7 @@ const GyroButtonContainer = styled.div`
     .highZIndex(1)}
   flex-direction: column;
  
-  width: ${domSizes.mobile.app.width.css};
+  width: 100%;
   position: absolute;
   top: ${domSizes.mobile.home.button.top.css};
  
@@ -85,6 +76,8 @@ const GyroButton = styled.button`
   }
 `
 
+
+
 const GyroEnableButton = styled(GyroButton) <StyledGyroButtonProps>`
   opacity: ${({ $isShown }) => $isShown ? 0 : 1};
   border: ${domSizes.mobile.home.button.border.css} solid currentColor;
@@ -98,12 +91,6 @@ const GyroToolTip = styled(GyroButton) <StyledGyroButtonProps>`
   pointer-events: none;
   transition: opacity ${transitionTime} ${transitionTime};
   opacity: ${({ $isShown }) => $isShown ? 1 : 0};
-  background-color: transparent;
 `
 
-const HomeTextContainer = styled(TextContainer)`
-  position: absolute;
-  top: ${domSizes.mobile.home.blocker.top.css};
-`
-
-export default HomeMobile
+export default HomeMobileTemp

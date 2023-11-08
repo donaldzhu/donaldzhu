@@ -14,8 +14,12 @@ export enum Device {
   desktop = 'desktop'
 }
 
-export const queries = mapObject(breakpts, (_, breakpt) =>
-  `only screen and (min-width: ${breakpt + 1}px)`)
+const createQueries = (sizePrefix: 'max' | 'min') =>
+  mapObject(breakpts, (_, breakpt) =>
+    `only screen and (${sizePrefix}-width: ${breakpt + (sizePrefix === 'min' ? 1 : 0)}px)`)
+
+export const minQueries = createQueries('min')
+export const maxQueries = createQueries('max')
 
 export const getBreakptKey = () => {
   if (window.screen.width >= breakpts.xxl)

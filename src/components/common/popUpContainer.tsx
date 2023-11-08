@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode, useEffect } from 'react'
+import { DetailedHTMLProps, HTMLAttributes, ReactNode, useEffect } from 'react'
 import styled from 'styled-components'
 import colors from '../../styles/colors'
 import { fontLineHeights } from '../../styles/fonts'
@@ -7,7 +7,7 @@ import mixins from '../../styles/mixins'
 type PopUpContainerProps = {
   className?: string,
   children?: ReactNode
-} & HTMLAttributes<HTMLDivElement>
+} & DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
 const PopUpContainer = ({ className, children, ...props }: PopUpContainerProps) => {
   useEffect(() => {

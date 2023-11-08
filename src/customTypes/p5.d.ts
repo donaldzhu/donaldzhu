@@ -47,6 +47,7 @@ declare module 'p5' {
 
     mouseClicked(this: p5, evt?: MouseEvent): boolean | void
     doubleClicked(this: p5, evt?: MouseEvent): boolean | void
+    doubleClicked(this: p5, evt?: MouseEvent): boolean | void
     Graphics: p5.Graphics & {
       canvas: HTMLCanvasElement
     }
