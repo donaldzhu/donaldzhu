@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.2db63b86.css",
-    "main.js": "/static/js/main.a2aa49e9.js",
+    "main.css": "/static/css/main.9643fa4e.css",
+    "main.js": "/static/js/main.ef5498bb.js",
     "static/js/787.1ed0c42c.chunk.js": "/static/js/787.1ed0c42c.chunk.js",
     "static/media/Recursive.woff2": "/static/media/Recursive.2f1b189e1c4b619d903a.woff2",
     "static/media/ManifontGroteskBold.woff": "/static/media/ManifontGroteskBold.188c6612d3a60a7652cc.woff",
@@ -20,12 +20,12 @@
     "static/media/t.svg": "/static/media/t.3745eaf736056919cd1804968f63778e.svg",
     "static/media/v.svg": "/static/media/v.4759377957d5b966593cdf841fd86014.svg",
     "index.html": "/index.html",
-    "main.2db63b86.css.map": "/static/css/main.2db63b86.css.map",
-    "main.a2aa49e9.js.map": "/static/js/main.a2aa49e9.js.map",
+    "main.9643fa4e.css.map": "/static/css/main.9643fa4e.css.map",
+    "main.ef5498bb.js.map": "/static/js/main.ef5498bb.js.map",
     "787.1ed0c42c.chunk.js.map": "/static/js/787.1ed0c42c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2db63b86.css",
-    "static/js/main.a2aa49e9.js"
+    "static/css/main.9643fa4e.css",
+    "static/js/main.ef5498bb.js"
   ]
 }
