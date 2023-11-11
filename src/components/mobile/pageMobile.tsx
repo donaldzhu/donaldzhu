@@ -1,22 +1,35 @@
-import { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
+import styled from 'styled-components'
+import { usePrevious } from '@uidotdev/usehooks'
+import mixins from '../../styles/mixins'
 import useGlobalCanvas from '../../hooks/useGlobalCanvas'
 import GlobalCanvas from '../canvas/globalCanvas'
 import { PageProps } from '../pageWrappers/pageTypes'
 import useMotion from '../../hooks/useMotion'
 import usePhysics from '../../hooks/usePhysics'
+import { noOverflow } from '../../utils/reactUtils'
 import useMemoRef from '../../hooks/useMemoRef'
+import { validateString } from '../../utils/commonUtils'
 import { PageMobileContext } from './mobileType'
-import NavMobile from './navMobile'
+import HeaderMobile from './headerMobile'
 import MenuMobile from './menuMobile'
 
+interface StyledGlobalCanvasProps {
+  $menuIsShown: boolean
+}
+
 const PageMobile = ({ canAutoPlay }: PageProps) => {
+  const location = useLocation()
+  const prevLocation = usePrevious(location)
   const engine = usePhysics()
   const canvasRef = useGlobalCanvas()
   const [gyroStates, setGyroStates] = useState({
     isEnabled: false, hasRequested: false
   })
   const [menuIsShown, setMenuIsShown] = useState(false)
+  const [shouldFade, setShouldFade] = useState(true)
+  const [shouldHideGyro, setShouldHideGyro] = useState(false)
 
   const {
     motionSettings,
@@ -39,6 +52,16 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
     })
   }
 
+  useEffect(() => {
+    if (menuIsShown) return noOverflow()
+  }, [menuIsShown])
+  useEffect(() => {
+    setMenuIsShown(false)
+    setShouldFade(true)
+    if (gyroStates.isEnabled && prevLocation.pathname !== location.pathname)
+      setShouldHideGyro(true)
+  }, [location])
+
   const handleMenuClick = (shouldShow?: boolean) => setMenuIsShown(shouldShow ?? !menuIsShown)
 
   const canvasStates = {
@@ -51,20 +74,53 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
   }
 
   return (
-    <>
-      <GlobalCanvas
-        canvasRef={canvasRef}
-        canvasStates={{ engine }} />
-      <NavMobile isShown={menuIsShown} handleClick={handleMenuClick} />
+    <Container $menuIsShown={menuIsShown}>
+      <HeaderMobile isShown={menuIsShown} handleClick={handleMenuClick} />
       {menuIsShown && <MenuMobile />}
-      <Outlet context={{
-        canAutoPlay,
-        canvasRef,
-        canvasStates,
-        handleGyroButtonClick
-      } satisfies PageMobileContext} />
-    </>
+      <AnimationContainer
+        $shouldFade={shouldFade}
+        onAnimationEnd={() => setShouldFade(false)}>
+        <StyledGlobalCanvas
+          canvasRef={canvasRef}
+          canvasStates={{ engine }}
+          $menuIsShown={menuIsShown} />
+        <Outlet context={{
+          canAutoPlay,
+          canvasRef,
+          canvasStates,
+          shouldHideGyro,
+          handleGyroButtonClick
+        } satisfies PageMobileContext} />
+      </AnimationContainer>
+    </Container>
   )
 }
+
+const AnimationContainer = styled.div<{ $shouldFade: boolean }>`
+  ${({ $shouldFade }) => validateString($shouldFade, `
+    @keyframes fadeIn {
+      from { 
+        opacity: 0; 
+      } to { 
+        opacity: 1;
+      }
+    }
+    animation: fadeIn 0.5s ease-in-out;
+  `)}
+`
+
+const Container = styled.div<StyledGlobalCanvasProps>`
+  &, &>${AnimationContainer} {
+    ${mixins.flex('center')}
+    flex-direction: column;
+    width: 100%;
+  }
+`
+
+
+const StyledGlobalCanvas = styled(GlobalCanvas) <StyledGlobalCanvasProps>`
+  position: static;
+  ${({ $menuIsShown }) => validateString(!$menuIsShown, mixins.highZIndex(4))}
+`
 
 export default PageMobile

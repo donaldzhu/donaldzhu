@@ -6,13 +6,8 @@ import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
 import { typedKeys } from '../../../utils/commonUtils'
 import SvgBorder from '../../common/svgBorder'
+import { LinkText } from '../../../data/links'
 import FooterLink from './footerLink'
-
-enum NameText {
-  work = 'WORK',
-  process = 'HOW I WORK',
-  contact = 'CONTACT'
-}
 
 const Footer = () => {
   return (
@@ -21,10 +16,10 @@ const Footer = () => {
         size={domSizes.desktop.sidebar.width}
         isVertical={false} />
       <FooterLinkContainer>
-        {typedKeys(NameText).map((name, i) =>
+        {typedKeys(LinkText).map((name, i) =>
           <Fragment key={name}>
             {!!i && <FooterDelimiter>●</FooterDelimiter>}
-            <FooterLink path={`/${name}`}>{NameText[name]}</FooterLink>
+            <FooterLink path={`/${name}`}>{LinkText[name]}</FooterLink>
           </Fragment>)}
       </FooterLinkContainer>
     </FooterContainer >

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import colors from '../../styles/colors'
 import { fontLineHeights } from '../../styles/fonts'
 import mixins from '../../styles/mixins'
+import { noOverflow } from '../../utils/reactUtils'
 
 type PopUpContainerProps = {
   className?: string,
@@ -10,12 +11,7 @@ type PopUpContainerProps = {
 } & DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
 const PopUpContainer = ({ className, children, ...props }: PopUpContainerProps) => {
-  useEffect(() => {
-    const { style } = document.body
-    style.overflow = 'hidden'
-
-    return () => { style.overflow = '' }
-  }, [])
+  useEffect(noOverflow, [])
 
   return (
     <Container className={className} {...props}>

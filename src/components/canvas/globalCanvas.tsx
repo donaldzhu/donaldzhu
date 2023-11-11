@@ -10,10 +10,18 @@ import { Device } from '../../utils/queryUtil'
 import Canvas from './canvas'
 import { GlobalCanvasStates, p5EventCallback } from './canvasTypes'
 
+interface StyledCanvasProps {
+  $highZIndex: number
+}
+
 const GlobalCanvas = <T extends Device>({
   canvasRef,
-  canvasStates = {}
-}: GlobalCanvasStates<T>) => {
+  canvasStates = {},
+  className,
+}: GlobalCanvasStates<T> & {
+  highZIndex?: number,
+  className?: string
+}) => {
   const setup = (p5: p5, canvasParent: HTMLDivElement) =>
     p5.createCanvas(getVw(), getVh()).parent(canvasParent)
 
@@ -47,20 +55,18 @@ const GlobalCanvas = <T extends Device>({
   const otherHandlers = _.omit(handlers, [P5Event.draw, P5Event.mouseMoved, P5Event.windowResized])
 
   return (
-    <CanvasStyled
+    <StyledCanvas
       setup={setup}
       draw={draw}
       mouseMoved={mouseMoved}
       windowResized={windowResized}
+      className={className}
       {...otherHandlers} />
   )
 }
 
-const CanvasStyled = styled(Canvas)`
-  ${mixins
-    .chain()
-    .highZIndex(1)
-    .fixed()}
+const StyledCanvas = styled(Canvas) <StyledCanvasProps>`
+  ${mixins.fixed()}
   pointer-events: none;
   mix-blend-mode: multiply;
 `

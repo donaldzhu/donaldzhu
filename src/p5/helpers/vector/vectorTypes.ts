@@ -1,4 +1,4 @@
-import p5, { Graphics } from 'p5'
+import p5 from 'p5'
 import { Constraint, Engine } from 'matter-js'
 import Size from '../../../utils/helpers/size'
 import { MobileCanvasStates } from '../../../components/canvas/canvasTypes'
@@ -56,7 +56,7 @@ export interface VectorSetting {
     engine: Engine,
     minFrictionAir: number,
     debug?: {
-      p5?: p5 | Graphics,
+      p5?: p5 | p5.Graphics,
       name?: string,
       enabled?: boolean,
     }

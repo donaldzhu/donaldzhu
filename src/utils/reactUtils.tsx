@@ -60,3 +60,10 @@ export const parseHtml = (string: string) => {
   }
   return parse(string, options)
 }
+
+export const noOverflow = () => {
+  const { style } = document.body
+  style.overflow = 'hidden'
+
+  return () => { style.overflow = '' }
+}

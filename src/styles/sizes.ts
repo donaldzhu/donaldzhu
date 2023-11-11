@@ -36,18 +36,23 @@ const mobileNavHeight =
   mobileNavLinkPadding.mult(2)
     .add(mobileNavLinkHeight)
 
-const mobileGyroButtonPaddingTop = getSize({ s: 56, l: 120 })
-const mobileGyroButtonTop = mobileSketchTop
-  .add(mobileGyroButtonPaddingTop)
+const mobileGyroPaddingTop = getSize({ s: 56, l: 120 })
+const mobileGyroMarginBottom = getSize({ s: 28, l: 28 })
+const mobileGyroTop = mobileSketchTop
+  .add(mobileGyroPaddingTop)
   .add(mobileSketchScale.mult(X_HEIGHT * 4))
   .add(mobileSketchLeading.mult(2))
   .add(mobileSketchCenterPadding)
   .add(mobileSketchLowerWeight)
   .add(mobileNavHeight)
   .sub(getSize({ s: 4, l: -1 }))
-const mobileGyroButtonBorder = getSize({ s: 1.5, l: 3.5 })
-const mobileGyroButtonPadding = fontSizes.mobile.home.button.mult(0.5)
-const mobileGyroButtonHeight = fontSizes.mobile.home.button.mult(1.2)
+const mobileGyroBorder = getSize({ s: 1.5, l: 3.5 })
+const mobileGyroPadding = fontSizes.mobile.home.button.mult(0.5)
+const mobileGyroHeight = fontSizes.mobile.home.button.mult(1.2)
+
+const mobileGyroBoxHeight = mobileGyroBorder.mult(2)
+  .add(mobileGyroPadding.mult(2))
+  .add(mobileGyroHeight)
 
 export const domSizes = {
   desktop: {
@@ -144,11 +149,11 @@ export const domSizes = {
     app: {
       margin: mobileMainMargin,
       padding: {
-        top: getSize({ s: 36, l: 36 }),
+        top: getSize({ s: 8, l: 8 }), // TODO
       },
       width: new Size({ vw: 100 }).sub(mobileMainMargin.mult(2))
     },
-    nav: {
+    header: {
       height: mobileNavHeight,
       link: {
         padding: mobileNavLinkPadding,
@@ -157,18 +162,25 @@ export const domSizes = {
     },
     home: {
       button: {
-        top: mobileGyroButtonTop,
-        height: mobileGyroButtonHeight,
-        padding: mobileGyroButtonPadding,
-        border: mobileGyroButtonBorder,
+        top: mobileGyroTop,
+        height: mobileGyroHeight,
+        padding: {
+          vert: mobileGyroPadding
+        },
+        margin: {
+          bottom: getSize({ s: 28, l: 28 }) // TODO
+        },
+        border: mobileGyroBorder,
         borderRadius: getSize({ s: 6, l: 12 })
+      },
+      toolTip: {
+        top: mobileGyroBoxHeight
       },
       blocker: {
         border: getSize({ s: 2.5, l: 2.5 }),
-        top: mobileGyroButtonTop
-          .add(mobileGyroButtonBorder.mult(2))
-          .add(mobileGyroButtonPadding.mult(2))
-          .add(mobileGyroButtonHeight)
+        top: mobileGyroTop
+          .add(mobileGyroBoxHeight)
+          .add(mobileGyroMarginBottom)
       }
     },
   },

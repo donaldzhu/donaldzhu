@@ -4,15 +4,17 @@ import mixins from '../../styles/mixins'
 import colors from '../../styles/colors'
 import { domSizes } from '../../styles/sizes'
 import { fontFamilies } from '../../styles/fonts'
-import { dvh } from '../../utils/sizeUtils'
+import { LinkPath, LinkText } from '../../data/links'
+import { typedKeys } from '../../utils/commonUtils'
 
 const MenuMobile = () => {
   return (
     <Container>
       <MenuItemList>
-        <li><Link to='work'>Work</Link></li>
-        <li><Link to='process'>How I Work</Link></li>
-        <li><Link to='contact'>Contact</Link></li>
+        {typedKeys(LinkText).map(name =>
+          <li key={name}>
+            <Link to={LinkPath[name]}>{LinkText[name]}</Link>
+          </li>)}
       </MenuItemList>
     </Container>
   )

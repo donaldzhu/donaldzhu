@@ -4,14 +4,14 @@ import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import Size from '../../utils/helpers/size'
 import { fontFamilies, fontSizes } from '../../styles/fonts'
-import MobileButton from '../common/mobileButton'
+import colors from '../../styles/colors'
 
-interface NavMobileProps {
+interface HeaderMobileProps {
   isShown: boolean
   handleClick: (shouldShow?: boolean) => void
 }
 
-const NavMobile = ({ isShown, handleClick }: NavMobileProps) => {
+const HeaderMobile = ({ isShown, handleClick }: HeaderMobileProps) => {
   return (
     <Container>
       <HomeLink to='/' onClick={() => handleClick(false)}>D<b>ZHU</b></HomeLink>
@@ -27,11 +27,13 @@ const Container = styled.header`
     .chain()
     .highZIndex(3)
     .flex('center', 'space-between')}
-  position: absolute;
+  position: fixed;
+  background-color: ${colors.background};
   width: ${new Size({ vw: 100 }).sub(domSizes.mobile.app.margin.mult(2)).css};
-  padding: ${domSizes.mobile.nav.link.padding.css} 0;
+
+  padding: ${domSizes.mobile.header.link.padding.css} 0;
   font-size: ${fontSizes.mobile.nav.mono.css};
-  height: ${domSizes.mobile.nav.link.height.css};
+  height: ${domSizes.mobile.header.link.height.css};
 `
 
 const HomeLink = styled(Link)`
@@ -40,8 +42,8 @@ const HomeLink = styled(Link)`
   font-size: ${fontSizes.mobile.nav.sans.css};
 `
 
-const MenuLink = styled(MobileButton)`
+const MenuLink = styled.button`
   ${mixins.textMono()}
 `
 
-export default NavMobile
+export default HeaderMobile

@@ -19,10 +19,12 @@ import useCanAutoPlay from './hooks/useCanAutoPlay'
 import { isBrowser, validateString } from './utils/commonUtils'
 import { BrowserType } from './utils/utilTypes'
 import useIsMobile from './hooks/useIsMobile'
-import { maxQueries, minQueries } from './utils/queryUtil'
+import { minQueries } from './utils/queryUtil'
 import PageMobileTemp from './components/mobileTemp/pageMobileTemp'
 import HomeMobileTemp from './components/mobileTemp/homeMobileTemp'
-import Size from './utils/helpers/size'
+import { LinkPath } from './data/links'
+import PageWithSketchMobile from './components/mobile/pageWithSketchMobile'
+import ProcessMobile from './components/mobile/processMobile'
 
 const App = () => {
   const isMobile = useIsMobile()
@@ -40,17 +42,20 @@ const App = () => {
                 <Route path='*' element={<Navigate to='/' replace />} />
               </Route> :
               <Route path='/' element={<PageMobile canAutoPlay={canAutoPlay} />}>
-                <Route path='' element={<HomeMobile />} />
+                <Route path='' element={<PageWithSketchMobile />}>
+                  <Route path='' element={<HomeMobile />} />
+                  <Route path={LinkPath.Process} element={<ProcessMobile />} />
+                </Route>
                 <Route path='*' element={<Navigate to='/' replace />} />
               </Route>
             ) :
             <Route path='/' element={<Page canAutoPlay={canAutoPlay} />}>
               <Route path='' element={<PageWithMainSketch />}>
                 <Route path='' element={<Home />} />
-                <Route path='contact' element={<Contact />} />
-                <Route path='process' element={<Process />} />
+                <Route path={LinkPath.Contact} element={<Contact />} />
+                <Route path={LinkPath.Process} element={<Process />} />
               </Route>
-              <Route path='work' >
+              <Route path={LinkPath.Work} >
                 <Route path='' element={<WorkIndex />} />
                 {workData.map(page => page.enabled &&
                   <Route key={page.id} path={page.id} element={
@@ -117,11 +122,6 @@ const StyledGlobal = styled.main`
     a:hover {
       color: ${colorConfig.activeElem};
     }
-  }
-
-  @media ${maxQueries.l} {
-    width: ${domSizes.mobile.app.width.css};
-    padding: 0 ${domSizes.mobile.app.margin.css};
   }
 `
 

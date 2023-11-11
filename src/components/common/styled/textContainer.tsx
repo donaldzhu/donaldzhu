@@ -14,7 +14,11 @@ const TextContainer = styled.div`
   }
 
   @media ${maxQueries.l} {
+    width: ${domSizes.mobile.app.width.css};
     padding-top: ${domSizes.mobile.app.padding.top.css};
+    &>:last-child {
+      padding-bottom: ${domSizes.mobile.app.padding.top.css};
+    }
   }
 `
 

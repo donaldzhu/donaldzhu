@@ -1,10 +1,11 @@
-import useSidebar from '../../hooks/useSidebar'
+import styled from 'styled-components'
 import Anchor from '../common/anchor'
-import SmallText from '../common/styled/smallText'
 import Text from '../common/styled/text'
 import TextContainer from '../common/styled/textContainer'
+import { domSizes } from '../../styles/sizes'
+import SmallText from '../common/styled/smallText'
 
-const ProcessSidebar = () => {
+const ProcessMobile = () => {
   return (
     <TextContainer>
       <Text>
@@ -27,14 +28,9 @@ const ProcessSidebar = () => {
         process. As such, the systematic outputs are the self-informed products that emerged
         from within the given concern of communication.
       </SmallText>
-      <SmallText>Simultaneously, tools and tool-making play an inextricable role in my design process <Anchor to='work/vector-spin-stroke'>(my capstone project on tools)</Anchor>. Given each tool’s particular performances and mechanisms, they stand between the designer and their outputs, setting the conditions within each investigation. In my case, to approach a situation from the ground up often involves making my own tools. Whether it be digital (coded, generative, algorithmic) or <Anchor to='work/stroke'>analog</Anchor> (tactile, haptic, tangible), they offer their own ways of assessing a given problem. In other words, tools are <i>potential openings to design challenges—through which new modes of thinking and making could emerge.</i></SmallText>
+      <Text>Simultaneously, tools and tool-making play an inextricable role in my design process <Anchor to='work/vector-spin-stroke'>(my capstone project on tools)</Anchor>. Given each tool’s particular performances and mechanisms, they stand between the designer and their outputs, setting the conditions within each investigation. In my case, to approach a situation from the ground up often involves making my own tools. Whether it be digital (coded, generative, algorithmic) or <Anchor to='work/stroke'>analog</Anchor> (tactile, haptic, tangible), they offer their own ways of assessing a given problem. In other words, tools are <i>potential openings to design challenges—through which new modes of thinking and making could emerge.</i></Text>
     </TextContainer>
   )
 }
 
-const Process = () => {
-  useSidebar(<ProcessSidebar />)
-  return undefined
-}
-
-export default Process
+export default ProcessMobile

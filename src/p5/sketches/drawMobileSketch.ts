@@ -16,7 +16,7 @@ const drawMobileSketch = () => {
 
     const workIn = new Text(p5, 'WORK IN', {
       ...configs.MOBILE_UPPER, x,
-      y: sketchSizes.mobile.main.top.add(domSizes.mobile.nav.height).value,
+      y: sketchSizes.mobile.main.top.add(domSizes.mobile.header.height).value,
       spaceWidth: sketchSizes.mobile.main.spaceWidth,
       tracking: sketchSizes.mobile.main.tracking.workIn
     }, canvasStates)
