@@ -33,7 +33,7 @@ const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }: Wor
 
 const ThumbnailLink = styled(Anchor)`
   display: block;
-   img, video {
+  img, video {
     width: 100%;
   }
 `

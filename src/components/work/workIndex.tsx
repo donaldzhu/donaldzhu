@@ -13,18 +13,6 @@ import MainContainer from '../common/styled/mainContainer'
 import WorkIndexSidebar from './workIndexSideBar'
 import WorkThumbnail from './workThumbnail'
 
-export interface WorkDataInterface {
-  id: string
-  title: string
-  abbr: string | null
-  date: string
-  tags: string[]
-  medium: string[]
-  animatedThumbnail: boolean
-  enabled: boolean
-  listed: boolean
-}
-
 interface StyledWorkIndex {
   $columns: number
 }

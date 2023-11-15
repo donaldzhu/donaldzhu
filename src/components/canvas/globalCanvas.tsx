@@ -10,16 +10,11 @@ import { Device } from '../../utils/queryUtil'
 import Canvas from './canvas'
 import { GlobalCanvasStates, p5EventCallback } from './canvasTypes'
 
-interface StyledCanvasProps {
-  $highZIndex: number
-}
-
 const GlobalCanvas = <T extends Device>({
   canvasRef,
   canvasStates = {},
   className,
 }: GlobalCanvasStates<T> & {
-  highZIndex?: number,
   className?: string
 }) => {
   const setup = (p5: p5, canvasParent: HTMLDivElement) =>
@@ -65,8 +60,11 @@ const GlobalCanvas = <T extends Device>({
   )
 }
 
-const StyledCanvas = styled(Canvas) <StyledCanvasProps>`
-  ${mixins.fixed()}
+const StyledCanvas = styled(Canvas)`
+  ${mixins
+    .chain()
+    .fixed()
+    .highZIndex(1)}
   pointer-events: none;
   mix-blend-mode: multiply;
 `

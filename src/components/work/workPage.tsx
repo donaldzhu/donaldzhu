@@ -16,7 +16,7 @@ import MainContainer from '../common/styled/mainContainer'
 import TextContainer from '../common/styled/textContainer'
 import { PageContextProps } from '../pageWrappers/pageTypes'
 import { MediaSize, getPreviewBreakptKey } from '../../utils/helpers/preloader/preloadUtils'
-import { WorkDataInterface } from './workIndex'
+import { WorkDataInterface } from './workTypes'
 
 interface WorkPageProps {
   data: WorkDataInterface

@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import TextContainer from '../common/styled/textContainer'
-import { WorkDataInterface } from './workIndex'
 import WorkSideBarItem from './workSidebarItem'
+import { WorkDataInterface } from './workTypes'
 
 interface WorkIndexSidebarProps {
   workData: WorkDataInterface[]

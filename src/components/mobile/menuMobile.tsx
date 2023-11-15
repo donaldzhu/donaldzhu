@@ -1,20 +1,28 @@
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import mixins from '../../styles/mixins'
 import colors from '../../styles/colors'
 import { domSizes } from '../../styles/sizes'
 import { fontFamilies } from '../../styles/fonts'
 import { LinkPath, LinkText } from '../../data/links'
 import { typedKeys } from '../../utils/commonUtils'
+import Anchor from '../common/anchor'
+
+interface MenuItemProps {
+  $isHighlighted: boolean
+}
 
 const MenuMobile = () => {
+  const location = useLocation()
   return (
     <Container>
       <MenuItemList>
         {typedKeys(LinkText).map(name =>
-          <li key={name}>
-            <Link to={LinkPath[name]}>{LinkText[name]}</Link>
-          </li>)}
+          <Menuitem
+            key={name}
+            $isHighlighted={!!location.pathname.match(LinkPath[name])}>
+            <Anchor to={LinkPath[name]}>{LinkText[name]}</Anchor>
+          </Menuitem>)}
       </MenuItemList>
     </Container>
   )
@@ -24,11 +32,9 @@ const Container = styled.nav`
   ${mixins.chain()
     .fullscreen()
     .highZIndex(2)
+    .mobileBody()
     .fixed()}
 
-  // TODO abstract to mixin?
-  width: ${domSizes.mobile.app.width.css};
-  padding: 0 ${domSizes.mobile.app.margin.css};
   background-color: ${colors.background};
   font-family: ${fontFamilies.sansFont};
   font-weight: bold;
@@ -41,6 +47,10 @@ const MenuItemList = styled.ul`
   ${mixins.innerMargin('1.75rem')}
   position: relative;
   top: 32dvh;
+`
+
+const Menuitem = styled.li<MenuItemProps>`
+  color: ${({ $isHighlighted }) => $isHighlighted ? colors.activeElem : 'inherit'};
 `
 
 export default MenuMobile

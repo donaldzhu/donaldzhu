@@ -1,5 +1,7 @@
 import _ from 'lodash'
 import { loopObject } from '../utils/commonUtils'
+import { minQueries } from '../utils/queryUtil'
+import { em } from '../utils/sizeUtils'
 import { fontParams } from './fonts'
 import { domSizes } from './sizes'
 import { FontVarConfigProps, MediaProps, PositionProps } from './styleTypes'
@@ -52,6 +54,11 @@ const innerMargin = (margin: string, direction = 'top') => `
   }
 `
 
+const mobileBody = () => `
+  width: ${domSizes.mobile.app.width.css};
+  padding: 0 ${domSizes.mobile.app.margin.css};
+`
+
 const highZIndex = (level: number) => `z-index: ${'9'.repeat(level)};`
 const noSelect = () => 'user-select: none;'
 
@@ -68,9 +75,13 @@ const fontVar = (config: FontVarConfigProps) => {
 }
 
 const slant = () => fontVar({ slnt: -5, CRSV: 1, MONO: fontParams.monoVariable })
-const underline = () => `
+const underline = (thickness?: string, offset?: string) => `
   text-decoration: underline;
-  text-underline-offset: 0.125em;
+  text-decoration-thickness: ${thickness ?? 'inherit'};
+  @media ${minQueries.l} {
+    text-underline-offset: ${offset ?? em(0.125)};
+  }
+  text-underline-offset: ${offset ?? em(0.2)};
 `
 const textMono = () => fontVar({ MONO: fontParams.monoVariable })
 
@@ -86,6 +97,7 @@ interface MixinInterface {
   fullscreen: typeof fullscreen
   flex: typeof flex
   squared: typeof squared
+  mobileBody: typeof mobileBody
   innerMargin: typeof innerMargin
   highZIndex: typeof highZIndex
   noSelect: typeof noSelect
@@ -108,6 +120,7 @@ const mixins: MixinInterface & { chain: () => chainedMixinType } = {
   fullscreen,
   flex,
   squared,
+  mobileBody,
   innerMargin,
   highZIndex,
   noSelect,

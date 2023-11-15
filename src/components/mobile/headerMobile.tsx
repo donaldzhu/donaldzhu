@@ -5,6 +5,7 @@ import { domSizes } from '../../styles/sizes'
 import Size from '../../utils/helpers/size'
 import { fontFamilies, fontSizes } from '../../styles/fonts'
 import colors from '../../styles/colors'
+import Anchor from '../common/anchor'
 
 interface HeaderMobileProps {
   isShown: boolean
@@ -36,7 +37,7 @@ const Container = styled.header`
   height: ${domSizes.mobile.header.link.height.css};
 `
 
-const HomeLink = styled(Link)`
+const HomeLink = styled(Anchor)`
   font-family: ${fontFamilies.sansFont};
   padding-top: 0.225em;
   font-size: ${fontSizes.mobile.nav.sans.css};

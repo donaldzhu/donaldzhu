@@ -25,6 +25,8 @@ import HomeMobileTemp from './components/mobileTemp/homeMobileTemp'
 import { LinkPath } from './data/links'
 import PageWithSketchMobile from './components/mobile/pageWithSketchMobile'
 import ProcessMobile from './components/mobile/processMobile'
+import ContactMobile from './components/mobile/contactMobile'
+import WorkIndexMobile from './components/mobile/workIndexMobile'
 
 const App = () => {
   const isMobile = useIsMobile()
@@ -44,7 +46,11 @@ const App = () => {
               <Route path='/' element={<PageMobile canAutoPlay={canAutoPlay} />}>
                 <Route path='' element={<PageWithSketchMobile />}>
                   <Route path='' element={<HomeMobile />} />
+                  <Route path={LinkPath.Contact} element={<ContactMobile />} />
                   <Route path={LinkPath.Process} element={<ProcessMobile />} />
+                </Route>
+                <Route path={LinkPath.Work} >
+                  <Route path='' element={<WorkIndexMobile />} />
                 </Route>
                 <Route path='*' element={<Navigate to='/' replace />} />
               </Route>

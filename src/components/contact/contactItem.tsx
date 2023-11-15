@@ -44,8 +44,7 @@ const ItemContainer = styled.li`
 
 const LinkContainer = styled(Anchor)`
   width: fit-content;
-  ${mixins.underline()}
-  text-decoration-thickness: 0.0765em;
+  ${mixins.underline(em(0.0765))}
 `
 
 const QRSvg = styled(Qr) <StyledQrSvgProps>`

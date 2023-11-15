@@ -59,16 +59,16 @@ const GyroButtonContainer = styled.div`
     .highZIndex(1)}
   flex-direction: column;
   position: absolute;
-  top: ${domSizes.mobile.home.button.top.css};
+  top: ${domSizes.mobile.main.button.top.css};
   width: ${domSizes.mobile.app.width.css};
-  font-size: ${fontSizes.mobile.home.button.css};
+  font-size: ${fontSizes.mobile.main.button.css};
 `
 
 const GyroButton = styled.button`
-  padding: ${domSizes.mobile.home.button.padding.vert.css} 0.7em;
+  padding: ${domSizes.mobile.main.button.padding.vert.css} 0.7em;
   word-spacing: -0.05em;
   font-weight: ${fontParams.semiBold};
-  height: ${domSizes.mobile.home.button.height.css};
+  height: ${domSizes.mobile.main.button.height.css};
   background-color: ${colors.background};
   transition: opacity ${transitionTime};
   transition-timing-function: ease-in-out;
@@ -77,8 +77,8 @@ const GyroButton = styled.button`
 
 const GyroEnableButton = styled(GyroButton) <StyledGyroButtonProps>`
   opacity: ${({ $isShown }) => $isShown ? 0 : 1};
-  border: ${domSizes.mobile.home.button.border.css} solid currentColor;
-  border-radius: ${domSizes.mobile.home.button.borderRadius.css};
+  border: ${domSizes.mobile.main.button.border.css} solid currentColor;
+  border-radius: ${domSizes.mobile.main.button.borderRadius.css};
 `
 
 // TODO: no button for aria purposes
@@ -89,14 +89,14 @@ const GyroToolTip = styled(GyroButton) <StyledGyroButtonProps>`
   opacity: ${({ $isShown }) => $isShown ? 1 : 0};
   background-color: transparent;
   position: relative;
-  top: ${domSizes.mobile.home.toolTip.top.mult(-1).css};
+  top: ${domSizes.mobile.main.toolTip.top.mult(-1).css};
 `
 
 const MainContainer = styled.div<StyledMainContainerProps>`
   position: absolute;
   top: ${({ $isGyroShown }) => $isGyroShown ?
     domSizes.mobile.home.blocker.top.css :
-    domSizes.mobile.home.button.top.css
+    domSizes.mobile.main.button.top.css
   };
 `
 

@@ -8,6 +8,9 @@ export interface MotionSettingInterface {
   isUsable: boolean | undefined
 }
 
+const DeviceMotionEvent = window.DeviceMotionEvent
+const DeviceOrientationEvent = window.DeviceOrientationEvent
+
 type requestPermissionType = () => Promise<'granted' | 'denied'>
 type Ios13MotionEvent = typeof DeviceMotionEvent & {
   requestPermission: requestPermissionType
@@ -15,6 +18,8 @@ type Ios13MotionEvent = typeof DeviceMotionEvent & {
 
 
 const needsPermission =
+  DeviceMotionEvent &&
+  DeviceOrientationEvent &&
   'requestPermission' in DeviceMotionEvent &&
   typeof DeviceMotionEvent.requestPermission === 'function' &&
   'requestPermission' in DeviceOrientationEvent &&
@@ -32,9 +37,6 @@ const useMotion = () => {
       hasMotion: true,
       isUsable: true,
     }
-
-
-
 
   const [motionSettings, setMotionSettings] =
     useState<MotionSettingInterface>(getInitialState())

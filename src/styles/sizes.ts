@@ -47,8 +47,8 @@ const mobileGyroTop = mobileSketchTop
   .add(mobileNavHeight)
   .sub(getSize({ s: 4, l: -1 }))
 const mobileGyroBorder = getSize({ s: 1.5, l: 3.5 })
-const mobileGyroPadding = fontSizes.mobile.home.button.mult(0.5)
-const mobileGyroHeight = fontSizes.mobile.home.button.mult(1.2)
+const mobileGyroPadding = fontSizes.mobile.main.button.mult(0.5)
+const mobileGyroHeight = fontSizes.mobile.main.button.mult(1.2)
 
 const mobileGyroBoxHeight = mobileGyroBorder.mult(2)
   .add(mobileGyroPadding.mult(2))
@@ -150,6 +150,7 @@ export const domSizes = {
       margin: mobileMainMargin,
       padding: {
         top: getSize({ s: 8, l: 8 }), // TODO
+        bottom: getSize({ s: 28, l: 28 }), // TODO
       },
       width: new Size({ vw: 100 }).sub(mobileMainMargin.mult(2))
     },
@@ -160,7 +161,7 @@ export const domSizes = {
         height: mobileNavLinkHeight
       }
     },
-    home: {
+    main: {
       button: {
         top: mobileGyroTop,
         height: mobileGyroHeight,
@@ -176,6 +177,8 @@ export const domSizes = {
       toolTip: {
         top: mobileGyroBoxHeight
       },
+    },
+    home: {
       blocker: {
         border: getSize({ s: 2.5, l: 2.5 }),
         top: mobileGyroTop
@@ -183,6 +186,16 @@ export const domSizes = {
           .add(mobileGyroMarginBottom)
       }
     },
+    contact: {
+      linkList: {
+        padding: {
+          top: getSize({ s: 12, l: 12 })
+        }
+      }
+    },
+    workIndex: {
+      top: mobileNavHeight
+    }
   },
 }
 

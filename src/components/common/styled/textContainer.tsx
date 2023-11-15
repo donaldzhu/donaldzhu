@@ -17,7 +17,7 @@ const TextContainer = styled.div`
     width: ${domSizes.mobile.app.width.css};
     padding-top: ${domSizes.mobile.app.padding.top.css};
     &>:last-child {
-      padding-bottom: ${domSizes.mobile.app.padding.top.css};
+      padding-bottom: ${domSizes.mobile.app.padding.bottom.css};
     }
   }
 `

@@ -49,7 +49,6 @@ const Vid = forwardRef<
         video.current.play()
       }, [vidCanAutoPlay])
 
-
       useEffect(() => {
         if (!!useNativeControl || !validateRef(video) || !entry) return _.noop
         if (!entry.isIntersecting) video.current.pause()
@@ -59,6 +58,7 @@ const Vid = forwardRef<
       return (
         <StyledVid
           muted
+          playsInline
           loop={loop}
           ref={mergedRef}
           poster={poster}

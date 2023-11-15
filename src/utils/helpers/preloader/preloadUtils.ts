@@ -25,7 +25,8 @@ export enum MediaFileType {
 
 export enum FileExt {
   Webm = 'webm',
-  Webp = 'webp'
+  Webp = 'webp',
+  Mp4 = 'mp4'
 }
 
 export enum VerboseLevel {
