@@ -8,7 +8,6 @@ const Text = styled.p`
 
   @media ${maxQueries.l} {
     font-size: ${fontSizes.mobile.text.mono.css};
-    //text-align: center;
   }
   @media ${minQueries.l} {
     font-size: ${fontSizes.desktop.text.mono.css};

@@ -1,7 +1,6 @@
 
 import * as THREE from 'three'
-import { degToRad } from 'three/src/math/MathUtils'
-import { TO_DEG } from '../../commonUtils'
+import { degToRad, radToDeg } from 'three/src/math/MathUtils'
 
 type gimbalAxes = 'xy' | 'z'
 
@@ -115,9 +114,9 @@ class Gimbal {
     const zEuler = new THREE.Euler().setFromQuaternion(this.quaternion.z, 'ZYX')
     // remapped
     return {
-      x: xyEuler.z * TO_DEG,
-      y: -(xyEuler.x - Math.PI / 2) * TO_DEG,
-      z: zEuler.z * TO_DEG
+      x: radToDeg(xyEuler.z),
+      y: radToDeg(-(xyEuler.x - Math.PI / 2)),
+      z: radToDeg(zEuler.z)
     }
   }
 }

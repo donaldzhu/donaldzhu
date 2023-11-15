@@ -61,7 +61,7 @@ const WorkPage = ({ data, Content }: WorkPageProps) => {
 
 const WorkPageSidebar = ({ title, id, date, tags, medium }: WorkDataInterface) =>
   <div>
-    <h1>{title}</h1>
+    <Title>{title}</Title>
     <Details>
       <p>{date}</p>
       <p>{capitalize(tags.join('/').toLocaleLowerCase())}</p>
@@ -72,6 +72,10 @@ const WorkPageSidebar = ({ title, id, date, tags, medium }: WorkDataInterface) =
 
 const ContentContainer = styled.div`
   ${mixins.innerMargin(domSizes.desktop.workPage.media.gap.css)}
+`
+
+const Title = styled.h1`
+  margin-bottom: 1em;
 `
 
 const Details = styled.div`

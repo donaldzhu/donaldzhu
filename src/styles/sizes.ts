@@ -24,7 +24,7 @@ const headerHeight = homeIconPaddingVert.mult(2)
 const footerHeight = footerPaddingTop.mult(2)
   .add(fontSizes.desktop.footer.link).sub(sidebarBorderGap)
 
-const mobileMainMargin = getSize({ s: 20, l: 20 })
+const mobileMainMargin = getSize({ s: 16, l: 16 })
 const mobileSketchScale = getSize({ s: 1.15, l: 2.75 })
 const mobileSketchTop = getSize({ s: 25, l: 120 })
 const mobileSketchCenterPadding = getSize({ s: 35, l: 84 })
@@ -35,6 +35,7 @@ const mobileNavLinkHeight = fontSizes.mobile.nav.mono
 const mobileNavHeight =
   mobileNavLinkPadding.mult(2)
     .add(mobileNavLinkHeight)
+const mobileNavMarginBottom = getSize({ s: 25, l: 25 })
 
 const mobileGyroPaddingTop = getSize({ s: 56, l: 120 })
 const mobileGyroMarginBottom = getSize({ s: 28, l: 28 })
@@ -147,6 +148,7 @@ export const domSizes = {
   },
   mobile: {
     app: {
+      top: mobileNavHeight.add(mobileNavMarginBottom),
       margin: mobileMainMargin,
       padding: {
         top: getSize({ s: 8, l: 8 }), // TODO
@@ -194,8 +196,16 @@ export const domSizes = {
       }
     },
     workIndex: {
-      top: mobileNavHeight,
-      innerMargin: getSize({ s: 30, l: 30 })
+      thumbnail: {
+        margin: getSize({ s: 24, l: 24 }),
+        width: getSize({ s: 210, l: 210 })
+      },
+      tags: {
+        padding: {
+          top: getSize({ s: 3.25, l: 3.25 })
+        }
+      },
+      gap: getSize({ s: 20, l: 20 })
     }
   },
 }

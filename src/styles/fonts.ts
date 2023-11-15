@@ -21,7 +21,7 @@ export const fontLineHeights = {
 const sansToMonoratio = 1.03
 const monoFontSizeDesktop = getRemSize({ l: 1.3, xxl: 2.875 })
 // const monoFontSizeMobile = getRemSize({ s: 1.3, l: 1.8 })
-const monoFontSizeMobile = getRemSize({ s: 1.75, l: 1.75 })
+const monoFontSizeMobile = getRemSize({ s: 1.55, l: 1.55 })
 const workIndexMonoFontSize = getRemSize({ l: 0.85, xxl: 1.7 })
 const navMonoFontSizeMobile = getRemSize({ s: 1.15, l: 1.125 })
 
@@ -63,13 +63,17 @@ export const fontSizes = {
       mono: monoFontSizeMobile,
       sans: monoFontSizeMobile.mult(sansToMonoratio)
     },
-    smallText: getRemSize({ s: 1.25, l: 1.25 }),
+    smallText: getRemSize({ s: 1.05, l: 1 }),
     nav: {
       mono: navMonoFontSizeMobile,
       sans: navMonoFontSizeMobile.mult(sansToMonoratio)
     },
     main: {
       button: getRemSize({ s: 1.075, l: 2.5 })
+    },
+    workIndex: {
+      title: getRemSize({ s: 0.9, l: 0.9 }), // TODO
+      tags: getRemSize({ s: 0.85, l: 0.85 })
     }
   }
 }

@@ -307,6 +307,7 @@ class PreloadManager {
     this.isComplete = true
   }
 
+  // TODO: sort load order based on device
   //-----getters-----//
   get sortedPageIds() {
     return workData.map(page => page.id)

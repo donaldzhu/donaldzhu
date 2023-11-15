@@ -27,6 +27,7 @@ import PageWithSketchMobile from './components/mobile/pageWithSketchMobile'
 import ProcessMobile from './components/mobile/processMobile'
 import ContactMobile from './components/mobile/contactMobile'
 import WorkIndexMobile from './components/mobile/workIndexMobile'
+import WorkPageMobile from './components/mobile/workPageMobile'
 
 const App = () => {
   const isMobile = useIsMobile()
@@ -51,6 +52,11 @@ const App = () => {
                 </Route>
                 <Route path={LinkPath.Work} >
                   <Route path='' element={<WorkIndexMobile />} />
+                  {workData.map(page => page.enabled &&
+                    <Route key={page.id} path={page.id} element={
+                      <WorkPageMobile
+                        data={page}
+                        Content={workPages[page.id]} />} />)}
                 </Route>
                 <Route path='*' element={<Navigate to='/' replace />} />
               </Route>
@@ -120,7 +126,6 @@ const StyledGlobal = styled.main`
 
   h1 {
     font-size: ${fontSizes.desktop.title.css};
-    margin-bottom: 1em;
   }
 
   @media ${minQueries.l} {

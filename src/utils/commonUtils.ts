@@ -1,7 +1,9 @@
 import { Falsey } from 'lodash'
 import breakpts from '../data/breakpoints'
+import workData from '../data/work/workData.json'
 import ElemRect from './helpers/rect/elemRect'
 import { BrowserType, CoorObject, CoorObject3D, coorTuple } from './utilTypes'
+import { Device } from './queryUtil'
 
 // string
 export const capitalize = <T extends string>(string: T) => string.charAt(0)
@@ -133,6 +135,11 @@ export function isBrowser(browserToMatch: BrowserType | BrowserType[]) {
   return arrayify(browserToMatch).some(browser => navigator.userAgent.includes(browser))
 }
 
-export const TO_DEG = 180 / Math.PI
-
 export const getIsMobile = () => window.innerWidth <= breakpts.l
+
+export const getParsedWorkData = (deviceType: Device) =>
+  workData
+    .sort((a, b) =>
+      (a.order[deviceType] ?? Infinity) -
+      (b.order[deviceType] ?? Infinity))
+    .filter(page => page.enabled)

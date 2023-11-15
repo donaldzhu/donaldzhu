@@ -2,14 +2,14 @@ import Masonry from '@mui/lab/Masonry'
 import { useMediaQuery } from '@uidotdev/usehooks'
 import { Suspense, useRef, useState } from 'react'
 import styled from 'styled-components'
-import workData from '../../data/work/workData.json'
 import useCanvas from '../../hooks/useCanvas'
 import usePreloadQueue from '../../hooks/usePreloadQueue'
 import useSidebar from '../../hooks/useSidebar'
 import drawWorkSketch from '../../p5/sketches/drawWorkSketch'
 import { domSizes } from '../../styles/sizes'
-import { minQueries } from '../../utils/queryUtil'
+import { Device, minQueries } from '../../utils/queryUtil'
 import MainContainer from '../common/styled/mainContainer'
+import { getParsedWorkData } from '../../utils/commonUtils'
 import WorkIndexSidebar from './workIndexSideBar'
 import WorkThumbnail from './workThumbnail'
 
@@ -31,7 +31,6 @@ const WorkIndex = () => {
     preloadManager.defaultPreload())
 
   useSidebar(<WorkIndexSidebar
-    workData={workData}
     highlighted={highlighted}
     sidebarRef={sidebarRef}
     handleHover={handleHover} />, [highlighted])
@@ -43,12 +42,13 @@ const WorkIndex = () => {
     <ThumbnailContainer $columns={columns}>
       <Suspense>
         <Masonry columns={columns}>
-          {workData.map(project => project.enabled && project.listed && <WorkThumbnail
-            key={project.title}
-            data={project}
-            isHighlighted={highlighted === project.title}
-            highlightedRef={rosterRef}
-            handleHover={handleHover} />)}
+          {getParsedWorkData(Device.desktop)
+            .map(project => project.listed && <WorkThumbnail
+              key={project.title}
+              data={project}
+              isHighlighted={highlighted === project.title}
+              highlightedRef={rosterRef}
+              handleHover={handleHover} />)}
         </Masonry>
       </Suspense>
     </ThumbnailContainer>

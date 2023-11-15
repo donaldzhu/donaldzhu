@@ -4,42 +4,56 @@ import Anchor from '../common/anchor'
 import Media from '../common/media/media'
 import { FileExt, MediaFileType } from '../../utils/helpers/preloader/preloadUtils'
 import { joinPaths } from '../../utils/commonUtils'
+import mixins from '../../styles/mixins'
+import { domSizes } from '../../styles/sizes'
+import { fontSizes } from '../../styles/fonts'
 
 interface WorkThumbnailMobileProps {
   data: WorkDataInterface
 }
 
 const WorkThumbnailMobile = ({ data }: WorkThumbnailMobileProps) => {
-  const { title, tags, animatedThumbnail, id } = data
+  const { title, abbr, tags, animatedThumbnail, id } = data
   const fallbackPath = joinPaths('assets/thumbnails/_mobile_test_', id) + '.' +
     (animatedThumbnail ? FileExt.Mp4 : FileExt.Webp)
   return (
     <ThumbnailLink to={id}>
+      <InfoContainer>
+        <Title>{abbr ?? title}</Title>
+        <Tags>{tags.join(' + ')}</Tags>
+      </InfoContainer>
       <Media
         type={animatedThumbnail ? MediaFileType.Video : MediaFileType.Image}
         src={fallbackPath} />
-      <div>
-        <Title>{title}</Title>
-        <Tags>{tags.join(' + ')}</Tags>
-      </div>
+
     </ThumbnailLink>
   )
 }
 
 const ThumbnailLink = styled(Anchor)`
-  display: block;
-  h3, p {
-    display: block;
-    padding-top: 0.35rem;
+  ${mixins.flex('initial', 'space-between')}
+  width: 100%;
+  margin-bottom: ${domSizes.mobile.workIndex.thumbnail.margin.css};
+
+  img, video {
+    width: ${domSizes.mobile.workIndex.thumbnail.width.css};
   }
 `
 
+const InfoContainer = styled.div`
+  padding-right: ${domSizes.mobile.workIndex.gap.css};
+`
+
 const Title = styled.h3`
-  font-size: 1.3rem;
+    display: block;
+  font-size: ${fontSizes.mobile.workIndex.title.css};
 `
 
 const Tags = styled.p`
-  font-size: 0.9rem;
+  ${mixins.textMono()}
+  display: block;
+  font-size: ${fontSizes.mobile.workIndex.tags.css};
+  padding-top: ${domSizes.mobile.workIndex.tags.padding.top.css};
 `
 
 export default WorkThumbnailMobile
