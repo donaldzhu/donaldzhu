@@ -13,27 +13,15 @@ const WorkIndexMobile = () => {
         key={project.title}
         data={project}
       />)}
-      {/* <div>
-        <Img src='assets/thumbnails/_mobile_test_/dm2020.webp' />
-        <h3>I VOTED!</h3>
-        <p>Digital Asset</p>
-      </div>
-      <div>
-        <Img src='assets/thumbnails/_mobile_test_/dm2020.webp' />
-        <h3>I VOTED!</h3>
-        <p>Digital Asset</p>
-      </div>
-      <div>
-        <Img src='assets/thumbnails/_mobile_test_/dm2020.webp' />
-        <h3>I VOTED!</h3>
-        <p>Digital Asset</p>
-      </div> */}
     </Container>
   )
 }
 
 const Container = styled.div`
-  ${mixins.mobileBody()}
+  ${mixins
+    .chain()
+    .mobileBody()
+    .innerMargin(domSizes.mobile.workIndex.innerMargin.css)}
   position: absolute;
   top: ${domSizes.mobile.workIndex.top.css};
 
@@ -42,8 +30,5 @@ const Container = styled.div`
   }
 `
 
-const Title = styled.h3`
-
-`
 
 export default WorkIndexMobile

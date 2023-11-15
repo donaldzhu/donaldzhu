@@ -194,7 +194,8 @@ export const domSizes = {
       }
     },
     workIndex: {
-      top: mobileNavHeight
+      top: mobileNavHeight,
+      innerMargin: getSize({ s: 30, l: 30 })
     }
   },
 }
