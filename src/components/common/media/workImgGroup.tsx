@@ -17,7 +17,7 @@ const WorkImgGroup = ({ grid, toolTip, prefix, props }: WorkImgGroupProps) => {
     <RowContainer key={i} toolTip={!i && toolTip}>
       {repeatMap(col, ii =>
         <WorkImg
-          src={joinPaths(prefix, `${i + ii + 1}.webp`)}
+          src={joinPaths(prefix, `${i * col + ii + 1}.webp`)}
           {...props}
           key={ii} />)}
     </RowContainer>

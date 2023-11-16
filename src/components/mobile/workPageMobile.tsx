@@ -22,9 +22,9 @@ const WorkPageMobile = ({ data, Content }: WorkPageProps) => {
 
   return (
     <Container>
-      <BannerContainer>
+      {/* <BannerContainer>
         <Media src={`assets/_mobile_test/banner/${id}.webp`} type={MediaFileType.Image} />
-      </BannerContainer>
+      </BannerContainer> */}
       <div>
         <Title>{title}</Title>
         <Details>
@@ -32,8 +32,8 @@ const WorkPageMobile = ({ data, Content }: WorkPageProps) => {
           <p>{capitalize(tags.join('/').toLocaleLowerCase())}</p>
           <p>{capitalize(medium.join(', ').toLocaleLowerCase())}</p>
         </Details>
-        <TextContainer>{parseHtml(typedWorkDescriptions[id])}</TextContainer>
       </div>
+      <TextContainer>{parseHtml(typedWorkDescriptions[id])}</TextContainer>
     </Container>
   )
 }
