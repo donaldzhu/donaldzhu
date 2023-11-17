@@ -10,6 +10,7 @@ const SmallText = styled(Text)`
 
   @media ${maxQueries.l} {
     font-size: ${fontSizes.mobile.smallText.css};
+    font-weight: normal;
   }
 
   @media ${minQueries.l} {

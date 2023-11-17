@@ -1,6 +1,6 @@
 import { WorkPageMobileProps } from '../workPageTypes'
 
-const PageThrasherReconstructedMobile = ({ Description }: WorkPageMobileProps) => {
+const PageThrasherReconstructedMobile = ({ WorkInfo: Description }: WorkPageMobileProps) => {
   return (
     <>
       <Description />

@@ -1,7 +1,7 @@
 import { WorkPageMobileProps } from '../workPageTypes'
 
 
-const PageMemoryOfMemoriesMobile = ({ Description }: WorkPageMobileProps) => {
+const PageMemoryOfMemoriesMobile = ({ WorkInfo: Description }: WorkPageMobileProps) => {
   return (
     <>
       <Description />

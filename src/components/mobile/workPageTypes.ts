@@ -1,5 +1,6 @@
 
 export interface WorkPageMobileProps {
-  Description: () => JSX.Element
+  WorkInfo: () => JSX.Element,
+  Description: () => string | JSX.Element | JSX.Element[]
 }
 

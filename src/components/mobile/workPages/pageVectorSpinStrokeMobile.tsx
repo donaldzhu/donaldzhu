@@ -1,6 +1,6 @@
 import { WorkPageMobileProps } from '../workPageTypes'
 
-const PageVectorSpinStrokeMobile = ({ Description }: WorkPageMobileProps) => {
+const PageVectorSpinStrokeMobile = ({ WorkInfo: Description }: WorkPageMobileProps) => {
   return (
     <>
       <Description />

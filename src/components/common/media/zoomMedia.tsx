@@ -11,6 +11,7 @@ import { percent, toPercent } from '../../../utils/sizeUtils'
 import { PageContextProps } from '../../pageWrappers/pageTypes'
 import { PageMobileContextProps } from '../../mobile/mobileType'
 import { maxQueries } from '../../../utils/queryUtil'
+import useIsMobile from '../../../hooks/useIsMobile'
 import { MediaRef, ZoomMediaProps } from './mediaTypes'
 import PreloadMedia from './preloadMedia'
 
@@ -23,6 +24,7 @@ interface StyledZoomMediaProps {
 function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
   const outletContext =
     useOutletContext<PageContextProps | PageMobileContextProps>()
+  const isMobile = useIsMobile()
 
   // TODO
   const handleZoomMedia = 'handleZoomMedia' in outletContext ?
@@ -42,7 +44,9 @@ function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
       MediaType.Images : MediaType.Videos
 
   src = isToolTip ? joinPaths(MediaType.ToolTips, src) : src
-  const fallbackPath = joinPaths('/assets/work', pageId, MediaSize.Max, src)
+  const fallbackPath = !isMobile ?
+    joinPaths('/assets/work', pageId, MediaSize.Max, src) :
+    joinPaths('/assets/_mobile_test/work', pageId, src)
   const mediaStack = preloadManager?.enabled ?
     preloadManager?.workPages[pageId][mediaType]?.find(stack => stack.fileName === src) :
     undefined

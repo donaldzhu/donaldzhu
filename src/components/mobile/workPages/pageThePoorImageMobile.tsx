@@ -1,7 +1,7 @@
 import { WorkPageMobileProps } from '../workPageTypes'
 
 
-const PageThePoorImageMobile = ({ Description }: WorkPageMobileProps) => {
+const PageThePoorImageMobile = ({ WorkInfo: Description }: WorkPageMobileProps) => {
   return (
     <>
       <Description />

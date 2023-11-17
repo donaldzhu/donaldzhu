@@ -1,7 +1,7 @@
 import { WorkPageMobileProps } from '../workPageTypes'
 
 
-const PageAcogitoMobile = ({ Description }: WorkPageMobileProps) => {
+const PageAcogitoMobile = ({ WorkInfo: Description }: WorkPageMobileProps) => {
   return (
     <>
       <Description />

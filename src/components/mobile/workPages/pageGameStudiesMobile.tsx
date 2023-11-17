@@ -1,6 +1,6 @@
 import { WorkPageMobileProps } from '../workPageTypes'
 
-const PageGameStudies = ({ Description }: WorkPageMobileProps) => {
+const PageGameStudies = ({ WorkInfo: Description }: WorkPageMobileProps) => {
   return (
     <>
       <Description />

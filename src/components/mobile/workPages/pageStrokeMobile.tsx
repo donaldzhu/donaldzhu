@@ -1,6 +1,6 @@
 import { WorkPageMobileProps } from '../workPageTypes'
 
-const PageStrokeMobile = ({ Description }: WorkPageMobileProps) => {
+const PageStrokeMobile = ({ WorkInfo: Description }: WorkPageMobileProps) => {
   return (
     <>
       <Description />

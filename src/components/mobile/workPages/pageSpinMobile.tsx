@@ -1,6 +1,6 @@
 import { WorkPageMobileProps } from '../workPageTypes'
 
-const PageSpinMobile = ({ Description }: WorkPageMobileProps) => {
+const PageSpinMobile = ({ WorkInfo: Description }: WorkPageMobileProps) => {
   return (
     <>
       <Description />

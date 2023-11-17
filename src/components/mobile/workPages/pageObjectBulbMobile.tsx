@@ -1,6 +1,6 @@
 import { WorkPageMobileProps } from '../workPageTypes'
 
-const PageObjectBulbMobile = ({ Description }: WorkPageMobileProps) => {
+const PageObjectBulbMobile = ({ WorkInfo: Description }: WorkPageMobileProps) => {
   return (
     <>
       <Description />

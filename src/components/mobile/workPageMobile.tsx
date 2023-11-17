@@ -9,6 +9,7 @@ import { capitalize } from '../../utils/commonUtils'
 import TextContainer from '../common/styled/textContainer'
 import { parseHtml } from '../../utils/reactUtils'
 import { WorkPageContext } from '../../contexts/context'
+import SmallText from '../common/styled/smallText'
 import { WorkPageMobileProps } from './workPageTypes'
 
 // TODO
@@ -21,27 +22,30 @@ const typedWorkDescriptions: Record<string, string> = workDescriptions
 const WorkPageMobile = ({ data, Content }: WorkPageProps) => {
   const { title, date, tags, medium, id } = data
 
-  const Description = useCallback(() => {
+  const WorkInfo = useCallback(() => {
     return (
       <DescriptionContainer>
         <Title>{title}</Title>
         <Details>
-          <p>
+          <SmallText>
             <span>{date}</span>
             <ItemDelimiter>—</ItemDelimiter>
             <Tags>{capitalize(tags.join('/').toLocaleLowerCase())}</Tags>
-          </p>
-          <p>{capitalize(medium.join(', ').toLocaleLowerCase())}</p>
+          </SmallText>
+          <SmallText>{capitalize(medium.join(', ').toLocaleLowerCase())}</SmallText>
         </Details>
-        <TextContainer>{parseHtml(typedWorkDescriptions[id])}</TextContainer>
       </DescriptionContainer>
     )
   }, [data])
 
+  const Description = useCallback(() => <TextContainer>
+    {parseHtml(typedWorkDescriptions[id])}
+  </TextContainer>, [data])
+
   return (
     <WorkPageContext.Provider value={{ pageId: id }}>
       <ContentContainer>
-        <Content Description={Description} />
+        <Content WorkInfo={WorkInfo} Description={Description} />
       </ContentContainer>
     </WorkPageContext.Provider>
   )

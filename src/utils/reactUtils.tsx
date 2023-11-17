@@ -47,7 +47,6 @@ export const parseHtml = (string: string) => {
     trim: true,
     replace: domNode => {
       if (!('name' in domNode)) return undefined
-      console.log(domNode.name)
       return (
         'attribs' in domNode && domNode.name === 'a' ?
           <Anchor

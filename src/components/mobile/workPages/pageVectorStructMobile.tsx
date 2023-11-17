@@ -1,7 +1,7 @@
 import { WorkPageMobileProps } from '../workPageTypes'
 
 
-const PageVectorStructMobile = ({ Description }: WorkPageMobileProps) => {
+const PageVectorStructMobile = ({ WorkInfo: Description }: WorkPageMobileProps) => {
   return (
     <>
       <Description />
