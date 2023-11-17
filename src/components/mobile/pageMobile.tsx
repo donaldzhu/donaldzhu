@@ -11,7 +11,8 @@ import usePhysics from '../../hooks/usePhysics'
 import { noOverflow } from '../../utils/reactUtils'
 import useMemoRef from '../../hooks/useMemoRef'
 import { validateString } from '../../utils/commonUtils'
-import { PageMobileContext } from './mobileType'
+import { Device } from '../../utils/queryUtil'
+import { PageMobileContextProps } from './mobileType'
 import HeaderMobile from './headerMobile'
 import MenuMobile from './menuMobile'
 
@@ -90,7 +91,7 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
           canvasStates,
           shouldHideGyro,
           handleGyroButtonClick
-        } satisfies PageMobileContext} />
+        } satisfies PageMobileContextProps} />
       </AnimationContainer>
     </Container>
   )
@@ -99,9 +100,9 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
 const AnimationContainer = styled.div<{ $shouldFade: boolean }>`
   ${({ $shouldFade }) => validateString($shouldFade, `
     @keyframes fadeIn {
-      from { 
-        opacity: 0; 
-      } to { 
+      from {
+        opacity: 0;
+      } to {
         opacity: 1;
       }
     }
@@ -118,7 +119,7 @@ const Container = styled.div<StyledGlobalCanvasProps>`
 `
 
 
-const StyledGlobalCanvas = styled(GlobalCanvas) <StyledGlobalCanvasProps>`
+const StyledGlobalCanvas = styled(GlobalCanvas<Device.mobile>) <StyledGlobalCanvasProps>`
   position: static;
   ${({ $menuIsShown }) => validateString(!$menuIsShown, mixins.highZIndex(4))}
 `

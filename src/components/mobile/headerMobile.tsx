@@ -27,12 +27,12 @@ const Container = styled.header`
   ${mixins
     .chain()
     .highZIndex(3)
+    .mobileBody()
     .flex('center', 'space-between')}
   position: fixed;
   background-color: ${colors.background};
-  width: ${new Size({ vw: 100 }).sub(domSizes.mobile.app.margin.mult(2)).css};
-
-  padding: ${domSizes.mobile.header.link.padding.css} 0;
+  padding-top: ${domSizes.mobile.header.link.padding.css};
+  padding-bottom: ${domSizes.mobile.header.link.padding.css};
   font-size: ${fontSizes.mobile.nav.mono.css};
   height: ${domSizes.mobile.header.link.height.css};
 `

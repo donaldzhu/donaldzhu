@@ -9,8 +9,9 @@ export type PageContextProps = {
   setSidebar: Dispatch<SetStateAction<ReactNode>>,
   zoomMedia: RequiredZoomMediaProps | undefined,
   handleZoomMedia: (zoomMedia: RequiredZoomMediaProps | undefined) => void,
+  preloadManager: PreloadManager,
+
   canAutoPlay: boolean | undefined,
-  preloadManager: PreloadManager
 } & GlobalCanvasStates<Device.desktop>
 
 export type handleZoomType = (media?: RequiredZoomMediaProps) => void

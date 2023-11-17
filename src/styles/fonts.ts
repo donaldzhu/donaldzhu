@@ -63,7 +63,7 @@ export const fontSizes = {
       mono: monoFontSizeMobile,
       sans: monoFontSizeMobile.mult(sansToMonoratio)
     },
-    smallText: getRemSize({ s: 1.05, l: 1 }),
+    smallText: getRemSize({ s: 1.05, l: 1.05 }),
     nav: {
       mono: navMonoFontSizeMobile,
       sans: navMonoFontSizeMobile.mult(sansToMonoratio)

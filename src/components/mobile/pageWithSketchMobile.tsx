@@ -7,7 +7,7 @@ import { domSizes } from '../../styles/sizes'
 import { fontParams, fontSizes } from '../../styles/fonts'
 import colors from '../../styles/colors'
 import mixins from '../../styles/mixins'
-import { PageMobileContext } from './mobileType'
+import { PageMobileContextProps } from './mobileType'
 
 interface StyledGyroButtonProps {
   $isShown: boolean
@@ -19,7 +19,7 @@ interface StyledMainContainerProps {
 
 const PageWithSketchMobile = () => {
   const { canvasStates, shouldHideGyro, handleGyroButtonClick } =
-    useOutletContext<PageMobileContext>()
+    useOutletContext<PageMobileContextProps>()
   const { motionSettings, gyroStates } = canvasStates
   useCanvas<Device.mobile>(drawMobileSketch)
   return (

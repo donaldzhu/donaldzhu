@@ -28,6 +28,7 @@ import ProcessMobile from './components/mobile/processMobile'
 import ContactMobile from './components/mobile/contactMobile'
 import WorkIndexMobile from './components/mobile/workIndexMobile'
 import WorkPageMobile from './components/mobile/workPageMobile'
+import workPagesMobile from './components/mobile/workPagesMapMobile'
 
 const App = () => {
   const isMobile = useIsMobile()
@@ -56,7 +57,7 @@ const App = () => {
                     <Route key={page.id} path={page.id} element={
                       <WorkPageMobile
                         data={page}
-                        Content={workPages[page.id]} />} />)}
+                        Content={workPagesMobile[page.id]} />} />)}
                 </Route>
                 <Route path='*' element={<Navigate to='/' replace />} />
               </Route>

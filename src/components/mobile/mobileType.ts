@@ -1,10 +1,10 @@
 import { TouchEvent } from 'react'
-import { CanvasRefType, MobileCanvasStates } from '../canvas/canvasTypes'
+import { GlobalCanvasStates } from '../canvas/canvasTypes'
+import { Device } from '../../utils/queryUtil'
 
-export interface PageMobileContext {
-  canAutoPlay: boolean | undefined
-  canvasRef: CanvasRefType,
-  canvasStates: Required<MobileCanvasStates>,
+export type PageMobileContextProps = {
   shouldHideGyro: boolean,
   handleGyroButtonClick: (e: TouchEvent<HTMLButtonElement>) => void
-}
+
+  canAutoPlay: boolean | undefined
+} & GlobalCanvasStates<Device.mobile>

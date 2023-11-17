@@ -7,29 +7,46 @@ import { MotionSettingInterface } from '../../hooks/useMotion'
 import Gimbal from '../../utils/helpers/motion/gimbal'
 import { Device } from '../../utils/queryUtil'
 
-export type DesktopCanvasStates = Partial<{
+export interface DesktopCanvasStates {
   mousePositionRef: MutableRefObject<null | [number, number]>
   hideCursorRef: MutableRefObject<boolean>
-}>
+}
+
+// Needed for engine-only initiation
+interface PartialMobileCanvasStates {
+  engine: Engine
+}
 
 interface GyroStateInterface {
   hasRequested: boolean,
   isEnabled: boolean
 }
 
-export type MobileCanvasStates = Partial<{
+export interface MobileCanvasStates {
   motionSettings: MotionSettingInterface,
   motionSettingsRef: MutableRefObject<MotionSettingInterface | undefined>
   gyroStates: GyroStateInterface,
   gyroStatesRef: MutableRefObject<GyroStateInterface | undefined>,
   gimbalRef: MutableRefObject<Gimbal | null>
   engine: Engine
-}>
+}
 
-export type CanvasStates = DesktopCanvasStates | MobileCanvasStates
-export type TypedCanvasStates<T extends Device> = T extends Device.desktop ?
-  DesktopCanvasStates :
-  MobileCanvasStates
+type TypedCanvasStates<T extends Device> = T extends Device.desktop ?
+  DesktopCanvasStates : MobileCanvasStates
+type PartialTypedCanvasStates<T extends Device> = T extends Device.desktop ?
+  DesktopCanvasStates : PartialMobileCanvasStates
+
+
+export type CanvasRefType = ReturnType<typeof useGlobalCanvas>
+
+export interface GlobalCanvasStates<T extends Device> {
+  canvasRef: CanvasRefType
+  canvasStates: TypedCanvasStates<T>
+}
+export interface PartialGlobalCanvasStates<T extends Device> {
+  canvasRef: CanvasRefType
+  canvasStates: PartialTypedCanvasStates<T>
+}
 
 export type p5Callback = (p5: p5) => void
 export type p5EventCallback = (p5: p5, evt?: Event | UIEvent) => void
@@ -44,10 +61,3 @@ export type SketchEventHandler<T extends Device> =
     cleanup: (canvasStates: TypedCanvasStates<T>) => void
   }
 
-
-export type CanvasRefType = ReturnType<typeof useGlobalCanvas>
-
-export interface GlobalCanvasStates<T extends Device> {
-  canvasRef: CanvasRefType
-  canvasStates: TypedCanvasStates<T>
-}

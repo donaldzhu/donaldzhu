@@ -21,8 +21,6 @@ enum Axes {
 }
 
 export const X_HEIGHT = 44
-export const GLYPH_NAMES = typedKeys(spacingsData).filter(char => char.length === 1)
-
 export const enum XPosition {
   Left,
   Center,

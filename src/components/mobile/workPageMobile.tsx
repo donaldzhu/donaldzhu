@@ -1,53 +1,54 @@
+import { useCallback } from 'react'
 import styled from 'styled-components'
 import { WorkDataInterface } from '../work/workTypes'
-import { fontLineHeights, fontParams, fontSizes } from '../../styles/fonts'
+import { fontLineHeights, fontParams } from '../../styles/fonts'
 import { domSizes } from '../../styles/sizes'
 import workDescriptions from '../../data/work/workDescriptions.json'
 import mixins from '../../styles/mixins'
 import { capitalize } from '../../utils/commonUtils'
 import TextContainer from '../common/styled/textContainer'
 import { parseHtml } from '../../utils/reactUtils'
-import Media from '../common/media/media'
-import { MediaFileType } from '../../utils/helpers/preloader/preloadUtils'
+import { WorkPageContext } from '../../contexts/context'
+import { WorkPageMobileProps } from './workPageTypes'
 
 // TODO
 interface WorkPageProps {
   data: WorkDataInterface
-  Content: () => JSX.Element
+  Content: (props: WorkPageMobileProps) => JSX.Element
 }
 
 const typedWorkDescriptions: Record<string, string> = workDescriptions
 const WorkPageMobile = ({ data, Content }: WorkPageProps) => {
   const { title, date, tags, medium, id } = data
 
-  return (
-    <Container>
-      {/* <BannerContainer>
-        <Media src={`assets/_mobile_test/banner/${id}.webp`} type={MediaFileType.Image} />
-      </BannerContainer> */}
-      <div>
+  const Description = useCallback(() => {
+    return (
+      <DescriptionContainer>
         <Title>{title}</Title>
         <Details>
-          <p>{date}</p>
-          <p>{capitalize(tags.join('/').toLocaleLowerCase())}</p>
+          <p>
+            <span>{date}</span>
+            <ItemDelimiter>—</ItemDelimiter>
+            <Tags>{capitalize(tags.join('/').toLocaleLowerCase())}</Tags>
+          </p>
           <p>{capitalize(medium.join(', ').toLocaleLowerCase())}</p>
         </Details>
-      </div>
-      <TextContainer>{parseHtml(typedWorkDescriptions[id])}</TextContainer>
-    </Container>
+        <TextContainer>{parseHtml(typedWorkDescriptions[id])}</TextContainer>
+      </DescriptionContainer>
+    )
+  }, [data])
+
+  return (
+    <WorkPageContext.Provider value={{ pageId: id }}>
+      <ContentContainer>
+        <Content Description={Description} />
+      </ContentContainer>
+    </WorkPageContext.Provider>
   )
 }
 
-const Container = styled.div`
+const DescriptionContainer = styled.div`
   ${mixins.mobileBody()}
-  position: absolute;
-  top: ${domSizes.mobile.app.top.css};
-`
-
-const BannerContainer = styled.div`
-  img, video {
-    width: 100%;
-  }
 `
 
 const Title = styled.h1`
@@ -63,6 +64,25 @@ const Details = styled.div`
 
   :first-child{
     ${mixins.fontVar({ MONO: 1 })};
+  }
+`
+
+const ItemDelimiter = styled.span`
+  margin: 0 0.35em;
+`
+
+const Tags = styled.i`
+  ${mixins.slant()}
+`
+
+
+const ContentContainer = styled.div`
+  ${mixins.flex()}
+  position: absolute;
+  top: ${domSizes.mobile.app.top.css};
+  flex-direction: column;
+  &>:last-child {
+    margin-bottom: 3vw;
   }
 `
 

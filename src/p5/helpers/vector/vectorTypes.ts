@@ -112,5 +112,3 @@ export const enum Easing {
   EaseInBounce = 'easeInBounce',
   EaseInOutBounce = 'easeInOutBounce',
 }
-
-export type MotionSettings = Pick<MobileCanvasStates, 'motionSettingsRef' | 'gimbalRef' | 'engine'>

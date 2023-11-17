@@ -10,6 +10,7 @@ import { PageContextProps } from '../../pageWrappers/pageTypes'
 import { validateRef } from '../../../utils/typeUtils'
 import useMemoRef from '../../../hooks/useMemoRef'
 import useMergedRef from '../../../hooks/useMergedRef'
+import { PageMobileContextProps } from '../../mobile/mobileType'
 import { StyledMediaProps, VidProps } from './mediaTypes'
 
 
@@ -29,7 +30,8 @@ const Vid = forwardRef<
       useNativeControl,
       ...props
     }, ref) {
-      const contextCanAutoPlay = useOutletContext<PageContextProps>()?.canAutoPlay
+      const contextCanAutoPlay =
+        useOutletContext<PageContextProps | PageMobileContextProps>()?.canAutoPlay
       const vidCanAutoPlay: boolean | undefined =
         canAutoPlay ?? contextCanAutoPlay
 

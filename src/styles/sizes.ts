@@ -35,7 +35,7 @@ const mobileNavLinkHeight = fontSizes.mobile.nav.mono
 const mobileNavHeight =
   mobileNavLinkPadding.mult(2)
     .add(mobileNavLinkHeight)
-const mobileNavMarginBottom = getSize({ s: 25, l: 25 })
+const mobileNavMarginBottom = getSize({ s: 12, l: 12 })
 
 const mobileGyroPaddingTop = getSize({ s: 56, l: 120 })
 const mobileGyroMarginBottom = getSize({ s: 28, l: 28 })

@@ -8,13 +8,13 @@ import { mousePosition, P5Event, wrapDrawingContext } from '../../utils/p5Utils'
 import { getVh, getVw } from '../../utils/sizeUtils'
 import { Device } from '../../utils/queryUtil'
 import Canvas from './canvas'
-import { GlobalCanvasStates, p5EventCallback } from './canvasTypes'
+import { p5EventCallback, PartialGlobalCanvasStates } from './canvasTypes'
 
 const GlobalCanvas = <T extends Device>({
   canvasRef,
-  canvasStates = {},
+  canvasStates,
   className,
-}: GlobalCanvasStates<T> & {
+}: PartialGlobalCanvasStates<T> & {
   className?: string
 }) => {
   const setup = (p5: p5, canvasParent: HTMLDivElement) =>

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import p5 from 'p5'
-import { DependencyList, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import {
   GlobalCanvasStates,
@@ -17,17 +17,16 @@ const useCanvas = <T extends Device>(
   createSketch: () => Partial<SketchEventHandler<T> & {
     draw: sketchEventCallback<T>
   }>,
-  config: Partial<GlobalCanvasStates<T>> = {},
-  dependencies: DependencyList = []
+  config?: GlobalCanvasStates<T>
 ) => {
   const [setupDone, setSetupDone] = useState(false)
-  const outletContext = useOutletContext<Partial<GlobalCanvasStates<T>>>()
-  const { canvasRef, canvasStates } = _.defaults(config, outletContext)
+  const outletContext = useOutletContext<GlobalCanvasStates<T>>()
+  const { canvasRef, canvasStates } = _.defaults(config ?? {}, outletContext)
 
   if (!validateRef(canvasRef))
     throw new Error('No canvasRef is passed to canvas.')
 
-  const { setup, draw, cleanup, ...callbacks } = useMemo(createSketch, dependencies)
+  const { setup, draw, cleanup, ...callbacks } = useMemo(createSketch, [])
 
   const registeredCallbacks: (() => void)[] = []
   const registerCallback = (eventName: P5Event, callback: p5Callback) => {
@@ -55,7 +54,7 @@ const useCanvas = <T extends Device>(
       unregisterCallbacks()
       if (cleanup) cleanup(canvasStates ?? {})
     }
-  }, dependencies)
+  }, [])
 
   return setupDone
 }

@@ -16,6 +16,7 @@ import Vid from '../common/media/vid'
 import { Device } from '../../utils/queryUtil'
 import { handleZoomType, PageContextProps, PageProps } from './pageTypes'
 
+const TypedGlobalCanvas = GlobalCanvas<Device.desktop>
 const Page = ({ canAutoPlay }: PageProps) => {
   const [sidebar, setSidebar] = useState<ReactNode | undefined>()
   const [zoomMedia, setZoomMedia] = useState<RequiredZoomMediaProps | undefined>()
@@ -31,7 +32,7 @@ const Page = ({ canAutoPlay }: PageProps) => {
   const handleZoomMedia: handleZoomType = media => setZoomMedia(media)
   const canvasRef = useGlobalCanvas()
 
-  useCanvas<Device.desktop>(drawCursor, { canvasRef, canvasStates: canvasStates })
+  useCanvas<Device.desktop>(drawCursor, { canvasRef, canvasStates })
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -40,7 +41,7 @@ const Page = ({ canAutoPlay }: PageProps) => {
 
   return (
     <>
-      <GlobalCanvas
+      <TypedGlobalCanvas
         canvasRef={canvasRef}
         canvasStates={canvasStates} />
       {zoomMedia && <ZoomedMedia

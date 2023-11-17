@@ -14,8 +14,8 @@ const HomeIcon = ({ canvasRef, canvasStates }: GlobalCanvasStates<Device.desktop
   const placeholderRef = useRef<HTMLDivElement | null>(null)
   const isHoveringRef = useRef(false)
 
-  useCanvas(() => drawHomeIcon({ placeholderRef, isHoveringRef }), {
-    canvasRef, canvasStates: canvasStates
+  useCanvas<Device.desktop>(() => drawHomeIcon({ placeholderRef, isHoveringRef }), {
+    canvasRef, canvasStates
   })
 
   const handleHover = (isOver: boolean) => isHoveringRef.current = isOver

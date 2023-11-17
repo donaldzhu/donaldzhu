@@ -41,21 +41,24 @@ export function addEventListener(
   return () => target.removeEventListener(type, listener, options)
 }
 
-
 export const parseHtml = (string: string) => {
   string = string.replace(/—/g, ' — ')
   const options: HTMLReactParserOptions = {
     trim: true,
     replace: domNode => {
-      if (!('attribs' in domNode)) return
-      const { href, target } = domNode.attribs
-      return 'name' in domNode && domNode.name === 'a' && href ?
-        <Anchor
-          to={href}
-          target={target}>
-          {domToReact(domNode.children, options)}
-        </Anchor> : domNode.name === 'p' ?
-          <SmallText>{domToReact(domNode.children, options)}</SmallText> : undefined
+      if (!('name' in domNode)) return undefined
+      console.log(domNode.name)
+      return (
+        'attribs' in domNode && domNode.name === 'a' ?
+          <Anchor
+            to={domNode.attribs.href}
+            target={domNode.attribs.target}>
+            {domToReact(domNode.children, options)}
+          </Anchor> :
+          (domNode.name === 'p' && 'children' in domNode) ?
+            <SmallText>{domToReact(domNode.children, options)}</SmallText> :
+            undefined
+      )
     }
   }
   return parse(string, options)
