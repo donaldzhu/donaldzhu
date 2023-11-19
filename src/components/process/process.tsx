@@ -8,7 +8,7 @@ const ProcessSidebar = () => {
   return (
     <TextContainer>
       <Text>
-        <b>My design process prioritizes an inter-disciplinary, bottom-up approach.</b>
+        <b>My process prioritizes an inter-disciplinary, bottom-up approach.</b>
       </Text>
       <SmallText>
         Contrary to the common perception of the “creative” designer, meaningful works are

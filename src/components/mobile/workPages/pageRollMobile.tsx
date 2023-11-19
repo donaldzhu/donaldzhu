@@ -1,10 +1,10 @@
 import WorkImg from '../../common/media/workImg'
 import RowContainer from '../../common/rowContainer'
 import TextContainer from '../../common/styled/textContainer'
-import { WorkPageMobileProps } from '../workPageTypes'
+import { WorkPageMobileContentProps } from '../workPageTypes'
 
 
-const PageRollMobile = ({ WorkInfo, Description }: WorkPageMobileProps) => {
+const PageRollMobile = ({ WorkInfo, Description }: WorkPageMobileContentProps) => {
   return (
     <>
       <RowContainer>

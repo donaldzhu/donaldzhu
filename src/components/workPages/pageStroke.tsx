@@ -48,7 +48,7 @@ const PageStroke = () => {
             <b>Bottom:</b> primary stylus;
           </p>
           <p>
-            Due to the simultaneity with which both styluses write,there is no clear
+            Due to the simultaneity with which both styluses write, there is no clear
             logical order: the letterform is derived from the gesture as much as the
             gesture is derived from the letterform. The consequent mark-making system
             investigates the relationship between the two.

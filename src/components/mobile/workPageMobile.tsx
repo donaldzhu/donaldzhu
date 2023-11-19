@@ -9,17 +9,16 @@ import { capitalize } from '../../utils/commonUtils'
 import TextContainer from '../common/styled/textContainer'
 import { parseHtml } from '../../utils/reactUtils'
 import { WorkPageContext } from '../../contexts/context'
-import SmallText from '../common/styled/smallText'
-import { WorkPageMobileProps } from './workPageTypes'
+import { WorkPageMobileContentProps } from './workPageTypes'
 
 // TODO
-interface WorkPageProps {
+interface WorkPageMobileProps {
   data: WorkDataInterface
-  Content: (props: WorkPageMobileProps) => JSX.Element
+  Content: (props: WorkPageMobileContentProps) => JSX.Element
 }
 
 const typedWorkDescriptions: Record<string, string> = workDescriptions
-const WorkPageMobile = ({ data, Content }: WorkPageProps) => {
+const WorkPageMobile = ({ data, Content }: WorkPageMobileProps) => {
   const { title, date, tags, medium, id } = data
 
   const WorkInfo = useCallback(() => {
@@ -27,12 +26,12 @@ const WorkPageMobile = ({ data, Content }: WorkPageProps) => {
       <DescriptionContainer>
         <Title>{title}</Title>
         <Details>
-          <SmallText>
+          <p>
             <span>{date}</span>
             <ItemDelimiter>—</ItemDelimiter>
             <Tags>{capitalize(tags.join('/').toLocaleLowerCase())}</Tags>
-          </SmallText>
-          <SmallText>{capitalize(medium.join(', ').toLocaleLowerCase())}</SmallText>
+          </p>
+          <p>{capitalize(medium.join(', ').toLocaleLowerCase())}</p>
         </Details>
       </DescriptionContainer>
     )
@@ -61,12 +60,12 @@ const Title = styled.h1`
 `
 
 const Details = styled.div`
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   line-height: ${fontLineHeights.text};
-  margin: ${domSizes.desktop.text.innerMargin.css} 0;
+  margin: ${domSizes.mobile.text.innerMargin.css} 0;
   font-weight: ${fontParams.demiBold};
 
-  :first-child{
+  span {
     ${mixins.fontVar({ MONO: 1 })};
   }
 `

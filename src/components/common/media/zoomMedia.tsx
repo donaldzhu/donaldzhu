@@ -75,19 +75,17 @@ function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
   )
 }
 
-const getWidth = (percentage: number) =>
-  ({ $width }: StyledZoomMediaProps) => $width ?? percent(percentage)
 const MediaContainer = styled.div<StyledZoomMediaProps>`
   ${mixins.flex('initial', 'center')}
 
   img, video {
     cursor: zoom-in;
-    width: ${getWidth(100)};
     object-fit: cover;
+    width: ${({ $width }: StyledZoomMediaProps) => $width ?? percent(100)};
 
     @media ${maxQueries.l} {
       padding-bottom: 2vw;
-      width: ${getWidth(96)};
+
     }
   }
 `

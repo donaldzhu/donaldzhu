@@ -1,9 +1,11 @@
 import WorkImg from '../../common/media/workImg'
 import RowContainer from '../../common/rowContainer'
-import { WorkPageMobileProps } from '../workPageTypes'
+import SmallText from '../../common/styled/smallText'
+import TextContainer from '../../common/styled/textContainer'
+import { WorkPageMobileContentProps } from '../workPageTypes'
 
 
-const PageArchitecture = ({ WorkInfo, Description }: WorkPageMobileProps) => {
+const PageArchitecture = ({ WorkInfo, Description }: WorkPageMobileContentProps) => {
   return (
     <>
       <RowContainer>

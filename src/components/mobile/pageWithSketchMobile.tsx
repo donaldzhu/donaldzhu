@@ -50,7 +50,7 @@ const transitionTime = '0.125s'
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: ${domSizes.mobile.app.width.css};
+  width: 100%;
 `
 
 const GyroButtonContainer = styled.div`
@@ -60,7 +60,7 @@ const GyroButtonContainer = styled.div`
   flex-direction: column;
   position: absolute;
   top: ${domSizes.mobile.main.button.top.css};
-  width: ${domSizes.mobile.app.width.css};
+  width: 100%;
   font-size: ${fontSizes.mobile.main.button.css};
 `
 

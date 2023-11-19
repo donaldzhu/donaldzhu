@@ -30,11 +30,11 @@ import WorkIndexMobile from './components/mobile/workIndexMobile'
 import WorkPageMobile from './components/mobile/workPageMobile'
 import workPagesMobile from './components/mobile/workPagesMapMobile'
 
+
 const App = () => {
   const isMobile = useIsMobile()
   const canAutoPlay = useCanAutoPlay()
   // const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
-
   return (
     <StyledGlobal>
       <HashRouter>

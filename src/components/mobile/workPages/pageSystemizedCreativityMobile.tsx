@@ -1,10 +1,10 @@
-import { WorkPageMobileProps } from '../workPageTypes'
+import { WorkPageMobileContentProps } from '../workPageTypes'
 import RowContainer from '../../common/rowContainer'
 import WorkImg from '../../common/media/workImg'
 import TextContainer from '../../common/styled/textContainer'
 import SmallText from '../../common/styled/smallText'
 
-const PageSystemizedCreativityMobile = ({ WorkInfo }: WorkPageMobileProps) => {
+const PageSystemizedCreativityMobile = ({ WorkInfo }: WorkPageMobileContentProps) => {
   return (
     <>
       <RowContainer>

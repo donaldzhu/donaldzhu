@@ -156,6 +156,9 @@ export const domSizes = {
       },
       width: new Size({ vw: 100 }).sub(mobileMainMargin.mult(2))
     },
+    text: {
+      innerMargin: getSize({ s: 16, l: 16 })
+    },
     header: {
       height: mobileNavHeight,
       link: {
@@ -206,6 +209,11 @@ export const domSizes = {
         }
       },
       gap: getSize({ s: 20, l: 20 })
+    },
+    workPage: {
+      media: {
+        gap: mobileMainMargin.div(2)
+      }
     }
   },
 }

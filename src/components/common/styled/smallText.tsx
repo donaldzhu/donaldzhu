@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { fontLineHeights, fontSizes } from '../../../styles/fonts'
+import { fontFamilies, fontLineHeights, fontParams, fontSizes } from '../../../styles/fonts'
 import { maxQueries, minQueries } from '../../../utils/queryUtil'
 import { domSizes } from '../../../styles/sizes'
 import Text from './text'
@@ -7,6 +7,11 @@ import Text from './text'
 const SmallText = styled(Text)`
   font-size: ${fontSizes.desktop.smallText.css};
   line-height: ${fontLineHeights.smallText};
+
+  b {
+    font-size: inherit;
+    font-family: ${fontFamilies.monoFont};
+  }
 
   @media ${maxQueries.l} {
     font-size: ${fontSizes.mobile.smallText.css};

@@ -57,6 +57,7 @@ const PageMobile = ({ canAutoPlay }: PageProps) => {
     if (menuIsShown) return noOverflow()
   }, [menuIsShown])
   useEffect(() => {
+    console.log(location)
     setMenuIsShown(false)
     setShouldFade(true)
     if (gyroStates.isEnabled && prevLocation.pathname !== location.pathname)

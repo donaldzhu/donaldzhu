@@ -1,4 +1,4 @@
-import { WorkPageMobileProps } from './workPageTypes'
+import { WorkPageMobileContentProps } from './workPageTypes'
 import PageAcogitoMobile from './workPages/pageAcogitoMobile'
 import PageArchitectureMobile from './workPages/pageArchitectureMobile'
 import PageDm2020Mobile from './workPages/pageDm2020Mobile'
@@ -17,7 +17,7 @@ import PageVectorStringMobile from './workPages/pageVectorStringMobile'
 import PageVectorStructMobile from './workPages/pageVectorStructMobile'
 
 // TODO: merge with desktop
-const workPagesMobile: Record<string, (props: WorkPageMobileProps) => JSX.Element> = {
+const workPagesMobile: Record<string, (props: WorkPageMobileContentProps) => JSX.Element> = {
   'game-studies': PageGameStudiesMobile,
   'vector-spin-stroke': PageVectorSpinStrokeMobile,
   'vector-struct': PageVectorStructMobile,

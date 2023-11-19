@@ -1,10 +1,38 @@
-import { WorkPageMobileProps } from '../workPageTypes'
+import WorkImg from '../../common/media/workImg'
+import WorkVid from '../../common/media/workVid'
+import RowContainer from '../../common/rowContainer'
+import { WorkPageMobileContentProps } from '../workPageTypes'
 
 
-const PageThePoorImageMobile = ({ WorkInfo: Description }: WorkPageMobileProps) => {
+const PageThePoorImageMobile = ({ WorkInfo, Description }: WorkPageMobileContentProps) => {
   return (
     <>
+      <RowContainer>
+        <WorkImg src='1.webp' />
+      </RowContainer>
+      <WorkInfo />
       <Description />
+      <RowContainer>
+        <WorkVid src='2.mp4' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='1 2.webp' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='2.webp' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='3.webp' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='4.webp' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='5.webp' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='6.webp' />
+      </RowContainer>
     </>
   )
 }
