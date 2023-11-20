@@ -47,28 +47,27 @@ const drawMainSketch = ({ placeholderRef }: PlaceholderProp) => {
   }
 
   const draw = (p5: p5, { mousePositionRef }: DesktopCanvasStates) => {
-    const { CENTER, ROUND, mouseX, mouseY } = p5
-    const halfCursorSize = sketchSizes.desktop.cursor.value / 2
-
-    upperText.write()
-    lowerText.write()
-
-    if (!mousePositionRef?.current) return
-    const anchorSize = sketchSizes.desktop.main.anchor.size.value
-    const { x1, y1, x2, y2 } = placeholder
-
-    const getCoors = (xCoors: coorTuple, yCoors: coorTuple) =>
-      repeatMap(4, i => {
-        const result: coorTuple = [xCoors[Math.floor(i / 2)], yCoors[i % 2]]
-        return result
-      })
-    const anchors = getCoors([x1, x2], [y1, y2])
-    const cursorCoors = getCoors(
-      [mouseX - halfCursorSize, mouseX + halfCursorSize],
-      [mouseY - halfCursorSize, mouseY + halfCursorSize]
-    )
-
     wrapDrawingContext(p5, () => {
+      const { CENTER, ROUND, mouseX, mouseY } = p5
+      const halfCursorSize = sketchSizes.desktop.cursor.value / 2
+
+      upperText.write()
+      lowerText.write()
+
+      const anchorSize = sketchSizes.desktop.main.anchor.size.value
+      const { x1, y1, x2, y2 } = placeholder
+
+      const getCoors = (xCoors: coorTuple, yCoors: coorTuple) =>
+        repeatMap(4, i => {
+          const result: coorTuple = [xCoors[Math.floor(i / 2)], yCoors[i % 2]]
+          return result
+        })
+      const anchors = getCoors([x1, x2], [y1, y2])
+      const cursorCoors = getCoors(
+        [mouseX - halfCursorSize, mouseX + halfCursorSize],
+        [mouseY - halfCursorSize, mouseY + halfCursorSize]
+      )
+
       p5.noStroke()
       p5.fill(colors.homeSketch)
       p5.ellipseMode(CENTER)
@@ -76,6 +75,7 @@ const drawMainSketch = ({ placeholderRef }: PlaceholderProp) => {
       anchors.forEach(anchor =>
         p5.ellipse(...anchor, anchorSize, anchorSize))
 
+      if (!mousePositionRef?.current) return
       p5.drawingContext.setLineDash(repeat(2, sketchSizes.desktop.line.dash.value))
       p5.stroke(colors.dashLine)
       p5.strokeCap(ROUND)

@@ -5,9 +5,7 @@ import { getPreloadBreakpt } from '../../../utils/queryUtil'
 import Media from './media'
 import { MediaRef, PreloadMediaProps } from './mediaTypes'
 
-const PreloadMedia = forwardRef(PreloadMediaWithRef)
-
-function PreloadMediaWithRef(props: PreloadMediaProps, ref: MediaRef) {
+const PreloadMedia = forwardRef((props: PreloadMediaProps, ref: MediaRef) => {
   const { mediaStack, isZoomed, fallbackPath, ...rest } = props
 
   const mediaIsVid = rest.type === MediaFileType.Video
@@ -56,6 +54,6 @@ function PreloadMediaWithRef(props: PreloadMediaProps, ref: MediaRef) {
     hasLoaded={loadState.hasLoaded}
     aspectRatio={!nativeW || !nativeH ? undefined : nativeW / nativeH}
     ref={ref} />
-}
+})
 
 export default PreloadMedia

@@ -1,75 +1,94 @@
-import _ from 'lodash'
+import { ReactNode, forwardRef, useEffect, useRef } from 'react'
+import _, { noop } from 'lodash'
 import p5 from 'p5'
-import { ReactNode, useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import { typedKeys } from '../../utils/commonUtils'
+import { mapObject, typedKeys } from '../../utils/commonUtils'
 import { P5Event } from '../../utils/p5Utils'
-import { P5EventHandlers } from './canvasTypes'
+import { validateRef } from '../../utils/typeUtils'
+import useMergedRef from '../../hooks/useMergedRef'
+import useForwardedRef from '../../hooks/useForwaredRef'
+import type { P5EventHandlers } from './canvasTypes'
 
 
 interface CanvasProps {
-  setup: (p: p5, parent: HTMLDivElement) => void
+  setup?: (p: p5, parent: HTMLDivElement) => void
   className?: string
   children?: ReactNode
 }
 
 let uuid = 0
-const Canvas = ({ setup, className, children, ...eventHandlers }:
-  CanvasProps & P5EventHandlers
-) => {
-  const parentRef = useRef<HTMLDivElement>(null)
-  const sketchRef = useRef<p5>()
-  const toRemoveRef = useRef(new Set())
+const Canvas = forwardRef<HTMLDivElement, CanvasProps & Partial<P5EventHandlers>>(
+  ({ setup, className, children, ...eventHandlers }, ref
+  ) => {
+    const forwaredRef = useForwardedRef(ref)
+    const parentRef = useMergedRef<HTMLDivElement>(forwaredRef)
+    const sketchRef = useRef<p5>()
+    const toRemoveRef = useRef(new Set())
 
-  useEffect(() => {
-    if (!parentRef.current) return _.noop
-    const _uuid = uuid
+    const defaultEventCallbacks: P5EventHandlers = mapObject(P5Event, () => noop)
+    const defaultEventHandlers: P5EventHandlers = _.defaults(eventHandlers, defaultEventCallbacks)
 
-    sketchRef.current = new p5(p => {
+    useEffect(() => {
+      if (!parentRef.current) return _.noop
+      const _uuid = uuid
 
-      p.setup = () => {
-        if (toRemoveRef.current.has(_uuid)) {
-          p.remove()
-          return toRemoveRef.current.delete(_uuid)
+      sketchRef.current = new p5(p => {
+        p.setup = () => {
+          if (!validateRef(parentRef)) return
+          if (toRemoveRef.current.has(_uuid)) {
+            p.remove()
+            return toRemoveRef.current.delete(_uuid)
+          }
+
+          const parent = parentRef.current
+          if (setup) setup(p, parent)
+          const { width, height } = parent.getBoundingClientRect()
+          p.createCanvas(width, height)
         }
 
-        if (!parentRef.current) return
-        setup(p, parentRef.current)
+        p.draw = () => {
+          if (p._loop) {
+            p.clear(0, 0, 0, 0)
+            defaultEventHandlers.draw(p)
+          }
+        }
 
-        const { style } = p.canvas
-        style.width = ''
-        style.height = ''
+        p.windowResized = () => {
+          defaultEventHandlers.windowResized(p)
+          if (!validateRef(parentRef)) return
+          const parent = parentRef.current
+          const { width, height } = parent.getBoundingClientRect()
+          p.resizeCanvas(width, height)
+        }
+
+        typedKeys<P5Event>(P5Event).forEach(event => {
+          if (defaultEventHandlers[event] &&
+            event !== P5Event.draw &&
+            event !== P5Event.windowResized
+          )
+            p[event] = (nativeEvent?: Event | UIEvent) =>
+              defaultEventHandlers[event](p, nativeEvent)
+        })
+      }, parentRef.current)
+
+      uuid++
+      const toRemoveRefCurr = toRemoveRef.current
+      return () => {
+        if (sketchRef.current?.canvas) sketchRef.current.remove()
+        else toRemoveRefCurr.add(_uuid)
       }
+    }, [parentRef])
 
-      p.draw = () => {
-        if (p._loop) eventHandlers.draw(p)
-      }
+    return (
+      <Container ref={parentRef} className={className}>
+        {children}
+      </Container>
+    )
+  })
 
-      typedKeys<P5Event>(P5Event).forEach(event => {
-        if (eventHandlers[event] && event !== P5Event.draw)
-          p[event] = (nativeEvent?: Event | UIEvent) => eventHandlers[event](p, nativeEvent)
-      })
-    }, parentRef.current)
-
-    uuid++
-    const toRemoveRefCurr = toRemoveRef.current
-    return () => {
-      if (sketchRef.current?.canvas) sketchRef.current.remove()
-      else toRemoveRefCurr.add(_uuid)
-    }
-  }, [parentRef])
-
-  return (
-    <CanvasContainer ref={parentRef} className={className}>
-      {children}
-    </CanvasContainer>
-  )
-}
-
-const CanvasContainer = styled.div`
-  > canvas {
-    width: 100%;
-    height: 100%;
+const Container = styled.div`
+  canvas {
+    position: absolute;
   }
 `
 

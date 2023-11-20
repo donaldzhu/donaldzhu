@@ -15,6 +15,7 @@ const sidebarPaddingLeft = getSize({ l: 20, xxl: 40 })
 const sidebarPaddingRight = getSize({ l: 30, xxl: 60 })
 const sidebarPaddingVert = getSize({ l: 17.5, xxl: 32 })
 const sidebarBorderGap = getSize({ l: 20, xxl: 35 })
+const appWidth = Size.subFromFullWidth(sidebarPaddingLeft)
 
 const workSidebarPaddingRight = getSize({ l: 10, xxl: 20 })
 const footerPaddingTop = getSize({ l: 20, xxl: 42.4, xxlSm: 33.5 })
@@ -58,7 +59,7 @@ const mobileGyroBoxHeight = mobileGyroBorder.mult(2)
 export const domSizes = {
   desktop: {
     app: {
-      width: Size.subFromFullWidth(sidebarPaddingLeft)
+      width: appWidth
     },
     text: {
       innerMargin: getSize({ l: 16, xxl: 30 })
@@ -96,9 +97,10 @@ export const domSizes = {
       }
     },
     mainContainer: {
+      left: sidebarWidth.add(sidebarPaddingLeft),
+      width: appWidth.sub(sidebarWidth),
       margin: getSize({ l: 25, xxl: 50 })
     },
-
     autoPlay: {
       width: getSize({ l: 330, xxl: 560 }),
       border: getSize({ l: 1, xxl: 2 }),

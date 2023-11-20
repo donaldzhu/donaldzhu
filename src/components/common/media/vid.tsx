@@ -18,60 +18,59 @@ const Vid = forwardRef<
   HTMLVideoElement,
   DetailedHTMLProps<
     VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement
-  > & VidProps>(
-    function Vid({
-      alt,
-      poster,
-      loop = true,
-      hasLoaded,
-      aspectRatio,
-      autoPlay = true,
-      canAutoPlay,
-      useNativeControl,
-      ...props
-    }, ref) {
-      const contextCanAutoPlay =
-        useOutletContext<PageContextProps | PageMobileContextProps>()?.canAutoPlay
-      const vidCanAutoPlay: boolean | undefined =
-        canAutoPlay ?? contextCanAutoPlay
+  > & VidProps>(({
+    alt,
+    poster,
+    loop = true,
+    hasLoaded,
+    aspectRatio,
+    autoPlay = true,
+    canAutoPlay,
+    useNativeControl,
+    ...props
+  }, ref) => {
+    const contextCanAutoPlay =
+      useOutletContext<PageContextProps | PageMobileContextProps>()?.canAutoPlay
+    const vidCanAutoPlay: boolean | undefined =
+      canAutoPlay ?? contextCanAutoPlay
 
-      const forwardedRef = useForwardedRef(ref)
-      const [mediaRef, entry] = useIntersectionObserver<HTMLVideoElement>({ threshold: 0 })
-      const mergedRef = useMergedRef(forwardedRef, mediaRef)
+    const forwardedRef = useForwardedRef(ref)
+    const [mediaRef, entry] = useIntersectionObserver<HTMLVideoElement>({ threshold: 0 })
+    const mergedRef = useMergedRef(forwardedRef, mediaRef)
 
-      const video = useMemoRef(() => {
-        if (useNativeControl) return
-        if (!validateRef(mergedRef)) throw new Error('Video’s ref.current is unexpectedly null')
-        return new Video(mergedRef, vidCanAutoPlay)
-      }, [])
+    const video = useMemoRef(() => {
+      if (useNativeControl) return
+      if (!validateRef(mergedRef)) throw new Error('Video’s ref.current is unexpectedly null')
+      return new Video(mergedRef, vidCanAutoPlay)
+    }, [])
 
-      useEffect(() => {
-        if (!!useNativeControl || !validateRef(video)) return _.noop
-        video.current.canAutoPlay = vidCanAutoPlay
-        video.current.play()
-      }, [vidCanAutoPlay])
+    useEffect(() => {
+      if (!!useNativeControl || !validateRef(video)) return _.noop
+      video.current.canAutoPlay = vidCanAutoPlay
+      video.current.play()
+    }, [vidCanAutoPlay])
 
-      useEffect(() => {
-        if (!!useNativeControl || !validateRef(video) || !entry) return _.noop
-        if (!entry.isIntersecting) video.current.pause()
-        else video.current?.play()
-      }, [entry])
+    useEffect(() => {
+      if (!!useNativeControl || !validateRef(video) || !entry) return _.noop
+      if (!entry.isIntersecting) video.current.pause()
+      else video.current?.play()
+    }, [entry])
 
-      return (
-        <StyledVid
-          muted
-          playsInline
-          loop={loop}
-          ref={mergedRef}
-          poster={poster}
-          $hasLoaded={hasLoaded}
-          $aspectRatio={aspectRatio}
-          autoPlay={useNativeControl && (canAutoPlay !== false && autoPlay)}
-          {...props}>
-          {alt}
-        </StyledVid>
-      )
-    })
+    return (
+      <StyledVid
+        muted
+        playsInline
+        loop={loop}
+        ref={mergedRef}
+        poster={poster}
+        $hasLoaded={hasLoaded}
+        $aspectRatio={aspectRatio}
+        autoPlay={useNativeControl && (canAutoPlay !== false && autoPlay)}
+        {...props}>
+        {alt}
+      </StyledVid>
+    )
+  })
 
 const StyledVid = styled.video<StyledMediaProps>`
   ${(props) => mixins.media(props)}

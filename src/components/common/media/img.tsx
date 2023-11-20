@@ -8,7 +8,7 @@ const Img = forwardRef<
   DetailedHTMLProps<
     ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement
   > & ImgProps>(
-    function Img({ src, alt, hasLoaded, aspectRatio, ...props }, ref) {
+    ({ src, alt, hasLoaded, aspectRatio, ...props }, ref) => {
       return (
         <StyledImg
           src={src}

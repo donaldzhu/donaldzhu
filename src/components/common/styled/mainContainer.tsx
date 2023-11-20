@@ -2,11 +2,11 @@ import styled from 'styled-components'
 import { domSizes } from '../../../styles/sizes'
 
 const MainContainer = styled.div`
-  width: ${domSizes.desktop.app.width.sub(domSizes.desktop.sidebar.width).css};
+  width: ${domSizes.desktop.mainContainer.width.css};
   height: fit-content;
 
   position: relative;
-  left: ${domSizes.desktop.sidebar.width.add(domSizes.desktop.sidebar.padding.left).css};
+  left: ${domSizes.desktop.mainContainer.left.css};
 
   overflow: visible;
   z-index: 2;

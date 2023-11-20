@@ -3,10 +3,10 @@ import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 import { WorkImgProps } from './mediaTypes'
 import ZoomMedia from './zoomMedia'
 
-const WorkImg = forwardRef(function WorkImg(
+const WorkImg = forwardRef((
   props: WorkImgProps,
   ref: ForwardedRef<HTMLImageElement>
-) {
+) => {
   return <ZoomMedia {...props} ref={ref} type={MediaFileType.Image} />
 })
 

@@ -15,13 +15,11 @@ import useIsMobile from '../../../hooks/useIsMobile'
 import { MediaRef, ZoomMediaProps } from './mediaTypes'
 import PreloadMedia from './preloadMedia'
 
-const ZoomMedia = forwardRef(ZoomMediaWithRef)
 
 interface StyledZoomMediaProps {
   $width: string | number | undefined
 }
-
-function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
+const ZoomMedia = forwardRef((props: ZoomMediaProps, ref: MediaRef) => {
   const outletContext =
     useOutletContext<PageContextProps | PageMobileContextProps>()
   const isMobile = useIsMobile()
@@ -73,7 +71,7 @@ function ZoomMediaWithRef(props: ZoomMediaProps, ref: MediaRef) {
         onClick={handleClick} />
     </MediaContainer>
   )
-}
+})
 
 const MediaContainer = styled.div<StyledZoomMediaProps>`
   ${mixins.flex('initial', 'center')}

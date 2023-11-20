@@ -8,7 +8,7 @@ import { minQueries } from '../../utils/queryUtil'
 import type { LinkProps } from 'react-router-dom'
 
 const Anchor = forwardRef<HTMLAnchorElement, LinkProps & { noQuery?: boolean }>(
-  function Anchor({ to, target, noQuery, ...props }, ref) {
+  ({ to, target, noQuery, ...props }, ref) => {
     const linkIsExternal = to && typeof to === 'string' && to.match(/^(https|www)/)
     const { pid } = usePortfolioQuery()
 

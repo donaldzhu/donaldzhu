@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import useCanvas from '../../hooks/useCanvas'
 import drawVectorString from '../../p5/sketches/drawVectorString'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import { addEventListener } from '../../utils/reactUtils'
@@ -8,11 +7,11 @@ import { VideoIframeType } from '../common/media/mediaTypes'
 import VideoIframe from '../common/media/videoIframe'
 import WorkImg from '../common/media/workImg'
 import RowContainer from '../common/rowContainer'
+import Canvas from '../canvas/canvas'
 
 const PageVectorString = () => {
   const [translateImgSrc, setTranslateImgSrc] = useState(1)
   const translateContainerRef = useRef<HTMLDivElement | null>(null)
-  const translatePlaceholderRef = useRef<HTMLDivElement | null>(null)
   const tranlsateImgCount = 20
 
   useEffect(() => {
@@ -27,11 +26,6 @@ const PageVectorString = () => {
     })
   }, [])
 
-  useCanvas(() => drawVectorString({
-    containerRef: translateContainerRef,
-    placeholderRef: translatePlaceholderRef
-  }))
-
   return (
     <>
       <RowContainer>
@@ -39,7 +33,7 @@ const PageVectorString = () => {
       </RowContainer>
       <RowContainer cols={[4, 3]} ref={translateContainerRef}>
         <WorkImg src={`translate/${translateImgSrc}.webp`} />
-        <div ref={translatePlaceholderRef} />
+        <Canvas {...drawVectorString()} />
       </RowContainer>
       <RowContainer toolTip={
         <p>

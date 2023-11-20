@@ -21,7 +21,6 @@ const GlobalCanvas = <T extends Device>({
     p5.createCanvas(getVw(), getVh()).parent(canvasParent)
 
   const draw = (p5: p5) => {
-    p5.clear(0, 0, 0, 0)
     if ('engine' in canvasStates && canvasStates.engine)
       Engine.update(canvasStates.engine)
     handleEvent(p5, P5Event.draw)
@@ -33,11 +32,6 @@ const GlobalCanvas = <T extends Device>({
     handleEvent(p5, P5Event.mouseMoved)
   }
 
-  const windowResized = (p5: p5) => {
-    p5.resizeCanvas(getVw(), getVh())
-    handleEvent(p5, P5Event.windowResized)
-  }
-
   const handleEvent = (p5: p5, eventName: P5Event) => {
     const handlers = canvasRef.current[eventName]
     if (handlers.length) handlers.forEach(handler =>
@@ -47,14 +41,13 @@ const GlobalCanvas = <T extends Device>({
 
   const handlers = mapObject<Record<P5Event, string>, p5EventCallback>(
     P5Event, eventName => (p5: p5) => { handleEvent(p5, eventName) })
-  const otherHandlers = _.omit(handlers, [P5Event.draw, P5Event.mouseMoved, P5Event.windowResized])
+  const otherHandlers = _.omit(handlers, [P5Event.draw, P5Event.mouseMoved])
 
   return (
     <StyledCanvas
       setup={setup}
       draw={draw}
       mouseMoved={mouseMoved}
-      windowResized={windowResized}
       className={className}
       {...otherHandlers} />
   )
@@ -65,6 +58,8 @@ const StyledCanvas = styled(Canvas)`
     .chain()
     .fixed()
     .highZIndex(1)}
+  width: 100dvw;
+  height: 100dvh;
   pointer-events: none;
   mix-blend-mode: multiply;
 `
