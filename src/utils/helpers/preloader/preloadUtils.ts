@@ -1,8 +1,8 @@
 import breakpts from '../../../data/breakpoints'
 import { toPairs } from '../../commonUtils'
 import { Breakpt, getBreakptKey } from '../../queryUtil'
-import { ImgStack, MediaStack } from './mediaStack'
-import { ImgPreloader, MediaPreloader } from './preloader'
+import type { ImgStack, MediaStack } from './mediaStack'
+import type { ImgPreloader, MediaPreloader } from './preloader'
 
 export enum MediaSize {
   DesktopFallback = 'desktopFallback',

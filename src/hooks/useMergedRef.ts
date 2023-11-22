@@ -1,5 +1,6 @@
-import { MutableRefObject, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { filterFalsy } from '../utils/commonUtils'
+import type { MutableRefObject } from 'react'
 
 const useMergedRef = <T>(...refs: (MutableRefObject<T | null> | undefined)[]) => {
   const filteredRefs = filterFalsy(refs)

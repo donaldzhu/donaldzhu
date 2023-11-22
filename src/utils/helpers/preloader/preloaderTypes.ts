@@ -1,7 +1,7 @@
-import { Breakpt } from '../../queryUtil'
-import { coorTuple } from '../../utilTypes'
-import { loadVidType } from './preloadTypes'
-import { MediaSize, MediaType } from './preloadUtils'
+import type { Breakpt } from '../../queryUtil'
+import type { coorTuple } from '../../utilTypes'
+import type { loadVidType } from './preloadTypes'
+import type { MediaSize, MediaType } from './preloadUtils'
 
 export interface MediaStackProps {
   pageId: string

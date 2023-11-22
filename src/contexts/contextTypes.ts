@@ -1,4 +1,4 @@
-import { ToolTipProps } from '../components/work/workTypes'
+import type { ToolTipProps } from '../components/desktop/work/workTypes'
 
 export type WorkPageContextProps = {
   pageId: string

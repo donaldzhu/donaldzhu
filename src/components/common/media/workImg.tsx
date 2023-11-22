@@ -1,7 +1,8 @@
-import { ForwardedRef, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
-import { WorkImgProps } from './mediaTypes'
 import ZoomMedia from './zoomMedia'
+import type { ForwardedRef } from 'react'
+import type { WorkImgProps } from './mediaTypes'
 
 const WorkImg = forwardRef((
   props: WorkImgProps,

@@ -1,6 +1,6 @@
-import { ForwardedRef, ImgHTMLAttributes, SyntheticEvent, VideoHTMLAttributes } from 'react'
-import { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
-import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
+import type { ForwardedRef, ImgHTMLAttributes, SyntheticEvent, VideoHTMLAttributes } from 'react'
+import type { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
+import type { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 
 interface MediaProps {
   hasLoaded?: boolean

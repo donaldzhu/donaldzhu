@@ -5,10 +5,10 @@ import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
 import { addEventListener } from '../../../utils/reactUtils'
 import { toPercent } from '../../../utils/sizeUtils'
-import { handleZoomType } from '../../pageWrappers/pageTypes'
 import PopUpContainer from '../popUpContainer'
-import { RequiredZoomMediaProps } from './mediaTypes'
 import PreloadMedia from './preloadMedia'
+import type { handleZoomType } from '../../desktop/pageWrappers/pageTypes'
+import type { RequiredZoomMediaProps } from './mediaTypes'
 
 interface ZoomedMediaProps {
   zoomMedia: RequiredZoomMediaProps

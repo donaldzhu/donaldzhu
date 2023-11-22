@@ -5,15 +5,15 @@ import { WorkPageContext } from '../../../contexts/context'
 import mixins from '../../../styles/mixins'
 import { joinPaths } from '../../../utils/commonUtils'
 import useForwardedRef from '../../../hooks/useForwaredRef'
-import { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
 import { MediaFileType, MediaSize, MediaType } from '../../../utils/helpers/preloader/preloadUtils'
 import { percent, toPercent } from '../../../utils/sizeUtils'
-import { PageContextProps } from '../../pageWrappers/pageTypes'
-import { PageMobileContextProps } from '../../mobile/mobileType'
 import { maxQueries } from '../../../utils/queryUtil'
 import useIsMobile from '../../../hooks/useIsMobile'
-import { MediaRef, ZoomMediaProps } from './mediaTypes'
 import PreloadMedia from './preloadMedia'
+import type { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
+import type { DesktopContextProps } from '../../desktop/pageWrappers/pageTypes'
+import type { MobileContextProps } from '../../mobile/pageWrappers/pageTypes'
+import type { MediaRef, ZoomMediaProps } from './mediaTypes'
 
 
 interface StyledZoomMediaProps {
@@ -21,7 +21,7 @@ interface StyledZoomMediaProps {
 }
 const ZoomMedia = forwardRef((props: ZoomMediaProps, ref: MediaRef) => {
   const outletContext =
-    useOutletContext<PageContextProps | PageMobileContextProps>()
+    useOutletContext<DesktopContextProps | MobileContextProps>()
   const isMobile = useIsMobile()
 
   // TODO

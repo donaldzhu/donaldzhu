@@ -1,6 +1,6 @@
 import _ from 'lodash'
+import { useContext, useEffect, useState } from 'react'
 import pointInPolygon from 'point-in-polygon'
-import { ReactNode, useContext, useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import styled from 'styled-components'
 import { WorkPageContext } from '../../contexts/context'
@@ -13,8 +13,9 @@ import ElemRect from '../../utils/helpers/rect/elemRect'
 import { addEventListener } from '../../utils/reactUtils'
 import { em } from '../../utils/sizeUtils'
 import { validateRef } from '../../utils/typeUtils'
-import { PageContextProps } from '../pageWrappers/pageTypes'
-import { WorkPageContextProps } from '../../contexts/contextTypes'
+import type { ReactNode } from 'react'
+import type { DesktopContextProps } from '../desktop/pageWrappers/pageTypes'
+import type { WorkPageContextProps } from '../../contexts/contextTypes'
 
 
 interface ToolTipProps {
@@ -28,7 +29,7 @@ interface StyledToolTipProps {
 const ToolTip = ({ children }: ToolTipProps) => {
   const [isShown, setIsShown] = useState(false)
   const { toolTipRef, popUpRef } = useContext<WorkPageContextProps>(WorkPageContext)
-  const { zoomMedia, canvasStates } = useOutletContext<PageContextProps>()
+  const { zoomMedia, canvasStates } = useOutletContext<DesktopContextProps>()
   const mousePositionRef = canvasStates?.mousePositionRef
 
   const handleHover = ({ currentTarget }: { currentTarget: HTMLDivElement }) => {

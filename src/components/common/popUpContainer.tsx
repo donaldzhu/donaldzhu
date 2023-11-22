@@ -1,9 +1,10 @@
-import { DetailedHTMLProps, HTMLAttributes, ReactNode, useEffect } from 'react'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 import colors from '../../styles/colors'
 import { fontLineHeights } from '../../styles/fonts'
 import mixins from '../../styles/mixins'
 import { noOverflow } from '../../utils/reactUtils'
+import type { DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react'
 
 type PopUpContainerProps = {
   className?: string,

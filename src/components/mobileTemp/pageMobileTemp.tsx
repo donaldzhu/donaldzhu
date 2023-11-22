@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import useGlobalCanvas from '../../hooks/useGlobalCanvas'
-import GlobalCanvas from '../canvas/globalCanvas'
-import { PageProps } from '../pageWrappers/pageTypes'
+import GlobalCanvas from '../common/canvas/globalCanvas'
 import useMotion from '../../hooks/useMotion'
 import usePhysics from '../../hooks/usePhysics'
 import useMemoRef from '../../hooks/useMemoRef'
-import { PageMobileContextTemp } from './mobileTypeTemp'
+import type { PageProps } from '../desktop/pageWrappers/pageTypes'
+import type { PageMobileContextTemp } from './mobileTypeTemp'
 
 const PageMobileTemp = ({ canAutoPlay }: PageProps) => {
   const engine = usePhysics()

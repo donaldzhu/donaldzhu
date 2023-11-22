@@ -1,5 +1,5 @@
 import { arrayify, filterFalsy } from '../commonUtils'
-import { queueArgType, queueFunctionType } from '../utilTypes'
+import type { queueArgType, queueFunctionType } from '../utilTypes'
 
 class Queue<T = any> {
   private currentId: undefined | number

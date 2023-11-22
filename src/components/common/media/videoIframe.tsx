@@ -1,6 +1,6 @@
-import { IframeHTMLAttributes } from 'react'
 import styled from 'styled-components'
 import { VideoIframeType } from './mediaTypes'
+import type { IframeHTMLAttributes } from 'react'
 
 interface VideoIframeProps {
   type: VideoIframeType,

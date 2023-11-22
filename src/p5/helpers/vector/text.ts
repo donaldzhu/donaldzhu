@@ -1,12 +1,12 @@
 import _ from 'lodash'
-import p5 from 'p5'
-import { CoorObject, coorTuple } from '../../../utils/utilTypes'
 import Size from '../../../utils/helpers/size'
-import vectorsData from '../../../data/vector/glyphs.json'
-import { MobileCanvasStates } from '../../../components/canvas/canvasTypes'
 import { DEFAULT_SETTING, SPACE_DELIMITER, X_HEIGHT, YPosition } from './constants'
 import Glyph from './glyph'
-import { SetTransformProps, SetTransformScaleProps, VectorSetting } from './vectorTypes'
+import type p5 from 'p5'
+import type vectorsData from '../../../data/vector/glyphs.json'
+import type { MobileCanvasStates } from '../../../components/common/canvas/canvasTypes'
+import type { CoorObject, coorTuple } from '../../../utils/utilTypes'
+import type { SetTransformProps, SetTransformScaleProps, VectorSetting } from './vectorTypes'
 
 
 interface BoundsInterface {
@@ -32,7 +32,7 @@ class Text {
   constructor(
     p5: p5 | p5.Graphics,
     text: string,
-    setting: Partial<VectorSetting> & { w?: Size },
+    setting: Partial<VectorSetting>,
     canvasStates?: MobileCanvasStates,
   ) {
     if (setting.w) setting.scale = new Size(1)

@@ -1,10 +1,8 @@
 import _ from 'lodash'
 import breakpts from '../../../data/breakpoints'
 import { joinPaths, keysToObject, typedKeys } from '../../commonUtils'
-import { Breakpt, getPreloadBreakpt } from '../../queryUtil'
-import { coorTuple } from '../../utilTypes'
+import { getPreloadBreakpt } from '../../queryUtil'
 import { ImgPreloader, VidPreloader } from './preloader'
-import { MediaStackProps, PreloadBreakpt } from './preloaderTypes'
 import {
   getPreviewBreakptKey,
   isImg,
@@ -12,6 +10,9 @@ import {
   MediaSize,
   MediaType
 } from './preloadUtils'
+import type { Breakpt } from '../../queryUtil'
+import type { coorTuple } from '../../utilTypes'
+import type { MediaStackProps, PreloadBreakpt } from './preloaderTypes'
 
 export abstract class MediaStack {
   private mediaType: MediaType
@@ -57,7 +58,7 @@ export abstract class MediaStack {
   }
 
   private getPath(size: PreloadBreakpt) {
-    const rootPath = '/assets'
+    const rootPath = '/assets/desktop'
     const pagePath = joinPaths(rootPath, 'work', this.pageId, size)
     const thumbnailRootPath = [rootPath, MediaType.Thumbnails, size]
 

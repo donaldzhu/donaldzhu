@@ -1,4 +1,4 @@
-import p5 from 'p5'
+import type p5 from 'p5'
 
 class FlatBrushMark {
   private p5: p5 | p5.Graphics

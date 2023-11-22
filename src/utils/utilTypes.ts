@@ -1,4 +1,4 @@
-import { Falsey } from 'lodash'
+import type { Falsey } from 'lodash'
 
 export type coorTuple = [number, number]
 export interface CoorObject { x: number, y: number }

@@ -12,11 +12,11 @@ import {
   validateString
 } from '../../commonUtils'
 import { getPreloadBreakpt } from '../../queryUtil'
-import { coorTuple, queueArgType, queueFunctionType } from '../../utilTypes'
 import Queue from '../queue'
 import { ImgStack, VidStack } from './mediaStack'
-import { loadVidType } from './preloadTypes'
 import { fileIsImg, isImg, isImgSize, MediaSize, MediaType, VerboseLevel } from './preloadUtils'
+import type { coorTuple, queueArgType, queueFunctionType } from '../../utilTypes'
+import type { loadVidType } from './preloadTypes'
 
 const LOG_COLORS = {
   [MediaSize.DesktopFallback]: 'yellow',

@@ -10,6 +10,7 @@ export const fontParams = {
   semiLight: 375,
   demiBold: 450,
   semiBold: 575,
+  bold: 625,
 }
 
 export const fontLineHeights = {
@@ -20,10 +21,9 @@ export const fontLineHeights = {
 
 const sansToMonoratio = 1.03
 const monoFontSizeDesktop = getRemSize({ l: 1.3, xxl: 2.875 })
-// const monoFontSizeMobile = getRemSize({ s: 1.3, l: 1.8 })
-const monoFontSizeMobile = getRemSize({ s: 1.75, l: 1.75 })
+const monoFontSizeMobile = getRemSize({ s: 1.75, l: 4.5 })
 const workIndexMonoFontSize = getRemSize({ l: 0.85, xxl: 1.7 })
-const navMonoFontSizeMobile = getRemSize({ s: 1.15, l: 1.125 })
+const navMonoFontSizeMobile = getRemSize({ s: 1.15, l: 2.5 })
 
 export const fontSizes = {
   desktop: {
@@ -63,17 +63,27 @@ export const fontSizes = {
       mono: monoFontSizeMobile,
       sans: monoFontSizeMobile.mult(sansToMonoratio)
     },
-    smallText: getRemSize({ s: 1.05, l: 1.05 }),
+    smallText: getRemSize({ s: 1.05, l: 2.55 }),
     nav: {
       mono: navMonoFontSizeMobile,
       sans: navMonoFontSizeMobile.mult(sansToMonoratio)
+    },
+    menu: {
+      item: getRemSize({ s: 2.3, l: 4.5 })
     },
     main: {
       button: getRemSize({ s: 1.075, l: 2.5 })
     },
     workIndex: {
-      title: getRemSize({ s: 0.9, l: 0.9 }), // TODO
-      tags: getRemSize({ s: 0.85, l: 0.85 })
+      title: getRemSize({ s: 0.9, l: 2.125 }),
+      tags: getRemSize({ s: 0.85, l: 1.6 })
+    },
+    home: {
+      blocker: getRemSize({ s: 1.25, l: 2.25 })
+    },
+    workPage: {
+      title: getRemSize({ s: 1.45, l: 3 }),
+      details: getRemSize({ s: 0.85, l: 1.75 })
     }
   }
 }

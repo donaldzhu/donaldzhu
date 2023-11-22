@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import styled from 'styled-components'
 import { useWindowSize } from '@uidotdev/usehooks'
-import { fontFamilies } from '../../styles/fonts'
+import { fontFamilies, fontSizes } from '../../styles/fonts'
 import colors from '../../styles/colors'
 import { domSizes } from '../../styles/sizes'
 import Size from '../../utils/helpers/size'
@@ -47,11 +47,11 @@ const MobileConstructionTemp = () => {
 const BannerContainer = styled.div`
   position: fixed;
   top: ${domSizes.mobile.home.blocker.top.css};
- 
+
   color: ${colors.popUpColor};
 
   font-family: ${fontFamilies.sansFont};
-  font-size: 1.25rem;
+  font-size: ${fontSizes.mobile.home.blocker.css};
   font-style: italic;
 `
 
@@ -67,7 +67,7 @@ const Banner = styled.p<StyledBannerProps>`
     const yShift = Math.sin(angle) * $shift
     return `translate(${xShift}px, ${$y1 + yShift}px) rotate(${angle}rad)`
   }};
-  padding: 0.35em 0 0.25em; 
+  padding: 0.35em 0 0.25em;
 `
 
 export default MobileConstructionTemp

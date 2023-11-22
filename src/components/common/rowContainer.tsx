@@ -1,11 +1,12 @@
 import _ from 'lodash'
-import { forwardRef, ReactNode } from 'react'
+import { forwardRef } from 'react'
 import styled from 'styled-components'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import { arrayify, validateString } from '../../utils/commonUtils'
 import { maxQueries, minQueries } from '../../utils/queryUtil'
 import ToolTip from './toolTip'
+import type { ReactNode } from 'react'
 
 interface RowContainerProps {
   className?: string
@@ -46,6 +47,7 @@ const Container = styled.div`
 
 const Row = styled.div<StyledRowContainerProps>`
   display: flex;
+  height: 100%;
 
   @media ${maxQueries.l} {
     width: 96%;

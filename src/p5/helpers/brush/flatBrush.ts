@@ -1,9 +1,10 @@
-import p5 from 'p5'
 import { repeatMap, shuffleTo } from '../../../utils/commonUtils'
 import Size from '../../../utils/helpers/size'
-import { BrushSetting } from '../../sketches/sketchTypes'
 import Brush from './brush'
-import FlatBrushMark, { FlatBrushPoint } from './flatBrushMark'
+import FlatBrushMark from './flatBrushMark'
+import type { FlatBrushPoint } from './flatBrushMark'
+import type p5 from 'p5'
+import type { BrushSetting } from '../../sketches/sketchTypes'
 
 
 class FlatBrush extends Brush {

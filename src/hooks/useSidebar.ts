@@ -1,9 +1,10 @@
-import { DependencyList, ReactNode, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useLocation, useOutletContext } from 'react-router-dom'
-import { PageContextProps } from '../components/pageWrappers/pageTypes'
+import type { DesktopContextProps } from '../components/desktop/pageWrappers/pageTypes'
+import type { DependencyList, ReactNode } from 'react'
 
 const useSidebar = (sidebar: ReactNode, dependencies: DependencyList = []) => {
-  const { setSidebar } = useOutletContext<PageContextProps>()
+  const { setSidebar } = useOutletContext<DesktopContextProps>()
   const location = useLocation()
   useEffect(() => {
     setSidebar(sidebar)

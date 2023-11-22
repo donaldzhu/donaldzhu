@@ -1,14 +1,12 @@
 import * as easing from 'easing-utils'
-import p5 from 'p5'
 import _ from 'lodash'
-import spacingsData from '../../../data/vector/spacings.json'
-import { getBlankCoors, loopObject, map, mapObject, typedKeys } from '../../../utils/commonUtils'
+import { getBlankCoors, loopObject, map, mapObject } from '../../../utils/commonUtils'
 import Size from '../../../utils/helpers/size'
 import { getVh, getVw } from '../../../utils/sizeUtils'
 import { sketchSizes } from '../../../styles/sizes'
 import { wrapDrawingContext } from '../../../utils/p5Utils'
-import { Easing, VectorSetting } from './vectorTypes'
-
+import type p5 from 'p5'
+import type { VectorSetting } from './vectorTypes'
 
 export const enum Mode {
   Center,
@@ -33,12 +31,53 @@ export const enum YPosition {
   Bottom
 }
 
+export enum VectorDrawMethod {
+  DrawLinks = 'drawLinks',
+  DrawPoints = 'drawPoints',
+  DrawVolume = 'drawVolume'
+}
+
+export const enum Easing {
+  Linear = 'linear',
+  EaseInSine = 'easeInSine',
+  EaseOutSine = 'easeOutSine',
+  EaseInOutSine = 'easeInOutSine',
+  EaseInQuad = 'easeInQuad',
+  EaseOutQuad = 'easeOutQuad',
+  EaseInOutQuad = 'easeInOutQuad',
+  EaseInCubic = 'easeInCubic',
+  EaseOutCubic = 'easeOutCubic',
+  EaseInOutCubic = 'easeInOutCubic',
+  EaseInQuart = 'easeInQuart',
+  EaseOutQuart = 'easeOutQuart',
+  EaseInOutQuart = 'easeInOutQuart',
+  EaseInQuint = 'easeInQuint',
+  EaseOutQuint = 'easeOutQuint',
+  EaseInOutQuint = 'easeInOutQuint',
+  EaseInExpo = 'easeInExpo',
+  EaseOutExpo = 'easeOutExpo',
+  EaseInOutExpo = 'easeInOutExpo',
+  EaseInCirc = 'easeInCirc',
+  EaseOutCirc = 'easeOutCirc',
+  EaseInOutCirc = 'easeInOutCirc',
+  EaseInBack = 'easeInBack',
+  EaseOutBack = 'easeOutBack',
+  EaseInOutBack = 'easeInOutBack',
+  EaseInElastic = 'easeInElastic',
+  EaseOutElastic = 'easeOutElastic',
+  EaseInOutElastic = 'easeInOutElastic',
+  EaseOutBounce = 'easeOutBounce',
+  EaseInBounce = 'easeInBounce',
+  EaseInOutBounce = 'easeInOutBounce',
+}
+
 export const SPACE_DELIMITER = ' '
 
 export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
 { mouseOrigin?: p5.Vector } = {
   x: 0,
   y: 0,
+  w: undefined,
   scale: new Size(1),
   position: [XPosition.Center, YPosition.Center],
   align: XPosition.Center,
@@ -60,6 +99,7 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
   volumeColor: 0,
   correctVolumeStroke: false,
   easing: Easing.Linear,
+  noMap: false,
   squareMap: true,
   mapFunction: function (stillVector, mouseVector) {
     const results = getBlankCoors(false)

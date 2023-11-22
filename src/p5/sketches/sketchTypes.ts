@@ -1,5 +1,5 @@
-import { MutableRefObject } from 'react'
-import Size from '../../utils/helpers/size'
+import type { MutableRefObject } from 'react'
+import type Size from '../../utils/helpers/size'
 
 export interface BrushSetting {
   splitNum: number

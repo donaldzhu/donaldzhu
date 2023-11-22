@@ -1,9 +1,8 @@
-import { Falsey } from 'lodash'
-import breakpts from '../data/breakpoints'
 import workData from '../data/work/workData.json'
-import ElemRect from './helpers/rect/elemRect'
-import { BrowserType, CoorObject, CoorObject3D, coorTuple } from './utilTypes'
-import { Device } from './queryUtil'
+import type { Falsey } from 'lodash'
+import type ElemRect from './helpers/rect/elemRect'
+import type { BrowserType, CoorObject, CoorObject3D, coorTuple } from './utilTypes'
+import type { Device } from './queryUtil'
 
 // string
 export const capitalize = <T extends string>(string: T) => string.charAt(0)
@@ -131,11 +130,8 @@ export function getBlankCoors(withZ = false) {
   return withZ ? { ...withoutZ, z: 0 } : withoutZ
 }
 
-export function isBrowser(browserToMatch: BrowserType | BrowserType[]) {
-  return arrayify(browserToMatch).some(browser => navigator.userAgent.includes(browser))
-}
-
-export const getIsMobile = () => window.innerWidth <= breakpts.l
+export const isBrowser = (browserToMatch: BrowserType | BrowserType[]) =>
+  arrayify(browserToMatch).some(browser => navigator.userAgent.includes(browser))
 
 export const getParsedWorkData = (deviceType: Device) =>
   workData

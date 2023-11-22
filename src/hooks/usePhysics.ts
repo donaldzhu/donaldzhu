@@ -1,5 +1,6 @@
-import { DependencyList, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Composite, Engine } from 'matter-js'
+import type { DependencyList } from 'react'
 
 const usePhysics = (dependencies: DependencyList = []) => {
   const engine = useMemo(Engine.create, dependencies)

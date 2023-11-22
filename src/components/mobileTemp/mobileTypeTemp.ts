@@ -1,5 +1,5 @@
-import { TouchEvent } from 'react'
-import { CanvasRefType, MobileCanvasStates } from '../canvas/canvasTypes'
+import type { TouchEvent } from 'react'
+import type { CanvasRefType, MobileCanvasStates } from '../common/canvas/canvasTypes'
 
 export interface PageMobileContextTemp {
   canAutoPlay: boolean | undefined

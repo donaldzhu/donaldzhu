@@ -1,7 +1,8 @@
-import { ForwardedRef, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
-import { WorkVidProps } from './mediaTypes'
 import ZoomMedia from './zoomMedia'
+import type { ForwardedRef } from 'react'
+import type { WorkVidProps } from './mediaTypes'
 
 const WorkVid = forwardRef((
   props: WorkVidProps,

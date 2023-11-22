@@ -1,13 +1,15 @@
-import p5 from 'p5'
-import Matter, { Bodies, Body, Composite, Constraint, Engine } from 'matter-js'
+import { Bodies, Body, Composite, Constraint } from 'matter-js'
 import bearingsData from '../../../data/vector/spacings.json'
 import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
 import { validateRef } from '../../../utils/typeUtils'
 import RollingFilter from '../../../utils/helpers/rollingFilter'
-import { MobileCanvasStates } from '../../../components/canvas/canvasTypes'
 import Vector from './vector'
-import { VectorSetting } from './vectorTypes'
 import { createMobilePhysicsSettings } from './constants'
+import type p5 from 'p5'
+import type Matter from 'matter-js'
+import type { Engine } from 'matter-js'
+import type { VectorSetting } from './vectorTypes'
+import type { MobileCanvasStates } from '../../../components/common/canvas/canvasTypes'
 
 
 class Glyph {
@@ -89,9 +91,10 @@ class Glyph {
   draw() {
     const { drawingSequence } = this.setting
 
-    if (this.setting.isMobile)
-      this.mapMobile()
-    else this.mapDesktop()
+    if (!this.setting.noMap)
+      if (this.setting.isMobile)
+        this.mapMobile()
+      else this.mapDesktop()
 
     this.still.draw()
     this.active.draw()

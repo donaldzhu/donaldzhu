@@ -1,8 +1,8 @@
 import colors from '../../styles/colors'
 import { sketchSizes } from '../../styles/sizes'
 import Size from '../../utils/helpers/size'
-import { XPosition, YPosition } from '../helpers/vector/constants'
-import { Easing, VectorDrawMethod, VectorPosition, VectorSetting } from '../helpers/vector/vectorTypes'
+import { Easing, VectorDrawMethod, XPosition, YPosition } from '../helpers/vector/constants'
+import type { VectorPosition, VectorSetting } from '../helpers/vector/vectorTypes'
 
 const mainSketchConfigs: Partial<VectorSetting> = {
   scale: sketchSizes.desktop.main.scale,
@@ -25,6 +25,12 @@ const mobileSketchConfigs: Partial<VectorSetting> = {
   spaceWidth: new Size(15)
 }
 
+const vectorStringTranslateConfigs: Partial<VectorSetting> = {
+  pointColor: colors.vectorStringSketch,
+  pointFill: colors.vectorStringSketch,
+  glyphColor: colors.vectorStringSketch,
+  linkColor: colors.vectorStringSketch,
+}
 
 const configs: Record<string, Partial<VectorSetting>> = {
   MAIN_UPPER: {
@@ -74,28 +80,19 @@ const configs: Record<string, Partial<VectorSetting>> = {
     maxStretch: 8,
   },
   VECTOR_STRING_TRANSLATE: {
+    ...vectorStringTranslateConfigs,
     glyphWeight: sketchSizes.desktop.string.weight.glyph,
     linkWeight: sketchSizes.desktop.string.weight.link,
     pointSize: sketchSizes.desktop.string.pointSize,
-    pointColor: colors.vectorStringSketch,
-    pointFill: colors.vectorStringSketch,
-    glyphColor: colors.vectorStringSketch,
-    linkColor: colors.vectorStringSketch,
+    drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawPoints]
+  },
+  VECTOR_STRING_TRANSLATE_MOBILE: {
+    ...vectorStringTranslateConfigs,
+    w: new Size({ vw: 20 }),
+    glyphWeight: sketchSizes.mobile.string.weight.glyph,
+    linkWeight: sketchSizes.mobile.string.weight.link,
+    pointSize: sketchSizes.mobile.string.pointSize,
     drawingSequence: [VectorDrawMethod.DrawLinks, VectorDrawMethod.DrawPoints],
-    mapFunction: function (stillVector, mouseVector) {
-      const distVector = mouseVector.sub(this.mouseOrigin ?? stillVector)
-      const segmentation = 20
-      const segmentSize = Math.PI * 2 / segmentation
-      const segmentedHeading = Math.floor(distVector.heading() / segmentSize) * segmentSize
-      const maxStretch = typeof this.maxStretch === 'object' ?
-        this.maxStretch.x :
-        this.maxStretch
-      distVector
-        .setHeading(segmentedHeading)
-        .setMag(maxStretch ?? 1)
-        .add(stillVector)
-      return distVector
-    }
   }
 }
 

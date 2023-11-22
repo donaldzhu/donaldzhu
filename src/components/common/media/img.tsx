@@ -1,7 +1,8 @@
-import { DetailedHTMLProps, forwardRef, ImgHTMLAttributes } from 'react'
+import { forwardRef } from 'react'
 import styled from 'styled-components'
 import mixins from '../../../styles/mixins'
-import { ImgProps, StyledMediaProps } from './mediaTypes'
+import type { DetailedHTMLProps, ImgHTMLAttributes } from 'react'
+import type { ImgProps, StyledMediaProps } from './mediaTypes'
 
 const Img = forwardRef<
   HTMLImageElement,

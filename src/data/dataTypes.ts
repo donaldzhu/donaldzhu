@@ -1,4 +1,4 @@
-import { FunctionComponent, MutableRefObject, SVGProps } from 'react'
+import type { FunctionComponent, MutableRefObject, SVGProps } from 'react'
 
 
 export interface ContactDataInterface {

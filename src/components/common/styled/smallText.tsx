@@ -4,22 +4,28 @@ import { maxQueries, minQueries } from '../../../utils/queryUtil'
 import { domSizes } from '../../../styles/sizes'
 import Text from './text'
 
+// needed to overwrite Text style
+const boldStyle = `
+  b {
+    font-size: inherit;
+    font-family: ${fontFamilies.monoFont};
+    font-weight: ${fontParams.bold};
+  }
+`
+
 const SmallText = styled(Text)`
   font-size: ${fontSizes.desktop.smallText.css};
   line-height: ${fontLineHeights.smallText};
 
-  b {
-    font-size: inherit;
-    font-family: ${fontFamilies.monoFont};
-  }
-
   @media ${maxQueries.l} {
     font-size: ${fontSizes.mobile.smallText.css};
     font-weight: normal;
+    ${boldStyle}
   }
 
   @media ${minQueries.l} {
     max-width: ${domSizes.desktop.workPage.sidebar.description.maxWidth.css};
+    ${boldStyle}
   }
 `
 

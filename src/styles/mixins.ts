@@ -4,7 +4,7 @@ import { minQueries } from '../utils/queryUtil'
 import { em } from '../utils/sizeUtils'
 import { fontParams } from './fonts'
 import { domSizes } from './sizes'
-import { FontVarConfigProps, MediaProps, PositionProps } from './styleTypes'
+import type { FontVarConfigProps, MediaProps, PositionProps } from './styleTypes'
 
 const recursiveCenterText = () => `
   position: relative;

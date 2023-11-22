@@ -1,6 +1,6 @@
-import p5 from 'p5'
 import { wrapDrawingContext } from '../../../utils/p5Utils'
-import { BrushSetting } from '../../sketches/sketchTypes'
+import type p5 from 'p5'
+import type { BrushSetting } from '../../sketches/sketchTypes'
 
 class Brush {
   setting: BrushSetting

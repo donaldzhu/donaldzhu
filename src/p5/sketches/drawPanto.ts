@@ -1,7 +1,4 @@
 import _ from 'lodash'
-import p5 from 'p5'
-import { MutableRefObject } from 'react'
-import { DesktopCanvasStates } from '../../components/canvas/canvasTypes'
 import colors from '../../styles/colors'
 import { sketchSizes } from '../../styles/sizes'
 import { loopObject } from '../../utils/commonUtils'
@@ -12,7 +9,10 @@ import { validateRef } from '../../utils/typeUtils'
 import config from '../configs/stroke'
 import Brush from '../helpers/brush/brush'
 import FlatBrush from '../helpers/brush/flatBrush'
-import { PlaceholderProp } from './sketchTypes'
+import type p5 from 'p5'
+import type { MutableRefObject } from 'react'
+import type { DesktopCanvasStates } from '../../components/common/canvas/canvasTypes'
+import type { PlaceholderProp } from './sketchTypes'
 
 type DrawPantoProps = {
   isClearingRef: MutableRefObject<boolean>

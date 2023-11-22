@@ -1,0 +1,46 @@
+import WorkImg from '../../common/media/workImg'
+import WorkImgGroup from '../../common/media/workImgGroup'
+import RowContainer from '../../common/rowContainer'
+import type { WorkPageContentProps } from '../work/workPageTypes'
+
+
+const PageObjectBulb = ({ WorkInfo, Description }: WorkPageContentProps) => {
+  return (
+    <>
+      <RowContainer>
+        <WorkImg src='1.webp' />
+      </RowContainer>
+      <WorkInfo />
+      <Description />
+      <RowContainer>
+        <WorkImg src='2.webp' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='3.webp' />
+        <WorkImg src='4.webp' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='5.webp' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='6.webp' />
+      </RowContainer>
+      <WorkImgGroup grid={[2, 3]} prefix='spray-paint' />
+      <RowContainer>
+        <WorkImg src='7.webp' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='8.webp' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='9.webp' />
+      </RowContainer>
+      <RowContainer>
+        <WorkImg src='10.webp' />
+      </RowContainer>
+    </>
+  )
+}
+
+
+export default PageObjectBulb

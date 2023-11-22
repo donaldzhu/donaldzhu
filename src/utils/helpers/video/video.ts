@@ -1,6 +1,6 @@
-
-import { MutableRefObject } from 'react'
 import Queue from '../queue'
+import { validateRef } from '../../typeUtils'
+import type { MutableRefObject } from 'react'
 
 class Video {
   private playQueue: Queue | undefined
@@ -32,6 +32,7 @@ class Video {
         this.playQueueList.shift()
         return this.ref.current.play()
           .then(() => this.playState.current = true)
+          .catch(err => console.error(err))
       }
     ))
   }
@@ -41,7 +42,8 @@ class Video {
     this.addToQueue(new VideoPlayCommand(
       false, () => {
         this.playQueueList.shift()
-        this.ref.current.pause()
+        if (validateRef(this.ref))
+          this.ref.current.pause()
         this.playState.current = false
       }
     ))

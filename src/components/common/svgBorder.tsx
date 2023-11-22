@@ -3,8 +3,8 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 import colors from '../../styles/colors'
 import { domSizes } from '../../styles/sizes'
-import Size from '../../utils/helpers/size'
 import Svg from './svg'
+import type Size from '../../utils/helpers/size'
 
 interface SvgBorderProps {
   className?: string

@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import { ForwardedRef, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
+import type { ForwardedRef } from 'react'
 
 const useForwardedRef = <T>(ref: ForwardedRef<T>) => {
   const innerRef = useRef<T | null>(null)

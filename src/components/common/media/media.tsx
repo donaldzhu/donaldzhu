@@ -1,9 +1,10 @@
 import _ from 'lodash'
-import { ForwardedRef, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 import Img from './img'
-import { MediaIntrinsicProps, MediaRef } from './mediaTypes'
 import Vid from './vid'
+import type { ForwardedRef } from 'react'
+import type { MediaIntrinsicProps, MediaRef } from './mediaTypes'
 
 const Media = forwardRef((props: MediaIntrinsicProps, ref: MediaRef) => {
   return props.type === MediaFileType.Image ?

@@ -1,22 +1,16 @@
-import p5 from 'p5'
-import { Constraint, Engine } from 'matter-js'
-import Size from '../../../utils/helpers/size'
-import { MobileCanvasStates } from '../../../components/canvas/canvasTypes'
-import { CoorObject } from '../../../utils/utilTypes'
-import RollingFilter from '../../../utils/helpers/rollingFilter'
-import { Mode, XPosition, YPosition } from './constants'
-
-export enum VectorDrawMethod {
-  DrawLinks = 'drawLinks',
-  DrawPoints = 'drawPoints',
-  DrawVolume = 'drawVolume'
-}
+import type { Constraint, Engine } from 'matter-js'
+import type Size from '../../../utils/helpers/size'
+import type RollingFilter from '../../../utils/helpers/rollingFilter'
+import type { Easing, Mode, VectorDrawMethod, XPosition, YPosition } from './constants'
+import type p5 from 'p5'
+import type { CoorObject } from '../../../utils/utilTypes'
 
 export type VectorPosition = [XPosition, YPosition]
 
 export interface VectorSetting {
   x: number
   y: number
+  w?: Size
   scale: Size
   mode?: Mode
   position: VectorPosition
@@ -40,7 +34,8 @@ export interface VectorSetting {
   volumeColor: number | string
   correctVolumeStroke: boolean
   easing: Easing
-  squareMap: true
+  noMap: boolean,
+  squareMap: boolean,
   mapFunction: (
     stillVector: p5.Vector,
     mouseVector: p5.Vector
@@ -78,37 +73,3 @@ interface SetTransformWidthProps {
 
 export type SetTransformProps = SetTransformScaleProps | SetTransformWidthProps
 
-
-export const enum Easing {
-  Linear = 'linear',
-  EaseInSine = 'easeInSine',
-  EaseOutSine = 'easeOutSine',
-  EaseInOutSine = 'easeInOutSine',
-  EaseInQuad = 'easeInQuad',
-  EaseOutQuad = 'easeOutQuad',
-  EaseInOutQuad = 'easeInOutQuad',
-  EaseInCubic = 'easeInCubic',
-  EaseOutCubic = 'easeOutCubic',
-  EaseInOutCubic = 'easeInOutCubic',
-  EaseInQuart = 'easeInQuart',
-  EaseOutQuart = 'easeOutQuart',
-  EaseInOutQuart = 'easeInOutQuart',
-  EaseInQuint = 'easeInQuint',
-  EaseOutQuint = 'easeOutQuint',
-  EaseInOutQuint = 'easeInOutQuint',
-  EaseInExpo = 'easeInExpo',
-  EaseOutExpo = 'easeOutExpo',
-  EaseInOutExpo = 'easeInOutExpo',
-  EaseInCirc = 'easeInCirc',
-  EaseOutCirc = 'easeOutCirc',
-  EaseInOutCirc = 'easeInOutCirc',
-  EaseInBack = 'easeInBack',
-  EaseOutBack = 'easeOutBack',
-  EaseInOutBack = 'easeInOutBack',
-  EaseInElastic = 'easeInElastic',
-  EaseOutElastic = 'easeOutElastic',
-  EaseInOutElastic = 'easeInOutElastic',
-  EaseOutBounce = 'easeOutBounce',
-  EaseInBounce = 'easeInBounce',
-  EaseInOutBounce = 'easeInOutBounce',
-}

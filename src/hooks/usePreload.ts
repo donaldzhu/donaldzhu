@@ -1,6 +1,7 @@
 import _ from 'lodash'
-import { ReactEventHandler, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import PreloadManager from '../utils/helpers/preloader/preloadManager'
+import type { ReactEventHandler } from 'react'
 
 interface LoadDataInterface {
   promise: Promise<void>

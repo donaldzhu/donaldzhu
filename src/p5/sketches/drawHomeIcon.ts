@@ -1,12 +1,12 @@
-import p5 from 'p5'
-import { MutableRefObject } from 'react'
 import colors from '../../styles/colors'
 import { domSizes } from '../../styles/sizes'
 import ElemRect from '../../utils/helpers/rect/elemRect'
 import { validateRef } from '../../utils/typeUtils'
 import configs from '../configs/vector'
 import Text from '../helpers/vector/text'
-import { PlaceholderProp } from './sketchTypes'
+import type p5 from 'p5'
+import type { MutableRefObject } from 'react'
+import type { PlaceholderProp } from './sketchTypes'
 
 type DrawHomeIconProps = {
   isHoveringRef: MutableRefObject<boolean>

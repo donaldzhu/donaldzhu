@@ -1,28 +1,32 @@
+import { useRef } from 'react'
 import styled from 'styled-components'
 import { useOutletContext } from 'react-router-dom'
-import useCanvas from '../../hooks/useCanvas'
 import drawMobileSketch from '../../p5/sketches/drawMobileSketch'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import colors from '../../styles/colors'
 import { fontParams, fontSizes } from '../../styles/fonts'
-import { Device } from '../../utils/queryUtil'
-
 import { em } from '../../utils/sizeUtils'
-import { PageMobileContextTemp } from './mobileTypeTemp'
+import Canvas from '../common/canvas/canvas'
+import useLocalCanvas from '../../hooks/useLocalCanvas'
 import MobileConstructionTemp from './mobileConstructionTemp'
+import type { Device } from '../../utils/queryUtil'
+import type { PageMobileContextTemp } from './mobileTypeTemp'
 
 interface StyledGyroButtonProps {
   $isShown: boolean
 }
 
 const HomeMobileTemp = () => {
+  const placeholderRef = useRef<HTMLDivElement>(null)
   const { canvasStates, handleGyroButtonClick } = useOutletContext<PageMobileContextTemp>()
   const { motionSettings, gyroStates } = canvasStates
 
-  useCanvas<Device.mobile>(drawMobileSketch)
+  const canvasHandlers = useLocalCanvas<Device.mobile>(drawMobileSketch)
   return (
     <div>
+      <StyledCanvas {...canvasHandlers} />
+      <MainSketchPlaceholder ref={placeholderRef} />
       {motionSettings.hasMotion &&
         <GyroButtonContainer>
           <GyroEnableButton
@@ -43,6 +47,14 @@ const HomeMobileTemp = () => {
 
 const svgHeight = em(1.325)
 const transitionTime = '0.125s'
+
+const StyledCanvas = styled(Canvas)`
+  ${mixins.fullscreen()}
+`
+
+const MainSketchPlaceholder = styled.div`
+  ${mixins.fullscreen()}
+`
 
 const GyroButtonContainer = styled.div`
   ${mixins.chain()
@@ -75,8 +87,6 @@ const GyroButton = styled.button`
     margin-left: 0.375em;
   }
 `
-
-
 
 const GyroEnableButton = styled(GyroButton) <StyledGyroButtonProps>`
   opacity: ${({ $isShown }) => $isShown ? 0 : 1};

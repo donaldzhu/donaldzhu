@@ -34,6 +34,9 @@ export const getBreakptKey = () => {
   return breakptPair[0]
 }
 
+export const getIsMobile = () => window.screen.width <= breakpts.l
+
+
 // TODO
 export const getPreloadBreakpt = () => {
   const breakpt = getBreakptKey()

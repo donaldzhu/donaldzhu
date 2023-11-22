@@ -1,4 +1,5 @@
-import p5Class, { p5InstanceExtensions } from 'p5'
+import p5Class from 'p5'
+import type { p5InstanceExtensions } from 'p5'
 
 declare module 'p5' {
   class p5 extends p5Class {

@@ -1,8 +1,9 @@
-import p5 from 'p5'
 import colors from '../styles/colors'
 import { sketchSizes } from '../styles/sizes'
 import { repeat } from './commonUtils'
-import { coorTuple } from './utilTypes'
+import { Device, getIsMobile } from './queryUtil'
+import type p5 from 'p5'
+import type { coorTuple } from './utilTypes'
 
 
 export enum P5Event {
@@ -29,10 +30,11 @@ export enum P5Event {
 export const parseVector = (vector: p5.Vector): [number, number] => [vector.x, vector.y]
 
 export const styleDashedRect = (p5: p5) => {
-  p5.drawingContext.setLineDash(repeat(2, sketchSizes.desktop.line.dash.value))
+  const device = getIsMobile() ? Device.mobile : Device.desktop
+  p5.drawingContext.setLineDash(repeat(2, sketchSizes[device].line.dash.value))
   p5.noFill()
   p5.stroke(colors.dashLine)
-  p5.strokeWeight(sketchSizes.desktop.line.weight.value)
+  p5.strokeWeight(sketchSizes[device].line.weight.value)
 }
 
 

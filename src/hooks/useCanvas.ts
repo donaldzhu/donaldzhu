@@ -1,22 +1,22 @@
 import _ from 'lodash'
-import p5 from 'p5'
 import { useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import {
-  GlobalCanvasStates,
-  p5Callback,
-  sketchEventCallback,
-  SketchEventHandler
-} from '../components/canvas/canvasTypes'
 import { loopObject } from '../utils/commonUtils'
 import { P5Event } from '../utils/p5Utils'
 import { validateRef } from '../utils/typeUtils'
-import { Device } from '../utils/queryUtil'
+import type p5 from 'p5'
+import type { Device } from '../utils/queryUtil'
+import type {
+  GlobalCanvasStates,
+  p5Callback,
+  SketchEventHandlers,
+  TypedCanvasStates
+} from '../components/common/canvas/canvasTypes'
 
 const useCanvas = <T extends Device>(
-  createSketch: () => Partial<SketchEventHandler<T> & {
-    draw: sketchEventCallback<T>
-  }>,
+  createSketch: () => SketchEventHandlers<T> & {
+    cleanup?: (canvasStates: TypedCanvasStates<T>) => void
+  },
   config?: GlobalCanvasStates<T>
 ) => {
   const [setupDone, setSetupDone] = useState(false)

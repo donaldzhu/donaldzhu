@@ -1,17 +1,18 @@
+import { forwardRef, useEffect } from 'react'
 import { useIntersectionObserver } from '@uidotdev/usehooks'
-import { DetailedHTMLProps, forwardRef, useEffect, VideoHTMLAttributes } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import styled from 'styled-components'
 import _ from 'lodash'
 import mixins from '../../../styles/mixins'
 import Video from '../../../utils/helpers/video/video'
 import useForwardedRef from '../../../hooks/useForwaredRef'
-import { PageContextProps } from '../../pageWrappers/pageTypes'
 import { validateRef } from '../../../utils/typeUtils'
 import useMemoRef from '../../../hooks/useMemoRef'
 import useMergedRef from '../../../hooks/useMergedRef'
-import { PageMobileContextProps } from '../../mobile/mobileType'
-import { StyledMediaProps, VidProps } from './mediaTypes'
+import type { DetailedHTMLProps, VideoHTMLAttributes } from 'react'
+import type { DesktopContextProps } from '../../desktop/pageWrappers/pageTypes'
+import type { MobileContextProps } from '../../mobile/pageWrappers/pageTypes'
+import type { StyledMediaProps, VidProps } from './mediaTypes'
 
 
 const Vid = forwardRef<
@@ -30,7 +31,7 @@ const Vid = forwardRef<
     ...props
   }, ref) => {
     const contextCanAutoPlay =
-      useOutletContext<PageContextProps | PageMobileContextProps>()?.canAutoPlay
+      useOutletContext<DesktopContextProps | MobileContextProps>()?.canAutoPlay
     const vidCanAutoPlay: boolean | undefined =
       canAutoPlay ?? contextCanAutoPlay
 

@@ -11,6 +11,10 @@ p {
   -webkit-hyphenate-limit-after: 3;
   -ms-hyphenate-limit-chars: 5 3 3;
 }
+p,
+p _:-moz-only-whitespace {
+  hyphens: none;
+}
 
 a {
   text-decoration: none;

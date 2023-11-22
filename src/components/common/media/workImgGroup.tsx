@@ -1,8 +1,8 @@
-import { ReactNode } from 'react'
 import { joinPaths, repeatMap } from '../../../utils/commonUtils'
 import RowContainer from '../rowContainer'
-import { WorkImgProps } from './mediaTypes'
 import WorkImg from './workImg'
+import type { ReactNode } from 'react'
+import type { WorkImgProps } from './mediaTypes'
 
 interface WorkImgGroupProps {
   grid: number[]

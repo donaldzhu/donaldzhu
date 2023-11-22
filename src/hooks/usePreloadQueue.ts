@@ -1,15 +1,16 @@
 import _ from 'lodash'
-import { DependencyList, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import { PageContextProps } from '../components/pageWrappers/pageTypes'
-import PreloadManager from '../utils/helpers/preloader/preloadManager'
+import type { DependencyList } from 'react'
+import type PreloadManager from '../utils/helpers/preloader/preloadManager'
+import type { DesktopContextProps } from '../components/desktop/pageWrappers/pageTypes'
 
 const usePreloadQueue = (
   setupDone: boolean,
   callback: (preloadManager: PreloadManager) => void,
   dependencies: DependencyList = []
 ) => {
-  const { preloadManager } = useOutletContext<PageContextProps>()
+  const { preloadManager } = useOutletContext<DesktopContextProps>()
   useEffect(() => {
     if (!setupDone || !preloadManager) return _.noop
     callback(preloadManager)

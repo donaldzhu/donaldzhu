@@ -3,7 +3,7 @@ import { forwardRef, useEffect, useState } from 'react'
 import { MediaFileType, MediaSize } from '../../../utils/helpers/preloader/preloadUtils'
 import { getPreloadBreakpt } from '../../../utils/queryUtil'
 import Media from './media'
-import { MediaRef, PreloadMediaProps } from './mediaTypes'
+import type { MediaRef, PreloadMediaProps } from './mediaTypes'
 
 const PreloadMedia = forwardRef((props: PreloadMediaProps, ref: MediaRef) => {
   const { mediaStack, isZoomed, fallbackPath, ...rest } = props

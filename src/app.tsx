@@ -1,84 +1,36 @@
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import styled from 'styled-components'
-import Contact from './components/contact/contact'
-import Home from './components/home/home'
-import Page from './components/pageWrappers/page'
-import PageMobile from './components/mobile/pageMobile'
-import PageWithMainSketch from './components/pageWrappers/pageWithSketch'
-import Process from './components/process/process'
-import WorkIndex from './components/work/workIndex'
-import WorkPage from './components/work/workPage'
-import workData from './data/work/workData.json'
-import workPages from './data/work/workPagesMap'
 import colorConfig from './styles/colors'
 import { fontFamilies, fontSizes } from './styles/fonts'
 import mixins from './styles/mixins'
 import { domSizes } from './styles/sizes'
-import HomeMobile from './components/mobile/homeMobile'
 import useCanAutoPlay from './hooks/useCanAutoPlay'
-import { isBrowser, validateString } from './utils/commonUtils'
-import { BrowserType } from './utils/utilTypes'
 import useIsMobile from './hooks/useIsMobile'
 import { minQueries } from './utils/queryUtil'
 import PageMobileTemp from './components/mobileTemp/pageMobileTemp'
 import HomeMobileTemp from './components/mobileTemp/homeMobileTemp'
-import { LinkPath } from './data/links'
-import PageWithSketchMobile from './components/mobile/pageWithSketchMobile'
-import ProcessMobile from './components/mobile/processMobile'
-import ContactMobile from './components/mobile/contactMobile'
-import WorkIndexMobile from './components/mobile/workIndexMobile'
-import WorkPageMobile from './components/mobile/workPageMobile'
-import workPagesMobile from './components/mobile/workPagesMapMobile'
+import MobileRouter from './components/mobile/router'
+import DesktopRouter from './components/desktop/router'
 
 
 const App = () => {
   const isMobile = useIsMobile()
   const canAutoPlay = useCanAutoPlay()
   // const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
+
   return (
     <StyledGlobal>
       <HashRouter>
         <Routes>
-          {isMobile ?
+          <Route path='*' element={isMobile ?
             (process.env.NODE_ENV === 'production' ?
               <Route path='/' element={<PageMobileTemp canAutoPlay={canAutoPlay} />}>
                 <Route path='' element={<HomeMobileTemp />} />
                 <Route path='*' element={<Navigate to='/' replace />} />
               </Route> :
-              <Route path='/' element={<PageMobile canAutoPlay={canAutoPlay} />}>
-                <Route path='' element={<PageWithSketchMobile />}>
-                  <Route path='' element={<HomeMobile />} />
-                  <Route path={LinkPath.Contact} element={<ContactMobile />} />
-                  <Route path={LinkPath.Process} element={<ProcessMobile />} />
-                </Route>
-                <Route path={LinkPath.Work} >
-                  <Route path='' element={<WorkIndexMobile />} />
-                  {workData.map(page => page.enabled &&
-                    <Route key={page.id} path={page.id} element={
-                      <WorkPageMobile
-                        data={page}
-                        Content={workPagesMobile[page.id]} />} />)}
-                </Route>
-                <Route path='*' element={<Navigate to='/' replace />} />
-              </Route>
-            ) :
-            <Route path='/' element={<Page canAutoPlay={canAutoPlay} />}>
-              <Route path='' element={<PageWithMainSketch />}>
-                <Route path='' element={<Home />} />
-                <Route path={LinkPath.Contact} element={<Contact />} />
-                <Route path={LinkPath.Process} element={<Process />} />
-              </Route>
-              <Route path={LinkPath.Work} >
-                <Route path='' element={<WorkIndex />} />
-                {workData.map(page => page.enabled &&
-                  <Route key={page.id} path={page.id} element={
-                    <WorkPage
-                      data={page}
-                      Content={workPages[page.id]} />} />)}
-              </Route >
-              <Route path='*' element={<Navigate to='/' replace />} />
-            </Route>
-          }
+              <MobileRouter canAutoPlay={canAutoPlay} />
+            ) : <DesktopRouter canAutoPlay={canAutoPlay} />
+          } />
         </Routes>
       </HashRouter>
     </StyledGlobal>
@@ -109,10 +61,6 @@ const StyledGlobal = styled.main`
       color: ${colorConfig.defaultTextSelectColor};
       background-color: ${colorConfig.defaultTextSelectBg};
     }
-  }
-
-  p {
-    ${validateString(isBrowser(BrowserType.Firefox), 'hyphens: none;')}
   }
 
   b,

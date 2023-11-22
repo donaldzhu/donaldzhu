@@ -10,6 +10,11 @@ p {
   -webkit-hyphenate-limit-before: 3;
   -webkit-hyphenate-limit-after: 3;
   -ms-hyphenate-limit-chars: 5 3 3;
+
+  &,
+  _:-moz-only-whitespace {
+    hyphens: none;
+  }
 }
 
 a {

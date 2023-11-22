@@ -1,12 +1,13 @@
-import p5 from 'p5'
 import { domSizes, sketchSizes } from '../../styles/sizes'
 import { validateRef } from '../../utils/typeUtils'
-import { coorTuple } from '../../utils/utilTypes'
 import configs from '../configs/vector'
 import Text from '../helpers/vector/text'
 import { getVw } from '../../utils/sizeUtils'
-import { MobileCanvasStates } from '../../components/canvas/canvasTypes'
 import { loopObject } from '../../utils/commonUtils'
+import type p5 from 'p5'
+import type { coorTuple } from '../../utils/utilTypes'
+import type { MobileCanvasStates } from '../../components/common/canvas/canvasTypes'
+
 
 const drawMobileSketch = () => {
   let texts: Record<string, Text>
@@ -46,9 +47,8 @@ const drawMobileSketch = () => {
     })
   }
 
-  const setup = (p5: p5, canvasState: MobileCanvasStates) => {
+  const setup = (p5: p5, canvasState: MobileCanvasStates) =>
     createVectors(p5, canvasState)
-  }
 
   const draw = (_: p5, { gimbalRef }: MobileCanvasStates) => {
     if (!texts) return

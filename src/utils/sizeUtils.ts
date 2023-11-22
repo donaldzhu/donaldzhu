@@ -1,4 +1,5 @@
-import { BreakptSizer, BreakptSizesType } from './helpers/breakptSizer'
+import { BreakptSizer } from './helpers/breakptSizer'
+import type { BreakptSizesType } from './helpers/breakptSizer'
 
 export const enum Unit {
   Vw = 'vw',

@@ -25,18 +25,18 @@ const headerHeight = homeIconPaddingVert.mult(2)
 const footerHeight = footerPaddingTop.mult(2)
   .add(fontSizes.desktop.footer.link).sub(sidebarBorderGap)
 
-const mobileMainMargin = getSize({ s: 16, l: 16 })
-const mobileSketchScale = getSize({ s: 1.15, l: 2.75 })
-const mobileSketchTop = getSize({ s: 25, l: 120 })
-const mobileSketchCenterPadding = getSize({ s: 35, l: 84 })
+const mobileMainMargin = getSize({ s: 16, l: 32 })
+const mobileSketchScale = getSize({ s: 1.15, l: 2.8 })
+const mobileSketchTop = getSize({ s: 25, l: 100 })
+const mobileSketchCenterPadding = getSize({ s: 35, l: 105 })
 const mobileSketchLeading = getSize({ s: 32, l: 80 })
-const mobileSketchLowerWeight = getSize({ s: 5, l: 12 })
+const mobileSketchLowerWeight = getSize({ s: 5, l: 12.5 })
 const mobileNavLinkPadding = fontSizes.mobile.nav.mono
 const mobileNavLinkHeight = fontSizes.mobile.nav.mono
 const mobileNavHeight =
   mobileNavLinkPadding.mult(2)
     .add(mobileNavLinkHeight)
-const mobileNavMarginBottom = getSize({ s: 12, l: 12 })
+const mobileNavMarginBottom = getSize({ s: 12, l: 24 })
 
 const mobileGyroPaddingTop = getSize({ s: 56, l: 120 })
 const mobileGyroMarginBottom = getSize({ s: 28, l: 28 })
@@ -47,7 +47,7 @@ const mobileGyroTop = mobileSketchTop
   .add(mobileSketchCenterPadding)
   .add(mobileSketchLowerWeight)
   .add(mobileNavHeight)
-  .sub(getSize({ s: 4, l: -1 }))
+  .sub(getSize({ s: 4, l: 4 }))
 const mobileGyroBorder = getSize({ s: 1.5, l: 3.5 })
 const mobileGyroPadding = fontSizes.mobile.main.button.mult(0.5)
 const mobileGyroHeight = fontSizes.mobile.main.button.mult(1.2)
@@ -153,13 +153,10 @@ export const domSizes = {
       top: mobileNavHeight.add(mobileNavMarginBottom),
       margin: mobileMainMargin,
       padding: {
-        top: getSize({ s: 8, l: 8 }), // TODO
-        bottom: getSize({ s: 28, l: 28 }), // TODO
+        top: getSize({ s: 8, l: 40 }),
+        bottom: getSize({ s: 28, l: 56 }),
       },
       width: new Size({ vw: 100 }).sub(mobileMainMargin.mult(2))
-    },
-    text: {
-      innerMargin: getSize({ s: 16, l: 16 })
     },
     header: {
       height: mobileNavHeight,
@@ -176,7 +173,7 @@ export const domSizes = {
           vert: mobileGyroPadding
         },
         margin: {
-          bottom: getSize({ s: 28, l: 28 }) // TODO
+          bottom: getSize({ s: 28, l: 40 })
         },
         border: mobileGyroBorder,
         borderRadius: getSize({ s: 6, l: 12 })
@@ -187,7 +184,7 @@ export const domSizes = {
     },
     home: {
       blocker: {
-        border: getSize({ s: 2.5, l: 2.5 }),
+        border: getSize({ s: 2.5, l: 3.5 }),
         top: mobileGyroTop
           .add(mobileGyroBoxHeight)
           .add(mobileGyroMarginBottom)
@@ -196,25 +193,34 @@ export const domSizes = {
     contact: {
       linkList: {
         padding: {
-          top: getSize({ s: 12, l: 12 })
+          top: getSize({ s: 12, l: 36 })
         }
       }
     },
+    menu: {
+      innerMargin: getSize({ s: 28, l: 56 })
+    },
     workIndex: {
       thumbnail: {
-        margin: getSize({ s: 24, l: 24 }),
-        width: getSize({ s: 210, l: 210 })
+        margin: getSize({ s: 24, l: 42 }),
+        width: getSize({ s: 210, l: 500 })
       },
       tags: {
         padding: {
-          top: getSize({ s: 3.25, l: 3.25 })
+          top: getSize({ s: 3.25, l: 5.5 })
         }
       },
-      gap: getSize({ s: 20, l: 20 })
+      gap: getSize({ s: 20, l: 50 })
     },
     workPage: {
+      title: {
+        margin: getSize({ s: 12, l: 28 })
+      },
       media: {
         gap: mobileMainMargin.div(2)
+      },
+      details: {
+        margin: getSize({ s: 16, l: 36 })
       }
     }
   },
@@ -293,10 +299,10 @@ export const sketchSizes = {
       scale: mobileSketchScale,
       weight: {
         lower: mobileSketchLowerWeight,
-        glyph: getSize({ s: 3, l: 8 }),
+        glyph: getSize({ s: 3, l: 9 }),
         link: getSize({ s: 1.5, l: 4.5 })
       },
-      pointSize: getSize({ s: 7.75, l: 19.5 }),
+      pointSize: getSize({ s: 7.75, l: 20 }),
       leading: mobileSketchLeading,
       tracking: {
         workIn: new Size(2.75),
@@ -308,5 +314,19 @@ export const sketchSizes = {
         gravity: getSize({ s: 5.75, l: 12.5 })
       }
     },
+    line: {
+      weight: getSize({ s: 2, l: 4.5 }),
+      dash: getSize({ s: 5, l: 10 })
+    },
+    string: {
+      weight: {
+        glyph: getSize({ s: 2, l: 4.5 }),
+        link: getSize({ s: 1.5, l: 4 }),
+      },
+      pointSize: getSize({ s: 6, l: 15 }),
+    },
+    struct: {
+      padding: getSize({ s: 1.5, l: 2.5 })
+    }
   }
 }

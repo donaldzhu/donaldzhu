@@ -1,4 +1,4 @@
-import { ReactNode, SVGProps } from 'react'
+import type { ReactNode, SVGProps } from 'react'
 
 type SvgPropsType = {
   w: number,

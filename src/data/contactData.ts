@@ -1,8 +1,8 @@
-import { ReactComponent as AreNaSvg } from '../assets/qr-codes/arena.svg'
-import { ReactComponent as EmailSvg } from '../assets/qr-codes/email.svg'
-import { ReactComponent as InstagramSvg } from '../assets/qr-codes/instagram.svg'
-import { ReactComponent as LinkedInSvg } from '../assets/qr-codes/linkedin.svg'
-import { ContactDataInterface } from './dataTypes'
+import { ReactComponent as AreNaSvg } from '../assets/desktop/qr-codes/arena.svg'
+import { ReactComponent as EmailSvg } from '../assets/desktop/qr-codes/email.svg'
+import { ReactComponent as InstagramSvg } from '../assets/desktop/qr-codes/instagram.svg'
+import { ReactComponent as LinkedInSvg } from '../assets/desktop/qr-codes/linkedin.svg'
+import type { ContactDataInterface } from './dataTypes'
 
 const contactData: ContactDataInterface[] = [
   {
