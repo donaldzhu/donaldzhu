@@ -20,6 +20,8 @@ const createQueries = (sizePrefix: 'max' | 'min') =>
 
 export const minQueries = createQueries('min')
 export const maxQueries = createQueries('max')
+export const desktopQuery = minQueries.l
+export const mobileQuery = maxQueries.l
 
 export const getBreakptKey = () => {
   if (window.screen.width >= breakpts.xxl)

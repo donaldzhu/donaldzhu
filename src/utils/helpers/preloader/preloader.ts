@@ -50,6 +50,8 @@ export class VidPreloader extends MediaPreloader {
     this.threshold = 0.25
   }
 
+  // TODO: kinda sucks and implementation dependent
+  // will hopefully fix after switching to live streaming
   preload() {
     if (this.loadCount >= 2 || !this.autoPlayConfig.canAutoPlay) return Promise.resolve()
     return this.loadVid(this.src, this.threshold)

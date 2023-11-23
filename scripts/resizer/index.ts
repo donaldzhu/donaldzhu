@@ -1,11 +1,11 @@
-import resizeDesktop from './resizeDesktop'
-import resizeMobile from './resizeMobile'
+import { Device } from './constants'
+import resize from './resize'
 
 const config = {
-  resizeThumbnails: true,
+  resizeThumbnails: false,
   resizeWork: true,
-  includePages: [],
+  includePages: ['i-voted'],
   includeBreakpts: [],
 }
 
-resizeMobile(config)
+resize(Device.Desktop, config)

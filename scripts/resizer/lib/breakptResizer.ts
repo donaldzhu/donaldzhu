@@ -1,12 +1,11 @@
 import path from 'path'
-import fs from 'fs'
 import sharp from 'sharp'
 import ffmpeg from 'fluent-ffmpeg'
 import _ from 'lodash'
 import { globSync } from 'glob'
 import { BreakptConfig, BreakptResizeConfig, BreakptResizerConfig, MediaType, ImgExtension, MediaOptions, dimensionType, vidExtensionRegex } from './resizerTypes'
 import { mkdirIfNone, emptyDir, joinPaths, removeFile, parseMediaType, getExtension } from '../../utils'
-import { POSTER_SUBFOLDER } from '../constants'
+import { POSTER_SUBFOLDER } from './constants'
 
 class BreakpointResizer<K extends string> {
   source: string

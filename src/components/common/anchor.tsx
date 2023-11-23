@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import usePortfolioQuery from '../../hooks/usePortfolioQuery'
 import colors from '../../styles/colors'
 import { appendQuery, validateString } from '../../utils/commonUtils'
-import { minQueries } from '../../utils/queryUtil'
+import { desktopQuery } from '../../utils/queryUtil'
 import type { LinkProps } from 'react-router-dom'
 
 const Anchor = forwardRef<HTMLAnchorElement, LinkProps & { noQuery?: boolean }>(
@@ -27,7 +27,7 @@ const Anchor = forwardRef<HTMLAnchorElement, LinkProps & { noQuery?: boolean }>(
   })
 
 const HoverLink = styled(Link)`
-  @media ${minQueries.l} {
+  @media ${desktopQuery} {
     &:hover {
       color:${colors.activeElem};
     }

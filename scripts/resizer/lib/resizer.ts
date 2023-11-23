@@ -8,7 +8,7 @@ import chalk from 'chalk'
 import BreakpointResizer from './breakptResizer'
 import { BreakptConfig, ImgExtension, MediaOptions, MediaType, ResizePosterConfig, ResizerConfig, callbackType, dimensionType, vidExtensionRegex } from './resizerTypes'
 import { mkdirIfNone, emptyDir, joinPaths, removeFile, parseMediaType, getExtension, mapPromises, sortFileNames } from '../../utils'
-import { POSTER_SUBFOLDER } from '../constants'
+import { POSTER_SUBFOLDER } from './constants'
 
 class Resizer<K extends string> {
   source: string
@@ -86,7 +86,6 @@ class Resizer<K extends string> {
     const size = posterConfig ? posterConfig.vidSize :
       this.throwNoWidth(await imgObj.metadata(), fileName)
 
-    if (imgPath.match(/\.gif$/)) console.log(size)
     await this.mapBreakpts(async resizer => await resizer.resizeImg(imgObj, {
       size,
       fileName: posterConfig ? posterConfig.vidFileName : fileName,

@@ -64,18 +64,18 @@ var lodash_1 = __importDefault(require("lodash"));
 var resizer_1 = __importDefault(require("./lib/resizer"));
 var utils_1 = require("../utils");
 var constants_1 = require("./constants");
-var getNoSizesError = function (sizes, sizeType) {
-    return new Error("Breakpoint size has no ".concat(sizeType, " sizes: ").concat(sizes[sizeType]));
+var resizeUtils_1 = require("./resizeUtils");
+var _a = (0, resizeUtils_1.getPaths)(constants_1.Device.Mobile), SRC_THUMBNAIL_PATH = _a.SRC_THUMBNAIL_PATH, SRC_WORK_PATH = _a.SRC_WORK_PATH, DESTINATION_THUMBNAIL_PATH = _a.DESTINATION_THUMBNAIL_PATH, DESTINATION_WORK_PATH = _a.DESTINATION_WORK_PATH, SIZE_PATH = _a.SIZE_PATH, NATIVE_DIMENSIONS_PATH = _a.NATIVE_DIMENSIONS_PATH;
+var getBreakptConfig = function (breakpt, sizes, debugOnly) {
+    return {
+        breakpt: breakpt,
+        breakptWidth: constants_1.BREAKPT_WIDTHS[breakpt],
+        sizes: sizes,
+        blur: breakpt === "mobileFallback" ? constants_1.BLUR : undefined,
+        exclude: breakpt === "mobileFallback" ? ["video"] : undefined,
+        debugOnly: debugOnly
+    };
 };
-var getResizeCallback = function (array, rootPath) {
-    return function (fileName, size) { return array
-        .push([
-        fileName.replace(new RegExp("^".concat(rootPath, "/")), ''),
-        [size.width, size.height]
-    ]); };
-};
-var workFolder = 'asset-original/mobile/work';
-var destination = 'public/assets/mobile';
 var resizeMobile = function (config) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, resizeThumbnails, resizeWork, includePages, includeBreakpts, mobileBreakpts, breakptWidths, breakptSizes, pageSizes, nativeDimensions, thumbnailConfigs, thumbnails, work;
     return __generator(this, function (_b) {
@@ -84,12 +84,12 @@ var resizeMobile = function (config) { return __awaiter(void 0, void 0, void 0, 
                 _a = __assign(__assign({}, (constants_1.DEFAULT_CONFIG)), config), resizeThumbnails = _a.resizeThumbnails, resizeWork = _a.resizeWork, includePages = _a.includePages, includeBreakpts = _a.includeBreakpts;
                 mobileBreakpts = lodash_1.default.pick(constants_1.BREAKPT_WIDTHS, "s", "m", "l");
                 breakptWidths = includeBreakpts.length ? lodash_1.default.pick.apply(lodash_1.default, __spreadArray([mobileBreakpts], includeBreakpts, false)) : mobileBreakpts;
-                breakptSizes = (0, utils_1.readJsonSync)('scripts/resizer/sizes/mobile/all.json');
+                breakptSizes = (0, utils_1.readJsonSync)((0, utils_1.joinPaths)(SIZE_PATH, 'all.json'));
                 pageSizes = {};
                 (0, utils_1.loopObject)(breakptWidths, function (breakpt) {
                     var work = breakptSizes.work;
                     if (!work || Array.isArray(work))
-                        throw getNoSizesError(breakptSizes, 'work');
+                        throw (0, resizeUtils_1.getNoSizesError)(breakptSizes, constants_1.WORK_FOLDER);
                     (0, utils_1.loopObject)(work, function (pageId, sizes) {
                         return (pageSizes[pageId] || (pageSizes[pageId] = {}))[breakpt] = sizes;
                     });
@@ -98,18 +98,13 @@ var resizeMobile = function (config) { return __awaiter(void 0, void 0, void 0, 
                 thumbnailConfigs = (0, utils_1.mapObject)(breakptWidths, function (breakpt) {
                     var thumbnails = breakptSizes.thumbnails;
                     if (!thumbnails || !Array.isArray(thumbnails))
-                        throw getNoSizesError(breakptSizes, 'thumbnails');
-                    return {
-                        breakpt: breakpt,
-                        breakptWidth: constants_1.BREAKPT_WIDTHS[breakpt],
-                        sizes: [thumbnails[0]],
-                        debugOnly: !resizeThumbnails
-                    };
+                        throw (0, resizeUtils_1.getNoSizesError)(breakptSizes, constants_1.THUMBNAIL_FOLDER);
+                    return getBreakptConfig(breakpt, [thumbnails[0]], !resizeThumbnails);
                 });
                 thumbnails = [];
-                return [4, new resizer_1.default('asset-original/mobile/thumbnails', Object.values(thumbnailConfigs), {
-                        destination: (0, utils_1.joinPaths)(destination, constants_1.THUMBNAIL_FOLDER),
-                        callback: getResizeCallback(thumbnails, 'asset-original/mobile/thumbnails')
+                return [4, new resizer_1.default(SRC_THUMBNAIL_PATH, Object.values(thumbnailConfigs), {
+                        destination: DESTINATION_THUMBNAIL_PATH,
+                        callback: (0, resizeUtils_1.getResizeCallback)(thumbnails, SRC_THUMBNAIL_PATH)
                     }).init()];
             case 1:
                 _b.sent();
@@ -122,24 +117,18 @@ var resizeMobile = function (config) { return __awaiter(void 0, void 0, void 0, 
                                 case 0:
                                     includePage = !includePages.length || includePages.includes(pageId);
                                     debugOnly = !resizeWork || !includePage;
-                                    pageConfigs = (0, utils_1.mapObject)(breakptSizes, function (breakpt, sizes) { return ({
-                                        breakpt: breakpt,
-                                        breakptWidth: constants_1.BREAKPT_WIDTHS[breakpt],
-                                        sizes: sizes,
-                                        debugOnly: debugOnly
-                                    }); });
+                                    pageConfigs = (0, utils_1.mapObject)(breakptSizes, function (breakpt, sizes) { return getBreakptConfig(breakpt, sizes, debugOnly); });
                                     maxConfig = {
                                         breakpt: constants_1.MAX_FOLDER,
                                         sizes: pageConfigs.l.sizes,
                                         noResize: true,
                                         maxDimension: 1500 * 2000,
-                                        exclude: ["poster"],
                                         debugOnly: debugOnly
                                     };
                                     workPage = [];
-                                    return [4, new resizer_1.default((0, utils_1.joinPaths)(workFolder, pageId), __spreadArray(__spreadArray([], Object.values(pageConfigs), true), [maxConfig], false), {
-                                            destination: (0, utils_1.joinPaths)(destination, constants_1.WORK_FOLDER, pageId),
-                                            callback: getResizeCallback(workPage, (0, utils_1.joinPaths)(workFolder, pageId))
+                                    return [4, new resizer_1.default((0, utils_1.joinPaths)(SRC_WORK_PATH, pageId), __spreadArray(__spreadArray([], Object.values(pageConfigs), true), [maxConfig], false), {
+                                            destination: (0, utils_1.joinPaths)(DESTINATION_WORK_PATH, pageId),
+                                            callback: (0, resizeUtils_1.getResizeCallback)(workPage, (0, utils_1.joinPaths)(SRC_WORK_PATH, pageId))
                                         }).init()];
                                 case 1:
                                     _a.sent();
@@ -151,7 +140,7 @@ var resizeMobile = function (config) { return __awaiter(void 0, void 0, void 0, 
             case 2:
                 _b.sent();
                 nativeDimensions.work = work;
-                fs_1.default.writeFileSync('src/data/media/nativeDimensions/mobile.json', JSON.stringify(nativeDimensions));
+                fs_1.default.writeFileSync(NATIVE_DIMENSIONS_PATH, JSON.stringify(nativeDimensions));
                 return [2];
         }
     });

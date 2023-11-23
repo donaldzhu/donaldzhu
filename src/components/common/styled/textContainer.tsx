@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
-import { maxQueries } from '../../../utils/queryUtil'
+import { mobileQuery } from '../../../utils/queryUtil'
 
 const TextContainer = styled.div`
   ${mixins
@@ -13,7 +13,7 @@ const TextContainer = styled.div`
     padding-bottom: ${domSizes.desktop.sidebar.padding.vert.css};
   }
 
-  @media ${maxQueries.l} {
+  @media ${mobileQuery} {
     ${mixins.mobileBody()}
     padding-top: ${domSizes.mobile.app.padding.top.css};
     &>:last-child {

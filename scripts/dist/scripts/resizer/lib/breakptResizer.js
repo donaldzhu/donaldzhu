@@ -53,7 +53,7 @@ var lodash_1 = __importDefault(require("lodash"));
 var glob_1 = require("glob");
 var resizerTypes_1 = require("./resizerTypes");
 var utils_1 = require("../../utils");
-var constants_1 = require("../constants");
+var constants_1 = require("./constants");
 var BreakpointResizer = (function () {
     function BreakpointResizer(source, config, _a) {
         var _this = this;

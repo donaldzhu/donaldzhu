@@ -7,7 +7,7 @@ import { joinPaths } from '../../../utils/commonUtils'
 import useForwardedRef from '../../../hooks/useForwaredRef'
 import { MediaFileType, MediaSize, MediaType } from '../../../utils/helpers/preloader/preloadUtils'
 import { percent, toPercent } from '../../../utils/sizeUtils'
-import { maxQueries } from '../../../utils/queryUtil'
+import { mobileQuery } from '../../../utils/queryUtil'
 import useIsMobile from '../../../hooks/useIsMobile'
 import PreloadMedia from './preloadMedia'
 import type { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
@@ -75,15 +75,14 @@ const ZoomMedia = forwardRef((props: ZoomMediaProps, ref: MediaRef) => {
 
 const MediaContainer = styled.div<StyledZoomMediaProps>`
   ${mixins.flex('initial', 'center')}
-
+  width: 100%;
   img, video {
     cursor: zoom-in;
     object-fit: cover;
     width: ${({ $width }: StyledZoomMediaProps) => $width ?? percent(100)};
 
-    @media ${maxQueries.l} {
+    @media ${mobileQuery} {
       padding-bottom: 2vw;
-
     }
   }
 `

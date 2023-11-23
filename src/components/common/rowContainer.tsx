@@ -4,27 +4,24 @@ import styled from 'styled-components'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import { arrayify, validateString } from '../../utils/commonUtils'
-import { maxQueries, minQueries } from '../../utils/queryUtil'
+import { Device, desktopQuery, mobileQuery } from '../../utils/queryUtil'
 import ToolTip from './toolTip'
 import type { ReactNode } from 'react'
 
 interface RowContainerProps {
   className?: string
   cols?: number[]
-  width?: string
   toolTip?: ReactNode
   children?: ReactNode
 }
 
 interface StyledRowContainerProps {
-  $width: string | undefined
   $cols: number[]
 }
 
 const RowContainer = forwardRef<HTMLDivElement, RowContainerProps>(({
   className,
   cols,
-  width,
   children,
   toolTip
 }, ref) => {
@@ -33,7 +30,6 @@ const RowContainer = forwardRef<HTMLDivElement, RowContainerProps>(({
     <Container className={className} ref={ref}>
       {toolTip && <ToolTip>{toolTip}</ToolTip>}
       <Row
-        $width={width}
         $cols={cols ?? Array(childrenLength).fill(1)}>
         {children}
       </Row>
@@ -45,28 +41,30 @@ const Container = styled.div`
   ${mixins.flex('center', 'center')};
 `
 
+const getChildrenStyles = (device: Device) => ({ $cols }: StyledRowContainerProps) =>
+  validateString($cols, $cols.map((col, i) => `
+    >:nth-child(${i + 1}){
+      width: calc((100% - ${domSizes[device].workPage.media.gap.css} * ${$cols.length - 1}) * ${col / _.sum($cols)});
+    }
+  `).join(''))
+
+
+const childrenMargin = (device: Device) => mixins.innerMargin(domSizes[device].workPage.media.gap.css, 'left')
+
 const Row = styled.div<StyledRowContainerProps>`
   display: flex;
   height: 100%;
 
-  @media ${maxQueries.l} {
-    width: 96%;
-    ${({ $cols }) =>
-    validateString($cols, $cols.map((col, i) => `
-      >:nth-child(${i + 1}){
-        width: calc((100% - ${domSizes.mobile.workPage.media.gap.css} * ${$cols.length - 1}) * ${col / _.sum($cols)});
-      }`).join(''))}
-    ${mixins.innerMargin(domSizes.mobile.workPage.media.gap.css, 'left')}
+  @media ${desktopQuery} {
+    width: 100%;
+    ${getChildrenStyles(Device.desktop)}
+    ${childrenMargin(Device.desktop)}
   }
 
-  @media ${minQueries.l} {
-    width: 100%;
-    ${({ $cols }) =>
-    validateString($cols, $cols.map((col, i) => `
-      >:nth-child(${i + 1}){
-        width: calc((100% - ${domSizes.desktop.workPage.media.gap.css} * ${$cols.length - 1}) * ${col / _.sum($cols)});
-      }`).join(''))}
-    ${mixins.innerMargin(domSizes.desktop.workPage.media.gap.css, 'left')}
+  @media ${mobileQuery} {
+    width: 96%;
+    ${getChildrenStyles(Device.mobile)}
+    ${childrenMargin(Device.mobile)}
   }
 
   > svg {

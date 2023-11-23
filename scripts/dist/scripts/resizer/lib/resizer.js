@@ -58,7 +58,7 @@ var chalk_1 = __importDefault(require("chalk"));
 var breakptResizer_1 = __importDefault(require("./breakptResizer"));
 var resizerTypes_1 = require("./resizerTypes");
 var utils_1 = require("../../utils");
-var constants_1 = require("../constants");
+var constants_1 = require("./constants");
 var Resizer = (function () {
     function Resizer(source, breakptConfigs, _a) {
         var _this = this;
@@ -174,8 +174,6 @@ var Resizer = (function () {
                         _c.label = 3;
                     case 3:
                         size = _a;
-                        if (imgPath.match(/\.gif$/))
-                            console.log(size);
                         return [4, this.mapBreakpts(function (resizer) { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {

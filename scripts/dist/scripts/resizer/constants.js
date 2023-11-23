@@ -4,23 +4,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TOOL_TIP_PERCENTAGE = exports.MAIN_RESIZE_PERCENTAGE = exports.DEFAULT_CONFIG = exports.BREAKPT_WIDTHS = exports.BLUR = exports.MAX_FOLDER = exports.NATIVE_DIMENSIONS_PATH = exports.SIZE_PATH = exports.POSTER_SUBFOLDER = exports.SRC_WORK_PATH = exports.WORK_FOLDER = exports.SRC_THUMBNAIL_PATH = exports.THUMBNAIL_FOLDER = exports.SRC_PATH = exports.DESTINATION_ROOT = exports.ROOT_PATH = void 0;
+exports.DEFAULT_CONFIG = exports.BREAKPT_WIDTHS = exports.Device = exports.MOBILE_MAX_SIZE = exports.DESKTOP_MAX_SIZE = exports.BLUR = exports.MAX_FOLDER = exports.WORK_FOLDER = exports.THUMBNAIL_FOLDER = void 0;
 var breakpoints_1 = __importDefault(require("../../src/data/breakpoints"));
-var utils_1 = require("../utils");
-exports.ROOT_PATH = '';
-exports.DESTINATION_ROOT = 'public/assets/desktop';
-exports.SRC_PATH = (0, utils_1.joinPaths)(exports.ROOT_PATH, 'asset-original', 'desktop');
 exports.THUMBNAIL_FOLDER = 'thumbnails';
-exports.SRC_THUMBNAIL_PATH = (0, utils_1.joinPaths)(exports.SRC_PATH, exports.THUMBNAIL_FOLDER);
 exports.WORK_FOLDER = 'work';
-exports.SRC_WORK_PATH = (0, utils_1.joinPaths)(exports.SRC_PATH, exports.WORK_FOLDER);
-exports.POSTER_SUBFOLDER = 'posters';
-exports.SIZE_PATH = 'scripts/resizer/sizes/desktop';
-exports.NATIVE_DIMENSIONS_PATH = 'src/data/media/nativeDimensions/desktop.json';
 exports.MAX_FOLDER = 'max';
 exports.BLUR = 4;
+exports.DESKTOP_MAX_SIZE = 2500 * 3000;
+exports.MOBILE_MAX_SIZE = 1500 * 2000;
+var Device;
+(function (Device) {
+    Device["Mobile"] = "mobile";
+    Device["Desktop"] = "desktop";
+})(Device || (exports.Device = Device = {}));
 exports.BREAKPT_WIDTHS = (_a = {},
     _a["desktopFallback"] = 600,
+    _a["mobileFallback"] = 250,
     _a["s"] = breakpoints_1.default.s,
     _a["m"] = breakpoints_1.default.m,
     _a["l"] = breakpoints_1.default.l,
@@ -33,5 +32,3 @@ exports.DEFAULT_CONFIG = {
     includePages: [],
     includeBreakpts: []
 };
-exports.MAIN_RESIZE_PERCENTAGE = 0.7;
-exports.TOOL_TIP_PERCENTAGE = 0.5;

@@ -6,7 +6,7 @@ import mixins from './styles/mixins'
 import { domSizes } from './styles/sizes'
 import useCanAutoPlay from './hooks/useCanAutoPlay'
 import useIsMobile from './hooks/useIsMobile'
-import { minQueries } from './utils/queryUtil'
+import { desktopQuery } from './utils/queryUtil'
 import PageMobileTemp from './components/mobileTemp/pageMobileTemp'
 import HomeMobileTemp from './components/mobileTemp/homeMobileTemp'
 import MobileRoutes from './components/mobile/routes'
@@ -77,7 +77,7 @@ const StyledGlobal = styled.main`
     font-size: ${fontSizes.desktop.title.css};
   }
 
-  @media ${minQueries.l} {
+  @media ${desktopQuery} {
     width: ${domSizes.desktop.app.width.css};
     a:hover {
       color: ${colorConfig.activeElem};

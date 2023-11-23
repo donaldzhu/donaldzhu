@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { loopObject } from '../utils/commonUtils'
-import { minQueries } from '../utils/queryUtil'
+import { desktopQuery } from '../utils/queryUtil'
 import { em } from '../utils/sizeUtils'
 import { fontParams } from './fonts'
 import { domSizes } from './sizes'
@@ -78,7 +78,7 @@ const slant = () => fontVar({ slnt: -5, CRSV: 1, MONO: fontParams.monoVariable }
 const underline = (thickness?: string, offset?: string) => `
   text-decoration: underline;
   text-decoration-thickness: ${thickness ?? 'inherit'};
-  @media ${minQueries.l} {
+  @media ${desktopQuery} {
     text-underline-offset: ${offset ?? em(0.125)};
   }
   text-underline-offset: ${offset ?? em(0.2)};

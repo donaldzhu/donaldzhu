@@ -64,25 +64,10 @@ var lodash_1 = __importDefault(require("lodash"));
 var resizer_1 = __importDefault(require("./lib/resizer"));
 var utils_1 = require("../utils");
 var constants_1 = require("./constants");
-var createBreakptMap = function (mapObj, callback) {
-    var _a;
-    var map = (_a = {},
-        _a["desktopFallback"] = undefined,
-        _a["l"] = undefined,
-        _a["xl"] = undefined,
-        _a["xxl"] = undefined,
-        _a);
-    (0, utils_1.loopObject)(mapObj, function (breakpt, mapValue) {
-        map[breakpt] = callback(breakpt, mapValue);
-    });
-    return map;
-};
-var getNoSizesError = function (sizes, sizeType) {
-    return new Error("Breakpoint size has no ".concat(sizeType, " sizes: ").concat(sizes[sizeType]));
-};
+var resizeUtils_1 = require("./resizeUtils");
+var _a = (0, resizeUtils_1.getPaths)(constants_1.Device.Desktop), SRC_THUMBNAIL_PATH = _a.SRC_THUMBNAIL_PATH, SRC_WORK_PATH = _a.SRC_WORK_PATH, DESTINATION_THUMBNAIL_PATH = _a.DESTINATION_THUMBNAIL_PATH, DESTINATION_WORK_PATH = _a.DESTINATION_WORK_PATH, SIZE_PATH = _a.SIZE_PATH, NATIVE_DIMENSIONS_PATH = _a.NATIVE_DIMENSIONS_PATH;
 var getBreakptConfig = function (breakpt, sizes, debugOnly) {
-    sizes.map(function (size) { return size[1] *= size[0].match(/^toolTips\//) ?
-        constants_1.TOOL_TIP_PERCENTAGE : constants_1.MAIN_RESIZE_PERCENTAGE; });
+    sizes.map(function (size) { return size[1] *= size[0].match(/^toolTips\//) ? 0.5 : 0.7; });
     return {
         breakpt: breakpt,
         breakptWidth: constants_1.BREAKPT_WIDTHS[breakpt],
@@ -92,15 +77,6 @@ var getBreakptConfig = function (breakpt, sizes, debugOnly) {
         debugOnly: debugOnly
     };
 };
-var getResizeCallback = function (array, rootPath) {
-    return function (fileName, size) { return array
-        .push([
-        fileName.replace(new RegExp("^".concat(rootPath, "/")), ''),
-        [size.width, size.height]
-    ]); };
-};
-var workFolder = constants_1.SRC_WORK_PATH;
-var destination = (0, utils_1.joinPaths)(constants_1.ROOT_PATH, constants_1.DESTINATION_ROOT);
 var resizeDesktop = function (config) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, resizeThumbnails, resizeWork, includePages, includeBreakpts, desktopBreakpts, breakptWidths, allBreakptSizes, pageSizes, nativeDimensions, thumbnailConfigs, thumbnails, work;
     return __generator(this, function (_b) {
@@ -109,29 +85,29 @@ var resizeDesktop = function (config) { return __awaiter(void 0, void 0, void 0,
                 _a = __assign(__assign({}, (constants_1.DEFAULT_CONFIG)), config), resizeThumbnails = _a.resizeThumbnails, resizeWork = _a.resizeWork, includePages = _a.includePages, includeBreakpts = _a.includeBreakpts;
                 desktopBreakpts = lodash_1.default.pick(constants_1.BREAKPT_WIDTHS, "desktopFallback", "l", "xl", "xxl");
                 breakptWidths = includeBreakpts.length ? lodash_1.default.pick.apply(lodash_1.default, __spreadArray([desktopBreakpts], includeBreakpts, false)) : desktopBreakpts;
-                allBreakptSizes = createBreakptMap(breakptWidths, function (breakpt) {
-                    return (0, utils_1.readJsonSync)((0, utils_1.joinPaths)(constants_1.SIZE_PATH, "".concat(breakpt, ".json")));
+                allBreakptSizes = (0, utils_1.mapObject)(breakptWidths, function (breakpt) {
+                    return (0, utils_1.readJsonSync)((0, utils_1.joinPaths)(SIZE_PATH, "".concat(breakpt, ".json")));
                 });
                 pageSizes = {};
-                (0, utils_1.loopObject)(allBreakptSizes, function (breakpt, allSizes) {
+                (0, utils_1.mapObject)(allBreakptSizes, function (breakpt, allSizes) {
                     var work = allSizes.work;
                     if (!work || Array.isArray(work))
-                        throw getNoSizesError(allSizes, 'work');
-                    (0, utils_1.loopObject)(work, function (pageId, sizes) {
+                        throw (0, resizeUtils_1.getNoSizesError)(allSizes, constants_1.WORK_FOLDER);
+                    (0, utils_1.mapObject)(work, function (pageId, sizes) {
                         return (pageSizes[pageId] || (pageSizes[pageId] = {}))[breakpt] = sizes;
                     });
                 });
                 nativeDimensions = {};
-                thumbnailConfigs = createBreakptMap(allBreakptSizes, function (breakpt, sizes) {
+                thumbnailConfigs = (0, utils_1.mapObject)(allBreakptSizes, function (breakpt, sizes) {
                     var thumbnails = sizes.thumbnails;
                     if (!thumbnails || !Array.isArray(thumbnails))
-                        throw getNoSizesError(sizes, 'thumbnails');
+                        throw (0, resizeUtils_1.getNoSizesError)(sizes, constants_1.THUMBNAIL_FOLDER);
                     return getBreakptConfig(breakpt, [thumbnails[0]], !resizeThumbnails);
                 });
                 thumbnails = [];
-                return [4, new resizer_1.default(constants_1.SRC_THUMBNAIL_PATH, Object.values(thumbnailConfigs), {
-                        destination: (0, utils_1.joinPaths)(destination, constants_1.THUMBNAIL_FOLDER),
-                        callback: getResizeCallback(thumbnails, constants_1.SRC_THUMBNAIL_PATH)
+                return [4, new resizer_1.default(SRC_THUMBNAIL_PATH, Object.values(thumbnailConfigs), {
+                        destination: DESTINATION_THUMBNAIL_PATH,
+                        callback: (0, resizeUtils_1.getResizeCallback)(thumbnails, SRC_THUMBNAIL_PATH)
                     }).init()];
             case 1:
                 _b.sent();
@@ -144,7 +120,7 @@ var resizeDesktop = function (config) { return __awaiter(void 0, void 0, void 0,
                                 case 0:
                                     includePage = !includePages.length || includePages.includes(pageId);
                                     debugOnly = !resizeWork || !includePage;
-                                    pageConfigs = createBreakptMap(breakptSizes, function (breakpt, sizes) { return getBreakptConfig(breakpt, sizes, debugOnly); });
+                                    pageConfigs = (0, utils_1.mapObject)(breakptSizes, function (breakpt, sizes) { return getBreakptConfig(breakpt, sizes, debugOnly); });
                                     maxConfig = {
                                         breakpt: constants_1.MAX_FOLDER,
                                         sizes: pageConfigs.xxl.sizes,
@@ -154,9 +130,9 @@ var resizeDesktop = function (config) { return __awaiter(void 0, void 0, void 0,
                                         debugOnly: debugOnly
                                     };
                                     workPage = [];
-                                    return [4, new resizer_1.default((0, utils_1.joinPaths)(workFolder, pageId), __spreadArray(__spreadArray([], Object.values(pageConfigs), true), [maxConfig], false), {
-                                            destination: (0, utils_1.joinPaths)(destination, constants_1.WORK_FOLDER, pageId),
-                                            callback: getResizeCallback(workPage, (0, utils_1.joinPaths)(constants_1.SRC_WORK_PATH, pageId))
+                                    return [4, new resizer_1.default((0, utils_1.joinPaths)(SRC_WORK_PATH, pageId), __spreadArray(__spreadArray([], Object.values(pageConfigs), true), [maxConfig], false), {
+                                            destination: (0, utils_1.joinPaths)(DESTINATION_WORK_PATH, pageId),
+                                            callback: (0, resizeUtils_1.getResizeCallback)(workPage, (0, utils_1.joinPaths)(SRC_WORK_PATH, pageId))
                                         }).init()];
                                 case 1:
                                     _a.sent();
@@ -168,7 +144,7 @@ var resizeDesktop = function (config) { return __awaiter(void 0, void 0, void 0,
             case 2:
                 _b.sent();
                 nativeDimensions.work = work;
-                fs_1.default.writeFileSync(constants_1.NATIVE_DIMENSIONS_PATH, JSON.stringify(nativeDimensions));
+                fs_1.default.writeFileSync(NATIVE_DIMENSIONS_PATH, JSON.stringify(nativeDimensions));
                 return [2];
         }
     });

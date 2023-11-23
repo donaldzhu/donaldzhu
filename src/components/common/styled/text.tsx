@@ -1,15 +1,15 @@
 import styled from 'styled-components'
 import { fontLineHeights, fontParams, fontSizes } from '../../../styles/fonts'
 import mixins from '../../../styles/mixins'
-import { maxQueries, minQueries } from '../../../utils/queryUtil'
+import { desktopQuery, mobileQuery } from '../../../utils/queryUtil'
 
 const Text = styled.p`
   margin: 0;
 
-  @media ${maxQueries.l} {
+  @media ${mobileQuery} {
     font-size: ${fontSizes.mobile.text.mono.css};
   }
-  @media ${minQueries.l} {
+  @media ${desktopQuery} {
     font-size: ${fontSizes.desktop.text.mono.css};
   }
   font-weight: ${fontParams.semiLight};
@@ -22,7 +22,7 @@ const Text = styled.p`
 
   b {
     font-size: ${fontSizes.mobile.text.sans.css};
-    @media ${minQueries.l} {
+    @media ${desktopQuery} {
       font-size: ${fontSizes.desktop.text.sans.css};
     }
     letter-spacing: 0;
