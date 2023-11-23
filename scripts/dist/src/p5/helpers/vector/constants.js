@@ -26,10 +26,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createMobilePhysicsSettings = exports.DEFAULT_SETTING = exports.SPACE_DELIMITER = exports.GLYPH_NAMES = exports.X_HEIGHT = void 0;
+exports.createMobilePhysicsSettings = exports.DEFAULT_SETTING = exports.SPACE_DELIMITER = exports.VectorDrawMethod = exports.X_HEIGHT = void 0;
 var easing = __importStar(require("easing-utils"));
 var lodash_1 = __importDefault(require("lodash"));
-var spacings_json_1 = __importDefault(require("../../../data/vector/spacings.json"));
 var commonUtils_1 = require("../../../utils/commonUtils");
 var size_1 = __importDefault(require("../../../utils/helpers/size"));
 var sizeUtils_1 = require("../../../utils/sizeUtils");
@@ -41,11 +40,17 @@ var Axes;
     Axes["y"] = "y";
 })(Axes || (Axes = {}));
 exports.X_HEIGHT = 44;
-exports.GLYPH_NAMES = (0, commonUtils_1.typedKeys)(spacings_json_1.default).filter(function (char) { return char.length === 1; });
+var VectorDrawMethod;
+(function (VectorDrawMethod) {
+    VectorDrawMethod["DrawLinks"] = "drawLinks";
+    VectorDrawMethod["DrawPoints"] = "drawPoints";
+    VectorDrawMethod["DrawVolume"] = "drawVolume";
+})(VectorDrawMethod || (exports.VectorDrawMethod = VectorDrawMethod = {}));
 exports.SPACE_DELIMITER = ' ';
 exports.DEFAULT_SETTING = {
     x: 0,
     y: 0,
+    w: undefined,
     scale: new size_1.default(1),
     position: [1, 1],
     align: 1,
@@ -67,6 +72,7 @@ exports.DEFAULT_SETTING = {
     volumeColor: 0,
     correctVolumeStroke: false,
     easing: "linear",
+    noMap: false,
     squareMap: true,
     mapFunction: function (stillVector, mouseVector) {
         var _this = this;
@@ -89,21 +95,24 @@ exports.DEFAULT_SETTING = {
     },
     mapMotionFunction: function (rotationVector, accelVector, rollingAccelFilter, bodies, engine, minFrictionAir, debug) {
         var _this = this;
+        var _a;
         var x = rotationVector.x, y = rotationVector.y;
         var unmappedValues = {
             x: x,
             y: (90 - Math.abs(Math.abs((y % 180)) - 90)) *
                 (y < 0 || y > 180 ? -1 : 1)
         };
+        var dist = Math.hypot(bodies.constraint.pointA.x - bodies.active.position.x, bodies.constraint.pointA.y - bodies.active.position.y);
+        var positionMax = 5;
+        var positionFriction = (0, commonUtils_1.map)(Math.min(dist, positionMax), positionMax, 0, 0, 0.6);
+        var accelMax = 10;
+        var accelFriction = (0, commonUtils_1.map)(Math.min((_a = rollingAccelFilter.mean) !== null && _a !== void 0 ? _a : 0, accelMax), 0, accelMax, 0, 0.25);
         rollingAccelFilter.add(Math.max(Math.abs(accelVector.x), Math.abs(accelVector.y)));
         Object.assign(engine.gravity, (0, commonUtils_1.mapObject)(unmappedValues, function (axis, unmapped) {
-            var _a, _b;
             var unfiltered = unmapped / 90;
             var eased = easing[_this.easing](Math.abs(unfiltered));
             var acceleration = (0, commonUtils_1.map)(Math.abs(unmapped), 90, 0) * accelVector[axis];
-            var accelFriction = (0, commonUtils_1.map)(Math.min((_a = rollingAccelFilter.mean) !== null && _a !== void 0 ? _a : 0, 10), 0, 10, 0, 0.5);
-            var dist = Math.hypot(bodies.constraint.pointA.x - bodies.active.position.x, bodies.constraint.pointA.y - bodies.active.position.y);
-            bodies.active.frictionAir = (0, commonUtils_1.map)(Math.min((_b = rollingAccelFilter.mean) !== null && _b !== void 0 ? _b : 0, 10), 0, 10, 0, 0.5) + minFrictionAir;
+            bodies.active.frictionAir = accelFriction + positionFriction + minFrictionAir;
             return acceleration * (axis === 'y' ? -1 : 1) * 0.675 +
                 eased * Math.sign(unfiltered) * sizes_1.sketchSizes.mobile.main.physics.gravity.value;
         }));
@@ -112,7 +121,6 @@ exports.DEFAULT_SETTING = {
             if (p5_1 && enabled)
                 (0, p5Utils_1.wrapDrawingContext)(p5_1, function () {
                     if (debug.name === 'W') {
-                        p5_1.text('x: ' + lodash_1.default.round(p5_1.dist(bodies.active.position.x, bodies.active.position.y, bodies.constraint.pointA.x, bodies.constraint.pointA.y), 3), 10, 20);
                     }
                 });
         }
@@ -122,7 +130,7 @@ exports.DEFAULT_SETTING = {
 var createMobilePhysicsSettings = function () { return ({
     active: {
         density: 5,
-        frictionAir: lodash_1.default.random(0.01, 0.03, true),
+        frictionAir: lodash_1.default.random(0.0125, 0.03, true),
         collisionFilter: { group: -1 }
     },
     constraint: {

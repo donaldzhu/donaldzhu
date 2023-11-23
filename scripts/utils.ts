@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { ImgExtention, MediaType, VidExtension } from './resizer/lib/resizerTypes'
+import { MediaType, imgExtensionRegex, vidExtensionRegex } from './resizer/lib/resizerTypes'
 import path from 'path'
 
 export const mkdirIfNone = (folderPath: string) => {
@@ -41,8 +41,8 @@ export const removeFile = (path: string) => {
 }
 
 export const parseMediaType = (fileName: string) => {
-  const imgRegex = new RegExp(`.(${ImgExtention.Gif}|${ImgExtention.Webp}|${ImgExtention.Png})$`, 'i')
-  const vidRegex = new RegExp(`.${VidExtension.Webm}$`, 'i')
+  const imgRegex = new RegExp(`.(${imgExtensionRegex})$`, 'i')
+  const vidRegex = new RegExp(`.(${vidExtensionRegex})$`, 'i')
   if (fileName.match(imgRegex) || fileName.match(/\*$/)) return MediaType.Image
   if (fileName.match(vidRegex)) return MediaType.Video
   throw new Error(`${fileName} is neither an image nor a video.`)
@@ -50,17 +50,37 @@ export const parseMediaType = (fileName: string) => {
 
 export const getExtension = (fileName: string) => path.extname(fileName).slice(1)
 
-export const mapObject = <K extends string, V>(
-  object: Record<K, V>,
-  callback: (key: K, value: V, object: Record<K, V>) => void
+export const loopObject = <T extends object>(
+  object: T,
+  callback: (key: keyof T, value: T[keyof T], object: T) => void
 ) => {
-  const keys = Object.keys(object) as K[]
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
+  const keys = typedKeys(object)
+  keys.forEach(key => {
     const value = object[key]
     callback(key, value, object)
-  }
+  })
+
   return object
+}
+
+export function typedKeys<T extends object>(object: T): (keyof T)[]
+export function typedKeys<T extends string>(object: object): T[]
+export function typedKeys<T extends (object | string)>(object: T) {
+  return Object.keys(object) as (T extends object ? keyof T : T)[]
+}
+
+export const mapObject = <T extends object, R>(
+  object: T,
+  callback: (key: keyof T, value: T[keyof T]) => R
+) => {
+  const newObject: Partial<Record<keyof T, R>> = {}
+  const keys = typedKeys(object)
+  keys.forEach(key => {
+    const value = object[key]
+    newObject[key] = callback(key, value)
+  })
+
+  return newObject as Record<keyof T, R>
 }
 
 export const mapPromises = async <T, R>(

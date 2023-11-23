@@ -56,6 +56,7 @@ var fluent_ffmpeg_1 = __importDefault(require("fluent-ffmpeg"));
 var glob_1 = require("glob");
 var chalk_1 = __importDefault(require("chalk"));
 var breakptResizer_1 = __importDefault(require("./breakptResizer"));
+var resizerTypes_1 = require("./resizerTypes");
 var utils_1 = require("../../utils");
 var constants_1 = require("../constants");
 var Resizer = (function () {
@@ -160,7 +161,7 @@ var Resizer = (function () {
                 switch (_c.label) {
                     case 0:
                         imgPath = posterConfig ? fileName : this.getSubpath(fileName);
-                        animated = (0, utils_1.getExtension)(imgPath) === "gif";
+                        animated = (0, utils_1.getExtension)(imgPath) === resizerTypes_1.ImgExtension.Gif;
                         imgObj = (0, sharp_1.default)(imgPath, { animated: animated });
                         if (!posterConfig) return [3, 1];
                         _a = posterConfig.vidSize;
@@ -320,10 +321,11 @@ var Resizer = (function () {
         console.log("".concat(chalk_1.default.gray('Resized: ')).concat(chalk_1.default[color](fileName)));
     };
     Resizer.prototype.getScreenshotPath = function (filename) {
-        return (0, utils_1.joinPaths)(path_1.default.dirname(filename), constants_1.POSTER_SUBFOLDER, path_1.default.basename(filename).replace("webm", "png"));
+        var regex = new RegExp("(".concat(resizerTypes_1.vidExtensionRegex, ")$"));
+        return (0, utils_1.joinPaths)(path_1.default.dirname(filename), constants_1.POSTER_SUBFOLDER, path_1.default.basename(filename).replace(regex, resizerTypes_1.ImgExtension.Png));
     };
     Resizer.prototype.getPosterPath = function (filename) {
-        return filename.replace("png", "webp");
+        return filename.replace(resizerTypes_1.ImgExtension.Png, resizerTypes_1.ImgExtension.Webp);
     };
     Resizer.prototype.throwNoWidth = function (metadata, fileName) {
         var width = metadata.width, height = metadata.height, pageHeight = metadata.pageHeight;

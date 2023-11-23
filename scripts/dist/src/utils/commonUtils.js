@@ -23,8 +23,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getIsMobile = exports.TO_DEG = exports.isBrowser = exports.getBlankCoors = exports.filterFalsy = exports.getToolTipPoints = exports.appendQuery = exports.toPairs = exports.keysToObject = exports.mapObject = exports.typedKeys = exports.loopObject = exports.partition = exports.sortLike = exports.shuffleTo = exports.arrayify = exports.repeat = exports.repeatMap = exports.map = exports.validateString = exports.joinPaths = exports.capitalize = void 0;
-var breakpoints_1 = __importDefault(require("../data/breakpoints"));
+exports.getParsedWorkData = exports.isBrowser = exports.getBlankCoors = exports.filterFalsy = exports.getToolTipPoints = exports.appendQuery = exports.toPairs = exports.keysToObject = exports.mapObject = exports.typedKeys = exports.loopObject = exports.partition = exports.sortLike = exports.shuffleTo = exports.arrayify = exports.repeat = exports.repeatMap = exports.map = exports.validateString = exports.joinPaths = exports.capitalize = void 0;
+var workData_json_1 = __importDefault(require("../data/work/workData.json"));
 var capitalize = function (string) { return string.charAt(0)
     .toUpperCase() + string.slice(1); };
 exports.capitalize = capitalize;
@@ -142,10 +142,17 @@ function getBlankCoors(withZ) {
     return withZ ? __assign(__assign({}, withoutZ), { z: 0 }) : withoutZ;
 }
 exports.getBlankCoors = getBlankCoors;
-function isBrowser(browserToMatch) {
+var isBrowser = function (browserToMatch) {
     return (0, exports.arrayify)(browserToMatch).some(function (browser) { return navigator.userAgent.includes(browser); });
-}
+};
 exports.isBrowser = isBrowser;
-exports.TO_DEG = 180 / Math.PI;
-var getIsMobile = function () { return window.innerWidth <= breakpoints_1.default.l; };
-exports.getIsMobile = getIsMobile;
+var getParsedWorkData = function (deviceType) {
+    return workData_json_1.default
+        .sort(function (a, b) {
+        var _a, _b;
+        return ((_a = a.order[deviceType]) !== null && _a !== void 0 ? _a : Infinity) -
+            ((_b = b.order[deviceType]) !== null && _b !== void 0 ? _b : Infinity);
+    })
+        .filter(function (page) { return page.enabled; });
+};
+exports.getParsedWorkData = getParsedWorkData;

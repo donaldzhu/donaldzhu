@@ -1,10 +1,11 @@
-import resize from './resize'
+import resizeDesktop from './resizeDesktop'
+import resizeMobile from './resizeMobile'
 
 const config = {
   resizeThumbnails: true,
-  resizeWork: false,
+  resizeWork: true,
   includePages: [],
   includeBreakpts: [],
 }
 
-resize(config)
+resizeMobile(config)

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import toSpaceCase from 'to-space-case'
-import nativeDimensions from '../../../data/media/nativeDimensions.json'
+import nativeDimensions from '../../../data/media/nativeDimensions/desktop.json'
 import workData from '../../../data/work/workData.json'
 import {
   capitalize,
@@ -56,7 +56,7 @@ class PreloadManager {
 
     this.isComplete = false
     this.enabled = true
-    this.verboseLevel = VerboseLevel.Quiet
+    this.verboseLevel = VerboseLevel.Diagnostic
 
     this.autoPlayConfig = { canAutoPlay }
     this.loadVid = loadVid

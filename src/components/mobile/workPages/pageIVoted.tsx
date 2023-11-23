@@ -7,7 +7,7 @@ const PageIVoted = ({ WorkInfo, Description }: WorkPageContentProps) => {
   return (
     <>
       <RowContainer>
-        <WorkImg src='mobile-1.webp' />
+        <WorkImg src='1.webp' />
       </RowContainer>
       <WorkInfo />
       <Description />

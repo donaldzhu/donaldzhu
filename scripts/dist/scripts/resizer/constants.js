@@ -8,19 +8,21 @@ exports.TOOL_TIP_PERCENTAGE = exports.MAIN_RESIZE_PERCENTAGE = exports.DEFAULT_C
 var breakpoints_1 = __importDefault(require("../../src/data/breakpoints"));
 var utils_1 = require("../utils");
 exports.ROOT_PATH = '';
-exports.DESTINATION_ROOT = 'public/assets';
-exports.SRC_PATH = (0, utils_1.joinPaths)(exports.ROOT_PATH, 'asset-original');
+exports.DESTINATION_ROOT = 'public/assets/desktop';
+exports.SRC_PATH = (0, utils_1.joinPaths)(exports.ROOT_PATH, 'asset-original', 'desktop');
 exports.THUMBNAIL_FOLDER = 'thumbnails';
 exports.SRC_THUMBNAIL_PATH = (0, utils_1.joinPaths)(exports.SRC_PATH, exports.THUMBNAIL_FOLDER);
 exports.WORK_FOLDER = 'work';
 exports.SRC_WORK_PATH = (0, utils_1.joinPaths)(exports.SRC_PATH, exports.WORK_FOLDER);
 exports.POSTER_SUBFOLDER = 'posters';
-exports.SIZE_PATH = 'scripts/resizer/sizes';
-exports.NATIVE_DIMENSIONS_PATH = 'src/data/media/nativeDimensions.json';
+exports.SIZE_PATH = 'scripts/resizer/sizes/desktop';
+exports.NATIVE_DIMENSIONS_PATH = 'src/data/media/nativeDimensions/desktop.json';
 exports.MAX_FOLDER = 'max';
 exports.BLUR = 4;
 exports.BREAKPT_WIDTHS = (_a = {},
     _a["desktopFallback"] = 600,
+    _a["s"] = breakpoints_1.default.s,
+    _a["m"] = breakpoints_1.default.m,
     _a["l"] = breakpoints_1.default.l,
     _a["xl"] = breakpoints_1.default.xl,
     _a["xxl"] = breakpoints_1.default.xxl,

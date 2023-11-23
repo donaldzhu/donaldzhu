@@ -20,21 +20,44 @@ var sidebarPaddingLeft = (0, sizeUtils_1.getSize)({ l: 20, xxl: 40 });
 var sidebarPaddingRight = (0, sizeUtils_1.getSize)({ l: 30, xxl: 60 });
 var sidebarPaddingVert = (0, sizeUtils_1.getSize)({ l: 17.5, xxl: 32 });
 var sidebarBorderGap = (0, sizeUtils_1.getSize)({ l: 20, xxl: 35 });
+var appWidth = size_1.default.subFromFullWidth(sidebarPaddingLeft);
 var workSidebarPaddingRight = (0, sizeUtils_1.getSize)({ l: 10, xxl: 20 });
 var footerPaddingTop = (0, sizeUtils_1.getSize)({ l: 20, xxl: 42.4, xxlSm: 33.5 });
 var headerHeight = homeIconPaddingVert.mult(2)
     .add(homeIconSizes[1]).sub(sidebarBorderGap);
 var footerHeight = footerPaddingTop.mult(2)
     .add(fonts_1.fontSizes.desktop.footer.link).sub(sidebarBorderGap);
-var mobileSketchScale = (0, sizeUtils_1.getSize)({ s: 1.15, l: 2.75 });
-var mobileSketchTop = (0, sizeUtils_1.getSize)({ s: 56, l: 120 });
-var mobileSketchCenterPadding = (0, sizeUtils_1.getSize)({ s: 35, l: 70 });
-var mobileSketchLeading = (0, sizeUtils_1.getSize)({ s: 32, l: 72 });
-var mobileSketchLowerWeight = (0, sizeUtils_1.getSize)({ s: 5, l: 12 });
+var mobileMainMargin = (0, sizeUtils_1.getSize)({ s: 16, l: 32 });
+var mobileSketchScale = (0, sizeUtils_1.getSize)({ s: 1.15, l: 2.8 });
+var mobileSketchTop = (0, sizeUtils_1.getSize)({ s: 25, l: 100 });
+var mobileSketchCenterPadding = (0, sizeUtils_1.getSize)({ s: 35, l: 105 });
+var mobileSketchLeading = (0, sizeUtils_1.getSize)({ s: 32, l: 80 });
+var mobileSketchLowerWeight = (0, sizeUtils_1.getSize)({ s: 5, l: 12.5 });
+var mobileNavLinkPadding = fonts_1.fontSizes.mobile.nav.mono;
+var mobileNavLinkHeight = fonts_1.fontSizes.mobile.nav.mono;
+var mobileNavHeight = mobileNavLinkPadding.mult(2)
+    .add(mobileNavLinkHeight);
+var mobileNavMarginBottom = (0, sizeUtils_1.getSize)({ s: 12, l: 24 });
+var mobileGyroPaddingTop = (0, sizeUtils_1.getSize)({ s: 56, l: 120 });
+var mobileGyroMarginBottom = (0, sizeUtils_1.getSize)({ s: 28, l: 28 });
+var mobileGyroTop = mobileSketchTop
+    .add(mobileGyroPaddingTop)
+    .add(mobileSketchScale.mult(constants_1.X_HEIGHT * 4))
+    .add(mobileSketchLeading.mult(2))
+    .add(mobileSketchCenterPadding)
+    .add(mobileSketchLowerWeight)
+    .add(mobileNavHeight)
+    .sub((0, sizeUtils_1.getSize)({ s: 4, l: 4 }));
+var mobileGyroBorder = (0, sizeUtils_1.getSize)({ s: 1.5, l: 3.5 });
+var mobileGyroPadding = fonts_1.fontSizes.mobile.main.button.mult(0.5);
+var mobileGyroHeight = fonts_1.fontSizes.mobile.main.button.mult(1.2);
+var mobileGyroBoxHeight = mobileGyroBorder.mult(2)
+    .add(mobileGyroPadding.mult(2))
+    .add(mobileGyroHeight);
 exports.domSizes = {
     desktop: {
         app: {
-            width: size_1.default.subFromFullWidth(sidebarPaddingLeft)
+            width: appWidth
         },
         text: {
             innerMargin: (0, sizeUtils_1.getSize)({ l: 16, xxl: 30 })
@@ -72,6 +95,8 @@ exports.domSizes = {
             }
         },
         mainContainer: {
+            left: sidebarWidth.add(sidebarPaddingLeft),
+            width: appWidth.sub(sidebarWidth),
             margin: (0, sizeUtils_1.getSize)({ l: 25, xxl: 50 })
         },
         autoPlay: {
@@ -121,18 +146,80 @@ exports.domSizes = {
         }
     },
     mobile: {
-        home: {
-            button: {
-                top: mobileSketchTop.mult(2)
-                    .add(mobileSketchScale.mult(constants_1.X_HEIGHT * 4))
-                    .add(mobileSketchLeading.mult(2))
-                    .add(mobileSketchCenterPadding)
-                    .add(mobileSketchLowerWeight)
-                    .sub((0, sizeUtils_1.getSize)({ s: 4, l: 4 })),
-                border: (0, sizeUtils_1.getSize)({ s: 1.5, l: 1.5 }),
-                borderRadius: (0, sizeUtils_1.getSize)({ s: 6, l: 6 })
+        app: {
+            top: mobileNavHeight.add(mobileNavMarginBottom),
+            margin: mobileMainMargin,
+            padding: {
+                top: (0, sizeUtils_1.getSize)({ s: 8, l: 40 }),
+                bottom: (0, sizeUtils_1.getSize)({ s: 28, l: 56 }),
+            },
+            width: new size_1.default({ vw: 100 }).sub(mobileMainMargin.mult(2))
+        },
+        header: {
+            height: mobileNavHeight,
+            link: {
+                padding: mobileNavLinkPadding,
+                height: mobileNavLinkHeight
             }
         },
+        main: {
+            button: {
+                top: mobileGyroTop,
+                height: mobileGyroHeight,
+                padding: {
+                    vert: mobileGyroPadding
+                },
+                margin: {
+                    bottom: (0, sizeUtils_1.getSize)({ s: 28, l: 40 })
+                },
+                border: mobileGyroBorder,
+                borderRadius: (0, sizeUtils_1.getSize)({ s: 6, l: 12 })
+            },
+            toolTip: {
+                top: mobileGyroBoxHeight
+            },
+        },
+        home: {
+            blocker: {
+                border: (0, sizeUtils_1.getSize)({ s: 2.5, l: 3.5 }),
+                top: mobileGyroTop
+                    .add(mobileGyroBoxHeight)
+                    .add(mobileGyroMarginBottom)
+            }
+        },
+        contact: {
+            linkList: {
+                padding: {
+                    top: (0, sizeUtils_1.getSize)({ s: 12, l: 36 })
+                }
+            }
+        },
+        menu: {
+            innerMargin: (0, sizeUtils_1.getSize)({ s: 28, l: 56 })
+        },
+        workIndex: {
+            thumbnail: {
+                margin: (0, sizeUtils_1.getSize)({ s: 24, l: 42 }),
+                width: (0, sizeUtils_1.getSize)({ s: 210, l: 500 })
+            },
+            tags: {
+                padding: {
+                    top: (0, sizeUtils_1.getSize)({ s: 3.25, l: 5.5 })
+                }
+            },
+            gap: (0, sizeUtils_1.getSize)({ s: 20, l: 50 })
+        },
+        workPage: {
+            title: {
+                margin: (0, sizeUtils_1.getSize)({ s: 12, l: 28 })
+            },
+            media: {
+                gap: mobileMainMargin.div(2)
+            },
+            details: {
+                margin: (0, sizeUtils_1.getSize)({ s: 16, l: 36 })
+            }
+        }
     },
 };
 exports.sketchSizes = {
@@ -208,10 +295,10 @@ exports.sketchSizes = {
             scale: mobileSketchScale,
             weight: {
                 lower: mobileSketchLowerWeight,
-                glyph: (0, sizeUtils_1.getSize)({ s: 3, l: 8 }),
+                glyph: (0, sizeUtils_1.getSize)({ s: 3, l: 9 }),
                 link: (0, sizeUtils_1.getSize)({ s: 1.5, l: 4.5 })
             },
-            pointSize: (0, sizeUtils_1.getSize)({ s: 7.75, l: 19.5 }),
+            pointSize: (0, sizeUtils_1.getSize)({ s: 7.75, l: 20 }),
             leading: mobileSketchLeading,
             tracking: {
                 workIn: new size_1.default(2.75),
@@ -224,8 +311,18 @@ exports.sketchSizes = {
             }
         },
         line: {
-            weight: (0, sizeUtils_1.getSize)({ s: 3, l: 3 }),
-            dash: (0, sizeUtils_1.getSize)({ s: 6, l: 6 })
+            weight: (0, sizeUtils_1.getSize)({ s: 2, l: 4.5 }),
+            dash: (0, sizeUtils_1.getSize)({ s: 5, l: 10 })
         },
+        string: {
+            weight: {
+                glyph: (0, sizeUtils_1.getSize)({ s: 2, l: 4.5 }),
+                link: (0, sizeUtils_1.getSize)({ s: 1.5, l: 4 }),
+            },
+            pointSize: (0, sizeUtils_1.getSize)({ s: 6, l: 15 }),
+        },
+        struct: {
+            padding: (0, sizeUtils_1.getSize)({ s: 1.5, l: 2.5 })
+        }
     }
 };

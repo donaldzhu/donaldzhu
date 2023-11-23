@@ -11,13 +11,13 @@ var Size = (function () {
         var _a, _b, _c;
         var remFactor = (0, sizeUtils_1.getRem)();
         if (typeof config === 'number') {
-            this.vw = 0;
-            this.vh = 0;
+            this.dvw = 0;
+            this.dvh = 0;
             this.rem = config / remFactor;
         }
         else {
-            this.vw = (_a = config.vw) !== null && _a !== void 0 ? _a : 0;
-            this.vh = (_b = config.vh) !== null && _b !== void 0 ? _b : 0;
+            this.dvw = (_a = config.vw) !== null && _a !== void 0 ? _a : 0;
+            this.dvh = (_b = config.vh) !== null && _b !== void 0 ? _b : 0;
             this.rem = (_c = config.rem) !== null && _c !== void 0 ? _c : 0;
         }
     }
@@ -35,22 +35,22 @@ var Size = (function () {
     };
     Size.prototype.calcWithSize = function (targetSize, operation) {
         return new Size({
-            vw: operation(this.vw, targetSize.vw),
-            vh: operation(this.vh, targetSize.vh),
+            vw: operation(this.dvw, targetSize.dvw),
+            vh: operation(this.dvh, targetSize.dvh),
             rem: operation(this.rem, targetSize.rem)
         });
     };
     Size.prototype.calcWithNum = function (targetNumber, operation) {
         return new Size({
-            vw: operation(this.vw, targetNumber),
-            vh: operation(this.vh, targetNumber),
+            vw: operation(this.dvw, targetNumber),
+            vh: operation(this.dvh, targetNumber),
             rem: operation(this.rem, targetNumber)
         });
     };
     Object.defineProperty(Size.prototype, "css", {
         get: function () {
             var _this = this;
-            var units = ["vw", "vh", "rem"];
+            var units = ["dvw", "dvh", "rem"];
             var addends = (0, commonUtils_1.filterFalsy)(units.map(function (unit) { return _this.returnUnit(unit); }));
             return "calc(".concat(addends.join(' + '), ")");
         },
@@ -59,7 +59,7 @@ var Size = (function () {
     });
     Object.defineProperty(Size.prototype, "value", {
         get: function () {
-            return lodash_1.default.round((0, sizeUtils_1.getVw)(this.vw) + (0, sizeUtils_1.getVh)(this.vh) + (0, sizeUtils_1.getRem)(this.rem), 3);
+            return lodash_1.default.round((0, sizeUtils_1.getVw)(this.dvw) + (0, sizeUtils_1.getVh)(this.dvh) + (0, sizeUtils_1.getRem)(this.rem), 3);
         },
         enumerable: false,
         configurable: true

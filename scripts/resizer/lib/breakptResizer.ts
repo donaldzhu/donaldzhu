@@ -4,7 +4,7 @@ import sharp from 'sharp'
 import ffmpeg from 'fluent-ffmpeg'
 import _ from 'lodash'
 import { globSync } from 'glob'
-import { BreakptConfig, BreakptResizeConfig, BreakptResizerConfig, MediaType, VidExtension, ImgExtention, MediaOptions, dimensionType } from './resizerTypes'
+import { BreakptConfig, BreakptResizeConfig, BreakptResizerConfig, MediaType, ImgExtension, MediaOptions, dimensionType, vidExtensionRegex } from './resizerTypes'
 import { mkdirIfNone, emptyDir, joinPaths, removeFile, parseMediaType, getExtension } from '../../utils'
 import { POSTER_SUBFOLDER } from '../constants'
 
@@ -72,9 +72,9 @@ class BreakpointResizer<K extends string> {
     this.prepareDest(outFile)
 
     const fileType = getExtension(fileName)
-    if (fileType === ImgExtention.Gif)
+    if (fileType === ImgExtension.Gif)
       imgObjClone.gif(this.mediaOptions.gif)
-    else if (fileType === ImgExtention.Webp)
+    else if (fileType === ImgExtension.Webp)
       imgObjClone.webp(this.mediaOptions.webp)
 
     return await imgObjClone.toFile(outFile)
@@ -143,9 +143,10 @@ class BreakpointResizer<K extends string> {
   }
 
   private getPosterPath(fileName: string) {
+    const regex = new RegExp(`(${vidExtensionRegex})$`)
     return joinPaths(
       POSTER_SUBFOLDER,
-      fileName.replace(VidExtension.Webm, ImgExtention.Webp)
+      fileName.replace(regex, ImgExtension.Webp)
     )
   }
 

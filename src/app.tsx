@@ -9,8 +9,8 @@ import useIsMobile from './hooks/useIsMobile'
 import { minQueries } from './utils/queryUtil'
 import PageMobileTemp from './components/mobileTemp/pageMobileTemp'
 import HomeMobileTemp from './components/mobileTemp/homeMobileTemp'
-import MobileRouter from './components/mobile/router'
-import DesktopRouter from './components/desktop/router'
+import MobileRoutes from './components/mobile/routes'
+import DesktopRoutes from './components/desktop/routes'
 
 
 const App = () => {
@@ -28,8 +28,8 @@ const App = () => {
                 <Route path='' element={<HomeMobileTemp />} />
                 <Route path='*' element={<Navigate to='/' replace />} />
               </Route> :
-              <MobileRouter canAutoPlay={canAutoPlay} />
-            ) : <DesktopRouter canAutoPlay={canAutoPlay} />
+              <MobileRoutes canAutoPlay={canAutoPlay} />
+            ) : <DesktopRoutes canAutoPlay={canAutoPlay} />
           } />
         </Routes>
       </HashRouter>

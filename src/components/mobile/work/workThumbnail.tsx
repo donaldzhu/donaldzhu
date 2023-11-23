@@ -14,7 +14,7 @@ interface WorkThumbnailProps {
 
 const WorkThumbnail = ({ data }: WorkThumbnailProps) => {
   const { title, abbr, tags, animatedThumbnail, id } = data
-  const fallbackPath = joinPaths('assets/thumbnails/_mobile_test_', id) + '.' +
+  const fallbackPath = joinPaths('assets/mobile/thumbnails/l', id) + '.' +
     (animatedThumbnail ? FileExt.Mp4 : FileExt.Webp)
   return (
     <ThumbnailLink to={id}>

@@ -51,6 +51,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var path_1 = __importDefault(require("path"));
 var lodash_1 = __importDefault(require("lodash"));
 var glob_1 = require("glob");
+var resizerTypes_1 = require("./resizerTypes");
 var utils_1 = require("../../utils");
 var constants_1 = require("../constants");
 var BreakpointResizer = (function () {
@@ -99,9 +100,9 @@ var BreakpointResizer = (function () {
                         outFile = this.getSubpath(fileName);
                         this.prepareDest(outFile);
                         fileType = (0, utils_1.getExtension)(fileName);
-                        if (fileType === "gif")
+                        if (fileType === resizerTypes_1.ImgExtension.Gif)
                             imgObjClone.gif(this.mediaOptions.gif);
-                        else if (fileType === "webp")
+                        else if (fileType === resizerTypes_1.ImgExtension.Webp)
                             imgObjClone.webp(this.mediaOptions.webp);
                         return [4, imgObjClone.toFile(outFile)];
                     case 1: return [2, _b.sent()];
@@ -178,7 +179,8 @@ var BreakpointResizer = (function () {
         return Math.min(resizedWidth, maxWidth);
     };
     BreakpointResizer.prototype.getPosterPath = function (fileName) {
-        return (0, utils_1.joinPaths)(constants_1.POSTER_SUBFOLDER, fileName.replace("webm", "webp"));
+        var regex = new RegExp("(".concat(resizerTypes_1.vidExtensionRegex, ")$"));
+        return (0, utils_1.joinPaths)(constants_1.POSTER_SUBFOLDER, fileName.replace(regex, resizerTypes_1.ImgExtension.Webp));
     };
     BreakpointResizer.prototype.shouldExport = function (type) {
         var _a;

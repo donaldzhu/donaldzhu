@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRemSize = exports.getSize = exports.toPercent = exports.getRem = exports.getVh = exports.getVw = exports.rem = exports.em = exports.percent = exports.vh = exports.vw = exports.px = void 0;
+exports.getRemSize = exports.getSize = exports.toPercent = exports.getRem = exports.getVh = exports.getVw = exports.rem = exports.em = exports.percent = exports.dvh = exports.dvw = exports.vh = exports.vw = exports.px = void 0;
 var breakptSizer_1 = require("./helpers/breakptSizer");
 var createSuffixFunction = function (suffix) {
     return function (quantity) { return "".concat(quantity).concat(suffix); };
@@ -8,6 +8,8 @@ var createSuffixFunction = function (suffix) {
 exports.px = createSuffixFunction("px");
 exports.vw = createSuffixFunction("vw");
 exports.vh = createSuffixFunction("vh");
+exports.dvw = createSuffixFunction("dvw");
+exports.dvh = createSuffixFunction("dvh");
 exports.percent = createSuffixFunction("%");
 exports.em = createSuffixFunction("em");
 exports.rem = createSuffixFunction("rem");

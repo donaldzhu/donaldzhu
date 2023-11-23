@@ -7,6 +7,7 @@ exports.wrapDrawingContext = exports.mousePosition = exports.intersectTwoCircles
 var colors_1 = __importDefault(require("../styles/colors"));
 var sizes_1 = require("../styles/sizes");
 var commonUtils_1 = require("./commonUtils");
+var queryUtil_1 = require("./queryUtil");
 var P5Event;
 (function (P5Event) {
     P5Event["draw"] = "draw";
@@ -31,17 +32,11 @@ var P5Event;
 var parseVector = function (vector) { return [vector.x, vector.y]; };
 exports.parseVector = parseVector;
 var styleDashedRect = function (p5) {
-    var isMobile = (0, commonUtils_1.getIsMobile)();
-    var strokeDash = isMobile ?
-        sizes_1.sketchSizes.mobile.line.dash.value :
-        sizes_1.sketchSizes.desktop.line.dash.value;
-    var strokeWeight = isMobile ?
-        sizes_1.sketchSizes.mobile.line.weight.value :
-        sizes_1.sketchSizes.desktop.line.weight.value;
-    p5.drawingContext.setLineDash((0, commonUtils_1.repeat)(2, strokeDash));
+    var device = (0, queryUtil_1.getIsMobile)() ? queryUtil_1.Device.mobile : queryUtil_1.Device.desktop;
+    p5.drawingContext.setLineDash((0, commonUtils_1.repeat)(2, sizes_1.sketchSizes[device].line.dash.value));
     p5.noFill();
     p5.stroke(colors_1.default.dashLine);
-    p5.strokeWeight(strokeWeight);
+    p5.strokeWeight(sizes_1.sketchSizes[device].line.weight.value);
 };
 exports.styleDashedRect = styleDashedRect;
 var intersectTwoCircles = function (center1, r1, center2, r2) {

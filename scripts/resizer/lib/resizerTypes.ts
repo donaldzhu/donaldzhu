@@ -16,15 +16,19 @@ export interface BreakptResizerConfig {
   exportPoster: boolean
 }
 
-export const enum ImgExtention {
+export enum ImgExtension {
   Gif = 'gif',
   Webp = 'webp',
   Png = 'png'
 }
 
-export const enum VidExtension {
-  Webm = 'webm'
+export enum VidExtension {
+  Webm = 'webm',
+  Mp4 = 'mp4'
 }
+
+export const imgExtensionRegex = Object.values(ImgExtension).join('|')
+export const vidExtensionRegex = Object.values(VidExtension).join('|')
 
 export const enum MediaType {
   Image = 'image',
@@ -33,8 +37,8 @@ export const enum MediaType {
 }
 
 export interface MediaOptions {
-  [ImgExtention.Gif]?: sharp.GifOptions
-  [ImgExtention.Webp]?: sharp.WebpOptions
+  [ImgExtension.Gif]?: sharp.GifOptions
+  [ImgExtension.Webp]?: sharp.WebpOptions
 }
 
 export interface BreakptConfig<K extends string> {

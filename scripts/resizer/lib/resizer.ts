@@ -6,7 +6,7 @@ import ffmpeg from 'fluent-ffmpeg'
 import { globSync } from 'glob'
 import chalk from 'chalk'
 import BreakpointResizer from './breakptResizer'
-import { BreakptConfig, ImgExtention, MediaOptions, MediaType, ResizePosterConfig, ResizerConfig, VidExtension, callbackType, dimensionType } from './resizerTypes'
+import { BreakptConfig, ImgExtension, MediaOptions, MediaType, ResizePosterConfig, ResizerConfig, callbackType, dimensionType, vidExtensionRegex } from './resizerTypes'
 import { mkdirIfNone, emptyDir, joinPaths, removeFile, parseMediaType, getExtension, mapPromises, sortFileNames } from '../../utils'
 import { POSTER_SUBFOLDER } from '../constants'
 
@@ -81,7 +81,7 @@ class Resizer<K extends string> {
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig): Promise<void>
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig) {
     const imgPath = posterConfig ? fileName : this.getSubpath(fileName)
-    const animated = getExtension(imgPath) === ImgExtention.Gif
+    const animated = getExtension(imgPath) === ImgExtension.Gif
     const imgObj = sharp(imgPath, { animated })
     const size = posterConfig ? posterConfig.vidSize :
       this.throwNoWidth(await imgObj.metadata(), fileName)
@@ -167,15 +167,16 @@ class Resizer<K extends string> {
   }
 
   private getScreenshotPath(filename: string) {
+    const regex = new RegExp(`(${vidExtensionRegex})$`)
     return joinPaths(
       path.dirname(filename),
       POSTER_SUBFOLDER,
-      path.basename(filename).replace(VidExtension.Webm, ImgExtention.Png)
+      path.basename(filename).replace(regex, ImgExtension.Png)
     )
   }
 
   private getPosterPath(filename: string) {
-    return filename.replace(ImgExtention.Png, ImgExtention.Webp)
+    return filename.replace(ImgExtension.Png, ImgExtension.Webp)
   }
 
   private throwNoWidth(metadata: Partial<dimensionType>, fileName: string) {

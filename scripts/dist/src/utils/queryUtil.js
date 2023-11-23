@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPreloadBreakpt = exports.getBreakptKey = exports.queries = exports.Device = exports.Breakpt = void 0;
+exports.getPreloadBreakpt = exports.getIsMobile = exports.getBreakptKey = exports.maxQueries = exports.minQueries = exports.Device = exports.Breakpt = void 0;
 var breakpoints_1 = __importDefault(require("../data/breakpoints"));
 var commonUtils_1 = require("./commonUtils");
 var Breakpt;
@@ -19,9 +19,13 @@ var Device;
     Device["mobile"] = "mobile";
     Device["desktop"] = "desktop";
 })(Device || (exports.Device = Device = {}));
-exports.queries = (0, commonUtils_1.mapObject)(breakpoints_1.default, function (_, breakpt) {
-    return "only screen and (min-width: ".concat(breakpt + 1, "px)");
-});
+var createQueries = function (sizePrefix) {
+    return (0, commonUtils_1.mapObject)(breakpoints_1.default, function (_, breakpt) {
+        return "only screen and (".concat(sizePrefix, "-width: ").concat(breakpt + (sizePrefix === 'min' ? 1 : 0), "px)");
+    });
+};
+exports.minQueries = createQueries('min');
+exports.maxQueries = createQueries('max');
 var getBreakptKey = function () {
     if (window.screen.width >= breakpoints_1.default.xxl)
         return Breakpt.xxl;
@@ -39,6 +43,8 @@ var getBreakptKey = function () {
     return breakptPair[0];
 };
 exports.getBreakptKey = getBreakptKey;
+var getIsMobile = function () { return window.screen.width <= breakpoints_1.default.l; };
+exports.getIsMobile = getIsMobile;
 var getPreloadBreakpt = function () {
     var breakpt = (0, exports.getBreakptKey)();
     return breakpt === Breakpt.m || breakpt === Breakpt.s ?

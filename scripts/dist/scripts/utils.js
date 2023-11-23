@@ -46,8 +46,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.forEachFile = exports.sortFileNames = exports.readJsonSync = exports.mapObjectPromises = exports.mapPromises = exports.mapObject = exports.getExtension = exports.parseMediaType = exports.removeFile = exports.joinPaths = exports.emptyDir = exports.mkdirIfNone = void 0;
+exports.forEachFile = exports.sortFileNames = exports.readJsonSync = exports.mapObjectPromises = exports.mapPromises = exports.mapObject = exports.typedKeys = exports.loopObject = exports.getExtension = exports.parseMediaType = exports.removeFile = exports.joinPaths = exports.emptyDir = exports.mkdirIfNone = void 0;
 var fs_1 = __importDefault(require("fs"));
+var resizerTypes_1 = require("./resizer/lib/resizerTypes");
 var path_1 = __importDefault(require("path"));
 var mkdirIfNone = function (folderPath) {
     try {
@@ -97,8 +98,8 @@ var removeFile = function (path) {
 };
 exports.removeFile = removeFile;
 var parseMediaType = function (fileName) {
-    var imgRegex = new RegExp(".(".concat("gif", "|").concat("webp", "|").concat("png", ")$"), 'i');
-    var vidRegex = new RegExp(".".concat("webm", "$"), 'i');
+    var imgRegex = new RegExp(".(".concat(resizerTypes_1.imgExtensionRegex, ")$"), 'i');
+    var vidRegex = new RegExp(".(".concat(resizerTypes_1.vidExtensionRegex, ")$"), 'i');
     if (fileName.match(imgRegex) || fileName.match(/\*$/))
         return "image";
     if (fileName.match(vidRegex))
@@ -108,14 +109,27 @@ var parseMediaType = function (fileName) {
 exports.parseMediaType = parseMediaType;
 var getExtension = function (fileName) { return path_1.default.extname(fileName).slice(1); };
 exports.getExtension = getExtension;
-var mapObject = function (object, callback) {
-    var keys = Object.keys(object);
-    for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
+var loopObject = function (object, callback) {
+    var keys = typedKeys(object);
+    keys.forEach(function (key) {
         var value = object[key];
         callback(key, value, object);
-    }
+    });
     return object;
+};
+exports.loopObject = loopObject;
+function typedKeys(object) {
+    return Object.keys(object);
+}
+exports.typedKeys = typedKeys;
+var mapObject = function (object, callback) {
+    var newObject = {};
+    var keys = typedKeys(object);
+    keys.forEach(function (key) {
+        var value = object[key];
+        newObject[key] = callback(key, value);
+    });
+    return newObject;
 };
 exports.mapObject = mapObject;
 var mapPromises = function (array, callback) { var _a, array_1, array_1_1; return __awaiter(void 0, void 0, void 0, function () {

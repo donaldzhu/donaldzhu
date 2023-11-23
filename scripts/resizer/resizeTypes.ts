@@ -1,9 +1,11 @@
-import { MAX_FOLDER } from './constants'
+import { DesktopBreakpts, MAX_FOLDER, MobileBreakpts } from './constants'
 export const enum Breakpt {
-  desktopFallback = 'desktopFallback',
-  l = 'l',
-  xl = 'xl',
-  xxl = 'xxl',
+  DesktopFallback = 'desktopFallback',
+  S = 's',
+  M = 'm',
+  L = 'l',
+  Xl = 'xl',
+  Xxl = 'xxl',
 }
 
 export type BreakptExports = Breakpt | typeof MAX_FOLDER
@@ -19,9 +21,9 @@ export type BreakptSizeCollection = Record<Breakpt, fileDataPair<size>[]>
 export type SizesJson = FileDataJson<size>
 export type DimensionsJson = FileDataJson<dimension>
 
-export interface ConfigType {
+export interface ConfigType<T extends Breakpt> {
   resizeThumbnails: boolean
   resizeWork: boolean
   includePages: string[]
-  includeBreakpts: Breakpt[]
+  includeBreakpts: T[]
 }
