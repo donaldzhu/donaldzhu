@@ -10,10 +10,10 @@ import { percent, toPercent } from '../../../utils/sizeUtils'
 import { mobileQuery } from '../../../utils/queryUtil'
 import useIsMobile from '../../../hooks/useIsMobile'
 import PreloadMedia from './preloadMedia'
-import type { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
 import type { DesktopContextProps } from '../../desktop/pageWrappers/pageTypes'
 import type { MobileContextProps } from '../../mobile/pageWrappers/pageTypes'
 import type { MediaRef, ZoomMediaProps } from './mediaTypes'
+import type { PreloadMediaStack } from '../../../utils/helpers/preloader/preloaderTypes'
 
 
 interface StyledZoomMediaProps {
@@ -65,7 +65,7 @@ const ZoomMedia = forwardRef((props: ZoomMediaProps, ref: MediaRef) => {
       <PreloadMedia
         {...rest}
         {...(rest.type === MediaFileType.Video ? { canAutoPlay: previewLoaded !== false } : {})}
-        mediaStack={mediaStack satisfies ImgStack | VidStack | undefined}
+        mediaStack={mediaStack satisfies PreloadMediaStack | undefined}
         fallbackPath={fallbackPath}
         ref={mediaRef}
         onClick={handleClick} />

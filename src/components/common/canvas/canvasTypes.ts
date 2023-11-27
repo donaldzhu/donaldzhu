@@ -52,7 +52,7 @@ export type p5Callback = (p5: p5) => void
 export type p5EventCallback = (p5: p5, evt?: Event | UIEvent) => void
 export type P5EventHandlers = Record<P5Event, p5EventCallback>
 
-export type sketchEventCallback<T extends Device> = (
+type sketchEventCallback<T extends Device> = (
   p5: p5,
   canvasStates: TypedCanvasStates<T>
 ) => void

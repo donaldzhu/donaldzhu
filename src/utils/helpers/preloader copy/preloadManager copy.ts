@@ -3,6 +3,7 @@ import toSpaceCase from 'to-space-case'
 import nativeDimensions from '../../../data/media/nativeDimensions/desktop.json'
 import workData from '../../../data/work/workData.json'
 import {
+  capitalize,
   filterFalsy,
   loopObject,
   mapObject,
@@ -12,12 +13,10 @@ import {
 } from '../../commonUtils'
 import { getPreloadBreakpt } from '../../queryUtil'
 import Queue from '../queue'
-import breakpts from '../../../data/breakpoints'
-import { MediaStack } from './mediaStack'
-import { fileIsImg, getPreviewBreakptKey, isImgSize, MediaFileType, MediaSize, MediaType, Verbosity } from './preloadUtils'
+import { ImgStack, VidStack } from './mediaStack'
+import { fileIsImg, isImg, isImgSize, MediaSize, MediaType, VerboseLevel } from './preloadUtils'
 import type { coorTuple, queueArgType, queueFunctionType } from '../../utilTypes'
 import type { loadVidType } from './preloadTypes'
-import type { MediaBreakpts, PreloadMediaStack } from './preloaderTypes'
 
 const LOG_COLORS = {
   [MediaSize.DesktopFallback]: 'yellow',
@@ -37,11 +36,11 @@ class PreloadManager {
   private mainQueuePageId?: string
   private subqueues: Queue[]
   private isComplete: boolean
-  private verboseLevel: Verbosity
+  private verboseLevel: VerboseLevel
   private loadVid: loadVidType
 
-  thumbnails: PreloadMediaStack[]
-  workPages: Record<string, Partial<Record<MediaType, PreloadMediaStack[]>>>
+  thumbnails: (ImgStack | VidStack)[]
+  workPages: Record<string, Partial<Record<MediaType, (ImgStack | VidStack)[]>>>
   enabled: boolean
   autoPlayConfig: { canAutoPlay: boolean | undefined }
 
@@ -57,7 +56,7 @@ class PreloadManager {
 
     this.isComplete = false
     this.enabled = true
-    this.verboseLevel = Verbosity.Diagnostic
+    this.verboseLevel = VerboseLevel.Diagnostic
 
     this.autoPlayConfig = { canAutoPlay }
     this.loadVid = loadVid
@@ -65,9 +64,9 @@ class PreloadManager {
     if (this.enabled) {
       this.createThumbnailStacks()
       this.createWorkPageStacks()
-    } else this.verboseLevel = Verbosity.Quiet
+    } else this.verboseLevel = VerboseLevel.Quiet
 
-    if (this.verboseLevel >= Verbosity.Normal) {
+    if (this.verboseLevel >= VerboseLevel.Normal) {
       console.log(`Breakpoint: ${getPreloadBreakpt().toLocaleUpperCase()}`)
       console.log(this)
     }
@@ -77,25 +76,19 @@ class PreloadManager {
     const thumbnails = (nativeDimensions.thumbnails as [string, coorTuple][])
       .map(([fileName, nativeDimension]) => {
         const pageId = fileName.replace(/\.[^/.]+$/, '')
-
-        const workPageData = workData.find(page => page.id === pageId)
+        const workPageData =
+          workData.find(page => page.id === pageId)
         if (!workPageData) return
         const { animatedThumbnail, listed, enabled } = workPageData
-
-        const stackBreakpts: MediaBreakpts[] =
-          animatedThumbnail ? typedKeys(breakpts) :
-            [...typedKeys(breakpts), MediaSize.DesktopFallback]
-
         if (!listed || !enabled) return
 
-        return new MediaStack({
+        const Stack = animatedThumbnail ? VidStack : ImgStack
+        return new Stack({
           pageId,
-          fileName,
-          filePath: 'assets/desktop/thumbnails',
-          fileType: animatedThumbnail ? MediaFileType.Video : MediaFileType.Image,
-          breakpts: stackBreakpts,
-          autoPlayConfig: this.autoPlayConfig,
           nativeDimension,
+          mediaType: MediaType.Thumbnails,
+          fileName,
+          autoPlayConfig: this.autoPlayConfig,
           loadVid: this.loadVid
         })
       })
@@ -104,26 +97,18 @@ class PreloadManager {
 
   private createWorkPageStacks() {
     loopObject(nativeDimensions.work, (pageId, nativeDimensions) => {
-      const initialObject: Partial<Record<MediaType, PreloadMediaStack[]>> = {}
-
+      const initialObject: Partial<Record<MediaType, (ImgStack | VidStack)[]>> = {}
       const workPage = this.workPages[pageId] = initialObject;
       (nativeDimensions as [string, coorTuple][]).forEach(([fileName, nativeDimension]) => {
-        const stackBreakpts: MediaBreakpts[] =
-          fileIsImg(fileName) ?
-            [...typedKeys(breakpts), MediaSize.DesktopFallback, MediaSize.Max] :
-            [...typedKeys(breakpts), MediaSize.Max]
-
+        const Stack = fileIsImg(fileName) ? ImgStack : VidStack
         const mediaType = fileName.match(/^toolTips\//) ? MediaType.ToolTips :
           fileIsImg(fileName) ? MediaType.Images : MediaType.Videos;
-
-        (workPage[mediaType] ??= []).push(new MediaStack({
+        (workPage[mediaType] ??= []).push(new Stack({
           pageId,
           fileName,
-          fileType: fileIsImg(fileName) ? MediaFileType.Image : MediaFileType.Video,
-          filePath: `assets/desktop/work/${pageId}`,
-          breakpts: stackBreakpts,
-          autoPlayConfig: this.autoPlayConfig,
+          mediaType,
           nativeDimension,
+          autoPlayConfig: this.autoPlayConfig,
           loadVid: this.loadVid
         }))
       })
@@ -188,7 +173,7 @@ class PreloadManager {
     const getPreload = (size: MediaSize) => {
       const preloadFunctions = this.sortedPageIds
         .map(pageId => ({
-          run: () => this.preloadMediaType(this.workPages[pageId][type], this.getBreakpts(size)),
+          run: () => this.preloadMediaType(this.workPages[pageId][type], size),
           callback: this.log(3, type, size, pageId, true)
         }))
 
@@ -214,12 +199,12 @@ class PreloadManager {
   //-----secondary preloaders-----//
   private preloadThumbnails() {
     const thumbnailStacks = Object.values(this.thumbnails)
-    const [imgStacks, vidStacks] = partition(
-      thumbnailStacks, stack => stack.fileType === MediaFileType.Image)
+    const [imgStacks, vidStacks] = partition<ImgStack, VidStack>(
+      thumbnailStacks, stack => isImg(stack))
     const getType = (type: MediaType) => `thumbnail ${type}`
     const getPreload = (type: MediaType, size: MediaSize) => ({
       run: () => this.preloadMediaType(
-        type === MediaType.Images ? imgStacks : vidStacks, this.getBreakpts(size),
+        type === MediaType.Images ? imgStacks : vidStacks, size,
       ),
       callback: this.log(3, getType(type), size)
     })
@@ -235,7 +220,7 @@ class PreloadManager {
     const getPreload = (type: MediaType) => {
       const pageIds = exclude ? _.pull(this.sortedPageIds, exclude) : this.sortedPageIds
       const preloadFunctions = pageIds.map(pageId => ({
-        run: () => this.preloadMediaType(this.workPages[pageId][type], this.getBreakpts(size)),
+        run: () => this.preloadMediaType(this.workPages[pageId][type], size),
         callback: this.log(3, type, size, pageId)
       }))
 
@@ -259,7 +244,7 @@ class PreloadManager {
       MediaType.Videos) : mediaStackKeys
 
     const queueFunctions = mediaTypes.map(type => ({
-      run: () => this.preloadMediaType(mediaStacks[type], this.getBreakpts(size)),
+      run: () => this.preloadMediaType(mediaStacks[type], size),
       callback: this.log(3, type, size, pageId)
     }))
 
@@ -267,22 +252,26 @@ class PreloadManager {
   }
 
   //-----preload helpers-----//
-  private getBreakpts(size: MediaSize): MediaBreakpts | undefined {
-    return (size === MediaSize.DesktopFallback || size === MediaSize.Max) ? size :
-      size === MediaSize.Preview ? getPreviewBreakptKey() :
-        getPreloadBreakpt()
+  private prefixPreload<T extends MediaSize>(size: T): `preload${Capitalize<T>}` {
+    return `preload${capitalize(size)}`
   }
 
   private preloadMediaType(
-    mediaTypeStacks: PreloadMediaStack[] | undefined,
-    size: MediaBreakpts | undefined
+    mediaTypeStacks: (ImgStack | VidStack)[] | undefined,
+    size: MediaSize
   ) {
-    if (!mediaTypeStacks || !size) return Promise.resolve()
-    const queueFunctions = mediaTypeStacks
-      .map(stack => () => {
-        if (stack.fileType === MediaFileType.Image || size !== MediaSize.DesktopFallback)
-          return stack.preload(size)
+    if (!mediaTypeStacks) return Promise.resolve()
+    const preloadFunctionName = this.prefixPreload(size)
+    const queueFunctions: (() => (Promise<void> | undefined))[] =
+      mediaTypeStacks.map(stack => {
+        // Type-guarding redundancy
+        if (stack instanceof ImgStack)
+          return stack[preloadFunctionName].bind(stack)
+        else if (preloadFunctionName === 'preloadFull' || preloadFunctionName === 'preloadMax')
+          return stack[preloadFunctionName].bind(stack)
+        return () => Promise.resolve()
       })
+
     return this.addToSubqueue(queueFunctions)
   }
 
@@ -326,7 +315,7 @@ class PreloadManager {
 
   //-----loggers-----//
   private log(
-    verboseLevel: Verbosity,
+    verboseLevel: VerboseLevel,
     type: string,
     size: MediaSize,
     pageId?: string,

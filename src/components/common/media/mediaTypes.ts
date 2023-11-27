@@ -1,6 +1,6 @@
 import type { ForwardedRef, ImgHTMLAttributes, SyntheticEvent, VideoHTMLAttributes } from 'react'
-import type { ImgStack, VidStack } from '../../../utils/helpers/preloader/mediaStack'
 import type { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
+import type { PreloadMediaStack } from '../../../utils/helpers/preloader/preloaderTypes'
 
 interface MediaProps {
   hasLoaded?: boolean
@@ -43,7 +43,7 @@ type MediaElement = HTMLImageElement | HTMLVideoElement
 export type MediaRef = ForwardedRef<MediaElement>
 
 interface PreloadMediaBaseProps {
-  mediaStack?: ImgStack | VidStack
+  mediaStack?: PreloadMediaStack
   fallbackPath: string
   isZoomed?: boolean
   autoPlay?: boolean
@@ -56,7 +56,7 @@ type ZoomMediaBaseProps<R extends boolean = false> = R extends true ? {
   src: string,
   width?: string,
   isToolTip?: boolean,
-  mediaStack?: ImgStack | VidStack
+  mediaStack?: PreloadMediaStack
   fallbackPath: string
   getCurrentTime: () => number
   maxSize?: string | number | undefined
@@ -64,7 +64,7 @@ type ZoomMediaBaseProps<R extends boolean = false> = R extends true ? {
   src: string,
   width?: string,
   isToolTip?: boolean,
-  mediaStack?: ImgStack | VidStack
+  mediaStack?: PreloadMediaStack
   fallbackPath?: string
   getCurrentTime?: () => number
   maxSize?: string | number

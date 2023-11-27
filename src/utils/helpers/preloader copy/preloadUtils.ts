@@ -1,6 +1,8 @@
 import breakpts from '../../../data/breakpoints'
 import { toPairs } from '../../commonUtils'
 import { Breakpt, getBreakptKey } from '../../queryUtil'
+import type { ImgStack, MediaStack } from './mediaStack'
+import type { ImgPreloader, MediaPreloader } from './preloader'
 
 export enum MediaSize {
   DesktopFallback = 'desktopFallback',
@@ -27,20 +29,22 @@ export enum FileExt {
   Mp4 = 'mp4'
 }
 
-export enum Verbosity {
+export enum VerboseLevel {
   Quiet,
   Minimal,
   Normal,
   Diagnostic,
 }
 
+export function isImg(media: MediaPreloader | MediaStack): media is ImgPreloader | ImgStack {
+  return media.fileType === MediaFileType.Image
+}
 export const isImgSize = (size: MediaSize) =>
   [MediaSize.DesktopFallback, MediaSize.Preview].includes(size)
 
-// TODO
 export const fileIsImg = (fileName: string) => {
   const imgRegex = new RegExp('.(gif|webp|png)$', 'i')
-  const vidRegex = new RegExp('.(webm|mp4)$', 'i')
+  const vidRegex = new RegExp('.webm$', 'i')
   if (!!fileName.match(imgRegex) || !!fileName.match(/\*$/)) return true
   if (fileName.match(vidRegex)) return false
   throw new Error(`${fileName} is neither an image nor a video.`)

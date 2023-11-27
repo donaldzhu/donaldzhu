@@ -1,15 +1,18 @@
 import type { Breakpt } from '../../queryUtil'
 import type { coorTuple } from '../../utilTypes'
+import type { MediaStack } from './mediaStack'
 import type { loadVidType } from './preloadTypes'
-import type { MediaSize, MediaType } from './preloadUtils'
+import type { MediaSize } from './preloadUtils'
 
-export interface MediaStackProps {
+export interface MediaStackProps<K extends string> {
   pageId: string
   fileName: string
-  mediaType: MediaType
+  filePath: string
+  breakpts: K[],
   autoPlayConfig: { canAutoPlay: boolean | undefined },
-  loadVid: loadVidType,
   nativeDimension: coorTuple
+  loadVid: loadVidType
 }
 
-export type PreloadBreakpt = Breakpt | MediaSize.DesktopFallback | MediaSize.Max
+export type MediaBreakpts = Breakpt | MediaSize.DesktopFallback | MediaSize.Max
+export type PreloadMediaStack = MediaStack<MediaBreakpts>
