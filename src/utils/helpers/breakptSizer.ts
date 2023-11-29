@@ -35,7 +35,7 @@ export class BreakptSizer {
   constructor(breakptSizes: DesktopBreakptSizesType)
   constructor(breakptSizes: BreakptSizesType)
   constructor(breakptSizes: Partial<Record<Breakpt | 'xxlSm', number>>) {
-    this.breakptSizes = !(Breakpt.xxl in breakptSizes) ? breakptSizes : {
+    this.breakptSizes = !(Breakpt.Xxl in breakptSizes) ? breakptSizes : {
       ...breakptSizes,
       xxlSm: breakptSizes.xxlSm ?? breakptSizes.xxl
     }
@@ -87,7 +87,7 @@ export class BreakptSizer {
   }
 
   private get vh() {
-    return Breakpt.xxl in this.breakptSizes && this.breakptSizes.xxl && this.breakptSizes.xxlSm ?
+    return Breakpt.Xxl in this.breakptSizes && this.breakptSizes.xxl && this.breakptSizes.xxlSm ?
       (this.breakptSizes.xxl - this.breakptSizes.xxlSm) / (xxlHeight - xxlSmHeight) : 0
   }
 }

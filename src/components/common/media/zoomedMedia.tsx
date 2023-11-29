@@ -46,7 +46,7 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
       onClick={() => handleUnzoom()}>
       <PreloadMedia
         type={type}
-        mediaStack={mediaStack}
+        stackData={mediaStack}
         fallbackPath={fallbackPath}
         alt={alt}
         ref={zoomedMediaRef}

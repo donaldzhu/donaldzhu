@@ -14,9 +14,7 @@ const usePreloadQueue = (
   useEffect(() => {
     if (!setupDone || !preloadManager) return _.noop
     callback(preloadManager)
-    return () => {
-      preloadManager.abort()
-    }
+    return () => preloadManager.abort()
   }, [preloadManager, setupDone, ...dependencies])
 }
 

@@ -11,10 +11,10 @@ import WorkIndex from './work/workIndex'
 import WorkPage from './work/workPage'
 import type { RouteProps } from '../routeTypes'
 
-const DesktopRoutes = ({ canAutoPlay }: RouteProps) => {
+const DesktopRoutes = ({ mediaSettings }: RouteProps) => {
   return (
     <Routes>
-      <Route path='/' element={<Page canAutoPlay={canAutoPlay} />}>
+      <Route path='/' element={<Page mediaSettings={mediaSettings} />}>
         <Route path='' element={<PageWithMainSketch />}>
           <Route index element={<Home />} />
           <Route path={LinkPath.Contact} element={<Contact />} />

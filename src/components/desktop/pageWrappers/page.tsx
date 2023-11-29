@@ -3,7 +3,6 @@ import { Outlet, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import useCanvas from '../../../hooks/useCanvas'
 import useGlobalCanvas from '../../../hooks/useGlobalCanvas'
-import usePreload from '../../../hooks/usePreload'
 import drawCursor from '../../../p5/sketches/drawCursor'
 import mixins from '../../../styles/mixins'
 import { typedKeys } from '../../../utils/commonUtils'
@@ -15,11 +14,13 @@ import Vid from '../../common/media/vid'
 import type { Device } from '../../../utils/queryUtil'
 import type { ReactNode } from 'react'
 import type { RequiredZoomMediaProps } from '../../common/media/mediaTypes'
-import type { handleZoomType, DesktopContextProps, PageProps } from './pageTypes'
+import type { handleZoomType, DesktopContextProps } from './pageTypes'
+import type { RouteProps } from '../../routeTypes'
 
 
 const TypedGlobalCanvas = GlobalCanvas<Device.desktop>
-const Page = ({ canAutoPlay }: PageProps) => {
+const Page = ({ mediaSettings }: RouteProps) => {
+  const { canAutoPlay, vidLoadData, preloadManager } = mediaSettings
   const [sidebar, setSidebar] = useState<ReactNode | undefined>()
   const [zoomMedia, setZoomMedia] = useState<RequiredZoomMediaProps | undefined>()
   const location = useLocation()
@@ -28,8 +29,6 @@ const Page = ({ canAutoPlay }: PageProps) => {
     mousePositionRef: useRef(null),
     hideCursorRef: useRef(false)
   }
-
-  const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
 
   const handleZoomMedia: handleZoomType = media => setZoomMedia(media)
   const canvasRef = useGlobalCanvas()

@@ -13,7 +13,7 @@ import PreloadMedia from './preloadMedia'
 import type { DesktopContextProps } from '../../desktop/pageWrappers/pageTypes'
 import type { MobileContextProps } from '../../mobile/pageWrappers/pageTypes'
 import type { MediaRef, ZoomMediaProps } from './mediaTypes'
-import type { PreloadMediaStack } from '../../../utils/helpers/preloader/preloaderTypes'
+import type { TypedPreloadStack } from '../../../utils/helpers/preloader/preloadManager'
 
 
 interface StyledZoomMediaProps {
@@ -45,9 +45,16 @@ const ZoomMedia = forwardRef((props: ZoomMediaProps, ref: MediaRef) => {
   const fallbackPath = !isMobile ?
     joinPaths('/assets/desktop/work', pageId, MediaSize.Max, src) :
     joinPaths('/assets/mobile/work', pageId, MediaSize.Max, src)
-  const mediaStack = preloadManager?.enabled ?
-    preloadManager?.workPages[pageId][mediaType]?.find(stack => stack.fileName === src) :
-    undefined
+  // const mediaStack = preloadManager?.enabled ?
+  //   preloadManager?.workPages[pageId][mediaType]?.find(stack => stack.fileName === src) :
+  //   undefined
+
+  const mediaStack = !preloadManager?.enabled ? undefined :
+    preloadManager?.preloadManager.stackData.find(stackData =>
+      stackData.stack.fileName === src &&
+      stackData.pageId === pageId &&
+      stackData.mediaType === mediaType
+    )
 
   // TODO
   const handleClick = handleZoomMedia ? () =>
@@ -65,7 +72,7 @@ const ZoomMedia = forwardRef((props: ZoomMediaProps, ref: MediaRef) => {
       <PreloadMedia
         {...rest}
         {...(rest.type === MediaFileType.Video ? { canAutoPlay: previewLoaded !== false } : {})}
-        mediaStack={mediaStack satisfies PreloadMediaStack | undefined}
+        stackData={mediaStack satisfies TypedPreloadStack | undefined}
         fallbackPath={fallbackPath}
         ref={mediaRef}
         onClick={handleClick} />

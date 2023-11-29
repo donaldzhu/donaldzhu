@@ -17,6 +17,10 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "archived/preloader copy",
+    "archived/preloadManager copy.ts"
+  ],
   "typeRoots": ["src/customTypes", "node_modules/@types"]
 }

@@ -7,9 +7,8 @@ import type { MediaStackProps } from './preloaderTypes'
 
 export class MediaStack<K extends string> {
   private listeners: (() => void)[]
-  private filePath: string
 
-  pageId: string
+  filePath: string
   fileName: string
   fileType: MediaFileType
   breakpts: K[]
@@ -17,18 +16,16 @@ export class MediaStack<K extends string> {
   stack: Record<K, ImgPreloader | VidPreloader>
 
   constructor({
-    pageId,
     fileName,
     fileType,
     filePath,
     breakpts,
-    autoPlayConfig,
+    config,
     nativeDimension,
     loadVid,
   }: MediaStackProps<K> & {
     fileType: MediaFileType
   }) {
-    this.pageId = pageId
     this.fileName = fileName
     this.fileType = fileType
     this.nativeDimension = nativeDimension
@@ -37,7 +34,7 @@ export class MediaStack<K extends string> {
 
     const Preloader = fileType === MediaFileType.Image ? ImgPreloader : VidPreloader
     this.stack = keysToObject<K, ImgPreloader | VidPreloader>(this.breakpts, size =>
-      new Preloader(this.getPath(size), autoPlayConfig, loadVid) as ImgPreloader | VidPreloader)
+      new Preloader(this.getPath(size), config, loadVid) as ImgPreloader | VidPreloader)
     this.listeners = []
   }
 

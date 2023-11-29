@@ -26,16 +26,18 @@ class Queue<T = any> {
         const result = queueFunction ? queueFunction() : undefined
         const promise = this.promisify<T | undefined>(result)
 
-        promise.then(() => {
-          const callback = typeof queueArg === 'object' ? queueArg.callback : null
-          if (callback) callback()
-          if (id !== this.currentId) return reject()
-          if (this.queueList.length) {
-            if (this.interval !== undefined)
-              setTimeout(() => serve(), this.interval)
-            else serve()
-          } else resolve()
-        })
+        promise
+          .then(res => {
+            const callback = typeof queueArg === 'object' ? queueArg.callback : null
+            if (callback) callback(res)
+            if (id !== this.currentId) return reject('Queue has been aborted.')
+            if (this.queueList.length) {
+              if (this.interval !== undefined)
+                setTimeout(() => serve(), this.interval)
+              else serve()
+            } else resolve()
+          })
+          .catch(err => console.warn(err))
       }
       serve()
     })

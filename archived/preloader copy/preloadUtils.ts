@@ -1,6 +1,6 @@
-import breakpts from '../../../data/breakpoints'
-import { toPairs } from '../../commonUtils'
-import { Breakpt, getBreakptKey } from '../../queryUtil'
+import breakpts from '../../src/data/breakpoints'
+import { toPairs } from '../../src/utils/commonUtils'
+import { Breakpt, getBreakptKey } from '../../src/utils/queryUtil'
 import type { ImgStack, MediaStack } from './mediaStack'
 import type { ImgPreloader, MediaPreloader } from './preloader'
 
@@ -57,5 +57,5 @@ export const getPreviewBreakptKey = () => {
     ([breakptKey]) => breakptKey === breakpt)
   const previewBreakptKey = breakptPairs[breakptIndex - 2][0]
   // TODO
-  return (breakptIndex > 1 && previewBreakptKey === Breakpt.l) ? previewBreakptKey : undefined
+  return (breakptIndex > 1 && previewBreakptKey === Breakpt.L) ? previewBreakptKey : undefined
 }

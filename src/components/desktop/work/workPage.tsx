@@ -14,7 +14,8 @@ import { capitalize } from '../../../utils/commonUtils'
 import { parseHtml } from '../../../utils/reactUtils'
 import MainContainer from '../../common/styled/mainContainer'
 import TextContainer from '../../common/styled/textContainer'
-import { MediaSize, getPreviewBreakptKey } from '../../../utils/helpers/preloader/preloadUtils'
+import { MediaSize, MediaType, getPreviewBreakptKey } from '../../../utils/helpers/preloader/preloadUtils'
+import { PreloadCategory } from '../../../utils/helpers/preloader/preloadManager'
 import type { DesktopContextProps } from '../pageWrappers/pageTypes'
 import type { WorkDataInterface } from './workTypes'
 
@@ -38,9 +39,16 @@ const WorkPage = ({ data, Content }: WorkPageProps) => {
 
   const { preloadManager } = useOutletContext<DesktopContextProps>()
 
-  const imageSizes = preloadManager.enabled ?
-    preloadManager.workPages[pageId].images?.map(imgStack => imgStack.loadedSizes) :
-    undefined
+  // const imageSizes = !preloadManager.enabled ? undefined :
+  //   preloadManager.workPages[pageId].images?.map(imgStack => imgStack.loadedSizes)
+
+  const imageSizes = !preloadManager.enabled ? undefined :
+    preloadManager.preloadManager.stackData.filter(stackData =>
+      stackData.category === PreloadCategory.WorkPage &&
+      stackData.pageId === pageId &&
+      stackData.mediaType === MediaType.Images
+    ).map(imgStackData => imgStackData.stack.loadedSizes)
+
   useEffect(() => {
     if (!imageSizes) return setPreviewLoaded(true)
     const previewKey = getPreviewBreakptKey()

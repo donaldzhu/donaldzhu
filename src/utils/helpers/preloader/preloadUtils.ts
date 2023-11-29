@@ -46,12 +46,29 @@ export const fileIsImg = (fileName: string) => {
   throw new Error(`${fileName} is neither an image nor a video.`)
 }
 
+// export const getPreviewBreakptKey = () => {
+//   const breakpt = getBreakptKey()
+//   const breakptPairs = toPairs(breakpts)
+//   const breakptIndex = breakptPairs.findIndex(
+//     ([breakptKey]) => breakptKey === breakpt)
+//   const previewBreakptKey = breakptPairs[breakptIndex - 2][0]
+//   // TODO
+//   return (breakptIndex > 1 && previewBreakptKey === Breakpt.L) ? previewBreakptKey : undefined
+// }
+
+// TODO
 export const getPreviewBreakptKey = () => {
   const breakpt = getBreakptKey()
-  const breakptPairs = toPairs(breakpts)
-  const breakptIndex = breakptPairs.findIndex(
-    ([breakptKey]) => breakptKey === breakpt)
-  const previewBreakptKey = breakptPairs[breakptIndex - 2][0]
-  // TODO
-  return (breakptIndex > 1 && previewBreakptKey === Breakpt.l) ? previewBreakptKey : undefined
+  return breakpt === Breakpt.L ? Breakpt.S :
+    breakpt === Breakpt.Xxl ? Breakpt.L : undefined
 }
+
+export const orderedBreakpts = [
+  MediaSize.DesktopFallback,
+  Breakpt.S,
+  Breakpt.M,
+  Breakpt.L,
+  Breakpt.Xl,
+  Breakpt.Xxl,
+  MediaSize.Max
+]

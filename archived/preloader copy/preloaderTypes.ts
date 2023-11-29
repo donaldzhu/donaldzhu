@@ -1,5 +1,5 @@
-import type { Breakpt } from '../../queryUtil'
-import type { coorTuple } from '../../utilTypes'
+import type { Breakpt } from '../../src/utils/queryUtil'
+import type { coorTuple } from '../../src/utils/utilTypes'
 import type { loadVidType } from './preloadTypes'
 import type { MediaSize, MediaType } from './preloadUtils'
 

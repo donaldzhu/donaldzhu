@@ -31,7 +31,7 @@ export class ImgPreloader extends MediaPreloader {
 }
 
 export class VidPreloader extends MediaPreloader {
-  private autoPlayConfig: {
+  private config: {
     canAutoPlay: boolean | undefined
   }
   private loadVid: loadVidType
@@ -40,11 +40,11 @@ export class VidPreloader extends MediaPreloader {
 
   constructor(
     src: string,
-    autoPlayConfig: { canAutoPlay: boolean | undefined },
+    config: { canAutoPlay: boolean | undefined },
     loadVid: loadVidType
   ) {
     super(src, MediaFileType.Video)
-    this.autoPlayConfig = autoPlayConfig
+    this.config = config
     this.loadVid = loadVid
     this.loadCount = 0
     this.threshold = 0.25
@@ -53,12 +53,13 @@ export class VidPreloader extends MediaPreloader {
   // TODO: kinda sucks and implementation dependent
   // will hopefully fix after switching to live streaming
   preload() {
-    if (this.loadCount >= 2 || !this.autoPlayConfig.canAutoPlay) return Promise.resolve()
-    return this.loadVid(this.src, this.threshold)
+    if (this.loadCount >= 2 || !this.config.canAutoPlay) return Promise.resolve()
+    const result = this.loadVid(this.src, this.threshold)
       .then(() => {
         this.loadCount++
         this.threshold = 1
         this.isLoaded = true
       })
+    return result
   }
 }

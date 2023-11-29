@@ -1,7 +1,7 @@
 import _ from 'lodash'
-import breakpts from '../../../data/breakpoints'
-import { joinPaths, keysToObject, typedKeys } from '../../commonUtils'
-import { getPreloadBreakpt } from '../../queryUtil'
+import breakpts from '../../src/data/breakpoints'
+import { joinPaths, keysToObject, typedKeys } from '../../src/utils/commonUtils'
+import { getPreloadBreakpt } from '../../src/utils/queryUtil'
 import { ImgPreloader, VidPreloader } from './preloader'
 import {
   getPreviewBreakptKey,
@@ -10,8 +10,8 @@ import {
   MediaSize,
   MediaType
 } from './preloadUtils'
-import type { Breakpt } from '../../queryUtil'
-import type { coorTuple } from '../../utilTypes'
+import type { Breakpt } from '../../src/utils/queryUtil'
+import type { coorTuple } from '../../src/utils/utilTypes'
 import type { MediaStackProps, PreloadBreakpt } from './preloaderTypes'
 
 export abstract class MediaStack {

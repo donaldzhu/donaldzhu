@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import toSpaceCase from 'to-space-case'
-import nativeDimensions from '../../../data/media/nativeDimensions/desktop.json'
-import workData from '../../../data/work/workData.json'
+import nativeDimensions from '../src/data/media/nativeDimensions/desktop.json'
+import workData from '../src/data/work/workData.json'
 import {
   filterFalsy,
   loopObject,
@@ -9,15 +9,15 @@ import {
   partition,
   typedKeys,
   validateString
-} from '../../commonUtils'
-import { getPreloadBreakpt } from '../../queryUtil'
-import Queue from '../queue'
-import breakpts from '../../../data/breakpoints'
-import { MediaStack } from './mediaStack'
-import { fileIsImg, getPreviewBreakptKey, isImgSize, MediaFileType, MediaSize, MediaType, Verbosity } from './preloadUtils'
-import type { coorTuple, queueArgType, queueFunctionType } from '../../utilTypes'
-import type { loadVidType } from './preloadTypes'
-import type { MediaBreakpts, PreloadMediaStack } from './preloaderTypes'
+} from '../src/utils/commonUtils'
+import { getPreloadBreakpt } from '../src/utils/queryUtil'
+import Queue from '../src/utils/helpers/queue'
+import breakpts from '../src/data/breakpoints'
+import { MediaStack } from '../src/utils/helpers/preloader/mediaStack'
+import { fileIsImg, getPreviewBreakptKey, isImgSize, MediaFileType, MediaSize, MediaType, Verbosity } from '../src/utils/helpers/preloader/preloadUtils'
+import type { coorTuple, queueArgType, queueFunctionType } from '../src/utils/utilTypes'
+import type { loadVidType } from '../src/utils/helpers/preloader/preloadTypes'
+import type { MediaBreakpts, PreloadMediaStack } from '../src/utils/helpers/preloader/preloaderTypes'
 
 const LOG_COLORS = {
   [MediaSize.DesktopFallback]: 'yellow',
@@ -36,13 +36,13 @@ class PreloadManager {
   private mainQueueName?: MainQueue
   private mainQueuePageId?: string
   private subqueues: Queue[]
-  private isComplete: boolean
   private verboseLevel: Verbosity
   private loadVid: loadVidType
 
   thumbnails: PreloadMediaStack[]
   workPages: Record<string, Partial<Record<MediaType, PreloadMediaStack[]>>>
   enabled: boolean
+  isComplete: boolean
   autoPlayConfig: { canAutoPlay: boolean | undefined }
 
   constructor(canAutoPlay: boolean | undefined, loadVid: loadVidType) {
@@ -89,12 +89,11 @@ class PreloadManager {
         if (!listed || !enabled) return
 
         return new MediaStack({
-          pageId,
           fileName,
           filePath: 'assets/desktop/thumbnails',
           fileType: animatedThumbnail ? MediaFileType.Video : MediaFileType.Image,
           breakpts: stackBreakpts,
-          autoPlayConfig: this.autoPlayConfig,
+          config: this.autoPlayConfig,
           nativeDimension,
           loadVid: this.loadVid
         })
@@ -117,12 +116,11 @@ class PreloadManager {
           fileIsImg(fileName) ? MediaType.Images : MediaType.Videos;
 
         (workPage[mediaType] ??= []).push(new MediaStack({
-          pageId,
           fileName,
           fileType: fileIsImg(fileName) ? MediaFileType.Image : MediaFileType.Video,
           filePath: `assets/desktop/work/${pageId}`,
           breakpts: stackBreakpts,
-          autoPlayConfig: this.autoPlayConfig,
+          config: this.autoPlayConfig,
           nativeDimension,
           loadVid: this.loadVid
         }))

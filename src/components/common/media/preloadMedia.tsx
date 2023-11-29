@@ -1,32 +1,36 @@
 import _ from 'lodash'
 import { forwardRef, useEffect, useState } from 'react'
-import { MediaFileType, MediaSize } from '../../../utils/helpers/preloader/preloadUtils'
-import { getPreloadBreakpt } from '../../../utils/queryUtil'
+import { MediaFileType, MediaSize, orderedBreakpts } from '../../../utils/helpers/preloader/preloadUtils'
+import { getBreakptKey } from '../../../utils/queryUtil'
+import { sortLike } from '../../../utils/commonUtils'
 import Media from './media'
 import type { MediaRef, PreloadMediaProps } from './mediaTypes'
+import type { MediaBreakpts } from '../../../utils/helpers/preloader/preloaderTypes'
 
 const PreloadMedia = forwardRef((props: PreloadMediaProps, ref: MediaRef) => {
-  const { mediaStack, isZoomed, fallbackPath, ...rest } = props
+  const { stackData, isZoomed, fallbackPath, ...rest } = props
+  const mediaStack = stackData?.stack
 
   const mediaIsVid = rest.type === MediaFileType.Video
-  const getLoadState = (mediaStack = props.mediaStack) => {
+  const getLoadState = (mediaStack = stackData?.stack) => {
     if (!mediaStack) return {
       src: fallbackPath,
       hasLoaded: true
     }
 
-    let sizes = _.chain(mediaStack.loadedSizes)
+    let sizes = _.chain(sortLike(mediaStack.loadedSizes, orderedBreakpts))
+
     if (!isZoomed) sizes = sizes.without(MediaSize.Max)
     let size = _.last(sizes.value())
 
     const hasLoaded = mediaIsVid || !!size
 
     if (mediaIsVid)
-      size = isZoomed ? MediaSize.Max : getPreloadBreakpt()
+      size = isZoomed ? MediaSize.Max : getBreakptKey()
     else size ||= MediaSize.DesktopFallback
 
     return {
-      src: mediaStack.stack[size].src,
+      src: mediaStack.stack[size as MediaBreakpts].src,
       hasLoaded
     }
   }
@@ -38,6 +42,7 @@ const PreloadMedia = forwardRef((props: PreloadMediaProps, ref: MediaRef) => {
     if (!mediaStack) return _.noop
     const handleStackLoad = () => {
       const newSrc = getLoadState()
+      // console.log(newSrc)
       if (!(isZoomed && mediaIsVid)) setLoadState(newSrc)
     }
 

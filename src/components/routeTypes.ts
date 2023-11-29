@@ -1,3 +1,8 @@
+import type useCanAutoPlay from '../hooks/useCanAutoPlay'
+import type usePreload from '../hooks/usePreload'
+
 export interface RouteProps {
-  canAutoPlay: boolean | undefined
+  mediaSettings: {
+    canAutoPlay: ReturnType<typeof useCanAutoPlay>
+  } & ReturnType<typeof usePreload>
 }

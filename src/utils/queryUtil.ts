@@ -2,11 +2,11 @@ import breakpts from '../data/breakpoints'
 import { mapObject, toPairs } from './commonUtils'
 
 export enum Breakpt {
-  s = 's',
-  m = 'm',
-  l = 'l',
-  xl = 'xl',
-  xxl = 'xxl'
+  S = 's',
+  M = 'm',
+  L = 'l',
+  Xl = 'xl',
+  Xxl = 'xxl'
 }
 
 export enum Device {
@@ -25,9 +25,9 @@ export const mobileQuery = maxQueries.l
 
 export const getBreakptKey = () => {
   if (window.screen.width >= breakpts.xxl)
-    return Breakpt.xxl
+    return Breakpt.Xxl
   if (window.screen.width < breakpts.s)
-    return Breakpt.s
+    return Breakpt.S
   const breakptPairs = toPairs(breakpts)
     .sort((a, b) => a[1] - b[1])
   const breakptPair = breakptPairs
@@ -37,11 +37,3 @@ export const getBreakptKey = () => {
 }
 
 export const getIsMobile = () => window.screen.width <= breakpts.l
-
-
-// TODO
-export const getPreloadBreakpt = () => {
-  const breakpt = getBreakptKey()
-  return breakpt === Breakpt.m || breakpt === Breakpt.s ?
-    Breakpt.l : breakpt
-}

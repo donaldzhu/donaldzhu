@@ -5,7 +5,7 @@ export interface CoorObject { x: number, y: number }
 export interface CoorObject3D { x: number, y: number, z: number }
 export type queueFunctionType<T> = (() => T) | {
   run: () => T,
-  callback?: () => void
+  callback?: (res: Awaited<T> | (Awaited<T> | undefined)[] | undefined) => void
 }
 
 export enum BrowserType {

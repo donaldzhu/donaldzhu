@@ -12,7 +12,8 @@ import WorkPage from './work/workPage'
 import type { RouteProps } from '../routeTypes'
 
 
-const MobileRoutes = ({ canAutoPlay }: RouteProps) => {
+const MobileRoutes = ({ mediaSettings }: RouteProps) => {
+  const { canAutoPlay } = mediaSettings
   return (
     <Routes>
       <Route path='/' element={<Page canAutoPlay={canAutoPlay} />}>

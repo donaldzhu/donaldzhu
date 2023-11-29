@@ -11,12 +11,15 @@ import PageMobileTemp from './components/mobileTemp/pageMobileTemp'
 import HomeMobileTemp from './components/mobileTemp/homeMobileTemp'
 import MobileRoutes from './components/mobile/routes'
 import DesktopRoutes from './components/desktop/routes'
-
+import usePreload from './hooks/usePreload'
 
 const App = () => {
   const isMobile = useIsMobile()
   const canAutoPlay = useCanAutoPlay()
-  // const { vidLoadData, preloadManager } = usePreload(canAutoPlay)
+  const mediaSettings = {
+    canAutoPlay,
+    ...usePreload({ canAutoPlay, isMobile })
+  }
 
   return (
     <StyledGlobal>
@@ -28,8 +31,8 @@ const App = () => {
                 <Route path='' element={<HomeMobileTemp />} />
                 <Route path='*' element={<Navigate to='/' replace />} />
               </Route> :
-              <MobileRoutes canAutoPlay={canAutoPlay} />
-            ) : <DesktopRoutes canAutoPlay={canAutoPlay} />
+              <MobileRoutes mediaSettings={mediaSettings} />
+            ) : <DesktopRoutes mediaSettings={mediaSettings} />
           } />
         </Routes>
       </HashRouter>

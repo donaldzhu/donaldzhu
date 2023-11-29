@@ -1,16 +1,17 @@
 import _ from 'lodash'
+import { usePrevious } from '@uidotdev/usehooks'
 import { useEffect, useMemo, useState } from 'react'
 import PreloadManager from '../utils/helpers/preloader/preloadManager'
 import type { ReactEventHandler } from 'react'
+import type { PreloadManagerConfig } from '../utils/helpers/preloader/preloaderTypes'
 
 interface LoadDataInterface {
   promise: Promise<void>
   onProgress: ReactEventHandler<HTMLVideoElement>
 }
 
-const usePreload = (canAutoPlay: boolean | undefined) => {
+const usePreload = (config: PreloadManagerConfig) => {
   const [vidLoadData, setVidLoadData] = useState<Record<string, LoadDataInterface>>({})
-
   const loadVid = (src: string, threshold: number) => {
     if (vidLoadData[src]) return Promise.resolve()
     const loadData: Partial<LoadDataInterface> = {}
@@ -27,12 +28,13 @@ const usePreload = (canAutoPlay: boolean | undefined) => {
     return loadData.promise
   }
 
-  const preloadManager = useMemo(() => new PreloadManager(canAutoPlay, loadVid), [])
+  const preloadManager = useMemo(() => new PreloadManager(config, loadVid), [])
 
   useEffect(() => {
-    preloadManager.autoPlayConfig.canAutoPlay = canAutoPlay
+    Object.assign(preloadManager.config, config)
     preloadManager.restart()
-  }, [canAutoPlay])
+  }, [config.canAutoPlay, config.isMobile])
+
   return { vidLoadData, preloadManager }
 }
 
