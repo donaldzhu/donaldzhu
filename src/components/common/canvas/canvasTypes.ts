@@ -5,7 +5,7 @@ import type useGlobalCanvas from '../../../hooks/useGlobalCanvas'
 import type { P5Event } from '../../../utils/p5Utils'
 import type { MotionSettingInterface } from '../../../hooks/useMotion'
 import type Gimbal from '../../../utils/helpers/motion/gimbal'
-import type { Device } from '../../../utils/queryUtil'
+import type { Device } from '../../../utils/breakptTypes'
 
 export interface DesktopCanvasStates {
   mousePositionRef: MutableRefObject<null | [number, number]>
@@ -31,9 +31,9 @@ export interface MobileCanvasStates {
   engine: Engine
 }
 
-export type TypedCanvasStates<T extends Device> = T extends Device.desktop ?
+export type TypedCanvasStates<T extends Device> = T extends Device.Desktop ?
   DesktopCanvasStates : MobileCanvasStates
-type PartialTypedCanvasStates<T extends Device> = T extends Device.desktop ?
+type PartialTypedCanvasStates<T extends Device> = T extends Device.Desktop ?
   DesktopCanvasStates : PartialMobileCanvasStates
 
 

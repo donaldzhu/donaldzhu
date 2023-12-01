@@ -2,10 +2,10 @@ import styled from 'styled-components'
 import { domSizes } from '../../../../styles/sizes'
 import SvgBorder from '../../../common/svgBorder'
 import HomeIcon from './homeIcon'
-import type { Device } from '../../../../utils/queryUtil'
+import type { Device } from '../../../../utils/breakptTypes'
 import type { GlobalCanvasStates } from '../../../common/canvas/canvasTypes'
 
-const Header = ({ canvasRef, canvasStates }: GlobalCanvasStates<Device.desktop>) => {
+const Header = ({ canvasRef, canvasStates }: GlobalCanvasStates<Device.Desktop>) => {
   return (
     <header>
       <HomeIconContainer>

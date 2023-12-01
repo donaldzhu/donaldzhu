@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { addEventListener } from '../utils/reactUtils'
-import { FileExt } from '../utils/helpers/preloader/preloadUtils'
+import { VidExt } from '../utils/helpers/preloader/preloadUtils'
 import useIsMobile from './useIsMobile'
 
 const useCanAutoPlay = () => {
@@ -12,7 +12,7 @@ const useCanAutoPlay = () => {
 
   useEffect(() => {
     const video = document.createElement('video')
-    video.src = '/assets/autoplay-test/test' + '.' + (isMobile ? FileExt.Mp4 : FileExt.Webm)
+    video.src = '/assets/autoplay-test/test' + '.' + (isMobile ? VidExt.Mp4 : VidExt.Webm)
     video.muted = true
     video.playsInline = true
     video.play()

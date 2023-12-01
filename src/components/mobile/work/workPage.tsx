@@ -8,6 +8,7 @@ import { capitalize } from '../../../utils/commonUtils'
 import TextContainer from '../../common/styled/textContainer'
 import { parseHtml } from '../../../utils/reactUtils'
 import { WorkPageContext } from '../../../contexts/context'
+import usePreloadQueue from '../../../hooks/usePreloadQueue'
 import type { WorkDataInterface } from '../../desktop/work/workTypes'
 import type { WorkPageContentProps } from './workPageTypes'
 
@@ -15,10 +16,13 @@ interface WorkPageProps {
   data: WorkDataInterface
   Content: (props: WorkPageContentProps) => JSX.Element
 }
-
 const typedWorkDescriptions: Record<string, string> = workDescriptions
 const WorkPage = ({ data, Content }: WorkPageProps) => {
-  const { title, date, tags, medium, id } = data
+  const { title, date, tags, medium } = data
+  const pageId = data.id
+
+  usePreloadQueue(true, preloadManager =>
+    preloadManager.pagePreload(pageId), [data])
 
   const WorkInfo = useCallback(() => {
     return (
@@ -37,11 +41,11 @@ const WorkPage = ({ data, Content }: WorkPageProps) => {
   }, [data])
 
   const Description = useCallback(() => <TextContainer>
-    {parseHtml(typedWorkDescriptions[id])}
+    {parseHtml(typedWorkDescriptions[pageId])}
   </TextContainer>, [data])
 
   return (
-    <WorkPageContext.Provider value={{ pageId: id }}>
+    <WorkPageContext.Provider value={{ pageId }}>
       <ContentContainer>
         <Content WorkInfo={WorkInfo} Description={Description} />
       </ContentContainer>
@@ -76,7 +80,6 @@ const ItemDelimiter = styled.span`
 const Tags = styled.i`
   ${mixins.slant()}
 `
-
 
 const ContentContainer = styled.div`
   ${mixins.flex()}

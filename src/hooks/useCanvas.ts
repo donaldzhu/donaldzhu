@@ -5,7 +5,7 @@ import { loopObject } from '../utils/commonUtils'
 import { P5Event } from '../utils/p5Utils'
 import { validateRef } from '../utils/typeUtils'
 import type p5 from 'p5'
-import type { Device } from '../utils/queryUtil'
+import type { Device } from '../utils/breakptTypes'
 import type {
   GlobalCanvasStates,
   p5Callback,

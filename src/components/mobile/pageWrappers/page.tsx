@@ -12,15 +12,19 @@ import useMemoRef from '../../../hooks/useMemoRef'
 import { validateString } from '../../../utils/commonUtils'
 import Header from '../header'
 import Menu from '../menu'
-import type { PageProps } from '../../desktop/pageWrappers/pageTypes'
-import type { Device } from '../../../utils/queryUtil'
+import VidLoadContainer from '../../common/media/vidLoadContainer'
+import ZoomedMedia from '../../common/media/zoomedMedia'
+import type { Device } from '../../../utils/breakptTypes'
 import type { MobileContextProps } from './pageTypes'
+import type { RouteProps } from '../../routeTypes'
+import type { handleZoomMediaType, RequiredZoomMediaProps } from '../../common/media/mediaTypes'
 
 interface StyledGlobalCanvasProps {
   $menuIsShown: boolean
 }
 
-const Page = ({ canAutoPlay }: PageProps) => {
+const Page = ({ mediaSettings }: RouteProps) => {
+  const { canAutoPlay, vidLoadData, preloadManager } = mediaSettings
   const location = useLocation()
   const prevLocation = usePrevious(location)
   const engine = usePhysics()
@@ -31,6 +35,7 @@ const Page = ({ canAutoPlay }: PageProps) => {
   const [menuIsShown, setMenuIsShown] = useState(false)
   const [shouldFade, setShouldFade] = useState(true)
   const [shouldHideGyro, setShouldHideGyro] = useState(false)
+  const [zoomMedia, setZoomMedia] = useState<RequiredZoomMediaProps | undefined>()
 
   const {
     motionSettings,
@@ -52,6 +57,8 @@ const Page = ({ canAutoPlay }: PageProps) => {
       isEnabled: false
     })
   }
+
+  const handleZoomMedia: handleZoomMediaType = media => setZoomMedia(media)
 
   useEffect(() => {
     if (menuIsShown) return noOverflow()
@@ -79,6 +86,9 @@ const Page = ({ canAutoPlay }: PageProps) => {
     <Container $menuIsShown={menuIsShown}>
       <Header isShown={menuIsShown} handleClick={handleMenuClick} />
       {menuIsShown && <Menu />}
+      {zoomMedia && <ZoomedMedia
+        zoomMedia={zoomMedia}
+        handleUnzoom={() => setZoomMedia(undefined)} />}
       <AnimationContainer
         $shouldFade={shouldFade}
         onAnimationEnd={() => setShouldFade(false)}>
@@ -91,9 +101,14 @@ const Page = ({ canAutoPlay }: PageProps) => {
           canvasRef,
           canvasStates,
           shouldHideGyro,
+          handleZoomMedia,
+          preloadManager,
           handleGyroButtonClick
         } satisfies MobileContextProps} />
       </AnimationContainer>
+      <VidLoadContainer
+        vidLoadData={vidLoadData}
+        canAutoPlay={canAutoPlay} />
     </Container>
   )
 }
@@ -119,7 +134,7 @@ const Container = styled.div<StyledGlobalCanvasProps>`
   }
 `
 
-const StyledGlobalCanvas = styled(GlobalCanvas<Device.mobile>) <StyledGlobalCanvasProps>`
+const StyledGlobalCanvas = styled(GlobalCanvas<Device.Mobile>) <StyledGlobalCanvasProps>`
   ${mixins.fixed()}
   ${({ $menuIsShown }) => validateString(!$menuIsShown, mixins.highZIndex(4))}
 `

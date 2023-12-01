@@ -7,7 +7,8 @@ import colors from '../../../styles/colors'
 import mixins from '../../../styles/mixins'
 import Canvas from '../../common/canvas/canvas'
 import useLocalCanvas from '../../../hooks/useLocalCanvas'
-import type { Device } from '../../../utils/queryUtil'
+import usePreloadQueue from '../../../hooks/usePreloadQueue'
+import type { Device } from '../../../utils/breakptTypes'
 import type { MobileContextProps } from './pageTypes'
 
 interface StyledGyroButtonProps {
@@ -22,7 +23,10 @@ const PageWithSketch = () => {
   const { canvasStates, shouldHideGyro, handleGyroButtonClick } =
     useOutletContext<MobileContextProps>()
   const { motionSettings, gyroStates } = canvasStates
-  const canvasHandlers = useLocalCanvas<Device.mobile>(drawMobileSketch)
+  const { canvasHandlers, setupDone } = useLocalCanvas<Device.Mobile>(drawMobileSketch)
+
+  usePreloadQueue(setupDone, preloadManager =>
+    preloadManager.defaultPreload())
   return (
     <Container>
       <StyledCanvas {...canvasHandlers} />

@@ -13,7 +13,7 @@ import WorkImg from '../../common/media/workImg'
 import WorkImgGroup from '../../common/media/workImgGroup'
 import WorkVid from '../../common/media/workVid'
 import RowContainer from '../../common/rowContainer'
-import type { Device } from '../../../utils/queryUtil'
+import type { Device } from '../../../utils/breakptTypes'
 
 const PageStroke = () => {
   const [hoveringCard, setHoveringCard] = useState<number | null>(null)
@@ -26,7 +26,7 @@ const PageStroke = () => {
   ]
 
   useCanvas(() => drawElemBorders({ elemRefs: [placeholderRef, ...cardRefs] }))
-  useCanvas<Device.desktop>(() => drawPanto({ placeholderRef, isClearingRef }))
+  useCanvas<Device.Desktop>(() => drawPanto({ placeholderRef, isClearingRef }))
 
   const handleClear = () => isClearingRef.current = true
 

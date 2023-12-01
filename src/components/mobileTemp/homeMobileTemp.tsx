@@ -10,7 +10,7 @@ import { em } from '../../utils/sizeUtils'
 import Canvas from '../common/canvas/canvas'
 import useLocalCanvas from '../../hooks/useLocalCanvas'
 import MobileConstructionTemp from './mobileConstructionTemp'
-import type { Device } from '../../utils/queryUtil'
+import type { Device } from '../../utils/breakptTypes'
 import type { PageMobileContextTemp } from './mobileTypeTemp'
 
 interface StyledGyroButtonProps {
@@ -22,7 +22,7 @@ const HomeMobileTemp = () => {
   const { canvasStates, handleGyroButtonClick } = useOutletContext<PageMobileContextTemp>()
   const { motionSettings, gyroStates } = canvasStates
 
-  const canvasHandlers = useLocalCanvas<Device.mobile>(drawMobileSketch)
+  const { canvasHandlers } = useLocalCanvas<Device.Mobile>(drawMobileSketch)
   return (
     <div>
       <StyledCanvas {...canvasHandlers} />

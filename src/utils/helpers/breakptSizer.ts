@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import breakpts from '../../data/breakpoints'
 import { sortLike, typedKeys } from '../commonUtils'
-import { Breakpt } from '../queryUtil'
+import { Breakpt } from '../breakptTypes'
 import { getRem } from '../sizeUtils'
 import Size from './size'
 

@@ -7,14 +7,14 @@ import { domSizes } from '../../../../styles/sizes'
 import { percent } from '../../../../utils/sizeUtils'
 import Anchor from '../../../common/anchor'
 import type { GlobalCanvasStates } from '../../../common/canvas/canvasTypes'
-import type { Device } from '../../../../utils/queryUtil'
+import type { Device } from '../../../../utils/breakptTypes'
 
 
-const HomeIcon = ({ canvasRef, canvasStates }: GlobalCanvasStates<Device.desktop>) => {
+const HomeIcon = ({ canvasRef, canvasStates }: GlobalCanvasStates<Device.Desktop>) => {
   const placeholderRef = useRef<HTMLDivElement | null>(null)
   const isHoveringRef = useRef(false)
 
-  useCanvas<Device.desktop>(() => drawHomeIcon({ placeholderRef, isHoveringRef }), {
+  useCanvas<Device.Desktop>(() => drawHomeIcon({ placeholderRef, isHoveringRef }), {
     canvasRef, canvasStates
   })
 

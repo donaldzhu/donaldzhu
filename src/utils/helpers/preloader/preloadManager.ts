@@ -3,19 +3,19 @@ import toSpaceCase from 'to-space-case'
 import desktopDimensions from '../../../data/media/nativeDimensions/desktop.json'
 import mobileDimensions from '../../../data/media/nativeDimensions/mobile.json'
 import workData from '../../../data/work/workData.json'
-import { filterFalsy, joinPaths, loopObject, typedKeys, validateString } from '../../commonUtils'
+import { getDevice, filterFalsy, joinPaths, loopObject, typedKeys, validateString } from '../../commonUtils'
 import breakpts from '../../../data/breakpoints'
-import { Device, getBreakptKey } from '../../queryUtil'
+import { getBreakptKey } from '../../queryUtil'
+import { Device } from '../../breakptTypes'
 import { MediaStack } from './mediaStack'
-import { MediaFileType, getPreviewBreakptKey, MediaSize, MediaType, fileIsImg, Verbosity } from './preloadUtils'
-import PreloadQueuer from './preloadQueuer'
-import type { MediaBreakpts, PreloadManagerConfig } from './preloaderTypes'
+import { MediaFileType, getPreviewBreakptKey, MediaSize, MediaType, fileIsImg, Verbosity, Fallback } from './preloadUtils'
+import PreloadQueuer, { type PreloadStack } from './preloadQueuer'
+import { type MediaBreakpts, type PreloaderConfig } from './preloaderTypes'
 import type { coorTuple } from '../../utilTypes'
 import type { loadVidType } from './preloadTypes'
-import type { PreloadStack } from './preloadQueuer'
 
 const LOG_COLORS = {
-  [MediaSize.DesktopFallback]: 'yellow',
+  [MediaSize.Fallback]: 'yellow',
   [MediaSize.Preview]: 'cyan',
   [MediaSize.Full]: 'orange',
   [MediaSize.Max]: 'red',
@@ -37,30 +37,50 @@ export type TypedPreloadStack = PreloadStack<PreloadManagerStack, MediaBreakpts>
 
 type DimensionData = [string, coorTuple][]
 
+enum PreloadName {
+  Default = 'defaultPreload',
+  Page = 'pagePreload'
+}
 
 class PreloadManager {
   private loadVid: loadVidType
   private verbosity: Verbosity
+  private breakpts: MediaBreakpts[]
+  private preloadQueuer: PreloadQueuer<PreloadManagerStack, MediaBreakpts>
+  private currentPreloadName: PreloadName | undefined
 
-  config: PreloadManagerConfig
+  config: PreloaderConfig
   enabled: boolean
-  preloadManager: PreloadQueuer<PreloadManagerStack, MediaBreakpts>
+  imgPreloaded: boolean
 
-  constructor(config: PreloadManagerConfig, loadVid: loadVidType) {
+  constructor(config: PreloaderConfig, loadVid: loadVidType) {
     this.config = config
     this.loadVid = loadVid
-    this.verbosity = Verbosity.Diagnostic
+
+    this.verbosity = Verbosity.Quiet
     this.enabled = true
-    this.preloadManager = new PreloadQueuer<PreloadManagerStack, MediaBreakpts>({
+    this.preloadQueuer = new PreloadQueuer<PreloadManagerStack, MediaBreakpts>({
       queueInterval: 0
     })
+    this.breakpts = [
+      ...typedKeys(breakpts),
+      Fallback.MobileFallback,
+      Fallback.DesktopFallback,
+      MediaSize.Max
+    ]
+
+    this.currentPreloadName = undefined
+    this.imgPreloaded = false
+
+    if (!this.enabled || process.env.NODE_ENV === 'production')
+      this.verbosity = Verbosity.Quiet
 
     if (this.enabled) {
-      this.createThumbnailStacks(Device.desktop)
-      this.createWorkPagesStacks(Device.desktop)
-      this.createThumbnailStacks(Device.mobile)
-      this.createWorkPagesStacks(Device.mobile)
-    } else this.verbosity = Verbosity.Quiet
+      this.createThumbnailStacks(Device.Desktop)
+      this.createWorkPagesStacks(Device.Desktop)
+      this.createThumbnailStacks(Device.Mobile)
+      this.createWorkPagesStacks(Device.Mobile)
+    }
 
     if (this.verbosity >= Verbosity.Normal) {
       console.log(`Breakpoint: ${getBreakptKey().toLocaleUpperCase()}`)
@@ -69,19 +89,19 @@ class PreloadManager {
   }
 
   private createThumbnailStacks(device: Device) {
-    const nativeDimensions = (device === Device.desktop ?
+    const nativeDimensions = (device === Device.Desktop ?
       desktopDimensions : mobileDimensions).thumbnails as DimensionData
     nativeDimensions.map(([fileName, nativeDimension]) => {
       const pageId = fileName.replace(/\.[^/.]+$/, '')
       const { animatedThumbnail, listed, enabled } = workData.find(page => page.id === pageId) ?? {}
       if (!listed || !enabled) return
 
-      this.preloadManager.stackData.push({
+      this.preloadQueuer.stackData.push({
         stack: new MediaStack<MediaBreakpts>({
           fileName,
           filePath: joinPaths('assets', device, 'thumbnails'),
           fileType: animatedThumbnail ? MediaFileType.Video : MediaFileType.Image,
-          breakpts: [...typedKeys(breakpts), MediaSize.DesktopFallback, MediaSize.Max],
+          breakpts: this.breakpts,
           config: this.config,
           nativeDimension,
           loadVid: this.loadVid
@@ -94,16 +114,16 @@ class PreloadManager {
   }
 
   private createWorkPagesStacks(device: Device) {
-    const nativeDimensions = (device === Device.desktop ?
+    const nativeDimensions = (device === Device.Desktop ?
       desktopDimensions : mobileDimensions).work
     loopObject(nativeDimensions, (pageId, nativeDimensions) => {
       (nativeDimensions as DimensionData).forEach(([fileName, nativeDimension]) =>
-        this.preloadManager.stackData.push({
+        this.preloadQueuer.stackData.push({
           stack: new MediaStack<MediaBreakpts>({
             fileName,
             fileType: fileIsImg(fileName) ? MediaFileType.Image : MediaFileType.Video,
             filePath: joinPaths('assets', device, 'work', pageId),
-            breakpts: [...typedKeys(breakpts), MediaSize.DesktopFallback, MediaSize.Max],
+            breakpts: this.breakpts,
             config: this.config,
             nativeDimension,
             loadVid: this.loadVid
@@ -118,56 +138,71 @@ class PreloadManager {
   }
 
   defaultPreload() {
-    const preloadName = 'defaultPreload'
-    this.logPreload(preloadName)
-    this.preloadManager.createMainQueue([
+    this.currentPreloadName = PreloadName.Default
+    this.logPreload()
+    this.preloadQueuer.createMainQueue([
       this.preloadThumbnails(),
-      this.preloadAllPages(MediaSize.DesktopFallback),
+      this.preloadAllPages(MediaSize.Fallback),
       this.preloadAllPages(MediaSize.Preview),
       this.preloadAllPages(MediaSize.Full),
-      this.preloadAllPages(MediaSize.Max),
+      this.config.isMobile ? undefined :
+        this.preloadAllPages(MediaSize.Max),
     ]).then(() => {
       this.logFinished(false)
+      this.currentPreloadName = undefined
       this.preloadRemainingVid()
     }).catch(() =>
-      this.logAborted(preloadName)
+      this.logAborted()
     )
   }
 
   pagePreload(pageIdToLoad: string) {
-    const preloadName = 'pagePreload'
-    this.logPreload(preloadName)
+    this.currentPreloadName = PreloadName.Page
+    this.logPreload()
     const currentPageLogText = `current page (${pageIdToLoad})`
-    this.preloadManager.createMainQueue([
-      this.preloadPage(MediaSize.DesktopFallback, pageIdToLoad),
-      this.preloadPage(MediaSize.Preview, pageIdToLoad),
+    this.preloadQueuer.createMainQueue([
+      this.preloadPage(MediaSize.Fallback, pageIdToLoad),
+      {
+        run: this.preloadPage(MediaSize.Preview, pageIdToLoad),
+        callback: () => this.imgPreloaded = true
+      },
       {
         run: this.preloadPage(MediaSize.Full, pageIdToLoad),
         callback: this.logGroup(currentPageLogText, MediaSize.Full)
       },
       this.preloadThumbnails(),
-      {
+      this.config.isMobile ? undefined : {
         run: this.preloadPage(MediaSize.Max, pageIdToLoad),
         callback: this.logGroup(currentPageLogText, MediaSize.Max)
       },
-      this.preloadAllPages(MediaSize.DesktopFallback, pageIdToLoad),
+      this.preloadAllPages(MediaSize.Fallback, pageIdToLoad),
       this.preloadAllPages(MediaSize.Preview, pageIdToLoad),
       this.preloadAllPages(MediaSize.Full, pageIdToLoad),
-      this.preloadAllPages(MediaSize.Max, pageIdToLoad),
+      this.config.isMobile ? undefined :
+        this.preloadAllPages(MediaSize.Max, pageIdToLoad),
     ]).then(() => {
       this.logFinished(false)
+      this.currentPreloadName = undefined
       this.preloadRemainingVid()
     }).catch(() =>
-      this.logAborted(preloadName)
+      this.logAborted()
     )
   }
 
   restart() {
-    this.preloadManager.restart()
+    this.preloadQueuer.restart()
+    this.cleanup()
   }
 
   abort() {
-    this.preloadManager.abort()
+    this.preloadQueuer.abort()
+    this.cleanup()
+    this.currentPreloadName = undefined
+  }
+
+  cleanup() {
+    if (!this.preloadQueuer.isComplete)
+      this.imgPreloaded = false
   }
 
   private preloadAllPages(
@@ -175,9 +210,10 @@ class PreloadManager {
     excludeId?: string | null,
     isFullVid?: boolean
   ) {
-    if (!size) return () => Promise.resolve(false)
+    if (!size)
+      return () => Promise.resolve(false)
     const preloadType = (type: MediaType) => ({
-      run: () => this.preloadManager.addToSubqueue(
+      run: () => this.preloadQueuer.addToSubqueue(
         filterFalsy(_.pull(this.sortedPageIds, excludeId))
           .map(pageIdToLoad => this.preloadPageType(size, type, pageIdToLoad))
       ),
@@ -185,7 +221,7 @@ class PreloadManager {
     })
 
     return {
-      run: () => this.preloadManager.addToSubqueue(
+      run: () => this.preloadQueuer.addToSubqueue(
         this.getPreloadTypes(size, isFullVid)
           .map(type => preloadType(type))
       ),
@@ -199,7 +235,7 @@ class PreloadManager {
     isFullVid = false
   ) {
     if (!size) return () => Promise.resolve(false)
-    return () => this.preloadManager.addToSubqueue(
+    return () => this.preloadQueuer.addToSubqueue(
       this.getPreloadTypes(size, isFullVid)
         .map(type => this.preloadPageType(size, type, pageIdToLoad))
     )
@@ -211,12 +247,13 @@ class PreloadManager {
     pageIdToLoad: string
   ) {
     return {
-      run: () => this.preloadManager.preload(
+      run: () => this.preloadQueuer.preload(
         this.getMediaSizes(size),
+        type === MediaType.Poster,
         ({ category, pageId, mediaType, device }) =>
           category === PreloadCategory.WorkPage &&
           pageId === pageIdToLoad &&
-          mediaType === type &&
+          (mediaType === type || type === MediaType.Poster) &&
           device === this.device),
       callback: this.log(3, type, size, pageIdToLoad)
     }
@@ -225,21 +262,27 @@ class PreloadManager {
   private getPreloadTypes(size: MediaSize, isFullVid = false) {
     const sizes: MediaType[] = []
 
-    if (!isFullVid) sizes.push(
-      MediaType.Images, MediaType.ToolTips
-    )
-    if (this.isVidSize(size)) sizes.push(
-      MediaType.Videos
-    )
+    if (!isFullVid) {
+      sizes.push(MediaType.Images)
+
+      if (size !== MediaSize.Max)
+        sizes.push(MediaType.Poster)
+
+      if (!this.config.isMobile)
+        sizes.push(MediaType.ToolTips)
+    }
+
+    if (this.isVidSize(size))
+      sizes.push(MediaType.Videos)
 
     return sizes
   }
 
   private preloadRemainingVid() {
     if (!this.config.canAutoPlay) return () => Promise.resolve(false)
-    return this.preloadManager.addToSubqueue([
+    return this.preloadQueuer.addToSubqueue([
       {
-        run: () => this.preloadManager.addToSubqueue([
+        run: () => this.preloadQueuer.addToSubqueue([
           this.preloadAllPages(MediaSize.Full, null, true),
           this.preloadAllPages(MediaSize.Max, null, true),
         ]),
@@ -249,19 +292,44 @@ class PreloadManager {
   }
 
   private preloadThumbnails() {
+    const filterThumbnail = (category: PreloadCategory, device: Device) =>
+      category === PreloadCategory.Thumbnail &&
+      device === this.device
+
     const preloadThumbnailSize = (size: MediaSize, fileType: MediaFileType) => ({
-      run: () => this.preloadManager.preload(this.getMediaSizes(size),
+      run: () => this.preloadQueuer.preload(
+        this.getMediaSizes(size),
+        false,
         ({ stack, category, device }) =>
-          category === PreloadCategory.Thumbnail &&
           stack.fileType === fileType &&
-          device === this.device),
+          filterThumbnail(category, device)
+      ),
       callback: this.log(3, `thumbnail ${fileType}`, size)
     })
 
+    const preloadPoster = (size: MediaSize) => ({
+      run: () => this.preloadQueuer.preload(
+        this.getMediaSizes(size),
+        true,
+        ({ category, device }) => filterThumbnail(category, device)
+      ),
+      callback: this.log(3, 'thumbnail posters', size)
+    })
+
     return {
-      run: () => this.preloadManager.addToSubqueue([
-        preloadThumbnailSize(MediaSize.DesktopFallback, MediaFileType.Image),
+      run: () => this.preloadQueuer.addToSubqueue([
+        preloadThumbnailSize(MediaSize.Fallback, MediaFileType.Image),
+        preloadPoster(MediaSize.Fallback),
         preloadThumbnailSize(MediaSize.Full, MediaFileType.Image),
+        {
+          run: () => this.preloadQueuer.addToSubqueue([
+            preloadPoster(MediaSize.Full)
+          ]),
+          callback: () => {
+            if (this.currentPreloadName === PreloadName.Default)
+              this.imgPreloaded = true
+          }
+        },
         preloadThumbnailSize(MediaSize.Full, MediaFileType.Video)
       ]),
       callback: this.logGroup('all thumbnails')
@@ -269,22 +337,26 @@ class PreloadManager {
   }
 
   private isVidSize(size: MediaSize | undefined) {
-    return size !== MediaSize.DesktopFallback &&
+    return size !== MediaSize.Fallback &&
       size !== MediaSize.Preview
   }
 
-  // TODO: sort load order based on device
   get sortedPageIds() {
-    return workData.map(page => page.id)
+    return workData
+      .sort((pageA, pageB) =>
+        (pageA.order[this.device] ?? 0) -
+        (pageB.order[this.device] ?? 0))
+      .map(page => page.id)
   }
 
   get device() {
-    return this.config.isMobile ? Device.mobile : Device.desktop
+    return getDevice(this.config.isMobile)
   }
 
   private getMediaSizes(size: MediaSize): MediaBreakpts | undefined {
     const map = {
-      [MediaSize.DesktopFallback]: MediaSize.DesktopFallback,
+      [MediaSize.Fallback]: this.config.isMobile ?
+        Fallback.MobileFallback : Fallback.DesktopFallback,
       [MediaSize.Preview]: getPreviewBreakptKey(),
       [MediaSize.Full]: getBreakptKey(),
       [MediaSize.Max]: MediaSize.Max
@@ -328,9 +400,9 @@ class PreloadManager {
     ) : _.noop
   }
 
-  private logPreload(queueName: string) {
+  private logPreload() {
     if (this.verbosity >= 1) console.log(
-      `Preloading: %c${queueName}`,
+      `Preloading: %c${this.currentPreloadName}`,
       'color: white; font-style: italic;',
     )
   }
@@ -347,9 +419,9 @@ class PreloadManager {
       'color: gray; font-style: italic;')
   }
 
-  private logAborted(queueName: string) {
+  private logAborted() {
     if (this.verbosity >= 1) console.log(
-      `%cAborted %c${queueName}%c.`,
+      `%cAborted %c${this.currentPreloadName}%c.`,
       'color: gray; font-style: italic;',
       'color: white; font-style: italic;',
       'color: gray; font-style: italic;',
@@ -385,6 +457,44 @@ class PreloadManager {
           ...styles,
         )
     }
+  }
+
+  findStack(searchFunction:
+    (stackData: TypedPreloadStack) => boolean
+  ) {
+    return this.preloadQueuer.stackData.find(searchFunction)
+  }
+
+  findThumbnail(pageId: string) {
+    return this.findStack(stackData =>
+      (stackData.stack.fileName.match(/^.*(?=\.)/) ?? [])[0] === pageId &&
+      stackData.device === this.device &&
+      stackData.category === PreloadCategory.Thumbnail
+    )
+  }
+
+  findWorkMedia(pageId: string, fileName: string) {
+    return this.findStack(stackData =>
+      stackData.stack.fileName === fileName &&
+      stackData.pageId === pageId &&
+      stackData.device === this.device
+    )
+  }
+
+  // TODO
+  getWorkPageImgSizes(pageId: string) {
+    return this.preloadQueuer.stackData.filter(stackData =>
+      stackData.category === PreloadCategory.WorkPage &&
+      stackData.pageId === pageId &&
+      stackData.mediaType === MediaType.Images
+    ).map(imgStackData => imgStackData.stack.loadedSizes)
+  }
+
+  previewIsLoaded(imgSizes: MediaBreakpts[][]) {
+    const breakpt = this.getMediaSizes(MediaSize.Full)
+    console.log(breakpt)
+    return !breakpt || imgSizes.every(sizes =>
+      sizes.includes(breakpt))
   }
 }
 

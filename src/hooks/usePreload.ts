@@ -1,16 +1,15 @@
 import _ from 'lodash'
-import { usePrevious } from '@uidotdev/usehooks'
 import { useEffect, useMemo, useState } from 'react'
 import PreloadManager from '../utils/helpers/preloader/preloadManager'
 import type { ReactEventHandler } from 'react'
-import type { PreloadManagerConfig } from '../utils/helpers/preloader/preloaderTypes'
+import type { PreloaderConfig } from '../utils/helpers/preloader/preloaderTypes'
 
 interface LoadDataInterface {
   promise: Promise<void>
   onProgress: ReactEventHandler<HTMLVideoElement>
 }
 
-const usePreload = (config: PreloadManagerConfig) => {
+const usePreload = (config: PreloaderConfig) => {
   const [vidLoadData, setVidLoadData] = useState<Record<string, LoadDataInterface>>({})
   const loadVid = (src: string, threshold: number) => {
     if (vidLoadData[src]) return Promise.resolve()

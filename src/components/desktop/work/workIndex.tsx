@@ -7,8 +7,9 @@ import usePreloadQueue from '../../../hooks/usePreloadQueue'
 import useSidebar from '../../../hooks/useSidebar'
 import drawWorkSketch from '../../../p5/sketches/drawWorkSketch'
 import { domSizes } from '../../../styles/sizes'
-import { Device, minQueries } from '../../../utils/queryUtil'
+import { minQueries } from '../../../utils/queryUtil'
 import MainContainer from '../../common/styled/mainContainer'
+import { Device } from '../../../utils/breakptTypes'
 import { getParsedWorkData } from '../../../utils/commonUtils'
 import WorkIndexSidebar from './workIndexSideBar'
 import WorkThumbnail from './workThumbnail'
@@ -42,7 +43,7 @@ const WorkIndex = () => {
     <ThumbnailContainer $columns={columns}>
       <Suspense>
         <Masonry columns={columns}>
-          {getParsedWorkData(Device.desktop)
+          {getParsedWorkData(Device.Desktop)
             .map(project => project.listed && <WorkThumbnail
               key={project.title}
               data={project}

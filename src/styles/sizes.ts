@@ -222,7 +222,10 @@ export const domSizes = {
       details: {
         margin: getSize({ s: 16, l: 36 })
       }
-    }
+    },
+    media: {
+      zoomPercentage: 0.95
+    },
   },
 }
 

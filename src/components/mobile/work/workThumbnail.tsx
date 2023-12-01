@@ -1,12 +1,14 @@
 import styled from 'styled-components'
+import { useOutletContext } from 'react-router-dom'
 import Anchor from '../../common/anchor'
-import Media from '../../common/media/media'
-import { FileExt, MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
+import { ImgExt, MediaFileType, VidExt } from '../../../utils/helpers/preloader/preloadUtils'
 import { joinPaths } from '../../../utils/commonUtils'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
 import { fontLineHeights, fontSizes } from '../../../styles/fonts'
+import PreloadMedia from '../../common/media/preloadMedia'
 import type { WorkDataInterface } from '../../desktop/work/workTypes'
+import type { MobileContextProps } from '../pageWrappers/pageTypes'
 
 interface WorkThumbnailProps {
   data: WorkDataInterface
@@ -14,18 +16,23 @@ interface WorkThumbnailProps {
 
 const WorkThumbnail = ({ data }: WorkThumbnailProps) => {
   const { title, abbr, tags, animatedThumbnail, id } = data
+  const { preloadManager } = useOutletContext<MobileContextProps>()
+
   const fallbackPath = joinPaths('assets/mobile/thumbnails/l', id) + '.' +
-    (animatedThumbnail ? FileExt.Mp4 : FileExt.Webp)
+    (animatedThumbnail ? VidExt.Mp4 : ImgExt.Webp)
   return (
     <ThumbnailLink to={id}>
       <InfoContainer>
         <Title>{abbr ?? title}</Title>
         <Tags>{tags.join(' + ')}</Tags>
       </InfoContainer>
-      <Media
-        type={animatedThumbnail ? MediaFileType.Video : MediaFileType.Image}
-        src={fallbackPath} />
-
+      <PreloadMedia
+        {...(!animatedThumbnail ? {} :
+          { canAutoPlay: preloadManager?.imgPreloaded !== false })}
+        stackData={!preloadManager?.enabled ? undefined :
+          preloadManager.findThumbnail(id)}
+        fallbackPath={fallbackPath}
+        type={animatedThumbnail ? MediaFileType.Video : MediaFileType.Image} />
     </ThumbnailLink>
   )
 }
@@ -36,6 +43,7 @@ const ThumbnailLink = styled(Anchor)`
   margin-bottom: ${domSizes.mobile.workIndex.thumbnail.margin.css};
 
   img, video {
+    flex: none;
     width: ${domSizes.mobile.workIndex.thumbnail.width.css};
   }
 `

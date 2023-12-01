@@ -1,12 +1,12 @@
 import _ from 'lodash'
-import { forwardRef } from 'react'
+import { forwardRef, type ReactNode } from 'react'
 import styled from 'styled-components'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import { arrayify, validateString } from '../../utils/commonUtils'
-import { Device, desktopQuery, mobileQuery } from '../../utils/queryUtil'
+import { desktopQuery, mobileQuery } from '../../utils/queryUtil'
+import { Device } from '../../utils/breakptTypes'
 import ToolTip from './toolTip'
-import type { ReactNode } from 'react'
 
 interface RowContainerProps {
   className?: string
@@ -57,14 +57,14 @@ const Row = styled.div<StyledRowContainerProps>`
 
   @media ${desktopQuery} {
     width: 100%;
-    ${getChildrenStyles(Device.desktop)}
-    ${childrenMargin(Device.desktop)}
+    ${getChildrenStyles(Device.Desktop)}
+    ${childrenMargin(Device.Desktop)}
   }
 
   @media ${mobileQuery} {
     width: 96%;
-    ${getChildrenStyles(Device.mobile)}
-    ${childrenMargin(Device.mobile)}
+    ${getChildrenStyles(Device.Mobile)}
+    ${childrenMargin(Device.Mobile)}
   }
 
   > svg {

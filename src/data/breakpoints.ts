@@ -1,4 +1,4 @@
-import type { Breakpt } from '../utils/queryUtil'
+import type { Breakpt } from '../utils/breakptTypes'
 
 const breakpts: Record<Breakpt, number> = {
   s: 414,

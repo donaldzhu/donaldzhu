@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import Queue from '../queue'
+import { MediaFileType } from './preloadUtils'
 import type { MediaStack } from './mediaStack'
 import type { queueArgType } from '../../utilTypes'
 
@@ -43,6 +44,7 @@ class PreloadQueuer<T extends object, S extends string> {
 
   preload(
     size: S | undefined,
+    isPoster: boolean,
     filter: (stackData: PreloadStack<T, S>) => boolean,
     sort?: (a: PreloadStack<T, S>, b: PreloadStack<T, S>) => number
   ) {
@@ -50,11 +52,15 @@ class PreloadQueuer<T extends object, S extends string> {
     sort ??= (a: PreloadStack<T, S>, b: PreloadStack<T, S>) =>
       a.stack.fileName.localeCompare(b.stack.fileName)
 
-    const filteredStacks = this.stackData.filter(filter)
+    const filteredStacks = this.stackData.filter(stackData =>
+      (
+        !isPoster || stackData.stack.fileType === MediaFileType.Video
+      ) && filter(stackData)
+    )
     const sortedStacks = filteredStacks.sort(sort)
     if (!sortedStacks.length) return Promise.resolve(false)
     return this.addToSubqueue(sortedStacks.map(stackData =>
-      () => stackData.stack.preload(size)))
+      () => stackData.stack.preload(size, isPoster)))
   }
 
   createMainQueue<T = void>(queueFunctions: queueArgType<T>) {
@@ -88,12 +94,10 @@ class PreloadQueuer<T extends object, S extends string> {
     if (!this.mainQueueFunctions) return
     this.abort()
     this.isComplete = false
-    //this[this.mainQueueName](this.mainQueuePageId)
     this.createMainQueue(this.mainQueueFunctions)
   }
 
   private onFinish() {
-    // this.logFinished(false)
     this.isComplete = true
   }
 }

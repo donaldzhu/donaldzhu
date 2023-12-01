@@ -13,10 +13,9 @@ import type { RouteProps } from '../routeTypes'
 
 
 const MobileRoutes = ({ mediaSettings }: RouteProps) => {
-  const { canAutoPlay } = mediaSettings
   return (
     <Routes>
-      <Route path='/' element={<Page canAutoPlay={canAutoPlay} />}>
+      <Route path='/' element={<Page mediaSettings={mediaSettings} />}>
         <Route path='' element={<PageWithSketch />}>
           <Route index element={<Home />} />
           <Route path={LinkPath.Contact} element={<Contact />} />

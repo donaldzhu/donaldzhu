@@ -70,6 +70,9 @@ type ZoomMediaBaseProps<R extends boolean = false> = R extends true ? {
   maxSize?: string | number
 }
 
+export type handleZoomMediaType = (media?: RequiredZoomMediaProps) => void
+
+
 type ZoomImgProps<R extends boolean = false> = ZoomMediaBaseProps<R> & ImgIntrinsicProps
 type ZoomVidProps<R extends boolean = false> = ZoomMediaBaseProps<R> & VidIntrinsicProps
 export type ZoomMediaProps<R extends boolean = false> = ZoomImgProps<R> | ZoomVidProps<R>

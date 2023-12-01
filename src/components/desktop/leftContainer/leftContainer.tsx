@@ -6,12 +6,12 @@ import SvgBorder from '../../common/svgBorder'
 import Footer from './footer/footer'
 import Header from './header/header'
 import type { ReactNode } from 'react'
-import type { Device } from '../../../utils/queryUtil'
+import type { Device } from '../../../utils/breakptTypes'
 import type { GlobalCanvasStates } from '../../common/canvas/canvasTypes'
 
 type LeftContainerProps = {
   sidebar: ReactNode | undefined
-} & GlobalCanvasStates<Device.desktop>
+} & GlobalCanvasStates<Device.Desktop>
 
 const LeftContainer = ({ sidebar, canvasRef, canvasStates }: LeftContainerProps) => {
   const sidebarRef = useRef<HTMLDivElement>(null)

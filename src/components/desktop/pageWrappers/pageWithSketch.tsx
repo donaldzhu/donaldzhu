@@ -7,11 +7,11 @@ import drawMainSketch from '../../../p5/sketches/drawMainSketch'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
 import Size from '../../../utils/helpers/size'
-import type { Device } from '../../../utils/queryUtil'
+import type { Device } from '../../../utils/breakptTypes'
 
 const PageWithMainSketch = () => {
   const placeholderRef = useRef<HTMLDivElement>(null)
-  const setupDone = useCanvas<Device.desktop>(() =>
+  const setupDone = useCanvas<Device.Desktop>(() =>
     drawMainSketch({ placeholderRef }))
 
   usePreloadQueue(setupDone, preloadManager =>

@@ -1,8 +1,8 @@
 import workData from '../data/work/workData.json'
+import { Device } from './breakptTypes'
 import type { Falsey } from 'lodash'
 import type ElemRect from './helpers/rect/elemRect'
 import type { BrowserType, CoorObject, CoorObject3D, coorTuple } from './utilTypes'
-import type { Device } from './queryUtil'
 
 // string
 export const capitalize = <T extends string>(string: T) => string.charAt(0)
@@ -139,3 +139,5 @@ export const getParsedWorkData = (deviceType: Device) =>
       (a.order[deviceType] ?? Infinity) -
       (b.order[deviceType] ?? Infinity))
     .filter(page => page.enabled)
+
+export const getDevice = (isMobile: boolean) => isMobile ? Device.Mobile : Device.Desktop

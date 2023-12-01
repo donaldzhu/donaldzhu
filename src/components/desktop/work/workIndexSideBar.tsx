@@ -3,7 +3,7 @@ import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
 import TextContainer from '../../common/styled/textContainer'
 import { getParsedWorkData } from '../../../utils/commonUtils'
-import { Device } from '../../../utils/queryUtil'
+import { Device } from '../../../utils/breakptTypes'
 import WorkSideBarItem from './workSidebarItem'
 import type { MutableRefObject } from 'react'
 
@@ -21,7 +21,7 @@ const WorkIndexSidebar = ({
   return (
     <>
       <SideBarContainer as='ul'>
-        {getParsedWorkData(Device.desktop)
+        {getParsedWorkData(Device.Desktop)
           .map(project => project.listed &&
             <WorkSideBarItem
               key={project.title}

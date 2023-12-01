@@ -9,7 +9,7 @@ import WorkImg from '../../common/media/workImg'
 import RowContainer from '../../common/rowContainer'
 import Canvas from '../../common/canvas/canvas'
 import useLocalCanvas from '../../../hooks/useLocalCanvas'
-import type { Device } from '../../../utils/queryUtil'
+import type { Device } from '../../../utils/breakptTypes'
 
 const PageVectorString = () => {
   const [translateImgSrc, setTranslateImgSrc] = useState(1)
@@ -28,7 +28,7 @@ const PageVectorString = () => {
     })
   }, [])
 
-  const canvasHandlers = useLocalCanvas<Device.desktop>(drawVectorString)
+  const { canvasHandlers } = useLocalCanvas<Device.Desktop>(drawVectorString)
   return (
     <>
       <RowContainer>

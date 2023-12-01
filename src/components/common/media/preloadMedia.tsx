@@ -1,8 +1,9 @@
 import _ from 'lodash'
 import { forwardRef, useEffect, useState } from 'react'
-import { MediaFileType, MediaSize, orderedBreakpts } from '../../../utils/helpers/preloader/preloadUtils'
+import { MediaFileType, MediaSize, getFallbackKey, getStackBreakpt, orderedBreakpts } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
 import { sortLike } from '../../../utils/commonUtils'
+import useIsMobile from '../../../hooks/useIsMobile'
 import Media from './media'
 import type { MediaRef, PreloadMediaProps } from './mediaTypes'
 import type { MediaBreakpts } from '../../../utils/helpers/preloader/preloaderTypes'
@@ -10,6 +11,9 @@ import type { MediaBreakpts } from '../../../utils/helpers/preloader/preloaderTy
 const PreloadMedia = forwardRef((props: PreloadMediaProps, ref: MediaRef) => {
   const { stackData, isZoomed, fallbackPath, ...rest } = props
   const mediaStack = stackData?.stack
+  const posterStack = rest.type === MediaFileType.Image ? undefined :
+    mediaStack?.posters
+  const isMobile = useIsMobile()
 
   const mediaIsVid = rest.type === MediaFileType.Video
   const getLoadState = (mediaStack = stackData?.stack) => {
@@ -18,16 +22,13 @@ const PreloadMedia = forwardRef((props: PreloadMediaProps, ref: MediaRef) => {
       hasLoaded: true
     }
 
-    let sizes = _.chain(sortLike(mediaStack.loadedSizes, orderedBreakpts))
-
-    if (!isZoomed) sizes = sizes.without(MediaSize.Max)
-    let size = _.last(sizes.value())
+    let size = getStackBreakpt(mediaStack, isZoomed)
 
     const hasLoaded = mediaIsVid || !!size
 
-    if (mediaIsVid)
-      size = isZoomed ? MediaSize.Max : getBreakptKey()
-    else size ||= MediaSize.DesktopFallback
+    if (mediaIsVid && mediaStack !== posterStack)
+      size = isZoomed && !isMobile ? MediaSize.Max : getBreakptKey()
+    else size ||= getFallbackKey()
 
     return {
       src: mediaStack.stack[size as MediaBreakpts].src,
@@ -36,26 +37,42 @@ const PreloadMedia = forwardRef((props: PreloadMediaProps, ref: MediaRef) => {
   }
 
   const [loadState, setLoadState] = useState(getLoadState())
+  const [posterLoadState, setPosterLoadState] = useState(getLoadState(posterStack))
 
   useEffect(() => {
     setLoadState(getLoadState())
     if (!mediaStack) return _.noop
-    const handleStackLoad = () => {
-      const newSrc = getLoadState()
-      // console.log(newSrc)
-      if (!(isZoomed && mediaIsVid)) setLoadState(newSrc)
+    const handleStackLoad = (isPoster = false) => {
+      const newSrc = getLoadState(isPoster ? posterStack : undefined)
+      if (!(isZoomed && mediaIsVid))
+        isPoster ?
+          setPosterLoadState(newSrc) :
+          setLoadState(newSrc)
     }
 
-    mediaStack.addLoadListener(handleStackLoad)
-    return () => mediaStack.removeLoadListener(handleStackLoad)
-  }, [mediaStack, fallbackPath])
+    const handleMediaStackLoad = () => handleStackLoad(false)
+    const handlePosterStackLoad = () => handleStackLoad(true)
 
+    mediaStack.addLoadListener(
+      handleMediaStackLoad,
+      handlePosterStackLoad
+    )
+
+    return () =>
+      mediaStack.removeLoadListener(
+        handleMediaStackLoad,
+        handlePosterStackLoad
+      )
+
+
+  }, [mediaStack, fallbackPath])
 
   const [nativeW, nativeH] = mediaStack?.nativeDimension ?? []
 
   return <Media
     {...rest}
     src={loadState.src}
+    poster={posterStack ? posterLoadState.src : undefined}
     hasLoaded={loadState.hasLoaded}
     aspectRatio={!nativeW || !nativeH ? undefined : nativeW / nativeH}
     ref={ref} />

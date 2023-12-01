@@ -6,7 +6,7 @@ import { mapObject } from '../../../utils/commonUtils'
 import { mousePosition, P5Event, wrapDrawingContext } from '../../../utils/p5Utils'
 import Canvas from './canvas'
 import type p5 from 'p5'
-import type { Device } from '../../../utils/queryUtil'
+import type { Device } from '../../../utils/breakptTypes'
 import type { p5EventCallback, PartialGlobalCanvasStates } from './canvasTypes'
 
 const GlobalCanvas = <T extends Device>({
