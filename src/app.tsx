@@ -15,10 +15,10 @@ import usePreload from './hooks/usePreload'
 
 const App = () => {
   const isMobile = useIsMobile()
-  const canAutoPlay = useCanAutoPlay()
+  const autoPlayConfig = useCanAutoPlay()
   const mediaSettings = {
-    canAutoPlay,
-    ...usePreload({ canAutoPlay, isMobile })
+    ...autoPlayConfig,
+    ...usePreload({ ...autoPlayConfig, isMobile })
   }
 
   return (
@@ -27,7 +27,7 @@ const App = () => {
         <Routes>
           <Route path='*' element={isMobile ?
             (process.env.NODE_ENV === 'production' ?
-              <Route path='/' element={<PageMobileTemp canAutoPlay={canAutoPlay} />}>
+              <Route path='/' element={<PageMobileTemp canAutoPlay={autoPlayConfig.canAutoPlay} />}>
                 <Route path='' element={<HomeMobileTemp />} />
                 <Route path='*' element={<Navigate to='/' replace />} />
               </Route> :

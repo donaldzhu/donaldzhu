@@ -1,17 +1,17 @@
 import _ from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { useWindowSize } from '@uidotdev/usehooks'
 import { domSizes } from '../../../styles/sizes'
 import { addEventListener } from '../../../utils/reactUtils'
 import { toPercent } from '../../../utils/sizeUtils'
 import PopUpContainer from '../popUpContainer'
-import { desktopQuery, mobileQuery } from '../../../utils/queryUtil'
 import { validateString } from '../../../utils/commonUtils'
 import mixins from '../../../styles/mixins'
 import { Device } from '../../../utils/breakptTypes'
 import useIsMobile from '../../../hooks/useIsMobile'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
+import colors from '../../../styles/colors'
+import useWindowSize from '../../../hooks/useWindowSize'
 import PreloadMedia from './preloadMedia'
 import type { RequiredZoomMediaProps, handleZoomMediaType } from './mediaTypes'
 
@@ -53,7 +53,8 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
     if (!currentMedia) return removeKeydownListener
 
     if (zoomMediaIsVid(currentMedia)) {
-      currentMedia.currentTime = zoomMedia.getCurrentTime()
+      if (!isMobile)
+        currentMedia.currentTime = zoomMedia.getCurrentTime()
       currentMedia.play()
       removeRenderListener = addEventListener(
         currentMedia, 'canplay', () => setIsRendered(true))
@@ -69,10 +70,6 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
     }
   }, [])
 
-  useEffect(() => {
-    if (isRendered) console.log(isRendered)
-  }, [isRendered])
-
   const { type, mediaStack, fallbackPath, alt } = zoomMedia
 
   const maxSize = zoomMedia.maxSize ?? toPercent(domSizes[isMobile ?
@@ -80,7 +77,7 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
 
   const { nativeDimension } = mediaStack?.stack ?? {}
   const aspectRatio = nativeDimension ? nativeDimension[0] / nativeDimension[1] : undefined
-  const deviceRatio = width && height ? (width / height) : undefined
+  const deviceRatio = width / height
   const isWider = aspectRatio && deviceRatio && aspectRatio >= deviceRatio
   const mobileWidth = isWider ? maxSize : ''
   const mobileHeight = !isWider ? maxSize : ''
@@ -131,24 +128,21 @@ const ZoomedContainer = styled(PopUpContainer) <StyledZoomedMediaProps>`
   cursor: zoom-out;
 
   img, video {
+    ${mobileSizeMixin}
     object-fit: contain;
     background-color: ${({ $isRendered }) => validateString(!$isRendered, 'white')};
-
-    @media ${mobileQuery} {
-      ${mobileSizeMixin}
-    }
-
-    @media ${desktopQuery} {
-      ${({ $maxSize }) => mixins.squared($maxSize)}
-    }
   }
 `
 
+// TODO responsive
 const LoadingContainer = styled.div<StyledLoadingContainerProps>`
   position: absolute;
-
   ${mobileSizeMixin}
   ${mixins.flex('center', 'center')}
+  p {
+    background-color: ${colors.background};
+    padding: 0.2em 1.25em;
+  }
 `
 
 export default ZoomedMedia

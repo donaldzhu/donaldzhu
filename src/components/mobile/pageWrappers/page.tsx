@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { usePrevious } from '@uidotdev/usehooks'
@@ -24,7 +24,7 @@ interface StyledGlobalCanvasProps {
 }
 
 const Page = ({ mediaSettings }: RouteProps) => {
-  const { canAutoPlay, vidLoadData, preloadManager } = mediaSettings
+  const { canAutoPlay, defaultCanAutoPlay, vidLoadData, preloadManager } = mediaSettings
   const location = useLocation()
   const prevLocation = usePrevious(location)
   const engine = usePhysics()
@@ -59,6 +59,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
   }
 
   const handleZoomMedia: handleZoomMediaType = media => setZoomMedia(media)
+  const handleUnzoom = useCallback(() => setZoomMedia(undefined), [])
 
   useEffect(() => {
     if (menuIsShown) return noOverflow()
@@ -69,6 +70,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
     setShouldFade(true)
     if (gyroStates.isEnabled && prevLocation.pathname !== location.pathname)
       setShouldHideGyro(true)
+    if (zoomMedia) setZoomMedia(undefined)
   }, [location])
 
   const handleMenuClick = (shouldShow?: boolean) => setMenuIsShown(shouldShow ?? !menuIsShown)
@@ -88,7 +90,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
       {menuIsShown && <Menu />}
       {zoomMedia && <ZoomedMedia
         zoomMedia={zoomMedia}
-        handleUnzoom={() => setZoomMedia(undefined)} />}
+        handleUnzoom={handleUnzoom} />}
       <AnimationContainer
         $shouldFade={shouldFade}
         onAnimationEnd={() => setShouldFade(false)}>
@@ -98,15 +100,19 @@ const Page = ({ mediaSettings }: RouteProps) => {
           $menuIsShown={menuIsShown} />
         <Outlet context={{
           canAutoPlay,
+          defaultCanAutoPlay,
           canvasRef,
           canvasStates,
           shouldHideGyro,
+          zoomMedia,
           handleZoomMedia,
           preloadManager,
           handleGyroButtonClick
         } satisfies MobileContextProps} />
       </AnimationContainer>
       <VidLoadContainer
+        isMobile={true}
+        hasZoomedMedia={!!zoomMedia}
         vidLoadData={vidLoadData}
         canAutoPlay={canAutoPlay} />
     </Container>

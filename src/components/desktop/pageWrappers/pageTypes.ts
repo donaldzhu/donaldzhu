@@ -5,6 +5,7 @@ import type { GlobalCanvasStates } from '../../common/canvas/canvasTypes'
 import type { RequiredZoomMediaProps, handleZoomMediaType } from '../../common/media/mediaTypes'
 
 export type DesktopContextProps = {
+  defaultCanAutoPlay: boolean | undefined,
   sidebar: ReactNode | undefined,
   setSidebar: Dispatch<SetStateAction<ReactNode>>,
   zoomMedia: RequiredZoomMediaProps | undefined,
@@ -13,6 +14,7 @@ export type DesktopContextProps = {
   canAutoPlay: boolean | undefined,
 } & GlobalCanvasStates<Device.Desktop>
 
+// TODO
 export interface PageProps {
   canAutoPlay: boolean | undefined
 }

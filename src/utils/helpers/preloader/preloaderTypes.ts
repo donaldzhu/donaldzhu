@@ -15,10 +15,9 @@ export interface MediaStackProps<K extends string> {
   loadVid: loadVidType
 }
 
-export interface PreloaderConfig {
-  canAutoPlay: ReturnType<typeof useCanAutoPlay>
+export type PreloaderConfig = {
   isMobile: ReturnType<typeof useIsMobile>
-}
+} & ReturnType<typeof useCanAutoPlay>
 
 export type MediaBreakpts = Breakpt | Fallback | MediaSize.Max
 export type PreloadMediaStack = MediaStack<MediaBreakpts>

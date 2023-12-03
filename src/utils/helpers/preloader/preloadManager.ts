@@ -44,7 +44,6 @@ enum PreloadName {
 
 class PreloadManager {
   private loadVid: loadVidType
-  private verbosity: Verbosity
   private breakpts: MediaBreakpts[]
   private preloadQueuer: PreloadQueuer<PreloadManagerStack, MediaBreakpts>
   private currentPreloadName: PreloadName | undefined
@@ -52,6 +51,7 @@ class PreloadManager {
   config: PreloaderConfig
   enabled: boolean
   imgPreloaded: boolean
+  verbosity: Verbosity
 
   constructor(config: PreloaderConfig, loadVid: loadVidType) {
     this.config = config

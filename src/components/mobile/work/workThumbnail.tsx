@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useOutletContext } from 'react-router-dom'
 import Anchor from '../../common/anchor'
@@ -16,7 +17,8 @@ interface WorkThumbnailProps {
 
 const WorkThumbnail = ({ data }: WorkThumbnailProps) => {
   const { title, abbr, tags, animatedThumbnail, id } = data
-  const { preloadManager } = useOutletContext<MobileContextProps>()
+  const { preloadManager, canAutoPlay } = useOutletContext<MobileContextProps>()
+  const [shouldAutoPlay] = useState(!!canAutoPlay)
 
   const fallbackPath = joinPaths('assets/mobile/thumbnails/l', id) + '.' +
     (animatedThumbnail ? VidExt.Mp4 : ImgExt.Webp)
@@ -28,7 +30,11 @@ const WorkThumbnail = ({ data }: WorkThumbnailProps) => {
       </InfoContainer>
       <PreloadMedia
         {...(!animatedThumbnail ? {} :
-          { canAutoPlay: preloadManager?.imgPreloaded !== false })}
+          {
+            canAutoPlay:
+              shouldAutoPlay &&
+              preloadManager?.imgPreloaded !== false
+          })}
         stackData={!preloadManager?.enabled ? undefined :
           preloadManager.findThumbnail(id)}
         fallbackPath={fallbackPath}

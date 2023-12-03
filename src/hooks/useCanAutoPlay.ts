@@ -8,6 +8,7 @@ const useCanAutoPlay = () => {
   const activationEvents: (keyof DocumentEventMap)[] =
     ['keydown', 'mousedown', 'pointerdown', 'pointerup', 'touchend']
   const [canAutoPlay, setCanAutoPlay] = useState<boolean | undefined>()
+  const [defaultCanAutoPlay, setInitialCanAutoPlay] = useState<boolean | undefined>()
   const isMobile = useIsMobile()
 
   useEffect(() => {
@@ -21,6 +22,8 @@ const useCanAutoPlay = () => {
   }, [])
 
   useEffect(() => {
+    if (defaultCanAutoPlay !== false)
+      setInitialCanAutoPlay(canAutoPlay)
     if (canAutoPlay) return _.noop
     const listenerRemovers = activationEvents.map(eventName =>
       addEventListener(document, eventName, () => setCanAutoPlay(true))
@@ -28,7 +31,7 @@ const useCanAutoPlay = () => {
     return () => listenerRemovers.forEach(remover => remover())
   }, [canAutoPlay])
 
-  return canAutoPlay
+  return { canAutoPlay, defaultCanAutoPlay }
 }
 
 export default useCanAutoPlay

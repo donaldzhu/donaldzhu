@@ -48,7 +48,8 @@ const Vid = forwardRef<
     useEffect(() => {
       if (!!useNativeControl || !validateRef(video)) return _.noop
       video.current.canAutoPlay = vidCanAutoPlay
-      video.current.play()
+      if (canAutoPlay) video.current.play()
+      else video.current.pause()
     }, [vidCanAutoPlay])
 
     useEffect(() => {

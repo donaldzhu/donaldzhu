@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import type { ForwardedRef } from 'react'
 
 const useForwardedRef = <T>(ref: ForwardedRef<T>) => {
-  const innerRef = useRef<T | null>(null)
+  const innerRef = useRef<T | null>(ref && typeof ref !== 'function' ? ref.current : null)
 
   useEffect(() => {
     if (!ref) return _.noop

@@ -1,14 +1,13 @@
 import _ from 'lodash'
 import { forwardRef, useEffect, useState } from 'react'
-import { MediaFileType, MediaSize, getFallbackKey, getStackBreakpt, orderedBreakpts } from '../../../utils/helpers/preloader/preloadUtils'
+import { MediaFileType, MediaSize, getFallbackKey, getStackBreakpt } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
-import { sortLike } from '../../../utils/commonUtils'
 import useIsMobile from '../../../hooks/useIsMobile'
 import Media from './media'
 import type { MediaRef, PreloadMediaProps } from './mediaTypes'
 import type { MediaBreakpts } from '../../../utils/helpers/preloader/preloaderTypes'
 
-const PreloadMedia = forwardRef((props: PreloadMediaProps, ref: MediaRef) => {
+const PreloadMedia = forwardRef(function PreloadMedia(props: PreloadMediaProps, ref: MediaRef) {
   const { stackData, isZoomed, fallbackPath, ...rest } = props
   const mediaStack = stackData?.stack
   const posterStack = rest.type === MediaFileType.Image ? undefined :
@@ -40,14 +39,20 @@ const PreloadMedia = forwardRef((props: PreloadMediaProps, ref: MediaRef) => {
   const [posterLoadState, setPosterLoadState] = useState(getLoadState(posterStack))
 
   useEffect(() => {
-    setLoadState(getLoadState())
+    const newLoadState = getLoadState()
+    if (!_.isEqual(newLoadState, loadState))
+      setLoadState(newLoadState)
+
     if (!mediaStack) return _.noop
     const handleStackLoad = (isPoster = false) => {
-      const newSrc = getLoadState(isPoster ? posterStack : undefined)
-      if (!(isZoomed && mediaIsVid))
-        isPoster ?
-          setPosterLoadState(newSrc) :
-          setLoadState(newSrc)
+      const newLoadState = getLoadState(isPoster ? posterStack : undefined)
+      if (isZoomed ?? mediaIsVid) return
+
+      if (isPoster) {
+        if (!_.isEqual(newLoadState, posterLoadState))
+          setPosterLoadState(newLoadState)
+      } else if (!_.isEqual(newLoadState, loadState))
+        setLoadState(newLoadState)
     }
 
     const handleMediaStackLoad = () => handleStackLoad(false)
@@ -63,8 +68,6 @@ const PreloadMedia = forwardRef((props: PreloadMediaProps, ref: MediaRef) => {
         handleMediaStackLoad,
         handlePosterStackLoad
       )
-
-
   }, [mediaStack, fallbackPath])
 
   const [nativeW, nativeH] = mediaStack?.nativeDimension ?? []
