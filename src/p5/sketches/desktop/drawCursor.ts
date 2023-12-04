@@ -1,8 +1,8 @@
-import { sketchSizes } from '../../styles/sizes'
-import { styleDashedRect, wrapDrawingContext } from '../../utils/p5Utils'
-import { validateRef } from '../../utils/typeUtils'
+import { sketchSizes } from '../../../styles/sizes'
+import { styleDashedRect, wrapDrawingContext } from '../../../utils/p5Utils'
+import { validateRef } from '../../../utils/typeUtils'
 import type p5 from 'p5'
-import type { DesktopCanvasStates } from '../../components/common/canvas/canvasTypes'
+import type { DesktopCanvasStates } from '../../../components/common/canvas/canvasTypes'
 
 const drawCursor = () => {
   const draw = (p5: p5, { mousePositionRef, hideCursorRef }: DesktopCanvasStates) => {

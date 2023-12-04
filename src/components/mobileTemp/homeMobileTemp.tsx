@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import styled from 'styled-components'
 import { useOutletContext } from 'react-router-dom'
-import drawMobileSketch from '../../p5/sketches/drawMobileSketch'
+import drawMobileSketch from '../../p5/sketches/mobile/drawGyroSketch'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
 import colors from '../../styles/colors'

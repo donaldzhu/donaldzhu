@@ -1,4 +1,4 @@
-import type { TouchEvent } from 'react'
+import type { RefObject, TouchEvent } from 'react'
 import type { GlobalCanvasStates } from '../../common/canvas/canvasTypes'
 import type { Device } from '../../../utils/breakptTypes'
 import type PreloadManager from '../../../utils/helpers/preloader/preloadManager'
@@ -10,6 +10,7 @@ export type MobileContextProps = {
   handleGyroButtonClick: (e: TouchEvent<HTMLButtonElement>) => void
   handleZoomMedia: handleZoomMediaType,
   preloadManager: PreloadManager,
+  headerRef: RefObject<HTMLHeadElement>
   zoomMedia: RequiredZoomMediaProps | undefined,
 } & GlobalCanvasStates<Device.Mobile> &
   ReturnType<typeof useCanAutoPlay>

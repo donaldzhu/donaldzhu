@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import styled from 'styled-components'
+import { useOutletContext } from 'react-router-dom'
 import Anchor from '../../common/anchor'
 import WorkImg from '../../common/media/workImg'
 import WorkVid from '../../common/media/workVid'
@@ -16,15 +17,17 @@ import mixins from '../../../styles/mixins'
 import { percent } from '../../../utils/sizeUtils'
 import WorkImgGroup from '../../common/media/workImgGroup'
 import useCanvas from '../../../hooks/useCanvas'
-import drawElemBorders from '../../../p5/sketches/drawElemBorders'
+import drawElemBorders from '../../../p5/sketches/common/drawElemBorders'
 import { sketchSizes } from '../../../styles/sizes'
 import ColumnContainer from '../../common/styled/columnContainer'
 import type { WorkPageContentProps } from '../work/workPageTypes'
+import type { MobileContextProps } from '../pageWrappers/pageTypes'
 
 
 const PageVectorStruct = ({ WorkInfo }: WorkPageContentProps) => {
   const [displayedGlyph, setDisplayedGlyph] = useState(0)
   const displayedGlyphRef = useRef<SVGSVGElement>(null)
+  const { headerRef } = useOutletContext<MobileContextProps>()
 
   const glyphs = 'vector'
   const VectorSvgs = [VSvg, ESvg, CSvg, TSvg, OSvg, RSvg]
@@ -32,7 +35,8 @@ const PageVectorStruct = ({ WorkInfo }: WorkPageContentProps) => {
   const handleClick = (i: number) => setDisplayedGlyph(i)
   useCanvas(() => drawElemBorders({
     elemRefs: [displayedGlyphRef],
-    padding: sketchSizes.mobile.struct.padding
+    padding: sketchSizes.mobile.struct.padding,
+    headerRef
   }))
 
   return (

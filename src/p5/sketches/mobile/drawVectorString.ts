@@ -1,6 +1,6 @@
-import configs from '../configs/vector'
-import Text from '../helpers/vector/text'
-import Size from '../../utils/helpers/size'
+import configs, { vectorStringCount } from '../../configs/vector'
+import Text from '../../helpers/vector/text'
+import Size from '../../../utils/helpers/size'
 import type { MutableRefObject } from 'react'
 import type p5 from 'p5'
 
@@ -15,7 +15,7 @@ const drawVectorStringMobile = ({ imgSrcRef }: DrawVectorStringMobileProps) => {
   const createVector = (p5: p5) => {
     text = new Text(p5, 'Ä', configs.VECTOR_STRING_TRANSLATE_MOBILE)
     text.setting.mapFunction = (stillVector) => {
-      const segmentation = 20 // TODO
+      const segmentation = vectorStringCount
       const segmentSize = Math.PI * 2 / segmentation
       const imgSrc = imgSrcRef.current ?? 1
       const activeVector = p5.createVector(1, 1)

@@ -1,18 +1,17 @@
-import _ from 'lodash'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { domSizes } from '../../../styles/sizes'
 import { addEventListener } from '../../../utils/reactUtils'
 import { toPercent } from '../../../utils/sizeUtils'
 import PopUpContainer from '../popUpContainer'
 import { validateString } from '../../../utils/commonUtils'
-import mixins from '../../../styles/mixins'
 import { Device } from '../../../utils/breakptTypes'
 import useIsMobile from '../../../hooks/useIsMobile'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
-import colors from '../../../styles/colors'
 import useWindowSize from '../../../hooks/useWindowSize'
+import useMediaIsRendered from '../../../hooks/useMediaIsRendered'
 import PreloadMedia from './preloadMedia'
+import LoadingContainer from './loadingContainer'
 import type { RequiredZoomMediaProps, handleZoomMediaType } from './mediaTypes'
 
 interface ZoomedMediaProps {
@@ -20,20 +19,17 @@ interface ZoomedMediaProps {
   handleUnzoom: handleZoomMediaType
 }
 
-interface StyledLoadingContainerProps {
+interface StyledZoomedMediaProps {
+  $maxSize: string | number
+  $isRendered: boolean
   $mobileWidth: string | number | undefined
   $mobileHeight: string | number | undefined
   $aspectRatio: number | undefined
 }
 
-type StyledZoomedMediaProps = {
-  $maxSize: string | number
-  $isRendered: boolean
-} & StyledLoadingContainerProps
-
 const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
   const zoomedMediaRef = useRef<HTMLImageElement | HTMLVideoElement>(null)
-  const [isRendered, setIsRendered] = useState(false)
+  const isRendered = useMediaIsRendered(zoomedMediaRef)
   const isMobile = useIsMobile()
   const { width, height } = useWindowSize()
 
@@ -43,31 +39,20 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
     }
 
     const currentMedia = zoomedMediaRef.current
+    const removeKeydownListener =
+      addEventListener(document, 'keydown', escListener)
+
+    if (!currentMedia) return removeKeydownListener
     const zoomMediaIsVid = (zoomedMedia: HTMLElement):
       zoomedMedia is HTMLVideoElement => zoomedMedia.tagName === 'VIDEO'
 
-    const removeKeydownListener =
-      addEventListener(document, 'keydown', escListener)
-    let removeRenderListener = _.noop
+    if (!zoomMediaIsVid(currentMedia))
+      return removeKeydownListener
 
-    if (!currentMedia) return removeKeydownListener
-
-    if (zoomMediaIsVid(currentMedia)) {
-      if (!isMobile)
-        currentMedia.currentTime = zoomMedia.getCurrentTime()
-      currentMedia.play()
-      removeRenderListener = addEventListener(
-        currentMedia, 'canplay', () => setIsRendered(true))
-    } else {
-      if (currentMedia.complete) setIsRendered(true)
-      else removeRenderListener = addEventListener(
-        currentMedia, 'load', () => setIsRendered(true))
-    }
-
-    return () => {
-      removeKeydownListener()
-      removeRenderListener()
-    }
+    if (!isMobile) currentMedia.currentTime =
+      zoomMedia.getCurrentTime()
+    currentMedia.play()
+    return removeKeydownListener
   }, [])
 
   const { type, mediaStack, fallbackPath, alt } = zoomMedia
@@ -98,50 +83,29 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
         ref={zoomedMediaRef}
         isZoomed={true}
         autoPlay={false} />
-      {isMobile &&
+      {
+        isMobile &&
         type === MediaFileType.Video &&
         !isRendered &&
-        <LoadingContainer
-          $aspectRatio={aspectRatio}
-          $mobileWidth={mobileWidth}
-          $mobileHeight={mobileHeight}>
-          <p>
-            Loading...
-          </p>
-        </LoadingContainer>}
+        <LoadingContainer />
+      }
     </ZoomedContainer>
   )
 }
 
 
-const mobileSizeMixin = () => ({
-  $aspectRatio,
-  $mobileWidth,
-  $mobileHeight
-}: StyledLoadingContainerProps) => `
-  width: ${$mobileWidth};
-  height: ${$mobileHeight};
-  aspect-ratio: ${validateString($aspectRatio)};
-`
 const ZoomedContainer = styled(PopUpContainer) <StyledZoomedMediaProps>`
   background-color: rgba(0, 0, 0, 0.85);
   cursor: zoom-out;
 
   img, video {
-    ${mobileSizeMixin}
+    ${({ $aspectRatio, $mobileWidth, $mobileHeight }) => `
+      width: ${$mobileWidth};
+      height: ${$mobileHeight};
+      aspect-ratio: ${validateString($aspectRatio)};
+    `}
     object-fit: contain;
     background-color: ${({ $isRendered }) => validateString(!$isRendered, 'white')};
-  }
-`
-
-// TODO responsive
-const LoadingContainer = styled.div<StyledLoadingContainerProps>`
-  position: absolute;
-  ${mobileSizeMixin}
-  ${mixins.flex('center', 'center')}
-  p {
-    background-color: ${colors.background};
-    padding: 0.2em 1.25em;
   }
 `
 

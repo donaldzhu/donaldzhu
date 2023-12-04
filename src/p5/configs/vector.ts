@@ -4,6 +4,8 @@ import Size from '../../utils/helpers/size'
 import { Easing, VectorDrawMethod, XPosition, YPosition } from '../helpers/vector/constants'
 import type { VectorPosition, VectorSetting } from '../helpers/vector/vectorTypes'
 
+export const vectorStringCount = 20
+
 const mainSketchConfigs: Partial<VectorSetting> = {
   scale: sketchSizes.desktop.main.scale,
   tracking: sketchSizes.desktop.main.tracking,

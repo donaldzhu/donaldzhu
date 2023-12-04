@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import drawVectorString from '../../../p5/sketches/drawVectorString'
+import drawVectorString from '../../../p5/sketches/desktop/drawVectorString'
 import ElemRect from '../../../utils/helpers/rect/elemRect'
 import { addEventListener } from '../../../utils/reactUtils'
 import { validateRef } from '../../../utils/typeUtils'
@@ -9,12 +9,13 @@ import WorkImg from '../../common/media/workImg'
 import RowContainer from '../../common/rowContainer'
 import Canvas from '../../common/canvas/canvas'
 import useLocalCanvas from '../../../hooks/useLocalCanvas'
+import { vectorStringCount } from '../../../p5/configs/vector'
 import type { Device } from '../../../utils/breakptTypes'
 
 const PageVectorString = () => {
   const [translateImgSrc, setTranslateImgSrc] = useState(1)
   const translateContainerRef = useRef<HTMLDivElement | null>(null)
-  const tranlsateImgCount = 20
+  const tranlsateImgCount = vectorStringCount
 
   useEffect(() => {
     let translateContainer: ElemRect<HTMLDivElement>

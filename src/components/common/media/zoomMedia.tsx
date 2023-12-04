@@ -10,7 +10,9 @@ import { percent, toPercent } from '../../../utils/sizeUtils'
 import { mobileQuery } from '../../../utils/queryUtil'
 import useIsMobile from '../../../hooks/useIsMobile'
 import { ReactComponent as PlaySvg } from '../../../assets/mobile/play.svg'
+import useMediaIsRendered from '../../../hooks/useMediaIsRendered'
 import PreloadMedia from './preloadMedia'
+import LoadingContainer from './loadingContainer'
 import type { DesktopContextProps } from '../../desktop/pageWrappers/pageTypes'
 import type { MobileContextProps } from '../../mobile/pageWrappers/pageTypes'
 import type { MediaRef, ZoomMediaProps } from './mediaTypes'
@@ -26,12 +28,13 @@ const ZoomMedia = forwardRef((props: ZoomMediaProps, ref: MediaRef) => {
   const { maxSize, width, isToolTip, ...rest } = props
 
   const isMobile = useIsMobile()
-  const { pageId } = useContext(WorkPageContext)
-  const mediaRef = useForwardedRef(ref)
-
   const mobileNoAutoPlay = isMobile && !defaultCanAutoPlay
   // for when the video is played manually
   const [forceAutoPlay, setForceAutoPlay] = useState(!mobileNoAutoPlay)
+
+  const { pageId } = useContext(WorkPageContext)
+  const mediaRef = useForwardedRef(ref)
+  const isRendered = useMediaIsRendered(mediaRef)
 
   useEffect(() => {
     if (!forceAutoPlay) setForceAutoPlay(!mobileNoAutoPlay)
@@ -86,17 +89,16 @@ const ZoomMedia = forwardRef((props: ZoomMediaProps, ref: MediaRef) => {
         ref={mediaRef}
         onClick={handleClick} />
       {
-        !forceAutoPlay &&
-        defaultCanAutoPlay !== undefined &&
-        rest.type === MediaFileType.Video &&
-        <div>
-          <PlaySvg />
-        </div>
+        defaultCanAutoPlay === false &&
+        rest.type === MediaFileType.Video && (
+          !forceAutoPlay ?
+            <div><PlaySvg /></div> :
+            !isRendered && <LoadingContainer />
+        )
       }
     </MediaContainer>
   )
 })
-
 
 const MediaContainer = styled.div<StyledZoomMediaProps>`
   ${mixins.flex('center', 'center')}
@@ -113,18 +115,17 @@ const MediaContainer = styled.div<StyledZoomMediaProps>`
   }
 
   > div {
+    ${mixins.flex('center', 'center')}
     width: ${({ $width }: StyledZoomMediaProps) => $width ?? percent(100)};
     position: absolute;
     pointer-events: none;
-    ${mixins.flex('center', 'center')}
 
     svg {
-      color: rgba(0,0,0,0.65);
+      color: rgba(0, 0, 0, 0.65);
       width: 13.5%;
     }
   }
 `
-
 
 
 export default ZoomMedia

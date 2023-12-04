@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import useCanvas from '../../../hooks/useCanvas'
 import useGlobalCanvas from '../../../hooks/useGlobalCanvas'
-import drawCursor from '../../../p5/sketches/drawCursor'
+import drawCursor from '../../../p5/sketches/desktop/drawCursor'
 import GlobalCanvas from '../../common/canvas/globalCanvas'
 import AutoPlayPopUp from '../../common/autoPlayPopUp'
 import ZoomedMedia from '../../common/media/zoomedMedia'
@@ -20,7 +20,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
   const { canAutoPlay, defaultCanAutoPlay, vidLoadData, preloadManager } = mediaSettings
   const [sidebar, setSidebar] = useState<ReactNode | undefined>()
   const [zoomMedia, setZoomMedia] = useState<RequiredZoomMediaProps | undefined>()
-  const location = useLocation()
+  const { pathname } = useLocation()
 
   const canvasStates = {
     mousePositionRef: useRef(null),
@@ -35,7 +35,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
   useEffect(() => {
     window.scrollTo(0, 0)
     if (zoomMedia) setZoomMedia(undefined)
-  }, [location])
+  }, [pathname])
 
   return (
     <>
@@ -45,7 +45,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
       {zoomMedia && <ZoomedMedia
         zoomMedia={zoomMedia}
         handleUnzoom={() => setZoomMedia(undefined)} />}
-      {(location.pathname.match(/^\/work/) && canAutoPlay === false) &&
+      {(pathname.match(/^\/work/) && canAutoPlay === false) &&
         <AutoPlayPopUp />}
       <LeftContainer
         sidebar={sidebar}

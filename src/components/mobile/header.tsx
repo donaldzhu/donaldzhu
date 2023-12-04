@@ -1,3 +1,4 @@
+import { forwardRef } from 'react'
 import styled from 'styled-components'
 import mixins from '../../styles/mixins'
 import { domSizes } from '../../styles/sizes'
@@ -10,16 +11,16 @@ interface HeaderProps {
   handleClick: (shouldShow?: boolean) => void
 }
 
-const Header = ({ isShown, handleClick }: HeaderProps) => {
+const Header = forwardRef<HTMLHeadElement, HeaderProps>(({ isShown, handleClick }, ref) => {
   return (
-    <Container>
+    <Container ref={ref}>
       <HomeLink to='/' onClick={() => handleClick(false)}>D<b>ZHU</b></HomeLink>
       <MenuLink onClick={() => handleClick()}>
         {isShown ? 'close' : 'menu'}
       </MenuLink>
     </Container>
   )
-}
+})
 
 const Container = styled.header`
   ${mixins

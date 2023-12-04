@@ -1,6 +1,6 @@
 import { Outlet, useOutletContext } from 'react-router-dom'
 import styled from 'styled-components'
-import drawMobileSketch from '../../../p5/sketches/drawMobileSketch'
+import drawMobileSketch from '../../../p5/sketches/mobile/drawGyroSketch'
 import { domSizes } from '../../../styles/sizes'
 import { fontParams, fontSizes } from '../../../styles/fonts'
 import colors from '../../../styles/colors'
@@ -27,10 +27,12 @@ const PageWithSketch = () => {
 
   usePreloadQueue(setupDone, preloadManager =>
     preloadManager.defaultPreload())
+
+  const isGyroShown = motionSettings.hasMotion && !shouldHideGyro
   return (
     <Container>
       <StyledCanvas {...canvasHandlers} />
-      {motionSettings.hasMotion && !shouldHideGyro &&
+      {isGyroShown &&
         <GyroButtonContainer>
           <GyroEnableButton
             onTouchEnd={handleGyroButtonClick}
@@ -43,7 +45,7 @@ const PageWithSketch = () => {
               'Permission Denied :('}
           </GyroToolTip>
         </GyroButtonContainer>}
-      <MainContainer $isGyroShown={!shouldHideGyro}>
+      <MainContainer $isGyroShown={isGyroShown}>
         <Outlet context={useOutletContext()} />
       </MainContainer>
     </Container>

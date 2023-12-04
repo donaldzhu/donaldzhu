@@ -1,12 +1,12 @@
-import { domSizes, sketchSizes } from '../../styles/sizes'
-import { validateRef } from '../../utils/typeUtils'
-import configs from '../configs/vector'
-import Text from '../helpers/vector/text'
-import { getVw } from '../../utils/sizeUtils'
-import { loopObject } from '../../utils/commonUtils'
+import { domSizes, sketchSizes } from '../../../styles/sizes'
+import { validateRef } from '../../../utils/typeUtils'
+import configs from '../../configs/vector'
+import Text from '../../helpers/vector/text'
+import { getVw } from '../../../utils/sizeUtils'
+import { loopObject } from '../../../utils/commonUtils'
 import type p5 from 'p5'
-import type { coorTuple } from '../../utils/utilTypes'
-import type { MobileCanvasStates } from '../../components/common/canvas/canvasTypes'
+import type { coorTuple } from '../../../utils/utilTypes'
+import type { MobileCanvasStates } from '../../../components/common/canvas/canvasTypes'
 
 
 const drawMobileSketch = () => {

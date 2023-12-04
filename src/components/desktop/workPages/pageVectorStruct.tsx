@@ -7,7 +7,7 @@ import { ReactComponent as RSvg } from '../../../assets/desktop/work/vector-stru
 import { ReactComponent as TSvg } from '../../../assets/desktop/work/vector-struct/t.svg'
 import { ReactComponent as VSvg } from '../../../assets/desktop/work/vector-struct/v.svg'
 import useCanvas from '../../../hooks/useCanvas'
-import drawElemBorders from '../../../p5/sketches/drawElemBorders'
+import drawElemBorders from '../../../p5/sketches/common/drawElemBorders'
 import mixins from '../../../styles/mixins'
 import WorkImg from '../../common/media/workImg'
 import WorkImgGroup from '../../common/media/workImgGroup'

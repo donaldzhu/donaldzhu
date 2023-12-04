@@ -18,6 +18,7 @@ const colorPalette = {
   defaultTextSelectBg: 1,
   popUpColor: 0,
   autoPlayPopUpBg: 2,
+  loadingText: 0,
   homeSketch: 0,
   homeIcon: 1,
   border: 0,

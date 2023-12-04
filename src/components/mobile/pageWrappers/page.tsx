@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { usePrevious } from '@uidotdev/usehooks'
@@ -45,6 +45,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
 
   const motionSettingsRef = useMemoRef(() => motionSettings, [motionSettings])
   const gyroStatesRef = useMemoRef(() => gyroStates, [gyroStates])
+  const headerRef = useRef<HTMLHeadElement>(null)
 
   const handleGyroButtonClick = () => {
     if (getPermission) Promise.resolve(getPermission())
@@ -86,7 +87,10 @@ const Page = ({ mediaSettings }: RouteProps) => {
 
   return (
     <Container $menuIsShown={menuIsShown}>
-      <Header isShown={menuIsShown} handleClick={handleMenuClick} />
+      <Header
+        ref={headerRef}
+        isShown={menuIsShown}
+        handleClick={handleMenuClick} />
       {menuIsShown && <Menu />}
       {zoomMedia && <ZoomedMedia
         zoomMedia={zoomMedia}
@@ -105,6 +109,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
           canvasStates,
           shouldHideGyro,
           zoomMedia,
+          headerRef,
           handleZoomMedia,
           preloadManager,
           handleGyroButtonClick
@@ -112,6 +117,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
       </AnimationContainer>
       <VidLoadContainer
         isMobile={true}
+        verbosity={mediaSettings.preloadManager.verbosity}
         hasZoomedMedia={!!zoomMedia}
         vidLoadData={vidLoadData}
         canAutoPlay={canAutoPlay} />

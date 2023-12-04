@@ -1,5 +1,5 @@
 import breakpts from '../data/breakpoints'
-import { Breakpt } from './breakptTypes'
+import { Breakpt, Device } from './breakptTypes'
 import { mapObject, toPairs } from './commonUtils'
 
 const createQueries = (sizePrefix: 'max' | 'min') =>
@@ -13,18 +13,30 @@ export const mobileQuery = maxQueries.l
 
 const getScreenWidth = () => Math.round(window.screen.width * window.devicePixelRatio)
 
-export const getBreakptKey = () => {
+export const getBreakptKey = (device: Device) => {
   const screenWidth = getScreenWidth()
+  let breakpt: Breakpt
+
   if (screenWidth >= breakpts.xxl)
-    return Breakpt.Xxl
-  if (screenWidth < breakpts.s)
-    return Breakpt.S
-  const breakptPairs = toPairs(breakpts)
-    .sort((a, b) => a[1] - b[1])
-  const breakptPair = breakptPairs
-    .find(([_, breakptWidth]) => breakptWidth >= screenWidth)
-  if (!breakptPair) return breakptPairs[0][0]
-  return breakptPair[0]
+    breakpt = Breakpt.Xxl
+  else if (screenWidth < breakpts.s)
+    breakpt = Breakpt.S
+  else {
+    const breakptPairs = toPairs(breakpts).sort((a, b) => a[1] - b[1])
+    const breakptPair = breakptPairs
+      .find(([_, breakptWidth]) => breakptWidth >= screenWidth)
+    if (!breakptPair) breakpt = breakptPairs[0][0]
+    else breakpt = breakptPair[0]
+  }
+
+  if ([Breakpt.Xl, Breakpt.Xxl].includes(breakpt) &&
+    device === Device.Mobile)
+    breakpt = Breakpt.L
+  else if ([Breakpt.S, Breakpt.M].includes(breakpt) &&
+    device === Device.Desktop)
+    breakpt = Breakpt.L
+
+  return breakpt
 }
 
 export const getIsMobile = () => getScreenWidth() <= breakpts.l

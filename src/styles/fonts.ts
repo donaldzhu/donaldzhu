@@ -84,6 +84,9 @@ export const fontSizes = {
     workPage: {
       title: getRemSize({ s: 1.45, l: 3 }),
       details: getRemSize({ s: 0.85, l: 1.75 })
+    },
+    media: {
+      loading: getRemSize({ s: 1, l: 2 })
     }
   }
 }

@@ -57,7 +57,7 @@ class PreloadManager {
     this.config = config
     this.loadVid = loadVid
 
-    this.verbosity = Verbosity.Quiet
+    this.verbosity = Verbosity.Normal
     this.enabled = true
     this.preloadQueuer = new PreloadQueuer<PreloadManagerStack, MediaBreakpts>({
       queueInterval: 0
@@ -83,7 +83,16 @@ class PreloadManager {
     }
 
     if (this.verbosity >= Verbosity.Normal) {
-      console.log(`Breakpoint: ${getBreakptKey().toLocaleUpperCase()}`)
+      console.log(
+        `%cBreakpoint: %c${getBreakptKey(this.device).toLocaleUpperCase()}`,
+        'color: white;',
+        'color: ""'
+      )
+      console.log(
+        `%cDevice: %c${this.device}`,
+        'color: white;',
+        'color: ""'
+      )
       console.log(this)
     }
   }
@@ -357,8 +366,8 @@ class PreloadManager {
     const map = {
       [MediaSize.Fallback]: this.config.isMobile ?
         Fallback.MobileFallback : Fallback.DesktopFallback,
-      [MediaSize.Preview]: getPreviewBreakptKey(),
-      [MediaSize.Full]: getBreakptKey(),
+      [MediaSize.Preview]: getPreviewBreakptKey(this.device),
+      [MediaSize.Full]: getBreakptKey(this.device),
       [MediaSize.Max]: MediaSize.Max
     } as const
     return map[size]
@@ -431,7 +440,7 @@ class PreloadManager {
   private decorateLog(messages: string[], styles: string[], size?: MediaSize, isFullVid?: boolean) {
     const extraMessages = [
       ` ${size}${size === MediaSize.Full ?
-        ` (${getBreakptKey().toLocaleUpperCase()})` : ''}`,
+        ` (${getBreakptKey(this.device).toLocaleUpperCase()})` : ''}`,
       ` - ${validateString(isFullVid, 'full vid ')}preloaded!`
     ]
     const extraStyles = [
@@ -479,22 +488,6 @@ class PreloadManager {
       stackData.pageId === pageId &&
       stackData.device === this.device
     )
-  }
-
-  // TODO
-  getWorkPageImgSizes(pageId: string) {
-    return this.preloadQueuer.stackData.filter(stackData =>
-      stackData.category === PreloadCategory.WorkPage &&
-      stackData.pageId === pageId &&
-      stackData.mediaType === MediaType.Images
-    ).map(imgStackData => imgStackData.stack.loadedSizes)
-  }
-
-  previewIsLoaded(imgSizes: MediaBreakpts[][]) {
-    const breakpt = this.getMediaSizes(MediaSize.Full)
-    console.log(breakpt)
-    return !breakpt || imgSizes.every(sizes =>
-      sizes.includes(breakpt))
   }
 }
 

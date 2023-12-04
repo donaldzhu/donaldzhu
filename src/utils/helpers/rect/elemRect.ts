@@ -1,13 +1,16 @@
 import { validateRef } from '../../typeUtils'
 import Rect from './rect'
-import type { MutableRefObject } from 'react'
+import type { MutableRefObject, RefObject } from 'react'
 import type { coorTuple } from '../../utilTypes'
 
 class ElemRect<T extends Element> extends Rect {
-  private ref: MutableRefObject<T>
+  private ref: MutableRefObject<T> | RefObject<T>
   private isRelative?: boolean
 
-  constructor(ref: MutableRefObject<T>, padding?: number | coorTuple, isRelative?: boolean) {
+  constructor(
+    ref: MutableRefObject<T> | RefObject<T>,
+    padding?: number | coorTuple,
+    isRelative?: boolean) {
     super({ padding })
     this.ref = ref
     this.isRelative = isRelative

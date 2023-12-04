@@ -1,7 +1,7 @@
-import Size from '../../utils/helpers/size'
-import configs from '../configs/vector'
-import Text from '../helpers/vector/text'
-import { domSizes } from '../../styles/sizes'
+import Size from '../../../utils/helpers/size'
+import configs, { vectorStringCount } from '../../configs/vector'
+import Text from '../../helpers/vector/text'
+import { domSizes } from '../../../styles/sizes'
 import type p5 from 'p5'
 
 const drawVectorString = () => {
@@ -11,7 +11,7 @@ const drawVectorString = () => {
     text = new Text(p5, 'Ä', configs.VECTOR_STRING_TRANSLATE)
     text.setting.mapFunction = (stillVector, mouseVector) => {
       const distVector = mouseVector.sub(text.setting.mouseOrigin ?? stillVector)
-      const segmentation = 20 // TODO
+      const segmentation = vectorStringCount
       const segmentSize = Math.PI * 2 / segmentation
       const segmentedHeading = Math.floor(distVector.heading() / segmentSize) * segmentSize
       const maxStretch = typeof text.setting.maxStretch === 'object' ?

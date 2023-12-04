@@ -10,17 +10,18 @@ import { addEventListener } from '../../../utils/reactUtils'
 import { validateRef } from '../../../utils/typeUtils'
 import { getVh } from '../../../utils/sizeUtils'
 import Canvas from '../../common/canvas/canvas'
-import drawVectorStringMobile from '../../../p5/sketches/drawVectorStringMobile'
+import drawVectorStringMobile from '../../../p5/sketches/mobile/drawVectorString'
 import useMemoRef from '../../../hooks/useMemoRef'
 import VideoIframe from '../../common/media/videoIframe'
 import { VideoIframeType } from '../../common/media/mediaTypes'
+import { vectorStringCount } from '../../../p5/configs/vector'
 import type { WorkPageContentProps } from '../work/workPageTypes'
 
 
 const PageVectorString = ({ WorkInfo }: WorkPageContentProps) => {
   const [translateImgSrc, setTranslateImgSrc] = useState(1)
   const translateImgSrcRef = useMemoRef(() => translateImgSrc, [translateImgSrc])
-  const tranlsateImgCount = 20
+  const tranlsateImgCount = vectorStringCount
   const translateImgRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

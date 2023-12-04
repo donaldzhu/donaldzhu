@@ -60,7 +60,10 @@ const mobileBody = () => `
 `
 
 const highZIndex = (level: number) => `z-index: ${'9'.repeat(level)};`
-const noSelect = () => 'user-select: none;'
+const noSelect = () => `
+  user-select: none;
+  -webkit-user-select: none;
+`
 
 const fontVar = (config: FontVarConfigProps) => {
   config = {

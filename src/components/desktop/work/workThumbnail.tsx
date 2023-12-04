@@ -5,6 +5,7 @@ import { ImgExt, MediaFileType, VidExt } from '../../../utils/helpers/preloader/
 import { getBreakptKey } from '../../../utils/queryUtil'
 import Anchor from '../../common/anchor'
 import PreloadMedia from '../../common/media/preloadMedia'
+import { Device } from '../../../utils/breakptTypes'
 import type { WorkAnchorProps } from './workTypes'
 import type { DesktopContextProps } from '../pageWrappers/pageTypes'
 
@@ -12,7 +13,7 @@ const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }: Wor
   const { title, id, animatedThumbnail } = data
   const { preloadManager } = useOutletContext<DesktopContextProps>()
 
-  const fallbackPath = joinPaths('/assets/thumbnails/', getBreakptKey(), id) + '.' +
+  const fallbackPath = joinPaths('/assets/thumbnails/', getBreakptKey(Device.Desktop), id) + '.' +
     (animatedThumbnail ? VidExt.Webm : ImgExt.Webp)
 
   return (

@@ -3,6 +3,7 @@ import { forwardRef, useEffect, useState } from 'react'
 import { MediaFileType, MediaSize, getFallbackKey, getStackBreakpt } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
 import useIsMobile from '../../../hooks/useIsMobile'
+import { Device } from '../../../utils/breakptTypes'
 import Media from './media'
 import type { MediaRef, PreloadMediaProps } from './mediaTypes'
 import type { MediaBreakpts } from '../../../utils/helpers/preloader/preloaderTypes'
@@ -26,7 +27,7 @@ const PreloadMedia = forwardRef(function PreloadMedia(props: PreloadMediaProps, 
     const hasLoaded = mediaIsVid || !!size
 
     if (mediaIsVid && mediaStack !== posterStack)
-      size = isZoomed && !isMobile ? MediaSize.Max : getBreakptKey()
+      size = isZoomed && !isMobile ? MediaSize.Max : getBreakptKey(Device.Mobile)
     else size ||= getFallbackKey()
 
     return {
@@ -46,7 +47,7 @@ const PreloadMedia = forwardRef(function PreloadMedia(props: PreloadMediaProps, 
     if (!mediaStack) return _.noop
     const handleStackLoad = (isPoster = false) => {
       const newLoadState = getLoadState(isPoster ? posterStack : undefined)
-      if (isZoomed ?? mediaIsVid) return
+      if (isZoomed ?? (mediaIsVid && !isPoster)) return
 
       if (isPoster) {
         if (!_.isEqual(newLoadState, posterLoadState))

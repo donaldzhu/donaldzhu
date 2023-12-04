@@ -8,6 +8,8 @@ import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
 import { fontLineHeights, fontSizes } from '../../../styles/fonts'
 import PreloadMedia from '../../common/media/preloadMedia'
+import { getBreakptKey } from '../../../utils/queryUtil'
+import { Device } from '../../../utils/breakptTypes'
 import type { WorkDataInterface } from '../../desktop/work/workTypes'
 import type { MobileContextProps } from '../pageWrappers/pageTypes'
 
@@ -20,7 +22,7 @@ const WorkThumbnail = ({ data }: WorkThumbnailProps) => {
   const { preloadManager, canAutoPlay } = useOutletContext<MobileContextProps>()
   const [shouldAutoPlay] = useState(!!canAutoPlay)
 
-  const fallbackPath = joinPaths('assets/mobile/thumbnails/l', id) + '.' +
+  const fallbackPath = joinPaths('assets/mobile/thumbnails', getBreakptKey(Device.Mobile), id) + '.' +
     (animatedThumbnail ? VidExt.Mp4 : ImgExt.Webp)
   return (
     <ThumbnailLink to={id}>

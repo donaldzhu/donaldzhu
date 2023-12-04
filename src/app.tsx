@@ -1,4 +1,4 @@
-import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 import styled from 'styled-components'
 import colorConfig from './styles/colors'
 import { fontFamilies, fontSizes } from './styles/fonts'
@@ -7,8 +7,6 @@ import { domSizes } from './styles/sizes'
 import useCanAutoPlay from './hooks/useCanAutoPlay'
 import useIsMobile from './hooks/useIsMobile'
 import { desktopQuery } from './utils/queryUtil'
-import PageMobileTemp from './components/mobileTemp/pageMobileTemp'
-import HomeMobileTemp from './components/mobileTemp/homeMobileTemp'
 import MobileRoutes from './components/mobile/routes'
 import DesktopRoutes from './components/desktop/routes'
 import usePreload from './hooks/usePreload'
@@ -26,13 +24,8 @@ const App = () => {
       <HashRouter>
         <Routes>
           <Route path='*' element={isMobile ?
-            (process.env.NODE_ENV === 'production' ?
-              <Route path='/' element={<PageMobileTemp canAutoPlay={autoPlayConfig.canAutoPlay} />}>
-                <Route path='' element={<HomeMobileTemp />} />
-                <Route path='*' element={<Navigate to='/' replace />} />
-              </Route> :
-              <MobileRoutes mediaSettings={mediaSettings} />
-            ) : <DesktopRoutes mediaSettings={mediaSettings} />
+            <MobileRoutes mediaSettings={mediaSettings} /> :
+            <DesktopRoutes mediaSettings={mediaSettings} />
           } />
         </Routes>
       </HashRouter>
@@ -55,8 +48,9 @@ const StyledGlobal = styled.main`
     flex: none;
   }
 
-  img {
-    ${mixins.noSelect()}
+  header, footer, img, div {
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   * {
@@ -85,6 +79,22 @@ const StyledGlobal = styled.main`
     a:hover {
       color: ${colorConfig.activeElem};
     }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  blockquote,
+  dd,
+  dt,
+  figcaption,
+  li,
+  p {
+    user-select: text;
+    -webkit-user-select: text;
   }
 `
 

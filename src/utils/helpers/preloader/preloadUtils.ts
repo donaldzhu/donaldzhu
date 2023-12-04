@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Breakpt } from '../../breakptTypes'
+import { Breakpt, type Device } from '../../breakptTypes'
 import { getBreakptKey, getIsMobile } from '../../queryUtil'
 import { sortLike } from '../../commonUtils'
 import type { MediaStack } from './mediaStack'
@@ -92,8 +92,8 @@ export const getFallbackKey = () => getIsMobile() ?
   Fallback.MobileFallback : Fallback.DesktopFallback
 
 // TODO
-export const getPreviewBreakptKey = () => {
-  const breakpt = getBreakptKey()
+export const getPreviewBreakptKey = (device: Device) => {
+  const breakpt = getBreakptKey(device)
   return breakpt === Breakpt.L ? Breakpt.S :
     breakpt === Breakpt.Xxl ? Breakpt.L : undefined
 }

@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import styled from 'styled-components'
 import useCanvas from '../../../../hooks/useCanvas'
-import drawHomeIcon from '../../../../p5/sketches/drawHomeIcon'
+import drawHomeIcon from '../../../../p5/sketches/desktop/drawHomeIcon'
 import mixins from '../../../../styles/mixins'
 import { domSizes } from '../../../../styles/sizes'
 import { percent } from '../../../../utils/sizeUtils'
