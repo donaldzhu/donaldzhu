@@ -21,7 +21,7 @@ const LOG_COLORS = {
   [MediaSize.Max]: 'red',
 }
 
-export enum PreloadCategory {
+enum PreloadCategory {
   Thumbnail = 'thumbnail',
   WorkPage = 'workPage'
 }

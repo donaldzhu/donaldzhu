@@ -48,7 +48,7 @@ export enum Verbosity {
   Diagnostic,
 }
 
-export const orderedBreakpts = [
+const orderedBreakpts = [
   Fallback.MobileFallback,
   Fallback.DesktopFallback,
   Breakpt.S,

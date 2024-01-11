@@ -13,8 +13,3 @@ export type DesktopContextProps = {
   preloadManager: PreloadManager,
   canAutoPlay: boolean | undefined,
 } & GlobalCanvasStates<Device.Desktop>
-
-// TODO
-export interface PageProps {
-  canAutoPlay: boolean | undefined
-}

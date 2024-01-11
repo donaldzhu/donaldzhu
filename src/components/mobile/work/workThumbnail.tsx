@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 import { useOutletContext } from 'react-router-dom'
 import Anchor from '../../common/anchor'

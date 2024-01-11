@@ -37,7 +37,7 @@ type PartialTypedCanvasStates<T extends Device> = T extends Device.Desktop ?
   DesktopCanvasStates : PartialMobileCanvasStates
 
 
-export type CanvasRefType = ReturnType<typeof useGlobalCanvas>
+type CanvasRefType = ReturnType<typeof useGlobalCanvas>
 
 export interface GlobalCanvasStates<T extends Device> {
   canvasRef: CanvasRefType

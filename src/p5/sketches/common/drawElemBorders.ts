@@ -1,5 +1,5 @@
 import ElemRect from '../../../utils/helpers/rect/elemRect'
-import { styleDashedRect, wrapDrawingContext } from '../../../utils/p5Utils'
+import { styleDashedRect } from '../../../utils/p5Utils'
 import { validateRef } from '../../../utils/typeUtils'
 import type p5 from 'p5'
 import type { MutableRefObject } from 'react'
