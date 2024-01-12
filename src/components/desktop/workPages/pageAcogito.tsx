@@ -1,3 +1,4 @@
+import Anchor from '../../common/anchor'
 import WorkImg from '../../common/media/workImg'
 import WorkImgGroup from '../../common/media/workImgGroup'
 import RowContainer from '../../common/rowContainer'
@@ -58,7 +59,7 @@ const PageAcogito = () => {
       </RowContainer>
       <RowContainer toolTip={
         <>
-          <p>Alongside other graphics of network structures in this project, the deck of transparencies is the generative output of my program in p5.js. The logic is borrowed from <a href='https://ciphrd.com/2021/03/17/pattern-formation-using-dividing-aggregating-walkers/'>Ciphrd’s dividing-aggregating walkers</a>—the appearance of which heavily resembles mycelial structures.</p>
+          <p>Alongside other graphics of network structures in this project, the deck of transparencies is the generative output of my program in p5.js. The logic is borrowed from <Anchor to='https://ciphrd.com/2021/03/17/pattern-formation-using-dividing-aggregating-walkers/'>Ciphrd’s dividing-aggregating walkers</Anchor>—the appearance of which heavily resembles mycelial structures.</p>
           <WorkImg src='1.gif' isToolTip />
         </>
       }>

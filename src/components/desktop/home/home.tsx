@@ -3,6 +3,7 @@ import useSidebar from '../../../hooks/useSidebar'
 import Anchor from '../../common/anchor'
 import Text from '../../common/styled/text'
 import TextContainer from '../../common/styled/textContainer'
+import pdfPortfolioData from '../../../data/pdf-portfolio.json'
 
 const Home = () => {
   useSidebar(<HomeSidebar />)
@@ -10,15 +11,21 @@ const Home = () => {
 }
 
 const HomeSidebar = () => {
-  const { portfolioData } = usePortfolioQuery()
+  const { pid, portfolioData } = usePortfolioQuery()
+
   const PortfolioHeader = portfolioData ?
-    `${portfolioData.toLocaleUpperCase()}, WELCOME! Thanks for your time.` :
+    `${portfolioData.toLocaleUpperCase()}, WELCOME!` :
     'DONALD ZHU is a graphic designer based in Toronto, Canada.'
+
+  const pdfLink = pid ? (pdfPortfolioData as Record<string, string>)[pid] : null
+  const PortfolioHeaderSuffix = pdfLink ?
+    <p>Please <Anchor to={pdfLink}>click here</Anchor> for a curated PDF portfolio.</p> :
+    <>Thanks for your time.</>
 
   return (
     <TextContainer>
       <Text>
-        <b>{PortfolioHeader}</b>
+        <b>{PortfolioHeader}{pdfLink ? PortfolioHeaderSuffix : null}</b>
       </Text>
       <Text>
         {portfolioData ?
