@@ -42,7 +42,8 @@
     "lint": "eslint ./src",
     "tsc-script": "tsc -p scripts/tsconfig.json",
     "tsc-script:watch": "npm run tsc-script -- -w",
-    "portfolio-id": "node scripts/dist/scripts/getPortfolioQuery "
+    "portfolio-id": "node scripts/dist/scripts/getPortfolioQuery",
+    "git-test": "git checkout test-git"
   },
   "eslintConfig": {
     "extends": [
