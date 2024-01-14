@@ -30,8 +30,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "build:no-asset": "react-scripts build; rm -rf build/assets",
+    "predeploy": "npm run build:no-asset",
+    "deploy": "gh-pages -d build; git checkout gh-pages; mkdir public; git checkout main -- public/assets; mv public/assets assets; rmdir public; git commit -m \"Copied assets folder\"; git push; git checkout main;",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "parse": "node scripts/dist/scripts/parseDescription/parseDescription",
@@ -42,8 +43,7 @@
     "lint": "eslint ./src",
     "tsc-script": "tsc -p scripts/tsconfig.json",
     "tsc-script:watch": "npm run tsc-script -- -w",
-    "portfolio-id": "node scripts/dist/scripts/getPortfolioQuery",
-    "git-test": "git checkout test-git"
+    "portfolio-id": "node scripts/dist/scripts/getPortfolioQuery"
   },
   "eslintConfig": {
     "extends": [
