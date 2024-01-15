@@ -49,7 +49,10 @@ class PreloadManager {
   private currentPreloadName: PreloadName | undefined
 
   config: PreloaderConfig
+
   enabled: boolean
+  loadLocal: boolean
+
   imgPreloaded: boolean
   verbosity: Verbosity
 
@@ -59,6 +62,7 @@ class PreloadManager {
 
     this.verbosity = Verbosity.Normal
     this.enabled = true
+    this.loadLocal = false
     this.preloadQueuer = new PreloadQueuer<PreloadManagerStack, MediaBreakpts>({
       queueInterval: 0
     })
@@ -74,6 +78,8 @@ class PreloadManager {
 
     if (!this.enabled || process.env.NODE_ENV === 'production')
       this.verbosity = Verbosity.Quiet
+    if (process.env.NODE_ENV === 'production')
+      this.loadLocal = false
 
     if (this.enabled) {
       this.createThumbnailStacks(Device.Desktop)
@@ -108,7 +114,7 @@ class PreloadManager {
       this.preloadQueuer.stackData.push({
         stack: new MediaStack<MediaBreakpts>({
           fileName,
-          filePath: joinPaths('assets', device, 'thumbnails'),
+          filePath: joinPaths(this.assetPath, device, 'thumbnails'),
           fileType: animatedThumbnail ? MediaFileType.Video : MediaFileType.Image,
           breakpts: this.breakpts,
           config: this.config,
@@ -131,7 +137,7 @@ class PreloadManager {
           stack: new MediaStack<MediaBreakpts>({
             fileName,
             fileType: fileIsImg(fileName) ? MediaFileType.Image : MediaFileType.Video,
-            filePath: joinPaths('assets', device, 'work', pageId),
+            filePath: joinPaths(this.assetPath, device, 'work', pageId),
             breakpts: this.breakpts,
             config: this.config,
             nativeDimension,
@@ -360,6 +366,13 @@ class PreloadManager {
 
   get device() {
     return getDevice(this.config.isMobile)
+  }
+
+  get assetPath() {
+    // const storageRoot= 'https://storage.googleapis.com/donaldzhu-portfolio/'
+    // const storageRoot = 'https://donaldzhu-portfolio-us-east.s3.us-east-2.amazonaws.com/'
+    const storageRoot = 'https://raw.githubusercontent.com/donaldzhu/portfolio-static-files/main/'
+    return validateString(!this.loadLocal, storageRoot) + 'assets'
   }
 
   private getMediaSizes(size: MediaSize): MediaBreakpts | undefined {

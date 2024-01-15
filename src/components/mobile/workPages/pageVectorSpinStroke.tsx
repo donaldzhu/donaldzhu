@@ -14,7 +14,7 @@ const PageVectorSpinStroke = ({ WorkInfo }: WorkPageContentProps) => {
       </RowContainer>
       <WorkInfo />
       <TextContainer>
-        <SmallText>[Term 1 <Anchor to='/assets/pdf/vector-spin-stroke-literature-review.pdf' target="_blank">literature review</Anchor>]</SmallText>
+        <SmallText>[Term 1 <Anchor to='/local-assets/pdf/vector-spin-stroke-literature-review.pdf' target="_blank">literature review</Anchor>]</SmallText>
         <SmallText>
           <i>VECTOR, SPIN, STROKE.</i> is an ongoing series that explores the
           role of tools and tool-making within design investigations. To position design

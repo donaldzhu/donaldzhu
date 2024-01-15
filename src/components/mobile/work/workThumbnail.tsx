@@ -22,7 +22,7 @@ const WorkThumbnail = ({ data }: WorkThumbnailProps) => {
   const { preloadManager, canAutoPlay } = useOutletContext<MobileContextProps>()
   const [shouldAutoPlay] = useState(!!canAutoPlay)
 
-  const fallbackPath = joinPaths('assets/mobile/thumbnails', getBreakptKey(Device.Mobile), id) + '.' +
+  const fallbackPath = joinPaths(preloadManager.assetPath, 'mobile/thumbnails', getBreakptKey(Device.Mobile), id) + '.' +
     (animatedThumbnail ? VidExt.Mp4 : ImgExt.Webp)
   return (
     <ThumbnailLink to={id}>

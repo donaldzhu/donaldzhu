@@ -13,7 +13,7 @@ const useCanAutoPlay = () => {
 
   useEffect(() => {
     const video = document.createElement('video')
-    video.src = '/assets/autoplay-test/test' + '.' + (isMobile ? VidExt.Mp4 : VidExt.Webm)
+    video.src = '/local-assets/autoplay-test/test' + '.' + (isMobile ? VidExt.Mp4 : VidExt.Webm)
     video.muted = true
     video.playsInline = true
     video.play()

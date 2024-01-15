@@ -43,7 +43,7 @@ const ZoomMedia = forwardRef((props: ZoomMediaProps, ref: MediaRef) => {
   const device = getDevice(isMobile)
 
   src = isToolTip ? joinPaths(MediaType.ToolTips, src) : src
-  const fallbackPath = joinPaths('/assets', device, 'work', pageId, MediaSize.Max, src)
+  const fallbackPath = '/' + joinPaths(preloadManager.assetPath, device, 'work', pageId, MediaSize.Max, src)
 
   const mediaStack = !preloadManager?.enabled ? undefined :
     preloadManager?.findWorkMedia(pageId, src)

@@ -13,7 +13,7 @@ const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }: Wor
   const { title, id, animatedThumbnail } = data
   const { preloadManager } = useOutletContext<DesktopContextProps>()
 
-  const fallbackPath = joinPaths('/assets/thumbnails/', getBreakptKey(Device.Desktop), id) + '.' +
+  const fallbackPath = '/' + joinPaths(preloadManager.assetPath, 'thumbnails', getBreakptKey(Device.Desktop), id) + '.' +
     (animatedThumbnail ? VidExt.Webm : ImgExt.Webp)
 
   return (
