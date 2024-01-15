@@ -5,10 +5,13 @@ class Queue<T = any> {
   private currentId: undefined | number
   private interval: undefined | number
   queueList: queueFunctionType<T>[]
-  constructor(interval?: number) {
+  capacity: number
+
+  constructor(interval?: number, capacity = 1) {
     this.currentId = undefined
     this.interval = interval
     this.queueList = []
+    this.capacity = capacity
   }
 
   create(queueArgs: queueArgType<T>) {
@@ -17,6 +20,7 @@ class Queue<T = any> {
       const id = this.currentId = Date.now()
       const serve = () => {
         const queueArg = this.queueList[0]
+        if (!queueArg) return
         this.queueList.shift()
         let queueFunction = queueArg
 
@@ -39,7 +43,10 @@ class Queue<T = any> {
           })
           .catch(err => console.warn(err))
       }
-      serve()
+
+      for (let i = 0; i < this.capacity; i++)
+        serve()
+
     })
   }
 

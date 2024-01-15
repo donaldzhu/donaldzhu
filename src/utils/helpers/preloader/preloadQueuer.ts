@@ -75,7 +75,7 @@ class PreloadQueuer<T extends object, S extends string> {
   }
 
   addToSubqueue<T = void>(queueFunctions: queueArgType<T>) {
-    const queue = new Queue(this.interval)
+    const queue = new Queue(this.interval, 3)
     this.subqueues.push(queue)
     if (!queueFunctions) return Promise.resolve(false)
     return queue.create(queueFunctions)
