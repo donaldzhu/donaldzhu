@@ -32,7 +32,7 @@
     "build": "react-scripts build",
     "build:no-asset": "react-scripts build; rm -rf build/assets",
     "predeploy": "npm run build:no-asset",
-    "deploy": "gh-pages -d build; git checkout gh-pages; mkdir public; git checkout main -- public/assets; mv public/assets assets; rmdir public; git commit -m \"Copied assets folder\"; git push; git checkout main;",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "parse": "node scripts/dist/scripts/parseDescription/parseDescription",
