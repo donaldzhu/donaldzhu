@@ -37,6 +37,7 @@
     "eject": "react-scripts eject",
     "parse": "node scripts/dist/scripts/parseDescription/parseDescription",
     "resize": "npm run tsc-script; node scripts/dist/scripts/resizer/index",
+    "upload-assets": "sh scripts/upload-assets.sh",
     "watch:parse": "nodemon -q -e html --watch src/data/work/descriptions -x \"npm run parse\"",
     "watch:sass": "sass --watch ./",
     "watch": "npm run watch:parse & npm run watch:sass",
