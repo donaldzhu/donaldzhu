@@ -26,8 +26,8 @@ class PreloadQueuer<T extends object, S extends string> {
 
   constructor(config?: PreloadQueuerProps) {
     const {
-      enabled = true,
-      queueInterval = 0
+      enabled,
+      queueInterval
     } = config ?? {}
 
     this.interval = queueInterval ?? undefined
@@ -37,7 +37,7 @@ class PreloadQueuer<T extends object, S extends string> {
 
     this.subqueues = []
 
-    this.enabled = enabled
+    this.enabled = enabled ?? true
     this.isComplete = false
     this.stackData = []
   }
