@@ -46,7 +46,6 @@ class Queue<T = any> {
 
       for (let i = 0; i < this.capacity; i++)
         serve()
-
     })
   }
 
