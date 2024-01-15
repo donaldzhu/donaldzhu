@@ -10,7 +10,7 @@ import { Device } from '../../breakptTypes'
 import { MediaStack } from './mediaStack'
 import { MediaFileType, getPreviewBreakptKey, MediaSize, MediaType, fileIsImg, Verbosity, Fallback } from './preloadUtils'
 import PreloadQueuer, { type PreloadStack } from './preloadQueuer'
-import { type MediaBreakpts, type PreloaderConfig } from './preloaderTypes'
+import type { MediaBreakpts, PreloaderConfig } from './preloaderTypes'
 import type { coorTuple } from '../../utilTypes'
 import type { loadVidType } from './preloadTypes'
 
@@ -42,6 +42,11 @@ enum PreloadName {
   Page = 'pagePreload'
 }
 
+interface DecorateLogConfig {
+  isFullVid?: boolean
+  shouldLogTime?: boolean
+}
+
 class PreloadManager {
   private loadVid: loadVidType
   private breakpts: MediaBreakpts[]
@@ -55,12 +60,17 @@ class PreloadManager {
 
   imgPreloaded: boolean
   verbosity: Verbosity
+  currentStartTime: number
+  logTime: boolean
 
   constructor(config: PreloaderConfig, loadVid: loadVidType) {
     this.config = config
     this.loadVid = loadVid
 
-    this.verbosity = Verbosity.Normal
+    this.verbosity = Verbosity.Minimal
+    this.currentStartTime = Date.now()
+    this.logTime = true
+
     this.enabled = true
     this.loadLocal = false
     this.preloadQueuer = new PreloadQueuer<PreloadManagerStack, MediaBreakpts>({
@@ -76,8 +86,11 @@ class PreloadManager {
     this.currentPreloadName = undefined
     this.imgPreloaded = false
 
-    if (!this.enabled || process.env.NODE_ENV === 'production')
+    if (!this.enabled || process.env.NODE_ENV === 'production') {
       this.verbosity = Verbosity.Quiet
+      this.logTime = false
+    }
+
     if (process.env.NODE_ENV === 'production')
       this.loadLocal = false
 
@@ -410,7 +423,7 @@ class PreloadManager {
     }
 
     return verboseLevel <= this.verbosity ?
-      this.decorateLog(messages, styles, size, isFullVid) :
+      this.decorateLog(messages, styles, size, { isFullVid }) :
       _.noop
   }
 
@@ -418,7 +431,8 @@ class PreloadManager {
     return this.verbosity >= 1 ? this.decorateLog(
       [` ${groupName.toLocaleUpperCase()} `],
       [`background: ${size ? LOG_COLORS[size] : 'white'}; color: black; font-weight: bold;`],
-      size
+      size,
+      { shouldLogTime: true }
     ) : _.noop
   }
 
@@ -450,12 +464,20 @@ class PreloadManager {
     )
   }
 
-  private decorateLog(messages: string[], styles: string[], size?: MediaSize, isFullVid?: boolean) {
+  private decorateLog(
+    messages: string[],
+    styles: string[],
+    size?: MediaSize,
+    config?: DecorateLogConfig
+  ) {
+    const { isFullVid, shouldLogTime } = config ?? {}
+
     const extraMessages = [
       ` ${size}${size === MediaSize.Full ?
         ` (${getBreakptKey(this.device).toLocaleUpperCase()})` : ''}`,
       ` - ${validateString(isFullVid, 'full vid ')}preloaded!`
     ]
+
     const extraStyles = [
       `color: ${size ? LOG_COLORS[size] : ''};`,
       'color: gray; font-style: italic;'
@@ -472,7 +494,13 @@ class PreloadManager {
     if (isFullVid)
       styles = styles.map(style => style + 'font-style: italic;')
 
+    this.currentStartTime = Date.now()
     return (shouldLog?: boolean) => {
+      if (shouldLogTime && this.logTime) {
+        messages.push(` ${(Date.now() - this.currentStartTime) / 1000}s`)
+        styles.push('color: white; font-style: normal;')
+      }
+
       if (shouldLog !== false)
         console.log(
           messages.map(msg => `%c${msg}`).join(''),
