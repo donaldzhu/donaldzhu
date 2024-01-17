@@ -25,7 +25,7 @@ const resize = async <T extends Device, B extends (T extends Device.Desktop ? De
   const fallbackBreakpt = isDesktop ? Breakpt.DesktopFallback : Breakpt.MobileFallback
 
   const getBreakptConfig = (breakpt: Breakpt, sizes: breakptSize[], debugOnly: boolean) => {
-    if (isDesktop) sizes.map((size) =>
+    if (isDesktop) sizes.map(size =>
       size[1] *= size[0].match(/^toolTips\//) ? 0.5 : 0.7)
     return {
       breakpt,
@@ -37,12 +37,12 @@ const resize = async <T extends Device, B extends (T extends Device.Desktop ? De
     }
   }
 
-
   const {
     resizeThumbnails,
     resizeWork,
-    includePages,
-    includeBreakpts
+    exportPages,
+    exportBreakpts,
+    exportTypes
   } = { ...(DEFAULT_CONFIG satisfies ConfigType<B>), ...config }
 
   const desktopBreakpts = [Breakpt.DesktopFallback, Breakpt.L, Breakpt.Xl, Breakpt.Xxl]
@@ -50,10 +50,11 @@ const resize = async <T extends Device, B extends (T extends Device.Desktop ? De
   const deviceBreakpts: Record<B, number> =
     _.pick(BREAKPT_WIDTHS, ...(isDesktop ? desktopBreakpts : mobileBreakpts))
 
-  const breakptWidths = includeBreakpts.length ? _.pick(deviceBreakpts, ...includeBreakpts) : deviceBreakpts
+  const breakptWidths = exportBreakpts.length ?
+    _.pick(deviceBreakpts, ...exportBreakpts) : deviceBreakpts
 
-  const breakptSizes = mapObject<typeof breakptWidths, SizesJson>(breakptWidths, breakpt =>
-    readJsonSync(joinPaths(SIZE_PATH, `${isDesktop ? breakpt : 'all'}.json`)))
+  const breakptSizes = mapObject<typeof breakptWidths, SizesJson>(breakptWidths,
+    breakpt => readJsonSync(joinPaths(SIZE_PATH, `${isDesktop ? breakpt : 'all'}.json`)))
 
   const pageSizes: Record<string, BreakptSizeCollection> = {}
 
@@ -69,7 +70,8 @@ const resize = async <T extends Device, B extends (T extends Device.Desktop ? De
   const thumbnailConfigs = mapObject(
     breakptSizes, (breakpt, sizes) => {
       const { thumbnails } = sizes
-      if (!thumbnails || !Array.isArray(thumbnails)) throw getNoSizesError(sizes, THUMBNAIL_FOLDER)
+      if (!thumbnails || !Array.isArray(thumbnails))
+        throw getNoSizesError(sizes, THUMBNAIL_FOLDER)
       return getBreakptConfig(breakpt, [thumbnails[0]], !resizeThumbnails)
     }
   )
@@ -80,14 +82,15 @@ const resize = async <T extends Device, B extends (T extends Device.Desktop ? De
     Object.values(thumbnailConfigs),
     {
       destination: DESTINATION_THUMBNAIL_PATH,
-      callback: getResizeCallback(thumbnails, SRC_THUMBNAIL_PATH)
+      callback: getResizeCallback(thumbnails, SRC_THUMBNAIL_PATH),
+      exportTypes
     }
   ).init()
   nativeDimensions.thumbnails = thumbnails
 
   const work: FileDataCollection<dimension> = {}
   await mapObjectPromises(pageSizes, async (pageId, breakptSizes) => {
-    const includePage = !includePages.length || includePages.includes(pageId)
+    const includePage = !exportPages.length || exportPages.includes(pageId)
     const debugOnly = !resizeWork || !includePage
     const pageConfigs = mapObject(breakptSizes,
       (breakpt, sizes) => getBreakptConfig(breakpt, sizes, debugOnly))
@@ -106,7 +109,8 @@ const resize = async <T extends Device, B extends (T extends Device.Desktop ? De
       [...Object.values(pageConfigs), maxConfig],
       {
         destination: joinPaths(DESTINATION_WORK_PATH, pageId),
-        callback: getResizeCallback(workPage, joinPaths(SRC_WORK_PATH, pageId))
+        callback: getResizeCallback(workPage, joinPaths(SRC_WORK_PATH, pageId)),
+        exportTypes
       }
     ).init()
     work[pageId] = workPage

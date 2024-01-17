@@ -1,17 +1,16 @@
 import { joinPaths } from '../utils'
 import { Device, THUMBNAIL_FOLDER, WORK_FOLDER } from './constants'
-import { dimensionType } from './lib/resizerTypes'
+import { Metadata } from './lib/resizerTypes'
 import { SizesJson, dimension, fileDataPair } from './resizeTypes'
 
 export const getNoSizesError = (sizes: SizesJson, sizeType: string) =>
   new Error(`Breakpoint size has no ${sizeType} sizes: ${sizes[sizeType]}`)
 
 export const getResizeCallback = (array: fileDataPair<dimension>[], rootPath: string) =>
-  (fileName: string, size: dimensionType) => array
-    .push([
-      fileName.replace(new RegExp(`^${rootPath}/`), ''),
-      [size.width, size.height]]
-    )
+  (fileName: string, size: Metadata) => array.push([
+    fileName.replace(new RegExp(`^${rootPath}/`), ''),
+    [size.width, size.height]]
+  )
 
 export const getPaths = (device: Device) => {
   const SRC_ROOT = 'public/assets-original'

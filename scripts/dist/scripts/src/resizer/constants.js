@@ -29,6 +29,7 @@ exports.BREAKPT_WIDTHS = (_a = {},
 exports.DEFAULT_CONFIG = {
     resizeThumbnails: true,
     resizeWork: true,
-    includePages: [],
-    includeBreakpts: []
+    exportPages: [],
+    exportBreakpts: [],
+    exportTypes: []
 };

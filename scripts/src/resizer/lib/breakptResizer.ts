@@ -3,8 +3,8 @@ import sharp from 'sharp'
 import ffmpeg from 'fluent-ffmpeg'
 import _ from 'lodash'
 import { globSync } from 'glob'
-import { BreakptConfig, BreakptResizeConfig, BreakptResizerConfig, MediaType, ImgExtension, MediaOptions, dimensionType, vidExtensionRegex } from './resizerTypes'
-import { mkdirIfNone, emptyDir, joinPaths, removeFile, parseMediaType, getExtension } from '../../utils'
+import { BreakptConfig, BreakptResizeConfig, BreakptResizerConfig, MediaType, ImgExtension, MediaOptions, Metadata, vidExtensionRegex } from './resizerTypes'
+import { mkdirIfNone, joinPaths, removeFile, parseMediaType, getExtension, mkdir } from '../../utils'
 import { POSTER_SUBFOLDER } from './constants'
 
 class BreakpointResizer<K extends string> {
@@ -15,6 +15,9 @@ class BreakpointResizer<K extends string> {
   mediaOptions: MediaOptions
   removeFilesAtDest: boolean
   exportPoster: boolean
+  exportTypes: MediaType[]
+  debugOnly: boolean
+
   constructor(
     source: string,
     config: BreakptConfig<K>,
@@ -22,7 +25,8 @@ class BreakpointResizer<K extends string> {
       destination,
       mediaOptions,
       removeFilesAtDest,
-      exportPoster
+      exportPoster,
+      exportTypes
     }: BreakptResizerConfig
   ) {
     this.source = source
@@ -33,7 +37,7 @@ class BreakpointResizer<K extends string> {
       config.sizes
         .map(size => size[0])
         .map(fileEntry => {
-          const fileNames = globSync(this.getSubpath(fileEntry), { nodir: true })
+          const fileNames = globSync(this.joinDestPath(fileEntry), { nodir: true })
           return fileNames.map(parseMediaType)
         })
         .flat()
@@ -42,23 +46,27 @@ class BreakpointResizer<K extends string> {
     this.mediaOptions = mediaOptions
     this.removeFilesAtDest = removeFilesAtDest
     this.exportPoster = exportPoster
+    this.exportTypes = exportTypes
+    this.debugOnly = config.debugOnly
   }
 
   init() {
-    this.createFolder()
-    this.createPosterFolder()
+    if (this.debugOnly) return
+    this.createDestDir()
+    this.createDestPosterDir()
   }
 
   async resizeImg(imgObj: sharp.Sharp, {
-    size, fileName, fileEntry, isPoster
+    metadata, fileName, fileEntry, isPoster
   }: BreakptResizeConfig) {
-    const { width } = size
-    const resizeWidth = this.getResizeWidth(fileEntry, size)
+    const { width } = metadata
+    const resizeWidth = this.getResizeWidth(fileEntry, metadata)
+
     if (
       !resizeWidth ||
-      !this.shouldExport(MediaType.Image) ||
-      (isPoster && !this.shouldExport(MediaType.Poster)) ||
-      this.config.debugOnly
+      !(isPoster ?
+        this.shouldExportPoster :
+        this.shouldExport(MediaType.Image))
     ) return
 
     const imgObjClone = imgObj.clone()
@@ -67,7 +75,7 @@ class BreakpointResizer<K extends string> {
     if (this.config.blur) imgObjClone.blur(this.config.blur)
 
     if (isPoster) fileName = this.getPosterPath(fileName)
-    const outFile = this.getSubpath(fileName)
+    const outFile = this.joinDestPath(fileName)
     this.prepareDest(outFile)
 
     const fileType = getExtension(fileName)
@@ -80,42 +88,36 @@ class BreakpointResizer<K extends string> {
   }
 
   async resizeVideo(vidObj: ffmpeg.FfmpegCommand, {
-    size, fileName, fileEntry
+    metadata, fileName, fileEntry
   }: BreakptResizeConfig) {
-    const { width } = size
-    const resizeWidth = this.getResizeWidth(fileEntry, size)
+    const { width } = metadata
+    const resizeWidth = this.getResizeWidth(fileEntry, metadata)
     if (
       !resizeWidth ||
-      !this.shouldExport(MediaType.Video) ||
-      this.config.debugOnly
+      !this.shouldExport(MediaType.Video)
     ) return
 
     if (width > resizeWidth) vidObj.size(`${resizeWidth}x?`)
 
-    const outFile = this.getSubpath(fileName)
+    const outFile = this.joinDestPath(fileName)
     this.prepareDest(outFile)
     vidObj.output(outFile)
   }
 
-  private getSubpath(...subpaths: (string | undefined)[]) {
+  private joinDestPath(...subpaths: (string | undefined)[]) {
     return joinPaths(this.destination, ...subpaths)
   }
 
-  private createFolder(...subpaths: (string | undefined)[]) {
-    if (this.config.debugOnly) return
-    const filePath = this.getSubpath(...subpaths)
-    if (this.removeFilesAtDest) emptyDir(filePath)
-    else mkdirIfNone(filePath)
+  private createDestDir(...subpaths: (string | undefined)[]) {
+    mkdir(this.joinDestPath(...subpaths),
+      !this.exportTypes.length &&
+      this.removeFilesAtDest
+    )
   }
 
-  private createPosterFolder() {
-    if (
-      this.hasVid &&
-      this.exportPoster &&
-      this.shouldExport(MediaType.Video) &&
-      this.shouldExport(MediaType.Poster) &&
-      !this.config.debugOnly
-    ) this.createFolder(POSTER_SUBFOLDER)
+  private createDestPosterDir() {
+    if (this.shouldExportPoster && this.hasVid)
+      this.createDestDir(POSTER_SUBFOLDER)
   }
 
   private prepareDest(fileName: string) {
@@ -128,7 +130,7 @@ class BreakpointResizer<K extends string> {
     return size ? size[1] : undefined
   }
 
-  private getResizeWidth(fileName: string, size: dimensionType) {
+  private getResizeWidth(fileName: string, size: Metadata) {
     const { breakptWidth, maxDimension, noResize } = this.config
     const { width, height } = size
     const maxWidth = maxDimension ? Math.round(Math.sqrt(maxDimension * width / height)) : width
@@ -149,8 +151,21 @@ class BreakpointResizer<K extends string> {
     )
   }
 
+  private _shouldExportType(type: MediaType) {
+    return !this.debugOnly && (
+      this.exportTypes.length === 0 ||
+      this.exportTypes.includes(type)
+    )
+  }
+
   private shouldExport(type: MediaType) {
-    return !this.config.exclude?.includes(type)
+    return this._shouldExportType(type) &&
+      !this.config.exclude?.includes(type)
+  }
+
+  private get shouldExportPoster() {
+    return this.exportPoster &&
+      this._shouldExportType(MediaType.Poster)
   }
 
   private get hasVid() {

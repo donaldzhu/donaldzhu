@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { MediaType, imgExtensionRegex, vidExtensionRegex } from './resizer/lib/resizerTypes'
 import path from 'path'
+import { Falsey } from 'lodash'
 
 export const mkdirIfNone = (folderPath: string) => {
   try {
@@ -12,6 +13,11 @@ export const mkdirIfNone = (folderPath: string) => {
   } catch (err) {
     throw err
   }
+}
+
+export const mkdir = (folderPath: string, removeExisting: boolean) => {
+  if (removeExisting) emptyDir(folderPath)
+  else mkdirIfNone(folderPath)
 }
 
 export const emptyDir = (folderPath: string) => {
@@ -154,3 +160,6 @@ export const forEachFile = async (
     callback(fileName, fileData, files)
   }
 }
+
+export const filterFalsy = <T>(array: T[]) =>
+  array.filter(elem => elem) as Exclude<T, Falsey>[]

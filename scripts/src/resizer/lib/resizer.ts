@@ -1,26 +1,30 @@
 import fs from 'fs'
 import path from 'path'
-import { exec } from 'child_process'
+import { execSync } from 'child_process'
 import _ from 'lodash'
 import sharp from 'sharp'
 import ffmpeg from 'fluent-ffmpeg'
 import { globSync } from 'glob'
 import chalk from 'chalk'
 import BreakpointResizer from './breakptResizer'
-import { BreakptConfig, ImgExtension, MediaOptions, MediaType, ResizePosterConfig, ResizerConfig, callbackType, dimensionType, vidExtensionRegex } from './resizerTypes'
-import { mkdirIfNone, emptyDir, joinPaths, removeFile, parseMediaType, getExtension, mapPromises, sortFileNames } from '../../utils'
-import { POSTER_SUBFOLDER } from './constants'
+import { BreakptConfig, ImgExtension, MediaOptions, MediaType, ResizePosterConfig, ResizerConfig, callbackType, Metadata, vidExtensionRegex } from './resizerTypes'
+import { joinPaths, removeFile, parseMediaType, getExtension, mapPromises, sortFileNames, mkdir, filterFalsy } from '../../utils'
+import { DASH_CONFIGS, DASH_SUBFOLDER, POSTER_SUBFOLDER } from './constants'
 
 class Resizer<K extends string> {
   source: string
   breakptConfigs: BreakptConfig<K>[]
+
   destination: string
   breakptResizers: BreakpointResizer<K>[]
   allFileEntries: string[]
   mediaOptions: MediaOptions
   removeFilesAtDest: boolean
   exportPoster: boolean
+  exportTypes: MediaType[]
+  debugOnly: boolean
   callback: callbackType
+
   constructor(
     source: string,
     breakptConfigs: BreakptConfig<K>[],
@@ -29,10 +33,12 @@ class Resizer<K extends string> {
       mediaOptions = {},
       removeFilesAtDest = true,
       exportPoster = true,
+      exportTypes = [],
       callback = _.noop
     }: ResizerConfig = {}) {
     this.source = source
     this.breakptConfigs = breakptConfigs
+
     this.destination = destination || source
     this.breakptResizers = breakptConfigs.map(config => new BreakpointResizer(
       source, config,
@@ -40,37 +46,54 @@ class Resizer<K extends string> {
         destination: this.destination,
         mediaOptions,
         removeFilesAtDest,
-        exportPoster
+        exportPoster,
+        exportTypes
       }
     ))
+
     this.allFileEntries = _.union(...this.breakptConfigs.map(config =>
       config.sizes.map(size => size[0])))
 
     this.mediaOptions = mediaOptions
     this.removeFilesAtDest = removeFilesAtDest
     this.exportPoster = exportPoster
+    this.exportTypes = exportTypes
+    this.debugOnly = !_.some(this.breakptConfigs, { debugOnly: false })
     this.callback = callback
   }
 
   async init() {
-    this.createPosterFolder()
+    if (this.shouldExport(MediaType.Poster))
+      this.createSrcPosterDir()
+    if (this.shouldExport(MediaType.Dash))
+      this.createDestDashDir()
+
     this.mapBreakpts(resizer => resizer.init())
     const mapAllEntries = async (fileEntry: string) => {
-      const fileNames = globSync(this.getSubpath(fileEntry), { nodir: true }).sort(sortFileNames)
-      await mapPromises(fileNames, async fileName => await this.resizeMedia(this.removeSubpath(fileName), fileEntry))
+      const fileNames = globSync(
+        this.joinSrcPath(fileEntry),
+        { nodir: true }
+      ).sort(sortFileNames)
+      await mapPromises(fileNames, async fileName =>
+        await this.resizeMedia(this.extractSrcSubpath(fileName), fileEntry))
     }
 
-    await mapPromises(this.allFileEntries, async fileEntry => await mapAllEntries(fileEntry))
+    await mapPromises(this.allFileEntries, async fileEntry =>
+      await mapAllEntries(fileEntry))
   }
 
-  private createPosterFolder() {
-    const hasVid = !!this.allFileEntries.find(fileName =>
-      parseMediaType(fileName) === MediaType.Video)
-    if (hasVid && this.exportPoster) this.createFolder(POSTER_SUBFOLDER)
+  private createSrcPosterDir() {
+    if (this.hasVid && this.exportPoster) mkdir(
+      this.joinSrcPath(POSTER_SUBFOLDER),
+      this.removeFilesAtDest
+    )
   }
 
-  private createVideoFolder() {
-
+  private createDestDashDir() {
+    if (this.hasVid) mkdir(
+      joinPaths(this.destination, DASH_SUBFOLDER),
+      this.removeFilesAtDest
+    )
   }
 
   private async resizeMedia(fileName: string, fileEntry: string) {
@@ -83,34 +106,37 @@ class Resizer<K extends string> {
   private async resizeImg(fileName: string, fileEntry: string): Promise<void>
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig): Promise<void>
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig) {
-    const imgPath = posterConfig ? fileName : this.getSubpath(fileName)
-    const animated = getExtension(imgPath) === ImgExtension.Gif
-    const imgObj = sharp(imgPath, { animated })
+    const imgPath = posterConfig ? fileName : this.joinSrcPath(fileName)
+    const isAnimated = getExtension(imgPath) === ImgExtension.Gif
+    const imgObj = sharp(imgPath, { animated: isAnimated })
     const size = posterConfig ? posterConfig.vidSize :
       this.throwNoWidth(await imgObj.metadata(), fileName)
+    const isPoster = !!posterConfig
+    const shouldExport = isPoster || this.shouldExport(MediaType.Image)
 
-    await this.mapBreakpts(async resizer => await resizer.resizeImg(imgObj, {
-      size,
-      fileName: posterConfig ? posterConfig.vidFileName : fileName,
-      fileEntry,
-      isPoster: !!posterConfig
-    }))
+    if (shouldExport) await this.mapBreakpts(async resizer =>
+      await resizer.resizeImg(imgObj, {
+        metadata: size,
+        fileName: posterConfig ? posterConfig.vidFileName : fileName,
+        fileEntry,
+        isPoster: !!posterConfig
+      }))
 
-    this.log(imgPath)
+    this.log(imgPath, isPoster ? MediaType.Poster : MediaType.Image, shouldExport)
     if (!posterConfig) this.callback(imgPath, size)
   }
 
   private async resizeVid(fileName: string, fileEntry: string) {
-    const vidPath = this.getSubpath(fileName)
+    const vidPath = this.joinSrcPath(fileName)
     const vidObj = ffmpeg({ source: vidPath, priority: 10 }).noAudio()
-    const size = await new Promise<dimensionType>(resolve => {
-      vidObj.ffprobe(async (_, { streams }) =>
-        resolve(this.throwNoWidth(streams[0], fileName)))
+    const metadata = await new Promise<Metadata>(resolve => {
+      vidObj.ffprobe(async (_, metadata) =>
+        resolve(this.throwNoWidth(metadata.streams[0], fileName)))
     })
 
     const pngPosterPath = this.getScreenshotPath(vidPath)
     const webpPosterPath = this.getPosterPath(pngPosterPath)
-    if (this.exportPoster) {
+    if (this.exportPoster && this.shouldExport(MediaType.Poster)) {
       await new Promise<null>(resolve => {
         removeFile(pngPosterPath)
         removeFile(webpPosterPath)
@@ -118,7 +144,7 @@ class Resizer<K extends string> {
         ffmpeg(vidPath).screenshots({
           filename: path.basename(pngPosterPath),
           timestamps: [0],
-          folder: this.getSubpath(POSTER_SUBFOLDER)
+          folder: this.joinSrcPath(POSTER_SUBFOLDER)
         }).on('end', async () => {
           await sharp(pngPosterPath)
             .webp(this.mediaOptions.webp)
@@ -129,69 +155,79 @@ class Resizer<K extends string> {
       })
 
       this.resizeImg(webpPosterPath, fileEntry, {
-        vidSize: size, vidFileName: fileName
+        vidSize: metadata, vidFileName: fileName
       })
     }
 
-    await this.mapBreakpts(async resizer => await resizer
-      .resizeVideo(vidObj, { size, fileName, fileEntry }))
+    if (this.shouldExport(MediaType.Video)) {
+      await this.mapBreakpts(async resizer => await resizer
+        .resizeVideo(vidObj, { metadata, fileName, fileEntry }))
+      await new Promise<null>(resolve =>
+        vidObj.on('end', () => resolve(null)).run())
+    }
+    this.log(vidPath, MediaType.Video, this.shouldExport(MediaType.Video))
 
-    const hasOutputs = _.some(this.breakptConfigs, { debugOnly: false })
-    if (hasOutputs) await new Promise<null>(resolve =>
-      vidObj.on('end', () => resolve(null)).run())
+    if (this.shouldExport(MediaType.Dash))
+      this.generateDash(fileName, metadata)
+    this.log(vidPath, MediaType.Dash, this.shouldExport(MediaType.Dash))
 
-    this.log(vidPath)
-    this.callback(vidPath, size)
+    this.callback(vidPath, metadata)
   }
 
-  private async generateDash(fileName: string, fileEntry: string) {
-    const vidPath = this.getSubpath(fileName)
+  private async generateDash(fileName: string, metadata: Metadata) {
+    const { name, ext } = path.parse(fileName)
+    const { width, height } = metadata
+    const destFolderPath = joinPaths(this.destination, DASH_SUBFOLDER, `${name}${ext.replace('.', '-')}`)
+    mkdir(destFolderPath, this.removeFilesAtDest)
     const gopSize = 100
 
-    exec(`
-      ffmpeg -i ${vidPath} -y -c:v libx264 \\
-        -preset veryslow -keyint_min ${gopSize} -g ${gopSize} -sc_threshold 0 \\
-        -c:a aac -b:a 128k -ac 1 -ar 44100 \\
-        -map v:0 -vf:0 "scale=-2:240" -b:v:0 145k -r:0 24 \\
-        -map v:0 -vf:1 "scale=-2:360" -b:v:1 365k -r:1 24 \\
-        -map v:0 -vf:2 "scale=-2:480" -b:v:2 730k -r:2 24 \\
-        -map v:0 -vf:3 "scale=-2:480" -b:v:3 1100k -r:3 24 \\
-        -map 0:a \\
-        -use_template 1 -use_timeline 1 -seg_duration 4 \\
-        -adaptation_sets "id=0,streams=v id=1,streams=a" \\
-        -f dash dash/dash.mpd
-      `, (err, stdout, stderr) => {
-      if (err) console.error(err)
-      else {
-        console.log(`stdout: ${stdout}`)
-        console.log(`stderr: ${stderr}`)
-      }
-    })
+    const getEvenWidth = (resizedHeight: number) => 2 * Math.round(width / height * resizedHeight / 2)
+    const qualityMap = DASH_CONFIGS
+      .map(({ size, bitrate, frameRate }, i) => {
+        if (size > height) return
+        frameRate = Math.min(frameRate, metadata.frameRate ?? Infinity)
+        return `-map v:0 -s:${i} ${getEvenWidth(size)}x${size} -b:v:${i} ${bitrate} -r:${i} ${frameRate}`
+      })
 
+    const qualityFilters = filterFalsy(qualityMap).join(' ')
+
+    const command = `
+      nice -n 10 ffmpeg -i ${this.joinSrcPath(fileName)} -y -c:v libx264 \\
+        -hide_banner -loglevel warning \\
+        -preset veryslow -keyint_min ${gopSize} -g ${gopSize} -sc_threshold 0 \\
+        ${qualityFilters} \\
+        -use_template 1 -use_timeline 1 -seg_duration 4 \\
+        -adaptation_sets "id=0,streams=v id=1" \\
+        -f dash ${destFolderPath}/dash.mpd
+      `
+
+    execSync(command)
   }
 
-  private getSubpath(...subpaths: (string | undefined)[]) {
+  private joinSrcPath(...subpaths: (string | undefined)[]) {
     return joinPaths(this.source, ...subpaths)
   }
 
-  private removeSubpath(fullPath: string) {
+  private extractSrcSubpath(fullPath: string) {
     const sourceRegex = new RegExp(`${this.source}/?`)
     return fullPath.replace(sourceRegex, '')
-  }
-
-  private createFolder(...subpaths: (string | undefined)[]) {
-    const filePath = this.getSubpath(...subpaths)
-    if (this.removeFilesAtDest) emptyDir(filePath)
-    else mkdirIfNone(filePath)
   }
 
   private async mapBreakpts(callback: (resizer: BreakpointResizer<K>) => Promise<any> | void) {
     await mapPromises(this.breakptResizers, async resizer => await callback(resizer))
   }
 
-  private log(fileName: string) {
-    const color = parseMediaType(fileName) === MediaType.Image ? 'green' : 'cyan'
-    console.log(`${chalk.gray('Resized: ')}${chalk[color](fileName)}`)
+  private log(fileName: string, type: MediaType, isExport: boolean) {
+    const colors = {
+      [MediaType.Image]: 'green',
+      [MediaType.Video]: 'cyan',
+      [MediaType.Poster]: 'yellow',
+      [MediaType.Dash]: 'magenta',
+    } as const
+
+    const color = colors[type]
+    console.log(`${chalk[isExport ? 'white' : 'gray'](`${isExport ?
+      'Resized' : 'Debugged'} [ ${type} ]: `)}${chalk[color](fileName)}`)
   }
 
   private getScreenshotPath(filename: string) {
@@ -207,10 +243,19 @@ class Resizer<K extends string> {
     return filename.replace(ImgExtension.Png, ImgExtension.Webp)
   }
 
-  private throwNoWidth(metadata: Partial<dimensionType>, fileName: string) {
-    const { width, height, pageHeight } = metadata
+  private throwNoWidth(metadata: Partial<Metadata>, fileName: string) {
+    const { width, height, pageHeight, frameRate } = metadata
     if (!width || !height) throw new Error(`Cannot read dimensions of ${fileName}.`)
-    return { width, height: pageHeight ?? height }
+    return { width, height: pageHeight ?? height, frameRate: frameRate ?? 24 }
+  }
+
+  private shouldExport(type: MediaType) {
+    return !this.debugOnly && (this.exportTypes.length === 0 || this.exportTypes.includes(type))
+  }
+
+  private get hasVid() {
+    return !!this.allFileEntries.find(fileName =>
+      parseMediaType(fileName) === MediaType.Video)
   }
 }
 

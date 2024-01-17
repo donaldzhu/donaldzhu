@@ -28,6 +28,7 @@ export const BREAKPT_WIDTHS: Record<Breakpt, number> = {
 export const DEFAULT_CONFIG = {
   resizeThumbnails: true,
   resizeWork: true,
-  includePages: [],
-  includeBreakpts: []
+  exportPages: [],
+  exportBreakpts: [],
+  exportTypes: []
 }

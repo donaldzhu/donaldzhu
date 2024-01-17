@@ -1,11 +1,14 @@
 import { Device } from './constants'
+import { MediaType } from './lib/resizerTypes'
 import resize from './resize'
 
 const config = {
   resizeThumbnails: false,
-  resizeWork: false,
-  includePages: ['i-voted'],
-  includeBreakpts: [],
+  resizeWork: true,
+  exportPages: ['roll'],
+  exportBreakpts: [],
+  exportTypes: []
 }
+
 
 resize(Device.Desktop, config)

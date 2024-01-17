@@ -72,7 +72,7 @@ class PreloadManager {
     this.logTime = true
 
     this.enabled = true
-    this.loadLocal = false
+    this.loadLocal = true
     this.preloadQueuer = new PreloadQueuer<PreloadManagerStack, MediaBreakpts>({
       queueInterval: 0
     })

@@ -46,7 +46,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.forEachFile = exports.sortFileNames = exports.readJsonSync = exports.mapObjectPromises = exports.mapPromises = exports.mapObject = exports.typedKeys = exports.loopObject = exports.getExtension = exports.parseMediaType = exports.removeFile = exports.joinPaths = exports.emptyDir = exports.mkdirIfNone = void 0;
+exports.filterFalsy = exports.forEachFile = exports.sortFileNames = exports.readJsonSync = exports.mapObjectPromises = exports.mapPromises = exports.mapObject = exports.typedKeys = exports.loopObject = exports.getExtension = exports.parseMediaType = exports.removeFile = exports.joinPaths = exports.emptyDir = exports.mkdir = exports.mkdirIfNone = void 0;
 var fs_1 = __importDefault(require("fs"));
 var resizerTypes_1 = require("./resizer/lib/resizerTypes");
 var path_1 = __importDefault(require("path"));
@@ -64,6 +64,13 @@ var mkdirIfNone = function (folderPath) {
     }
 };
 exports.mkdirIfNone = mkdirIfNone;
+var mkdir = function (folderPath, removeExisting) {
+    if (removeExisting)
+        (0, exports.emptyDir)(folderPath);
+    else
+        (0, exports.mkdirIfNone)(folderPath);
+};
+exports.mkdir = mkdir;
 var emptyDir = function (folderPath) {
     try {
         fs_1.default.rmSync(folderPath, { recursive: true });
@@ -271,3 +278,7 @@ var forEachFile = function (path, callback) { return __awaiter(void 0, void 0, v
     });
 }); };
 exports.forEachFile = forEachFile;
+var filterFalsy = function (array) {
+    return array.filter(function (elem) { return elem; });
+};
+exports.filterFalsy = filterFalsy;

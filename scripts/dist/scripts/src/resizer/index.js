@@ -7,8 +7,9 @@ var constants_1 = require("./constants");
 var resize_1 = __importDefault(require("./resize"));
 var config = {
     resizeThumbnails: false,
-    resizeWork: false,
-    includePages: ['i-voted'],
-    includeBreakpts: [],
+    resizeWork: true,
+    exportPages: ['roll'],
+    exportBreakpts: [],
+    exportTypes: []
 };
 (0, resize_1.default)(constants_1.Device.Desktop, config);

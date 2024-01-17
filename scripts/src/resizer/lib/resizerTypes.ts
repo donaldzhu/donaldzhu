@@ -4,7 +4,8 @@ export interface ResizerConfig {
   destination?: string
   mediaOptions?: MediaOptions
   removeFilesAtDest?: boolean
-  exportPoster?: boolean
+  exportPoster?: boolean,
+  exportTypes?: MediaType[],
   callback?: callbackType
 }
 
@@ -12,7 +13,8 @@ export interface BreakptResizerConfig {
   destination: string
   mediaOptions: MediaOptions
   removeFilesAtDest: boolean
-  exportPoster: boolean
+  exportPoster: boolean,
+  exportTypes: MediaType[],
 }
 
 export enum ImgExtension {
@@ -32,7 +34,8 @@ export const vidExtensionRegex = Object.values(VidExtension).join('|')
 export const enum MediaType {
   Image = 'image',
   Video = 'video',
-  Poster = 'poster'
+  Poster = 'poster',
+  Dash = 'dash'
 }
 
 export interface MediaOptions {
@@ -48,13 +51,13 @@ export interface BreakptConfig<K extends string> {
   maxDimension?: number
   blur?: number
   exclude?: MediaType[]
-  debugOnly?: boolean
+  debugOnly: boolean
 }
 
 export type breakptSize = [string, number]
 
 export interface BreakptResizeConfig {
-  size: dimensionType
+  metadata: Metadata
   fileName: string
   fileEntry: string
   isPoster?: boolean
@@ -62,14 +65,21 @@ export interface BreakptResizeConfig {
 }
 
 export interface ResizePosterConfig {
-  vidSize: dimensionType
+  vidSize: Metadata
   vidFileName: string
 }
 
-export interface dimensionType {
+export interface Metadata {
   width: number
   height: number
-  pageHeight?: number
+  pageHeight?: number,
+  frameRate?: number
 }
 
-export type callbackType = (fileName: string, size: dimensionType) => void
+export type callbackType = (fileName: string, size: Metadata) => void
+
+export interface DashConfig {
+  size: number,
+  bitrate: string,
+  frameRate: number
+}

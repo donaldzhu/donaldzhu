@@ -8,8 +8,7 @@ var getNoSizesError = function (sizes, sizeType) {
 };
 exports.getNoSizesError = getNoSizesError;
 var getResizeCallback = function (array, rootPath) {
-    return function (fileName, size) { return array
-        .push([
+    return function (fileName, size) { return array.push([
         fileName.replace(new RegExp("^".concat(rootPath, "/")), ''),
         [size.width, size.height]
     ]); };

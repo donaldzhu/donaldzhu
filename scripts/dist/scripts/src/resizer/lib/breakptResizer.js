@@ -57,38 +57,42 @@ var constants_1 = require("./constants");
 var BreakpointResizer = (function () {
     function BreakpointResizer(source, config, _a) {
         var _this = this;
-        var destination = _a.destination, mediaOptions = _a.mediaOptions, removeFilesAtDest = _a.removeFilesAtDest, exportPoster = _a.exportPoster;
+        var destination = _a.destination, mediaOptions = _a.mediaOptions, removeFilesAtDest = _a.removeFilesAtDest, exportPoster = _a.exportPoster, exportTypes = _a.exportTypes;
         this.source = source;
         this.config = config;
         this.destination = (0, utils_1.joinPaths)(destination, this.config.breakpt);
         this.breakptTypes = lodash_1.default.uniq(config.sizes
             .map(function (size) { return size[0]; })
             .map(function (fileEntry) {
-            var fileNames = (0, glob_1.globSync)(_this.getSubpath(fileEntry), { nodir: true });
+            var fileNames = (0, glob_1.globSync)(_this.joinDestPath(fileEntry), { nodir: true });
             return fileNames.map(utils_1.parseMediaType);
         })
             .flat());
         this.mediaOptions = mediaOptions;
         this.removeFilesAtDest = removeFilesAtDest;
         this.exportPoster = exportPoster;
+        this.exportTypes = exportTypes;
+        this.debugOnly = config.debugOnly;
     }
     BreakpointResizer.prototype.init = function () {
-        this.createFolder();
-        this.createPosterFolder();
+        if (this.debugOnly)
+            return;
+        this.createDestDir();
+        this.createDestPosterDir();
     };
     BreakpointResizer.prototype.resizeImg = function (imgObj, _a) {
-        var size = _a.size, fileName = _a.fileName, fileEntry = _a.fileEntry, isPoster = _a.isPoster;
+        var metadata = _a.metadata, fileName = _a.fileName, fileEntry = _a.fileEntry, isPoster = _a.isPoster;
         return __awaiter(this, void 0, void 0, function () {
             var width, resizeWidth, imgObjClone, outFile, fileType;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        width = size.width;
-                        resizeWidth = this.getResizeWidth(fileEntry, size);
+                        width = metadata.width;
+                        resizeWidth = this.getResizeWidth(fileEntry, metadata);
                         if (!resizeWidth ||
-                            !this.shouldExport("image") ||
-                            (isPoster && !this.shouldExport("poster")) ||
-                            this.config.debugOnly)
+                            !(isPoster ?
+                                this.shouldExportPoster :
+                                this.shouldExport("image")))
                             return [2];
                         imgObjClone = imgObj.clone();
                         if (width > resizeWidth)
@@ -97,7 +101,7 @@ var BreakpointResizer = (function () {
                             imgObjClone.blur(this.config.blur);
                         if (isPoster)
                             fileName = this.getPosterPath(fileName);
-                        outFile = this.getSubpath(fileName);
+                        outFile = this.joinDestPath(fileName);
                         this.prepareDest(outFile);
                         fileType = (0, utils_1.getExtension)(fileName);
                         if (fileType === resizerTypes_1.ImgExtension.Gif)
@@ -111,52 +115,42 @@ var BreakpointResizer = (function () {
         });
     };
     BreakpointResizer.prototype.resizeVideo = function (vidObj, _a) {
-        var size = _a.size, fileName = _a.fileName, fileEntry = _a.fileEntry;
+        var metadata = _a.metadata, fileName = _a.fileName, fileEntry = _a.fileEntry;
         return __awaiter(this, void 0, void 0, function () {
             var width, resizeWidth, outFile;
             return __generator(this, function (_b) {
-                width = size.width;
-                resizeWidth = this.getResizeWidth(fileEntry, size);
+                width = metadata.width;
+                resizeWidth = this.getResizeWidth(fileEntry, metadata);
                 if (!resizeWidth ||
-                    !this.shouldExport("video") ||
-                    this.config.debugOnly)
+                    !this.shouldExport("video"))
                     return [2];
                 if (width > resizeWidth)
                     vidObj.size("".concat(resizeWidth, "x?"));
-                outFile = this.getSubpath(fileName);
+                outFile = this.joinDestPath(fileName);
                 this.prepareDest(outFile);
                 vidObj.output(outFile);
                 return [2];
             });
         });
     };
-    BreakpointResizer.prototype.getSubpath = function () {
+    BreakpointResizer.prototype.joinDestPath = function () {
         var subpaths = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             subpaths[_i] = arguments[_i];
         }
         return utils_1.joinPaths.apply(void 0, __spreadArray([this.destination], subpaths, false));
     };
-    BreakpointResizer.prototype.createFolder = function () {
+    BreakpointResizer.prototype.createDestDir = function () {
         var subpaths = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             subpaths[_i] = arguments[_i];
         }
-        if (this.config.debugOnly)
-            return;
-        var filePath = this.getSubpath.apply(this, subpaths);
-        if (this.removeFilesAtDest)
-            (0, utils_1.emptyDir)(filePath);
-        else
-            (0, utils_1.mkdirIfNone)(filePath);
+        (0, utils_1.mkdir)(this.joinDestPath.apply(this, subpaths), !this.exportTypes.length &&
+            this.removeFilesAtDest);
     };
-    BreakpointResizer.prototype.createPosterFolder = function () {
-        if (this.hasVid &&
-            this.exportPoster &&
-            this.shouldExport("video") &&
-            this.shouldExport("poster") &&
-            !this.config.debugOnly)
-            this.createFolder(constants_1.POSTER_SUBFOLDER);
+    BreakpointResizer.prototype.createDestPosterDir = function () {
+        if (this.shouldExportPoster && this.hasVid)
+            this.createDestDir(constants_1.POSTER_SUBFOLDER);
     };
     BreakpointResizer.prototype.prepareDest = function (fileName) {
         (0, utils_1.removeFile)(fileName);
@@ -182,10 +176,23 @@ var BreakpointResizer = (function () {
         var regex = new RegExp("(".concat(resizerTypes_1.vidExtensionRegex, ")$"));
         return (0, utils_1.joinPaths)(constants_1.POSTER_SUBFOLDER, fileName.replace(regex, resizerTypes_1.ImgExtension.Webp));
     };
+    BreakpointResizer.prototype._shouldExportType = function (type) {
+        return !this.debugOnly && (this.exportTypes.length === 0 ||
+            this.exportTypes.includes(type));
+    };
     BreakpointResizer.prototype.shouldExport = function (type) {
         var _a;
-        return !((_a = this.config.exclude) === null || _a === void 0 ? void 0 : _a.includes(type));
+        return this._shouldExportType(type) &&
+            !((_a = this.config.exclude) === null || _a === void 0 ? void 0 : _a.includes(type));
     };
+    Object.defineProperty(BreakpointResizer.prototype, "shouldExportPoster", {
+        get: function () {
+            return this.exportPoster &&
+                this._shouldExportType("poster");
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(BreakpointResizer.prototype, "hasVid", {
         get: function () {
             return this.breakptTypes.includes("video");

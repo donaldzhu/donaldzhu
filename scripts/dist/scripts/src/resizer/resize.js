@@ -66,7 +66,7 @@ var utils_1 = require("../utils");
 var constants_1 = require("./constants");
 var resizeUtils_1 = require("./resizeUtils");
 var resize = function (device, config) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, SRC_THUMBNAIL_PATH, SRC_WORK_PATH, DESTINATION_THUMBNAIL_PATH, DESTINATION_WORK_PATH, SIZE_PATH, NATIVE_DIMENSIONS_PATH, isDesktop, fallbackBreakpt, getBreakptConfig, _b, resizeThumbnails, resizeWork, includePages, includeBreakpts, desktopBreakpts, mobileBreakpts, deviceBreakpts, breakptWidths, breakptSizes, pageSizes, nativeDimensions, thumbnailConfigs, thumbnails, work;
+    var _a, SRC_THUMBNAIL_PATH, SRC_WORK_PATH, DESTINATION_THUMBNAIL_PATH, DESTINATION_WORK_PATH, SIZE_PATH, NATIVE_DIMENSIONS_PATH, isDesktop, fallbackBreakpt, getBreakptConfig, _b, resizeThumbnails, resizeWork, exportPages, exportBreakpts, exportTypes, desktopBreakpts, mobileBreakpts, deviceBreakpts, breakptWidths, breakptSizes, pageSizes, nativeDimensions, thumbnailConfigs, thumbnails, work;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
@@ -87,14 +87,12 @@ var resize = function (device, config) { return __awaiter(void 0, void 0, void 0
                         debugOnly: debugOnly
                     };
                 };
-                _b = __assign(__assign({}, (constants_1.DEFAULT_CONFIG)), config), resizeThumbnails = _b.resizeThumbnails, resizeWork = _b.resizeWork, includePages = _b.includePages, includeBreakpts = _b.includeBreakpts;
+                _b = __assign(__assign({}, (constants_1.DEFAULT_CONFIG)), config), resizeThumbnails = _b.resizeThumbnails, resizeWork = _b.resizeWork, exportPages = _b.exportPages, exportBreakpts = _b.exportBreakpts, exportTypes = _b.exportTypes;
                 desktopBreakpts = ["desktopFallback", "l", "xl", "xxl"];
                 mobileBreakpts = ["mobileFallback", "s", "m", "l"];
                 deviceBreakpts = lodash_1.default.pick.apply(lodash_1.default, __spreadArray([constants_1.BREAKPT_WIDTHS], (isDesktop ? desktopBreakpts : mobileBreakpts), false));
-                breakptWidths = includeBreakpts.length ? lodash_1.default.pick.apply(lodash_1.default, __spreadArray([deviceBreakpts], includeBreakpts, false)) : deviceBreakpts;
-                breakptSizes = (0, utils_1.mapObject)(breakptWidths, function (breakpt) {
-                    return (0, utils_1.readJsonSync)((0, utils_1.joinPaths)(SIZE_PATH, "".concat(isDesktop ? breakpt : 'all', ".json")));
-                });
+                breakptWidths = exportBreakpts.length ? lodash_1.default.pick.apply(lodash_1.default, __spreadArray([deviceBreakpts], exportBreakpts, false)) : deviceBreakpts;
+                breakptSizes = (0, utils_1.mapObject)(breakptWidths, function (breakpt) { return (0, utils_1.readJsonSync)((0, utils_1.joinPaths)(SIZE_PATH, "".concat(isDesktop ? breakpt : 'all', ".json"))); });
                 pageSizes = {};
                 (0, utils_1.loopObject)(breakptSizes, function (breakpt, allSizes) {
                     var work = allSizes.work;
@@ -114,7 +112,8 @@ var resize = function (device, config) { return __awaiter(void 0, void 0, void 0
                 thumbnails = [];
                 return [4, new resizer_1.default(SRC_THUMBNAIL_PATH, Object.values(thumbnailConfigs), {
                         destination: DESTINATION_THUMBNAIL_PATH,
-                        callback: (0, resizeUtils_1.getResizeCallback)(thumbnails, SRC_THUMBNAIL_PATH)
+                        callback: (0, resizeUtils_1.getResizeCallback)(thumbnails, SRC_THUMBNAIL_PATH),
+                        exportTypes: exportTypes
                     }).init()];
             case 1:
                 _c.sent();
@@ -125,7 +124,7 @@ var resize = function (device, config) { return __awaiter(void 0, void 0, void 0
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    includePage = !includePages.length || includePages.includes(pageId);
+                                    includePage = !exportPages.length || exportPages.includes(pageId);
                                     debugOnly = !resizeWork || !includePage;
                                     pageConfigs = (0, utils_1.mapObject)(breakptSizes, function (breakpt, sizes) { return getBreakptConfig(breakpt, sizes, debugOnly); });
                                     maxConfig = {
@@ -138,7 +137,8 @@ var resize = function (device, config) { return __awaiter(void 0, void 0, void 0
                                     workPage = [];
                                     return [4, new resizer_1.default((0, utils_1.joinPaths)(SRC_WORK_PATH, pageId), __spreadArray(__spreadArray([], Object.values(pageConfigs), true), [maxConfig], false), {
                                             destination: (0, utils_1.joinPaths)(DESTINATION_WORK_PATH, pageId),
-                                            callback: (0, resizeUtils_1.getResizeCallback)(workPage, (0, utils_1.joinPaths)(SRC_WORK_PATH, pageId))
+                                            callback: (0, resizeUtils_1.getResizeCallback)(workPage, (0, utils_1.joinPaths)(SRC_WORK_PATH, pageId)),
+                                            exportTypes: exportTypes
                                         }).init()];
                                 case 1:
                                     _a.sent();

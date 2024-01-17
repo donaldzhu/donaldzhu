@@ -77,13 +77,13 @@ var getBreakptConfig = function (breakpt, sizes, debugOnly) {
     };
 };
 var resizeMobile = function (config) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, resizeThumbnails, resizeWork, includePages, includeBreakpts, mobileBreakpts, breakptWidths, breakptSizes, pageSizes, nativeDimensions, thumbnailConfigs, thumbnails, work;
+    var _a, resizeThumbnails, resizeWork, exportPages, exportBreakpts, mobileBreakpts, breakptWidths, breakptSizes, pageSizes, nativeDimensions, thumbnailConfigs, thumbnails, work;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = __assign(__assign({}, (constants_1.DEFAULT_CONFIG)), config), resizeThumbnails = _a.resizeThumbnails, resizeWork = _a.resizeWork, includePages = _a.includePages, includeBreakpts = _a.includeBreakpts;
+                _a = __assign(__assign({}, (constants_1.DEFAULT_CONFIG)), config), resizeThumbnails = _a.resizeThumbnails, resizeWork = _a.resizeWork, exportPages = _a.exportPages, exportBreakpts = _a.exportBreakpts;
                 mobileBreakpts = lodash_1.default.pick(constants_1.BREAKPT_WIDTHS, "s", "m", "l");
-                breakptWidths = includeBreakpts.length ? lodash_1.default.pick.apply(lodash_1.default, __spreadArray([mobileBreakpts], includeBreakpts, false)) : mobileBreakpts;
+                breakptWidths = exportBreakpts.length ? lodash_1.default.pick.apply(lodash_1.default, __spreadArray([mobileBreakpts], exportBreakpts, false)) : mobileBreakpts;
                 breakptSizes = (0, utils_1.readJsonSync)((0, utils_1.joinPaths)(SIZE_PATH, 'all.json'));
                 pageSizes = {};
                 (0, utils_1.loopObject)(breakptWidths, function (breakpt) {
@@ -115,7 +115,7 @@ var resizeMobile = function (config) { return __awaiter(void 0, void 0, void 0, 
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    includePage = !includePages.length || includePages.includes(pageId);
+                                    includePage = !exportPages.length || exportPages.includes(pageId);
                                     debugOnly = !resizeWork || !includePage;
                                     pageConfigs = (0, utils_1.mapObject)(breakptSizes, function (breakpt, sizes) { return getBreakptConfig(breakpt, sizes, debugOnly); });
                                     maxConfig = {

@@ -63,7 +63,7 @@ var constants_1 = require("./constants");
 var Resizer = (function () {
     function Resizer(source, breakptConfigs, _a) {
         var _this = this;
-        var _b = _a === void 0 ? {} : _a, destination = _b.destination, _c = _b.mediaOptions, mediaOptions = _c === void 0 ? {} : _c, _d = _b.removeFilesAtDest, removeFilesAtDest = _d === void 0 ? true : _d, _e = _b.exportPoster, exportPoster = _e === void 0 ? true : _e, _f = _b.callback, callback = _f === void 0 ? lodash_1.default.noop : _f;
+        var _b = _a === void 0 ? {} : _a, destination = _b.destination, _c = _b.mediaOptions, mediaOptions = _c === void 0 ? {} : _c, _d = _b.removeFilesAtDest, removeFilesAtDest = _d === void 0 ? true : _d, _e = _b.exportPoster, exportPoster = _e === void 0 ? true : _e, _f = _b.exportTypes, exportTypes = _f === void 0 ? [] : _f, _g = _b.callback, callback = _g === void 0 ? lodash_1.default.noop : _g;
         this.source = source;
         this.breakptConfigs = breakptConfigs;
         this.destination = destination || source;
@@ -71,7 +71,8 @@ var Resizer = (function () {
             destination: _this.destination,
             mediaOptions: mediaOptions,
             removeFilesAtDest: removeFilesAtDest,
-            exportPoster: exportPoster
+            exportPoster: exportPoster,
+            exportTypes: exportTypes
         }); });
         this.allFileEntries = lodash_1.default.union.apply(lodash_1.default, this.breakptConfigs.map(function (config) {
             return config.sizes.map(function (size) { return size[0]; });
@@ -79,6 +80,8 @@ var Resizer = (function () {
         this.mediaOptions = mediaOptions;
         this.removeFilesAtDest = removeFilesAtDest;
         this.exportPoster = exportPoster;
+        this.exportTypes = exportTypes;
+        this.debugOnly = !lodash_1.default.some(this.breakptConfigs, { debugOnly: false });
         this.callback = callback;
     }
     Resizer.prototype.init = function () {
@@ -88,7 +91,10 @@ var Resizer = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.createPosterFolder();
+                        if (this.shouldExport("poster"))
+                            this.createSrcPosterDir();
+                        if (this.shouldExport("dash"))
+                            this.createDestDashDir();
                         this.mapBreakpts(function (resizer) { return resizer.init(); });
                         mapAllEntries = function (fileEntry) { return __awaiter(_this, void 0, void 0, function () {
                             var fileNames;
@@ -96,10 +102,10 @@ var Resizer = (function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
-                                        fileNames = (0, glob_1.globSync)(this.getSubpath(fileEntry), { nodir: true }).sort(utils_1.sortFileNames);
+                                        fileNames = (0, glob_1.globSync)(this.joinSrcPath(fileEntry), { nodir: true }).sort(utils_1.sortFileNames);
                                         return [4, (0, utils_1.mapPromises)(fileNames, function (fileName) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                                                 switch (_a.label) {
-                                                    case 0: return [4, this.resizeMedia(this.removeSubpath(fileName), fileEntry)];
+                                                    case 0: return [4, this.resizeMedia(this.extractSrcSubpath(fileName), fileEntry)];
                                                     case 1: return [2, _a.sent()];
                                                 }
                                             }); }); })];
@@ -122,14 +128,13 @@ var Resizer = (function () {
             });
         });
     };
-    Resizer.prototype.createPosterFolder = function () {
-        var hasVid = !!this.allFileEntries.find(function (fileName) {
-            return (0, utils_1.parseMediaType)(fileName) === "video";
-        });
-        if (hasVid && this.exportPoster)
-            this.createFolder(constants_1.POSTER_SUBFOLDER);
+    Resizer.prototype.createSrcPosterDir = function () {
+        if (this.hasVid && this.exportPoster)
+            (0, utils_1.mkdir)(this.joinSrcPath(constants_1.POSTER_SUBFOLDER), this.removeFilesAtDest);
     };
-    Resizer.prototype.createVideoFolder = function () {
+    Resizer.prototype.createDestDashDir = function () {
+        if (this.hasVid)
+            (0, utils_1.mkdir)((0, utils_1.joinPaths)(this.destination, constants_1.DASH_SUBFOLDER), this.removeFilesAtDest);
     };
     Resizer.prototype.resizeMedia = function (fileName, fileEntry) {
         return __awaiter(this, void 0, void 0, function () {
@@ -157,14 +162,14 @@ var Resizer = (function () {
     };
     Resizer.prototype.resizeImg = function (fileName, fileEntry, posterConfig) {
         return __awaiter(this, void 0, void 0, function () {
-            var imgPath, animated, imgObj, size, _a, _b;
+            var imgPath, isAnimated, imgObj, size, _a, _b, isPoster, shouldExport;
             var _this = this;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        imgPath = posterConfig ? fileName : this.getSubpath(fileName);
-                        animated = (0, utils_1.getExtension)(imgPath) === resizerTypes_1.ImgExtension.Gif;
-                        imgObj = (0, sharp_1.default)(imgPath, { animated: animated });
+                        imgPath = posterConfig ? fileName : this.joinSrcPath(fileName);
+                        isAnimated = (0, utils_1.getExtension)(imgPath) === resizerTypes_1.ImgExtension.Gif;
+                        imgObj = (0, sharp_1.default)(imgPath, { animated: isAnimated });
                         if (!posterConfig) return [3, 1];
                         _a = posterConfig.vidSize;
                         return [3, 3];
@@ -176,11 +181,14 @@ var Resizer = (function () {
                         _c.label = 3;
                     case 3:
                         size = _a;
+                        isPoster = !!posterConfig;
+                        shouldExport = isPoster || this.shouldExport("image");
+                        if (!shouldExport) return [3, 5];
                         return [4, this.mapBreakpts(function (resizer) { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0: return [4, resizer.resizeImg(imgObj, {
-                                                size: size,
+                                                metadata: size,
                                                 fileName: posterConfig ? posterConfig.vidFileName : fileName,
                                                 fileEntry: fileEntry,
                                                 isPoster: !!posterConfig
@@ -191,7 +199,9 @@ var Resizer = (function () {
                             }); })];
                     case 4:
                         _c.sent();
-                        this.log(imgPath);
+                        _c.label = 5;
+                    case 5:
+                        this.log(imgPath, isPoster ? "poster" : "image", shouldExport);
                         if (!posterConfig)
                             this.callback(imgPath, size);
                         return [2];
@@ -201,33 +211,30 @@ var Resizer = (function () {
     };
     Resizer.prototype.resizeVid = function (fileName, fileEntry) {
         return __awaiter(this, void 0, void 0, function () {
-            var vidPath, vidObj, size, pngPosterPath, webpPosterPath, hasOutputs;
+            var vidPath, vidObj, metadata, pngPosterPath, webpPosterPath;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        vidPath = this.getSubpath(fileName);
+                        vidPath = this.joinSrcPath(fileName);
                         vidObj = (0, fluent_ffmpeg_1.default)({ source: vidPath, priority: 10 }).noAudio();
                         return [4, new Promise(function (resolve) {
-                                vidObj.ffprobe(function (_, _a) {
-                                    var streams = _a.streams;
-                                    return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_b) {
-                                        return [2, resolve(this.throwNoWidth(streams[0], fileName))];
-                                    }); });
-                                });
+                                vidObj.ffprobe(function (_, metadata) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                                    return [2, resolve(this.throwNoWidth(metadata.streams[0], fileName))];
+                                }); }); });
                             })];
                     case 1:
-                        size = _a.sent();
+                        metadata = _a.sent();
                         pngPosterPath = this.getScreenshotPath(vidPath);
                         webpPosterPath = this.getPosterPath(pngPosterPath);
-                        if (!this.exportPoster) return [3, 3];
+                        if (!(this.exportPoster && this.shouldExport("poster"))) return [3, 3];
                         return [4, new Promise(function (resolve) {
                                 (0, utils_1.removeFile)(pngPosterPath);
                                 (0, utils_1.removeFile)(webpPosterPath);
                                 (0, fluent_ffmpeg_1.default)(vidPath).screenshots({
                                     filename: path_1.default.basename(pngPosterPath),
                                     timestamps: [0],
-                                    folder: _this.getSubpath(constants_1.POSTER_SUBFOLDER)
+                                    folder: _this.joinSrcPath(constants_1.POSTER_SUBFOLDER)
                                 }).on('end', function () { return __awaiter(_this, void 0, void 0, function () {
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
@@ -246,22 +253,22 @@ var Resizer = (function () {
                     case 2:
                         _a.sent();
                         this.resizeImg(webpPosterPath, fileEntry, {
-                            vidSize: size, vidFileName: fileName
+                            vidSize: metadata, vidFileName: fileName
                         });
                         _a.label = 3;
-                    case 3: return [4, this.mapBreakpts(function (resizer) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4, resizer
-                                            .resizeVideo(vidObj, { size: size, fileName: fileName, fileEntry: fileEntry })];
-                                    case 1: return [2, _a.sent()];
-                                }
-                            });
-                        }); })];
+                    case 3:
+                        if (!this.shouldExport("video")) return [3, 6];
+                        return [4, this.mapBreakpts(function (resizer) { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4, resizer
+                                                .resizeVideo(vidObj, { metadata: metadata, fileName: fileName, fileEntry: fileEntry })];
+                                        case 1: return [2, _a.sent()];
+                                    }
+                                });
+                            }); })];
                     case 4:
                         _a.sent();
-                        hasOutputs = lodash_1.default.some(this.breakptConfigs, { debugOnly: false });
-                        if (!hasOutputs) return [3, 6];
                         return [4, new Promise(function (resolve) {
                                 return vidObj.on('end', function () { return resolve(null); }).run();
                             })];
@@ -269,52 +276,52 @@ var Resizer = (function () {
                         _a.sent();
                         _a.label = 6;
                     case 6:
-                        this.log(vidPath);
-                        this.callback(vidPath, size);
+                        this.log(vidPath, "video", this.shouldExport("video"));
+                        if (this.shouldExport("dash"))
+                            this.generateDash(fileName, metadata);
+                        this.log(vidPath, "dash", this.shouldExport("dash"));
+                        this.callback(vidPath, metadata);
                         return [2];
                 }
             });
         });
     };
-    Resizer.prototype.generateDash = function (fileName, fileEntry) {
+    Resizer.prototype.generateDash = function (fileName, metadata) {
         return __awaiter(this, void 0, void 0, function () {
-            var vidPath, gopSize;
-            return __generator(this, function (_a) {
-                vidPath = this.getSubpath(fileName);
+            var _a, name, ext, width, height, destFolderPath, gopSize, getEvenWidth, qualityMap, qualityFilters, command;
+            return __generator(this, function (_b) {
+                _a = path_1.default.parse(fileName), name = _a.name, ext = _a.ext;
+                width = metadata.width, height = metadata.height;
+                destFolderPath = (0, utils_1.joinPaths)(this.destination, constants_1.DASH_SUBFOLDER, "".concat(name).concat(ext.replace('.', '-')));
+                (0, utils_1.mkdir)(destFolderPath, this.removeFilesAtDest);
                 gopSize = 100;
-                (0, child_process_1.exec)("\n      ffmpeg -i ".concat(vidPath, " -y -c:v libx264 \\\n        -preset veryslow -keyint_min ").concat(gopSize, " -g ").concat(gopSize, " -sc_threshold 0 \\\n        -c:a aac -b:a 128k -ac 1 -ar 44100 \\\n        -map v:0 -vf:0 \"scale=-2:240\" -b:v:0 145k -r:0 24 \\\n        -map v:0 -vf:1 \"scale=-2:360\" -b:v:1 365k -r:1 24 \\\n        -map v:0 -vf:2 \"scale=-2:480\" -b:v:2 730k -r:2 24 \\\n        -map v:0 -vf:3 \"scale=-2:480\" -b:v:3 1100k -r:3 24 \\\n        -map 0:a \\\n        -use_template 1 -use_timeline 1 -seg_duration 4 \\\n        -adaptation_sets \"id=0,streams=v id=1,streams=a\" \\\n        -f dash dash/dash.mpd\n      "), function (err, stdout, stderr) {
-                    if (err)
-                        console.error(err);
-                    else {
-                        console.log("stdout: ".concat(stdout));
-                        console.log("stderr: ".concat(stderr));
-                    }
+                getEvenWidth = function (resizedHeight) { return 2 * Math.round(width / height * resizedHeight / 2); };
+                qualityMap = constants_1.DASH_CONFIGS
+                    .map(function (_a, i) {
+                    var _b;
+                    var size = _a.size, bitrate = _a.bitrate, frameRate = _a.frameRate;
+                    if (size > height)
+                        return;
+                    frameRate = Math.min(frameRate, (_b = metadata.frameRate) !== null && _b !== void 0 ? _b : Infinity);
+                    return "-map v:0 -s:".concat(i, " ").concat(getEvenWidth(size), "x").concat(size, " -b:v:").concat(i, " ").concat(bitrate, " -r:").concat(i, " ").concat(frameRate);
                 });
+                qualityFilters = (0, utils_1.filterFalsy)(qualityMap).join(' ');
+                command = "\n      nice -n 10 ffmpeg -i ".concat(this.joinSrcPath(fileName), " -y -c:v libx264 \\\n        -hide_banner -loglevel warning \\\n        -preset veryslow -keyint_min ").concat(gopSize, " -g ").concat(gopSize, " -sc_threshold 0 \\\n        ").concat(qualityFilters, " \\\n        -use_template 1 -use_timeline 1 -seg_duration 4 \\\n        -adaptation_sets \"id=0,streams=v id=1\" \\\n        -f dash ").concat(destFolderPath, "/dash.mpd\n      ");
+                (0, child_process_1.execSync)(command);
                 return [2];
             });
         });
     };
-    Resizer.prototype.getSubpath = function () {
+    Resizer.prototype.joinSrcPath = function () {
         var subpaths = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             subpaths[_i] = arguments[_i];
         }
         return utils_1.joinPaths.apply(void 0, __spreadArray([this.source], subpaths, false));
     };
-    Resizer.prototype.removeSubpath = function (fullPath) {
+    Resizer.prototype.extractSrcSubpath = function (fullPath) {
         var sourceRegex = new RegExp("".concat(this.source, "/?"));
         return fullPath.replace(sourceRegex, '');
-    };
-    Resizer.prototype.createFolder = function () {
-        var subpaths = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            subpaths[_i] = arguments[_i];
-        }
-        var filePath = this.getSubpath.apply(this, subpaths);
-        if (this.removeFilesAtDest)
-            (0, utils_1.emptyDir)(filePath);
-        else
-            (0, utils_1.mkdirIfNone)(filePath);
     };
     Resizer.prototype.mapBreakpts = function (callback) {
         return __awaiter(this, void 0, void 0, function () {
@@ -334,9 +341,17 @@ var Resizer = (function () {
             });
         });
     };
-    Resizer.prototype.log = function (fileName) {
-        var color = (0, utils_1.parseMediaType)(fileName) === "image" ? 'green' : 'cyan';
-        console.log("".concat(chalk_1.default.gray('Resized: ')).concat(chalk_1.default[color](fileName)));
+    Resizer.prototype.log = function (fileName, type, isExport) {
+        var _a;
+        var colors = (_a = {},
+            _a["image"] = 'green',
+            _a["video"] = 'cyan',
+            _a["poster"] = 'yellow',
+            _a["dash"] = 'magenta',
+            _a);
+        var color = colors[type];
+        console.log("".concat(chalk_1.default[isExport ? 'white' : 'gray']("".concat(isExport ?
+            'Resized' : 'Debugged', " [ ").concat(type, " ]: "))).concat(chalk_1.default[color](fileName)));
     };
     Resizer.prototype.getScreenshotPath = function (filename) {
         var regex = new RegExp("(".concat(resizerTypes_1.vidExtensionRegex, ")$"));
@@ -346,11 +361,23 @@ var Resizer = (function () {
         return filename.replace(resizerTypes_1.ImgExtension.Png, resizerTypes_1.ImgExtension.Webp);
     };
     Resizer.prototype.throwNoWidth = function (metadata, fileName) {
-        var width = metadata.width, height = metadata.height, pageHeight = metadata.pageHeight;
+        var width = metadata.width, height = metadata.height, pageHeight = metadata.pageHeight, frameRate = metadata.frameRate;
         if (!width || !height)
             throw new Error("Cannot read dimensions of ".concat(fileName, "."));
-        return { width: width, height: pageHeight !== null && pageHeight !== void 0 ? pageHeight : height };
+        return { width: width, height: pageHeight !== null && pageHeight !== void 0 ? pageHeight : height, frameRate: frameRate !== null && frameRate !== void 0 ? frameRate : 24 };
     };
+    Resizer.prototype.shouldExport = function (type) {
+        return !this.debugOnly && (this.exportTypes.length === 0 || this.exportTypes.includes(type));
+    };
+    Object.defineProperty(Resizer.prototype, "hasVid", {
+        get: function () {
+            return !!this.allFileEntries.find(function (fileName) {
+                return (0, utils_1.parseMediaType)(fileName) === "video";
+            });
+        },
+        enumerable: false,
+        configurable: true
+    });
     return Resizer;
 }());
 exports.default = Resizer;

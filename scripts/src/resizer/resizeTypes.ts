@@ -1,4 +1,5 @@
 import { MAX_FOLDER } from './constants'
+import { MediaType } from './lib/resizerTypes'
 export const enum Breakpt {
   DesktopFallback = 'desktopFallback',
   MobileFallback = 'mobileFallback',
@@ -28,6 +29,7 @@ export type MobileBreakpts = Breakpt.S | Breakpt.M | Breakpt.L
 export interface ConfigType<T extends Breakpt> {
   resizeThumbnails: boolean
   resizeWork: boolean
-  includePages: string[]
-  includeBreakpts: T[]
+  exportPages: string[]
+  exportBreakpts: T[]
+  exportTypes: MediaType[]
 }
