@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import { exec } from 'child_process'
 import _ from 'lodash'
 import sharp from 'sharp'
 import ffmpeg from 'fluent-ffmpeg'
@@ -81,7 +80,6 @@ class Resizer<K extends string> {
   private async resizeImg(fileName: string, fileEntry: string): Promise<void>
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig): Promise<void>
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig) {
-    console.log(fileName, fileEntry)
     const imgPath = posterConfig ? fileName : this.getSubpath(fileName)
     const animated = getExtension(imgPath) === ImgExtension.Gif
     const imgObj = sharp(imgPath, { animated })
@@ -141,18 +139,6 @@ class Resizer<K extends string> {
 
     this.log(vidPath)
     this.callback(vidPath, size)
-  }
-
-  private async generateDash(fileName: string, fileEntry: string) {
-    const vidPath = this.getSubpath(fileName)
-    const vidObj = ffmpeg(vidPath)
-    const size = await new Promise<dimensionType>(resolve => {
-      vidObj.ffprobe(async (_, { streams }) =>
-        resolve(this.throwNoWidth(streams[0], fileName)))
-    })
-
-    exec('')
-
   }
 
   private getSubpath(...subpaths: (string | undefined)[]) {

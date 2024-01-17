@@ -3,7 +3,7 @@ import resize from './resize'
 
 const config = {
   resizeThumbnails: false,
-  resizeWork: true,
+  resizeWork: false,
   includePages: ['i-voted'],
   includeBreakpts: [],
 }

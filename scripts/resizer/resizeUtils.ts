@@ -6,7 +6,6 @@ import { SizesJson, dimension, fileDataPair } from './resizeTypes'
 export const getNoSizesError = (sizes: SizesJson, sizeType: string) =>
   new Error(`Breakpoint size has no ${sizeType} sizes: ${sizes[sizeType]}`)
 
-
 export const getResizeCallback = (array: fileDataPair<dimension>[], rootPath: string) =>
   (fileName: string, size: dimensionType) => array
     .push([
