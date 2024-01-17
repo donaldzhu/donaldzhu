@@ -3,7 +3,6 @@ import sharp from 'sharp'
 export interface ResizerConfig {
   destination?: string
   mediaOptions?: MediaOptions
-  toParentFolder?: boolean
   removeFilesAtDest?: boolean
   exportPoster?: boolean
   callback?: callbackType

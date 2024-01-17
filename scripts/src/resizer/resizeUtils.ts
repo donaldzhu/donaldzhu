@@ -16,7 +16,7 @@ export const getResizeCallback = (array: fileDataPair<dimension>[], rootPath: st
 export const getPaths = (device: Device) => {
   const SRC_ROOT = 'public/assets-original'
   const DESTINATION_ROOT = 'public/assets'
-  const SIZE_ROOT = 'scripts/resizer/sizes'
+  const SIZE_ROOT = 'scripts/src/resizer/sizes'
   const NATIVE_DIMENSIONS_ROOT = 'src/data/media/nativeDimensions'
 
   const SRC_PATH = joinPaths(SRC_ROOT, device)

@@ -1,5 +1,5 @@
 import { Breakpt } from './resizeTypes'
-import breakpoints from '../../src/data/breakpoints'
+import breakpoints from '../../../src/data/breakpoints'
 
 export const THUMBNAIL_FOLDER = 'thumbnails'
 export const WORK_FOLDER = 'work'

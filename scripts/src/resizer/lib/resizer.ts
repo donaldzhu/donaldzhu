@@ -27,15 +27,13 @@ class Resizer<K extends string> {
     {
       destination,
       mediaOptions = {},
-      toParentFolder = true,
       removeFilesAtDest = true,
       exportPoster = true,
       callback = _.noop
     }: ResizerConfig = {}) {
     this.source = source
     this.breakptConfigs = breakptConfigs
-    const parentFolder = path.dirname(source)
-    this.destination = destination || (toParentFolder ? parentFolder : source)
+    this.destination = destination || source
     this.breakptResizers = breakptConfigs.map(config => new BreakpointResizer(
       source, config,
       {
@@ -71,6 +69,10 @@ class Resizer<K extends string> {
     if (hasVid && this.exportPoster) this.createFolder(POSTER_SUBFOLDER)
   }
 
+  private createVideoFolder() {
+
+  }
+
   private async resizeMedia(fileName: string, fileEntry: string) {
     const type = parseMediaType(fileName)
     if (type === MediaType.Image) await this.resizeImg(fileName, fileEntry)
@@ -81,7 +83,6 @@ class Resizer<K extends string> {
   private async resizeImg(fileName: string, fileEntry: string): Promise<void>
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig): Promise<void>
   private async resizeImg(fileName: string, fileEntry: string, posterConfig?: ResizePosterConfig) {
-    console.log(fileName, fileEntry)
     const imgPath = posterConfig ? fileName : this.getSubpath(fileName)
     const animated = getExtension(imgPath) === ImgExtension.Gif
     const imgObj = sharp(imgPath, { animated })
@@ -145,13 +146,27 @@ class Resizer<K extends string> {
 
   private async generateDash(fileName: string, fileEntry: string) {
     const vidPath = this.getSubpath(fileName)
-    const vidObj = ffmpeg(vidPath)
-    const size = await new Promise<dimensionType>(resolve => {
-      vidObj.ffprobe(async (_, { streams }) =>
-        resolve(this.throwNoWidth(streams[0], fileName)))
-    })
+    const gopSize = 100
 
-    exec('')
+    exec(`
+      ffmpeg -i ${vidPath} -y -c:v libx264 \\
+        -preset veryslow -keyint_min ${gopSize} -g ${gopSize} -sc_threshold 0 \\
+        -c:a aac -b:a 128k -ac 1 -ar 44100 \\
+        -map v:0 -vf:0 "scale=-2:240" -b:v:0 145k -r:0 24 \\
+        -map v:0 -vf:1 "scale=-2:360" -b:v:1 365k -r:1 24 \\
+        -map v:0 -vf:2 "scale=-2:480" -b:v:2 730k -r:2 24 \\
+        -map v:0 -vf:3 "scale=-2:480" -b:v:3 1100k -r:3 24 \\
+        -map 0:a \\
+        -use_template 1 -use_timeline 1 -seg_duration 4 \\
+        -adaptation_sets "id=0,streams=v id=1,streams=a" \\
+        -f dash dash/dash.mpd
+      `, (err, stdout, stderr) => {
+      if (err) console.error(err)
+      else {
+        console.log(`stdout: ${stdout}`)
+        console.log(`stderr: ${stderr}`)
+      }
+    })
 
   }
 
