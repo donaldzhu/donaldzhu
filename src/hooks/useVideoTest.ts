@@ -1,19 +1,21 @@
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
+import dashjs from 'dashjs'
 import { addEventListener } from '../utils/reactUtils'
-import { VidExt } from '../utils/helpers/preloader/preloadUtils'
-import useIsMobile from './useIsMobile'
 
-const useCanAutoPlay = () => {
+const useVideoTest = () => {
   const activationEvents: (keyof DocumentEventMap)[] =
     ['keydown', 'mousedown', 'pointerdown', 'pointerup', 'touchend']
   const [canAutoPlay, setCanAutoPlay] = useState<boolean | undefined>()
   const [defaultCanAutoPlay, setInitialCanAutoPlay] = useState<boolean | undefined>()
-  const isMobile = useIsMobile()
+
+  const video = document.createElement('video')
+  const canPlayWebm = video.canPlayType('video/webm; codecs="vp8, vorbis"') === 'probably'
+  const canUseDash = dashjs.supportsMediaSource()
 
   useEffect(() => {
     const video = document.createElement('video')
-    video.src = '/assets-local/autoplay-test/test' + '.' + (isMobile ? VidExt.Mp4 : VidExt.Webm)
+    video.src = 'assets-local/autoplay-test/test.mp4'
     video.muted = true
     video.playsInline = true
     video.play()
@@ -31,7 +33,7 @@ const useCanAutoPlay = () => {
     return () => listenerRemovers.forEach(remover => remover())
   }, [canAutoPlay])
 
-  return { canAutoPlay, defaultCanAutoPlay }
+  return { canAutoPlay, defaultCanAutoPlay, canPlayWebm, canUseDash }
 }
 
-export default useCanAutoPlay
+export default useVideoTest

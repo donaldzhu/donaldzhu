@@ -1,7 +1,9 @@
 import _ from 'lodash'
-import { joinPaths, keysToObject, typedKeys } from '../../commonUtils'
+import dashjs from 'dashjs'
+import { joinPaths, keysToObject, typedKeys, validateString } from '../../commonUtils'
 import { ImgPreloader, VidPreloader } from './mediaPreloader'
-import { MediaFileType, getPosterFile } from './preloadUtils'
+import { MediaFileType, VidExt, getPosterFile } from './preloadUtils'
+import type { MediaPlayerClass } from 'dashjs'
 import type { coorTuple } from '../../utilTypes'
 import type { MediaStackProps } from './preloaderTypes'
 
@@ -15,6 +17,11 @@ export class MediaStack<K extends string> {
   nativeDimension: coorTuple
   stack: Record<K, ImgPreloader | VidPreloader>
   posters: MediaStack<K> | undefined
+  dashPath: string | undefined
+
+  canPlayWebm: boolean
+  canUseDash: boolean
+  dashLoader: MediaPlayerClass | null
 
   constructor(props: MediaStackProps<K> & {
     fileType: MediaFileType
@@ -33,24 +40,47 @@ export class MediaStack<K extends string> {
     this.nativeDimension = nativeDimension
     this.filePath = filePath
     this.breakpts = breakpts
-    this.posters = fileType === MediaFileType.Image ? undefined :
+    this.posters = this.isImg ? undefined :
       new MediaStack<K>({
         ...props,
         fileName: joinPaths('posters', getPosterFile(fileName)),
         fileType: MediaFileType.Image,
       })
+    this.dashPath = this.isImg ? undefined :
+      joinPaths(this.filePath, 'dash', this.vidName, 'dash.mpd')
+    this.canPlayWebm = config.canPlayWebm
+    this.canUseDash = config.canUseDash
+    this.dashLoader = this.canUseDash ? dashjs.MediaPlayer().create() : null
 
-    const Preloader = fileType === MediaFileType.Image ? ImgPreloader : VidPreloader
+    const Preloader = this.isImg ? ImgPreloader : VidPreloader
     this.stack = keysToObject<K, ImgPreloader | VidPreloader>(this.breakpts, size =>
       new Preloader(this.getPath(size), config, loadVid) as ImgPreloader | VidPreloader)
     this.listeners = []
   }
 
   private getPath(breakpt: K) {
-    return joinPaths(this.filePath, breakpt, this.fileName)
+    return joinPaths(
+      this.filePath,
+      breakpt,
+      validateString(!this.isImg, this.canPlayWebm ? VidExt.Webm : VidExt.Mp4),
+      this.fileName
+    )
+  }
+
+  private get vidName() {
+    return this.fileName.replace(/\.(mp4|webm)$/, '')
+  }
+
+  private get isImg() {
+    return this.fileType === MediaFileType.Image
   }
 
   preload(breakpt: K | undefined, isPoster = false) {
+    if (!this.isImg && this.canUseDash) {
+      this.preloadDash()
+      return Promise.resolve()
+    }
+
     if (!breakpt) return Promise.resolve()
     const stack = isPoster ? this.posters?.stack : this.stack
     if (!stack) return Promise.resolve()
@@ -60,6 +90,14 @@ export class MediaStack<K extends string> {
         console.log(this)
         throw err
       })
+  }
+
+  private preloadDash() {
+    if (!this.dashLoader) return
+    this.dashLoader.initialize(undefined, this.dashPath, false)
+    this.dashLoader.updateSettings({
+      streaming: { cacheInitSegments: true }
+    })
   }
 
   onFinished() {
@@ -80,6 +118,5 @@ export class MediaStack<K extends string> {
       return media.isLoaded
     })
   }
+
 }
-
-

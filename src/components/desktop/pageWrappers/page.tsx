@@ -17,7 +17,13 @@ import type { RouteProps } from '../../routeTypes'
 
 const TypedGlobalCanvas = GlobalCanvas<Device.Desktop>
 const Page = ({ mediaSettings }: RouteProps) => {
-  const { canAutoPlay, defaultCanAutoPlay, vidLoadData, preloadManager } = mediaSettings
+  const {
+    canAutoPlay,
+    canUseDash,
+    vidLoadData,
+    preloadManager,
+    ...rest
+  } = mediaSettings
   const [sidebar, setSidebar] = useState<ReactNode | undefined>()
   const [zoomMedia, setZoomMedia] = useState<RequiredZoomMediaProps | undefined>()
   const { pathname } = useLocation()
@@ -53,18 +59,19 @@ const Page = ({ mediaSettings }: RouteProps) => {
         canvasStates={canvasStates} />
       <Outlet context={{
         canvasRef,
-        defaultCanAutoPlay,
         canvasStates,
         sidebar,
         setSidebar,
         zoomMedia,
-        handleZoomMedia,
         canAutoPlay,
-        preloadManager
+        canUseDash,
+        preloadManager,
+        handleZoomMedia,
+        ...rest
       } satisfies DesktopContextProps} />
-      <VidLoadContainer
+      {!canUseDash && <VidLoadContainer
         vidLoadData={vidLoadData}
-        canAutoPlay={canAutoPlay} />
+        canAutoPlay={canAutoPlay} />}
     </>
   )
 }

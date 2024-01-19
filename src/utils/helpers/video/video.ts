@@ -1,21 +1,36 @@
 import Queue from '../queue'
 import { validateRef } from '../../typeUtils'
 import type { MutableRefObject } from 'react'
+import type { MediaPlayerClass } from 'dashjs'
 
 class Video {
   private playQueue: Queue | undefined
   private playQueueList: VideoPlayCommand[]
-  ref: MutableRefObject<HTMLVideoElement>
+  vidRef: MutableRefObject<HTMLVideoElement>
+  dashPlayerRef: MutableRefObject<MediaPlayerClass | null>
+  useDash: boolean
   canAutoPlay: boolean | undefined
+  playerInitializedRef: MutableRefObject<boolean>
+
   playState: {
     current: boolean
     future: boolean
     isSettled: boolean
   }
 
-  constructor(ref: MutableRefObject<HTMLVideoElement>, canAutoPlay: boolean | undefined) {
-    this.ref = ref
+  constructor(
+    vidRef: MutableRefObject<HTMLVideoElement>,
+    dashPlayerRef: MutableRefObject<MediaPlayerClass | null>,
+    useDash: boolean,
+    canAutoPlay: boolean | undefined,
+    playerInitializedRef: MutableRefObject<boolean>
+  ) {
+    this.vidRef = vidRef
+    this.dashPlayerRef = dashPlayerRef
+    this.useDash = useDash
     this.canAutoPlay = canAutoPlay
+    this.playerInitializedRef = playerInitializedRef
+
     this.playQueue = undefined
     this.playQueueList = []
     this.playState = {
@@ -26,24 +41,42 @@ class Video {
   }
 
   play() {
-    if (!this.canAutoPlay || this.playState.future) return
+    if (!this.canAutoPlay) return
+    if (this.useDash) {
+      if (validateRef(this.dashPlayerRef))
+        this.dashPlayerRef.current.play()
+    }
+    else this.nativePlay()
+  }
+
+  pause() {
+    if (this.useDash) {
+      if (validateRef(this.dashPlayerRef))
+        this.dashPlayerRef.current.pause()
+    }
+    else this.nativePause()
+  }
+
+  private nativePlay() {
+    if (this.playState.future) return
     this.addToQueue(new VideoPlayCommand(
       true, () => {
         this.playQueueList.shift()
-        return this.ref.current.play()
+
+        return this.vidRef.current.play()
           .then(() => this.playState.current = true)
           .catch(err => console.error(err))
       }
     ))
   }
 
-  pause() {
+  private nativePause() {
     if (!this.playState.future) return
     this.addToQueue(new VideoPlayCommand(
       false, () => {
         this.playQueueList.shift()
-        if (validateRef(this.ref))
-          this.ref.current.pause()
+        if (validateRef(this.vidRef))
+          this.vidRef.current.pause()
         this.playState.current = false
       }
     ))

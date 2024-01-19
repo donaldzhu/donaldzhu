@@ -11,6 +11,7 @@ import { validateRef } from '../../../utils/typeUtils'
 import useMemoRef from '../../../hooks/useMemoRef'
 import useMergedRef from '../../../hooks/useMergedRef'
 import { addEventListener } from '../../../utils/reactUtils'
+import bitrateMap from '../../../data/media/bitrate-map.json'
 import type { DetailedHTMLProps, VideoHTMLAttributes } from 'react'
 import type { MediaPlayerClass } from 'dashjs'
 import type { DesktopContextProps } from '../../desktop/pageWrappers/pageTypes'
@@ -86,40 +87,47 @@ const Vid = forwardRef<
       if (!canUseDash || !src) return _.noop
       if (!validateRef(mergedRef)) throw new Error('Video’s ref.current is unexpectedly null')
       const player = playerRef.current = dashjs.MediaPlayer().create()
-      player.initialize(mergedRef.current, src, false)
       playerInitilizedRef.current = true
 
-      const updateMaxBitrate = () => {
-        const elemWidth = mergedRef.current.getBoundingClientRect().width
-        const bitrateInfoList = player.getBitrateInfoListFor('video')
-        const widthList = _.uniq(bitrateInfoList.map(info => info.width))
-          .sort((a, b) => a - b)
-        const maxWidth = widthList.find(width => width >= elemWidth)
-        if (!maxWidth) return
+      const elemHeight = mergedRef.current.getBoundingClientRect().height
 
-        const maxBitrateInfo = _.maxBy(
-          bitrateInfoList.filter(info => info.width === maxWidth),
-          info => info.bitrate
-        )
+      const heightList = _
+        .uniq(Object.values(bitrateMap))
+        .sort((a, b) => a - b)
+      const maxHeight = heightList.find(width => width >= elemHeight)
+      if (!maxHeight) return
 
-        if (maxBitrateInfo) player.updateSettings({
-          streaming: {
-            abr: {
-              maxBitrate: { audio: -1, video: maxBitrateInfo.bitrate / 1000 },
-            }
+      const maxBitrates = _.pickBy(bitrateMap, width => width === maxHeight)
+      const filteredBitrates = Object.keys(maxBitrates)
+        .map(bitrateString => parseInt(bitrateString))
+      const maxBitrate = Math.max(...filteredBitrates)
+
+      player.updateSettings({
+        streaming: {
+          abr: {
+            maxBitrate: { audio: -1, video: maxBitrate / 1000 },
           }
-        })
-      }
+        }
+      })
+      console.log(src, maxBitrate)
 
-      player.on('streamInitialized', updateMaxBitrate)
-      const removeResizeListener = addEventListener(window, 'resize', updateMaxBitrate)
+      player.on('playbackStarted', () => {
+        setInterval(() => {
+          if (validateRef(playerRef))
+            console.log(
+              playerRef.current.getBitrateInfoListFor('video')[playerRef.current.getQualityFor('video')].bitrate
+            )
+        }, 2000)
+      })
+
+      player.initialize(mergedRef.current, src, false)
 
       return () => {
         player.destroy()
         playerInitilizedRef.current = false
-        removeResizeListener()
       }
     }, [])
+
 
 
     return (

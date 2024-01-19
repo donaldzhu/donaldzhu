@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { forwardRef, useEffect, useState } from 'react'
+import dashjs from 'dashjs'
 import { MediaFileType, MediaSize, getFallbackKey, getStackBreakpt } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
 import useIsMobile from '../../../hooks/useIsMobile'
@@ -14,6 +15,7 @@ const PreloadMedia = forwardRef(function PreloadMedia(props: PreloadMediaProps, 
   const posterStack = rest.type === MediaFileType.Image ? undefined :
     mediaStack?.posters
   const isMobile = useIsMobile()
+  const canUseDash = dashjs.supportsMediaSource()
 
   const mediaIsVid = rest.type === MediaFileType.Video
   const getLoadState = (mediaStack = stackData?.stack) => {
@@ -22,9 +24,14 @@ const PreloadMedia = forwardRef(function PreloadMedia(props: PreloadMediaProps, 
       hasLoaded: true
     }
 
+    if (canUseDash && mediaIsVid) return {
+      src: mediaStack.dashPath,
+      hasLoaded: false
+    }
+
     let size = getStackBreakpt(mediaStack, isZoomed)
 
-    const hasLoaded = mediaIsVid || !!size
+    const hasLoaded = !mediaIsVid || !!size
 
     if (mediaIsVid && mediaStack !== posterStack)
       size = isZoomed && !isMobile ? MediaSize.Max : getBreakptKey(Device.Mobile)
@@ -44,7 +51,7 @@ const PreloadMedia = forwardRef(function PreloadMedia(props: PreloadMediaProps, 
     if (!_.isEqual(newLoadState, loadState))
       setLoadState(newLoadState)
 
-    if (!mediaStack) return _.noop
+    if (!mediaStack || canUseDash && mediaIsVid) return _.noop
     const handleStackLoad = (isPoster = false) => {
       const newLoadState = getLoadState(isPoster ? posterStack : undefined)
       if (isZoomed ?? (mediaIsVid && !isPoster)) return

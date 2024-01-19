@@ -24,7 +24,13 @@ interface StyledGlobalCanvasProps {
 }
 
 const Page = ({ mediaSettings }: RouteProps) => {
-  const { canAutoPlay, defaultCanAutoPlay, vidLoadData, preloadManager } = mediaSettings
+  const {
+    canAutoPlay,
+    canUseDash,
+    vidLoadData,
+    preloadManager,
+    ...rest
+  } = mediaSettings
   const location = useLocation()
   const prevLocation = usePrevious(location)
   const engine = usePhysics()
@@ -103,24 +109,25 @@ const Page = ({ mediaSettings }: RouteProps) => {
           canvasStates={{ engine }}
           $menuIsShown={menuIsShown} />
         <Outlet context={{
-          canAutoPlay,
-          defaultCanAutoPlay,
           canvasRef,
           canvasStates,
-          shouldHideGyro,
           zoomMedia,
+          shouldHideGyro,
           headerRef,
-          handleZoomMedia,
+          canAutoPlay,
+          canUseDash,
           preloadManager,
-          handleGyroButtonClick
+          handleZoomMedia,
+          handleGyroButtonClick,
+          ...rest
         } satisfies MobileContextProps} />
       </AnimationContainer>
-      <VidLoadContainer
+      {!canUseDash && <VidLoadContainer
         isMobile={true}
         verbosity={mediaSettings.preloadManager.verbosity}
         hasZoomedMedia={!!zoomMedia}
         vidLoadData={vidLoadData}
-        canAutoPlay={canAutoPlay} />
+        canAutoPlay={canAutoPlay} />}
     </Container>
   )
 }

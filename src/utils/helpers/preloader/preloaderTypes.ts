@@ -3,7 +3,7 @@ import type { coorTuple } from '../../utilTypes'
 import type { MediaStack } from './mediaStack'
 import type { loadVidType } from './preloadTypes'
 import type { Fallback, MediaSize } from './preloadUtils'
-import type useCanAutoPlay from '../../../hooks/useCanAutoPlay'
+import type useVideoTest from '../../../hooks/useVideoTest'
 import type useIsMobile from '../../../hooks/useIsMobile'
 
 export interface MediaStackProps<K extends string> {
@@ -17,7 +17,7 @@ export interface MediaStackProps<K extends string> {
 
 export type PreloaderConfig = {
   isMobile: ReturnType<typeof useIsMobile>
-} & ReturnType<typeof useCanAutoPlay>
+} & ReturnType<typeof useVideoTest>
 
 export type MediaBreakpts = Breakpt | Fallback | MediaSize.Max
 export type PreloadMediaStack = MediaStack<MediaBreakpts>

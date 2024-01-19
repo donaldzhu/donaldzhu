@@ -4,10 +4,10 @@ import ZoomMedia from './zoomMedia'
 import type { ForwardedRef } from 'react'
 import type { WorkVidProps } from './mediaTypes'
 
-const WorkVid = forwardRef((
+const WorkVid = forwardRef(function WorkVid(
   props: WorkVidProps,
   ref: ForwardedRef<HTMLVideoElement>
-) => {
+) {
   return <ZoomMedia {...props} ref={ref} preload='false' type={MediaFileType.Video} />
 })
 
