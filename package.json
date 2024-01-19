@@ -10,6 +10,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@uidotdev/usehooks": "^2.3.1",
+    "dashjs": "^4.7.3",
     "easing-utils": "^1.0.0",
     "html-react-parser": "^4.2.1",
     "kalmanjs": "^1.1.0",

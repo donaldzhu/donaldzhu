@@ -43,6 +43,7 @@
       { "argsIgnorePattern": "^_" }
     ],
     "react-hooks/exhaustive-deps": "off",
+    "react/display-name": "warn",
     "import/no-named-as-default": "off",
     "import/order": [
       "error",
