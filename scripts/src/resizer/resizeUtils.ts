@@ -1,3 +1,4 @@
+import path from 'path'
 import { joinPaths } from '../utils'
 import { Device, THUMBNAIL_FOLDER, WORK_FOLDER } from './constants'
 import { Metadata } from './lib/resizerTypes'
@@ -29,5 +30,13 @@ export const getPaths = (device: Device) => {
     SIZE_PATH: joinPaths(SIZE_ROOT, device),
     NATIVE_DIMENSIONS_PATH: joinPaths(NATIVE_DIMENSIONS_ROOT, `${device}.json`)
   }
-
 }
+
+export const replaceExt = (fileName: string, newExt: string) => {
+  const ext = path.extname(fileName)
+  const regex = new RegExp(`${ext}$`)
+  return fileName.replace(regex, '.' + newExt)
+}
+
+export const roundEven = (number: number) => 2 * Math.round(number / 2)
+export const isOdd = (number: number) => !!(number % 2)

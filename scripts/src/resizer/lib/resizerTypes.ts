@@ -28,6 +28,8 @@ export enum VidExtension {
   Mp4 = 'mp4'
 }
 
+export const vidExportTypes = [VidExtension.Webm, VidExtension.Mp4]
+
 export const imgExtensionRegex = Object.values(ImgExtension).join('|')
 export const vidExtensionRegex = Object.values(VidExtension).join('|')
 
@@ -61,7 +63,6 @@ export interface BreakptResizeConfig {
   fileName: string
   fileEntry: string
   isPoster?: boolean
-  debugOnly?: boolean
 }
 
 export interface ResizePosterConfig {

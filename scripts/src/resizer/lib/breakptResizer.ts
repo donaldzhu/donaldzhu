@@ -3,9 +3,10 @@ import sharp from 'sharp'
 import ffmpeg from 'fluent-ffmpeg'
 import _ from 'lodash'
 import { globSync } from 'glob'
-import { BreakptConfig, BreakptResizeConfig, BreakptResizerConfig, MediaType, ImgExtension, MediaOptions, Metadata, vidExtensionRegex } from './resizerTypes'
+import { BreakptConfig, BreakptResizerConfig, MediaType, ImgExtension, MediaOptions, Metadata, vidExportTypes, BreakptResizeConfig } from './resizerTypes'
 import { mkdirIfNone, joinPaths, removeFile, parseMediaType, getExtension, mkdir } from '../../utils'
 import { POSTER_SUBFOLDER } from './constants'
+import { replaceExt, roundEven } from '../resizeUtils'
 
 class BreakpointResizer<K extends string> {
   source: string
@@ -53,6 +54,7 @@ class BreakpointResizer<K extends string> {
   init() {
     if (this.debugOnly) return
     this.createDestDir()
+    this.createDestVidDir()
     this.createDestPosterDir()
   }
 
@@ -90,18 +92,21 @@ class BreakpointResizer<K extends string> {
   async resizeVideo(vidObj: ffmpeg.FfmpegCommand, {
     metadata, fileName, fileEntry
   }: BreakptResizeConfig) {
-    const { width } = metadata
     const resizeWidth = this.getResizeWidth(fileEntry, metadata)
+
     if (
       !resizeWidth ||
       !this.shouldExport(MediaType.Video)
     ) return
 
-    if (width > resizeWidth) vidObj.size(`${resizeWidth}x?`)
-
-    const outFile = this.joinDestPath(fileName)
-    this.prepareDest(outFile)
-    vidObj.output(outFile)
+    for (let i = 0; i < vidExportTypes.length; i++) {
+      const type = vidExportTypes[i]
+      const outFile = replaceExt(this.joinDestPath(type, fileName), type)
+      this.prepareDest(outFile)
+      vidObj
+        .size(`${resizeWidth}x?`)
+        .output(outFile)
+    }
   }
 
   private joinDestPath(...subpaths: (string | undefined)[]) {
@@ -113,6 +118,11 @@ class BreakpointResizer<K extends string> {
       !this.exportTypes.length &&
       this.removeFilesAtDest
     )
+  }
+
+  private createDestVidDir() {
+    if (this.shouldExport(MediaType.Video) && this.hasVid)
+      vidExportTypes.forEach(type => this.createDestDir(type))
   }
 
   private createDestPosterDir() {
@@ -140,14 +150,13 @@ class BreakpointResizer<K extends string> {
     if (!sizePercentage) return
 
     const resizedWidth = Math.round(sizePercentage * breakptWidth)
-    return Math.min(resizedWidth, maxWidth)
+    return roundEven(Math.min(resizedWidth, maxWidth, width))
   }
 
   private getPosterPath(fileName: string) {
-    const regex = new RegExp(`(${vidExtensionRegex})$`)
     return joinPaths(
       POSTER_SUBFOLDER,
-      fileName.replace(regex, ImgExtension.Webp)
+      replaceExt(fileName, ImgExtension.Webp)
     )
   }
 
