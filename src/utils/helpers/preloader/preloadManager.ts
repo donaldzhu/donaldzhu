@@ -67,7 +67,7 @@ class PreloadManager {
     this.config = config
     this.loadVid = loadVid
 
-    this.verbosity = Verbosity.Quiet
+    this.verbosity = Verbosity.Minimal
     this.currentStartTime = Date.now()
     this.logTime = true
 

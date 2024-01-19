@@ -1,7 +1,9 @@
 import _ from 'lodash'
+import dashjs from 'dashjs'
 import { joinPaths, keysToObject, typedKeys, validateString } from '../../commonUtils'
 import { ImgPreloader, VidPreloader } from './mediaPreloader'
 import { MediaFileType, VidExt, getPosterFile } from './preloadUtils'
+import type { MediaPlayerClass } from 'dashjs'
 import type { coorTuple } from '../../utilTypes'
 import type { MediaStackProps } from './preloaderTypes'
 
@@ -16,8 +18,10 @@ export class MediaStack<K extends string> {
   stack: Record<K, ImgPreloader | VidPreloader>
   posters: MediaStack<K> | undefined
   dashPath: string | undefined
+
   canPlayWebm: boolean
   canUseDash: boolean
+  dashLoader: MediaPlayerClass | null
 
   constructor(props: MediaStackProps<K> & {
     fileType: MediaFileType
@@ -46,6 +50,7 @@ export class MediaStack<K extends string> {
       joinPaths(this.filePath, 'dash', this.vidName, 'dash.mpd')
     this.canPlayWebm = config.canPlayWebm
     this.canUseDash = config.canUseDash
+    this.dashLoader = this.canUseDash ? dashjs.MediaPlayer().create() : null
 
     const Preloader = this.isImg ? ImgPreloader : VidPreloader
     this.stack = keysToObject<K, ImgPreloader | VidPreloader>(this.breakpts, size =>
@@ -71,7 +76,10 @@ export class MediaStack<K extends string> {
   }
 
   preload(breakpt: K | undefined, isPoster = false) {
-    if (!this.isImg && this.canUseDash) return Promise.resolve()
+    if (!this.isImg && this.canUseDash) {
+      this.preloadDash()
+      return Promise.resolve()
+    }
 
     if (!breakpt) return Promise.resolve()
     const stack = isPoster ? this.posters?.stack : this.stack
@@ -82,6 +90,14 @@ export class MediaStack<K extends string> {
         console.log(this)
         throw err
       })
+  }
+
+  private preloadDash() {
+    if (!this.dashLoader) return
+    this.dashLoader.initialize(undefined, this.dashPath, false)
+    this.dashLoader.updateSettings({
+      streaming: { cacheInitSegments: true }
+    })
   }
 
   onFinished() {
@@ -104,5 +120,3 @@ export class MediaStack<K extends string> {
   }
 
 }
-
-
