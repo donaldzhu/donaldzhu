@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPaths = exports.getResizeCallback = exports.getNoSizesError = void 0;
+exports.isOdd = exports.roundEven = exports.replaceExt = exports.getPaths = exports.getResizeCallback = exports.getNoSizesError = void 0;
+var path_1 = __importDefault(require("path"));
 var utils_1 = require("../utils");
 var constants_1 = require("./constants");
 var getNoSizesError = function (sizes, sizeType) {
@@ -31,3 +35,13 @@ var getPaths = function (device) {
     };
 };
 exports.getPaths = getPaths;
+var replaceExt = function (fileName, newExt) {
+    var ext = path_1.default.extname(fileName);
+    var regex = new RegExp("".concat(ext, "$"));
+    return fileName.replace(regex, '.' + newExt);
+};
+exports.replaceExt = replaceExt;
+var roundEven = function (number) { return 2 * Math.round(number / 2); };
+exports.roundEven = roundEven;
+var isOdd = function (number) { return !!(number % 2); };
+exports.isOdd = isOdd;

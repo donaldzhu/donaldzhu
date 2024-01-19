@@ -54,6 +54,7 @@ var glob_1 = require("glob");
 var resizerTypes_1 = require("./resizerTypes");
 var utils_1 = require("../../utils");
 var constants_1 = require("./constants");
+var resizeUtils_1 = require("../resizeUtils");
 var BreakpointResizer = (function () {
     function BreakpointResizer(source, config, _a) {
         var _this = this;
@@ -78,6 +79,7 @@ var BreakpointResizer = (function () {
         if (this.debugOnly)
             return;
         this.createDestDir();
+        this.createDestVidDir();
         this.createDestPosterDir();
     };
     BreakpointResizer.prototype.resizeImg = function (imgObj, _a) {
@@ -117,18 +119,20 @@ var BreakpointResizer = (function () {
     BreakpointResizer.prototype.resizeVideo = function (vidObj, _a) {
         var metadata = _a.metadata, fileName = _a.fileName, fileEntry = _a.fileEntry;
         return __awaiter(this, void 0, void 0, function () {
-            var width, resizeWidth, outFile;
+            var resizeWidth, i, type, outFile;
             return __generator(this, function (_b) {
-                width = metadata.width;
                 resizeWidth = this.getResizeWidth(fileEntry, metadata);
                 if (!resizeWidth ||
                     !this.shouldExport("video"))
                     return [2];
-                if (width > resizeWidth)
-                    vidObj.size("".concat(resizeWidth, "x?"));
-                outFile = this.joinDestPath(fileName);
-                this.prepareDest(outFile);
-                vidObj.output(outFile);
+                for (i = 0; i < resizerTypes_1.vidExportTypes.length; i++) {
+                    type = resizerTypes_1.vidExportTypes[i];
+                    outFile = (0, resizeUtils_1.replaceExt)(this.joinDestPath(type, fileName), type);
+                    this.prepareDest(outFile);
+                    vidObj
+                        .size("".concat(resizeWidth, "x?"))
+                        .output(outFile);
+                }
                 return [2];
             });
         });
@@ -147,6 +151,11 @@ var BreakpointResizer = (function () {
         }
         (0, utils_1.mkdir)(this.joinDestPath.apply(this, subpaths), !this.exportTypes.length &&
             this.removeFilesAtDest);
+    };
+    BreakpointResizer.prototype.createDestVidDir = function () {
+        var _this = this;
+        if (this.shouldExport("video") && this.hasVid)
+            resizerTypes_1.vidExportTypes.forEach(function (type) { return _this.createDestDir(type); });
     };
     BreakpointResizer.prototype.createDestPosterDir = function () {
         if (this.shouldExportPoster && this.hasVid)
@@ -170,11 +179,10 @@ var BreakpointResizer = (function () {
         if (!sizePercentage)
             return;
         var resizedWidth = Math.round(sizePercentage * breakptWidth);
-        return Math.min(resizedWidth, maxWidth);
+        return (0, resizeUtils_1.roundEven)(Math.min(resizedWidth, maxWidth, width));
     };
     BreakpointResizer.prototype.getPosterPath = function (fileName) {
-        var regex = new RegExp("(".concat(resizerTypes_1.vidExtensionRegex, ")$"));
-        return (0, utils_1.joinPaths)(constants_1.POSTER_SUBFOLDER, fileName.replace(regex, resizerTypes_1.ImgExtension.Webp));
+        return (0, utils_1.joinPaths)(constants_1.POSTER_SUBFOLDER, (0, resizeUtils_1.replaceExt)(fileName, resizerTypes_1.ImgExtension.Webp));
     };
     BreakpointResizer.prototype._shouldExportType = function (type) {
         return !this.debugOnly && (this.exportTypes.length === 0 ||

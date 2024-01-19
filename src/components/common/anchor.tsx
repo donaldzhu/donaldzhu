@@ -7,24 +7,28 @@ import { appendQuery, validateString } from '../../utils/commonUtils'
 import { desktopQuery } from '../../utils/queryUtil'
 import type { LinkProps } from 'react-router-dom'
 
-const Anchor = forwardRef<HTMLAnchorElement, LinkProps & { noQuery?: boolean }>(
-  ({ to, target, noQuery, ...props }, ref) => {
-    const linkIsExternal = to && typeof to === 'string' && to.match(/^(https|www)/)
-    const { pid } = usePortfolioQuery()
+const Anchor = forwardRef<HTMLAnchorElement, LinkProps & { noQuery?: boolean }>(function Anchor({
+  to,
+  target,
+  noQuery,
+  ...props
+}, ref) {
+  const linkIsExternal = to && typeof to === 'string' && to.match(/^(https|www)/)
+  const { pid } = usePortfolioQuery()
 
-    target ||= (linkIsExternal ? '_blank' : '_self')
-    to += `${validateString(
-      (pid && !linkIsExternal && !noQuery),
-      appendQuery(['pid', pid])
-    )}`
+  target ||= (linkIsExternal ? '_blank' : '_self')
+  to += `${validateString(
+    (pid && !linkIsExternal && !noQuery),
+    appendQuery(['pid', pid])
+  )}`
 
-    return <HoverLink
-      {...props}
-      ref={ref}
-      to={to}
-      target={target}
-      rel='noreferrer' />
-  })
+  return <HoverLink
+    {...props}
+    ref={ref}
+    to={to}
+    target={target}
+    rel='noreferrer' />
+})
 
 const HoverLink = styled(Link)`
   @media ${desktopQuery} {

@@ -11,7 +11,10 @@ interface HeaderProps {
   handleClick: (shouldShow?: boolean) => void
 }
 
-const Header = forwardRef<HTMLHeadElement, HeaderProps>(({ isShown, handleClick }, ref) => {
+const Header = forwardRef<HTMLHeadElement, HeaderProps>(function Header({
+  isShown,
+  handleClick
+}, ref) {
   return (
     <Container ref={ref}>
       <HomeLink to='/' onClick={() => handleClick(false)}>D<b>ZHU</b></HomeLink>

@@ -21,7 +21,7 @@ import type { TypedPreloadStack } from '../../../utils/helpers/preloader/preload
 interface StyledZoomMediaProps {
   $width: string | number | undefined
 }
-const ZoomMedia = forwardRef((props: ZoomMediaProps, ref: MediaRef) => {
+const ZoomMedia = forwardRef(function ZoomMedia(props: ZoomMediaProps, ref: MediaRef) {
   const { handleZoomMedia, zoomMedia, defaultCanAutoPlay, preloadManager } =
     useOutletContext<DesktopContextProps | MobileContextProps>()
   let { src } = props

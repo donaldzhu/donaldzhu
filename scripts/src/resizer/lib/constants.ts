@@ -3,6 +3,7 @@ import { DashConfig } from './resizerTypes'
 export const DASH_SUBFOLDER = 'dash'
 export const POSTER_SUBFOLDER = 'posters'
 
+
 export const DASH_CONFIGS: DashConfig[] = [
   {
     size: 240,

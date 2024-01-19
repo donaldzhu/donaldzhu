@@ -8,18 +8,23 @@ const Img = forwardRef<
   HTMLImageElement,
   DetailedHTMLProps<
     ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement
-  > & ImgProps>(
-    ({ src, alt, hasLoaded, aspectRatio, ...props }, ref) => {
-      return (
-        <StyledImg
-          src={src}
-          alt={alt}
-          ref={ref}
-          $hasLoaded={hasLoaded}
-          $aspectRatio={aspectRatio}
-          {...props} />
-      )
-    })
+  > & ImgProps>(function Img({
+    src,
+    alt,
+    hasLoaded,
+    aspectRatio,
+    ...props
+  }, ref) {
+    return (
+      <StyledImg
+        src={src}
+        alt={alt}
+        ref={ref}
+        $hasLoaded={hasLoaded}
+        $aspectRatio={aspectRatio}
+        {...props} />
+    )
+  })
 
 const StyledImg = styled.img<StyledMediaProps>`
   ${mixins.media}
