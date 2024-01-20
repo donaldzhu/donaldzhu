@@ -36,7 +36,7 @@
     "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "parse": "node scripts/dist/scripts/parseDescription/parseDescription",
+    "parse": "node scripts/dist/scripts/src/parseDescription/parseDescription",
     "resize": "npm run tsc-script; node scripts/dist/scripts/src/resizer/index",
     "upload-assets": "sh scripts/upload-assets.sh",
     "watch:parse": "nodemon -q -e html --watch src/data/work/descriptions -x \"npm run parse\"",

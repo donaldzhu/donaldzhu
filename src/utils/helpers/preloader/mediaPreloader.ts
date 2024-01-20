@@ -1,5 +1,5 @@
 import { MediaFileType } from './preloadUtils'
-import type { loadVidType } from './preloadTypes'
+import type { loadNativeVidType } from './preloadTypes'
 import type { PreloaderConfig } from './preloaderTypes'
 
 abstract class MediaPreloader {
@@ -33,28 +33,28 @@ export class ImgPreloader extends MediaPreloader {
 
 export class VidPreloader extends MediaPreloader {
   private config: PreloaderConfig
-  private loadVid: loadVidType
+  private loadNativeVid: loadNativeVidType
   private threshold: number
   loadCount: number
 
   constructor(
     src: string,
     config: PreloaderConfig,
-    loadVid: loadVidType
+    loadNativeVid: loadNativeVidType
   ) {
     super(src, MediaFileType.Video)
     this.config = config
-    this.loadVid = loadVid
+    this.loadNativeVid = loadNativeVid
     this.loadCount = 0
     this.threshold = config.isMobile ? 0.125 : 0.25
   }
 
   preload() {
     if (this.loadCount >= 2 || !this.config.canAutoPlay) return Promise.resolve()
-    const result = this.loadVid(this.src, this.threshold)
+    const result = this.loadNativeVid(this.src, this.threshold)
       .then(() => {
         this.loadCount++
-        this.threshold = 1
+        this.threshold = this.config.isMobile ? 0.25 : 0.5
         this.isLoaded = true
       })
     return result

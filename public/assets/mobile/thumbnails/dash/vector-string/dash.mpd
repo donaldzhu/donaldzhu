@@ -64,7 +64,5 @@
 				</SegmentTemplate>
 			</Representation>
 		</AdaptationSet>
-		<AdaptationSet id="1" contentType="audio" startWithSAP="1" segmentAlignment="true" bitstreamSwitching="true">
-		</AdaptationSet>
 	</Period>
 </MPD>

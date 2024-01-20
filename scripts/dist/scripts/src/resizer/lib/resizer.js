@@ -346,7 +346,7 @@ var Resizer = (function () {
                 gopSize = 100;
                 destFolderPath = (0, utils_1.joinPaths)(this.destination, constants_1.DASH_SUBFOLDER, name);
                 (0, utils_1.mkdir)(destFolderPath, this.removeFilesAtDest);
-                command = "\n      nice -n 10 ffmpeg -i ".concat(this.joinSrcPath(fileName), " -y \\\n        -c:v libx264 -preset veryslow -sc_threshold 0 \\\n        -keyint_min ").concat(gopSize, " -g ").concat(gopSize, " -hide_banner -loglevel warning \\\n        ").concat(qualityFilters, " \\\n        -use_template 1 -use_timeline 1 -seg_duration 4 \\\n        -adaptation_sets \"id=0,streams=v id=1\" \\\n        -f dash ").concat(destFolderPath, "/dash.mpd\n    ");
+                command = "\n      nice -n 10 ffmpeg -i ".concat(this.joinSrcPath(fileName), " -y \\\n        -c:v libx264 -preset veryslow -sc_threshold 0 \\\n        -keyint_min ").concat(gopSize, " -g ").concat(gopSize, " -hide_banner -loglevel warning \\\n        ").concat(qualityFilters, " \\\n        -use_template 1 -use_timeline 1 -seg_duration 4 \\\n        -adaptation_sets \"id=0,streams=v\" \\\n        -f dash ").concat(destFolderPath, "/dash.mpd\n    ");
                 (0, child_process_1.execSync)(command);
                 return [2];
             });

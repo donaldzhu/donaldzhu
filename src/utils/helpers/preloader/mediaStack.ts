@@ -1,14 +1,16 @@
 import _ from 'lodash'
 import dashjs from 'dashjs'
+import Video from '../video/video'
 import { joinPaths, keysToObject, typedKeys, validateString } from '../../commonUtils'
 import { ImgPreloader, VidPreloader } from './mediaPreloader'
 import { MediaFileType, VidExt, getPosterFile } from './preloadUtils'
-import type { MediaPlayerClass } from 'dashjs'
 import type { coorTuple } from '../../utilTypes'
 import type { MediaStackProps } from './preloaderTypes'
 
 export class MediaStack<K extends string> {
   private listeners: (() => void)[]
+  private canPlayWebm: boolean
+  private dashLoaded: boolean
 
   filePath: string
   fileName: string
@@ -18,10 +20,6 @@ export class MediaStack<K extends string> {
   stack: Record<K, ImgPreloader | VidPreloader>
   posters: MediaStack<K> | undefined
   dashPath: string | undefined
-
-  canPlayWebm: boolean
-  canUseDash: boolean
-  dashLoader: MediaPlayerClass | null
 
   constructor(props: MediaStackProps<K> & {
     fileType: MediaFileType
@@ -33,7 +31,7 @@ export class MediaStack<K extends string> {
       breakpts,
       config,
       nativeDimension,
-      loadVid,
+      loadNativeVid,
     } = props
     this.fileName = fileName
     this.fileType = fileType
@@ -47,14 +45,13 @@ export class MediaStack<K extends string> {
         fileType: MediaFileType.Image,
       })
     this.dashPath = this.isImg ? undefined :
-      joinPaths(this.filePath, 'dash', this.vidName, 'dash.mpd')
+      joinPaths(this.filePath, 'dash', validateString(this.vidName), 'dash.mpd')
     this.canPlayWebm = config.canPlayWebm
-    this.canUseDash = config.canUseDash
-    this.dashLoader = this.canUseDash ? dashjs.MediaPlayer().create() : null
+    this.dashLoaded = false
 
     const Preloader = this.isImg ? ImgPreloader : VidPreloader
     this.stack = keysToObject<K, ImgPreloader | VidPreloader>(this.breakpts, size =>
-      new Preloader(this.getPath(size), config, loadVid) as ImgPreloader | VidPreloader)
+      new Preloader(this.getPath(size), config, loadNativeVid) as ImgPreloader | VidPreloader)
     this.listeners = []
   }
 
@@ -68,7 +65,7 @@ export class MediaStack<K extends string> {
   }
 
   private get vidName() {
-    return this.fileName.replace(/\.(mp4|webm)$/, '')
+    return this.isImg ? null : this.fileName.replace(/\.(mp4|webm)$/, '')
   }
 
   private get isImg() {
@@ -76,12 +73,12 @@ export class MediaStack<K extends string> {
   }
 
   preload(breakpt: K | undefined, isPoster = false) {
-    if (!this.isImg && this.canUseDash) {
-      this.preloadDash()
-      return Promise.resolve()
+    if (!breakpt) return Promise.resolve()
+    if (!this.isImg && Video.canUseDash && !isPoster) {
+      if (breakpt === 'max') return Promise.resolve()
+      else return this.preloadDash()
     }
 
-    if (!breakpt) return Promise.resolve()
     const stack = isPoster ? this.posters?.stack : this.stack
     if (!stack) return Promise.resolve()
     return stack[breakpt].preload()
@@ -93,10 +90,43 @@ export class MediaStack<K extends string> {
   }
 
   private preloadDash() {
-    if (!this.dashLoader) return
-    this.dashLoader.initialize(undefined, this.dashPath, false)
-    this.dashLoader.updateSettings({
-      streaming: { cacheInitSegments: true }
+    if (this.dashLoaded) return Promise.resolve()
+
+    return new Promise<void>(resolve => {
+      const player = dashjs.MediaPlayer().create()
+      const dashThreshold = 4
+      const vidEndTolerence = 0.5
+      const bufferEvent = 'bufferLevelUpdated'
+      player.updateSettings({
+        streaming: {
+          cacheInitSegments: true,
+          buffer: {
+            bufferTimeAtTopQuality: dashThreshold,
+            bufferTimeAtTopQualityLongForm: dashThreshold,
+            longFormContentDurationThreshold: 300,
+          }
+        }
+      })
+
+      const bufferListener = () => {
+        const dashMetrics = player.getDashMetrics()
+        const bufferLevel = dashMetrics.getCurrentBufferLevel('video')
+        if (
+          bufferLevel >= dashThreshold ||
+          Math.abs(bufferLevel - player.duration()) <= vidEndTolerence
+        ) onBuffered()
+      }
+
+      const onBuffered = () => {
+        player.off(bufferEvent, bufferListener)
+        setTimeout(player.destroy, 0)
+        this.dashLoaded = true
+        resolve()
+      }
+
+      player.on(bufferEvent, bufferListener)
+      player.initialize(document.createElement('video'), this.dashPath, false)
+      player.preload()
     })
   }
 

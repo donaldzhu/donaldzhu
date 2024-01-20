@@ -5,14 +5,16 @@ import mobileDimensions from '../../../data/media/nativeDimensions/mobile.json'
 import workData from '../../../data/work/workData.json'
 import { getDevice, filterFalsy, joinPaths, loopObject, typedKeys, validateString } from '../../commonUtils'
 import breakpts from '../../../data/breakpoints'
+import Video from '../video/video'
 import { getBreakptKey } from '../../queryUtil'
 import { Device } from '../../breakptTypes'
 import { MediaStack } from './mediaStack'
 import { MediaFileType, getPreviewBreakptKey, MediaSize, MediaType, fileIsImg, Verbosity, Fallback } from './preloadUtils'
-import PreloadQueuer, { type PreloadStack } from './preloadQueuer'
+import PreloadQueuer from './preloadQueuer'
+import type { PreloadStack } from './preloadQueuer'
 import type { MediaBreakpts, PreloaderConfig } from './preloaderTypes'
 import type { coorTuple } from '../../utilTypes'
-import type { loadVidType } from './preloadTypes'
+import type { loadNativeVidType } from './preloadTypes'
 
 const LOG_COLORS = {
   [MediaSize.Fallback]: 'yellow',
@@ -48,34 +50,38 @@ interface DecorateLogConfig {
 }
 
 class PreloadManager {
-  private loadVid: loadVidType
+  private loadNativeVid: loadNativeVidType
   private breakpts: MediaBreakpts[]
   private preloadQueuer: PreloadQueuer<PreloadManagerStack, MediaBreakpts>
   private currentPreloadName: PreloadName | undefined
+  private currentStartTime: number
+  private logTime: boolean
 
   config: PreloaderConfig
 
   enabled: boolean
   loadLocal: boolean
-
   imgPreloaded: boolean
-  verbosity: Verbosity
-  currentStartTime: number
-  logTime: boolean
 
-  constructor(config: PreloaderConfig, loadVid: loadVidType) {
+  verbosity: Verbosity
+
+  constructor(config: PreloaderConfig, loadNativeVid: loadNativeVidType) {
     this.config = config
-    this.loadVid = loadVid
+    this.loadNativeVid = loadNativeVid
+
+    this.enabled = true
+    this.loadLocal = true
+    this.imgPreloaded = false
 
     this.verbosity = Verbosity.Minimal
     this.currentStartTime = Date.now()
     this.logTime = true
 
-    this.enabled = true
-    this.loadLocal = true
     this.preloadQueuer = new PreloadQueuer<PreloadManagerStack, MediaBreakpts>({
-      queueInterval: 0
+      queueInterval: 0,
+      queueCount: 3
     })
+
     this.breakpts = [
       ...typedKeys(breakpts),
       Fallback.MobileFallback,
@@ -84,7 +90,6 @@ class PreloadManager {
     ]
 
     this.currentPreloadName = undefined
-    this.imgPreloaded = false
 
     if (!this.enabled || process.env.NODE_ENV === 'production') {
       this.verbosity = Verbosity.Quiet
@@ -132,7 +137,7 @@ class PreloadManager {
           breakpts: this.breakpts,
           config: this.config,
           nativeDimension,
-          loadVid: this.loadVid
+          loadNativeVid: this.loadNativeVid
         }),
         device,
         category: PreloadCategory.Thumbnail,
@@ -154,7 +159,7 @@ class PreloadManager {
             breakpts: this.breakpts,
             config: this.config,
             nativeDimension,
-            loadVid: this.loadVid
+            loadNativeVid: this.loadNativeVid
           }),
           device,
           category: PreloadCategory.WorkPage,
@@ -176,8 +181,10 @@ class PreloadManager {
       this.config.isMobile ? undefined :
         this.preloadAllPages(MediaSize.Max),
     ]).then(() => {
-      this.logFinished(false)
       this.currentPreloadName = undefined
+      if (Video.canUseDash)
+        return this.logFinished(true)
+      this.logFinished(false)
       this.preloadRemainingVid()
     }).catch(() =>
       this.logAborted()
@@ -209,8 +216,10 @@ class PreloadManager {
       this.config.isMobile ? undefined :
         this.preloadAllPages(MediaSize.Max, pageIdToLoad),
     ]).then(() => {
-      this.logFinished(false)
       this.currentPreloadName = undefined
+      if (Video.canUseDash)
+        return this.logFinished(true)
+      this.logFinished(false)
       this.preloadRemainingVid()
     }).catch(() =>
       this.logAborted()
@@ -238,8 +247,7 @@ class PreloadManager {
     excludeId?: string | null,
     isFullVid?: boolean
   ) {
-    if (!size)
-      return () => Promise.resolve(false)
+    if (!size) return () => Promise.resolve(false)
     const preloadType = (type: MediaType) => ({
       run: () => this.preloadQueuer.addToSubqueue(
         filterFalsy(_.pull(this.sortedPageIds, excludeId))
@@ -307,7 +315,8 @@ class PreloadManager {
   }
 
   private preloadRemainingVid() {
-    if (!this.config.canAutoPlay) return () => Promise.resolve(false)
+    if (!this.config.canAutoPlay)
+      return () => Promise.resolve(false)
     return this.preloadQueuer.addToSubqueue([
       {
         run: () => this.preloadQueuer.addToSubqueue([

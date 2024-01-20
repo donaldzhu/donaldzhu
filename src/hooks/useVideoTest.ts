@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
-import dashjs from 'dashjs'
 import { addEventListener } from '../utils/reactUtils'
 
 const useVideoTest = () => {
@@ -11,7 +10,6 @@ const useVideoTest = () => {
 
   const video = document.createElement('video')
   const canPlayWebm = video.canPlayType('video/webm; codecs="vp8, vorbis"') === 'probably'
-  const canUseDash = dashjs.supportsMediaSource()
 
   useEffect(() => {
     const video = document.createElement('video')
@@ -33,7 +31,7 @@ const useVideoTest = () => {
     return () => listenerRemovers.forEach(remover => remover())
   }, [canAutoPlay])
 
-  return { canAutoPlay, defaultCanAutoPlay, canPlayWebm, canUseDash }
+  return { canAutoPlay, defaultCanAutoPlay, canPlayWebm }
 }
 
 export default useVideoTest

@@ -1,7 +1,7 @@
 import type { Breakpt } from '../../breakptTypes'
 import type { coorTuple } from '../../utilTypes'
 import type { MediaStack } from './mediaStack'
-import type { loadVidType } from './preloadTypes'
+import type { loadNativeVidType } from './preloadTypes'
 import type { Fallback, MediaSize } from './preloadUtils'
 import type useVideoTest from '../../../hooks/useVideoTest'
 import type useIsMobile from '../../../hooks/useIsMobile'
@@ -12,7 +12,7 @@ export interface MediaStackProps<K extends string> {
   breakpts: K[],
   config: PreloaderConfig,
   nativeDimension: coorTuple
-  loadVid: loadVidType
+  loadNativeVid: loadNativeVidType
 }
 
 export type PreloaderConfig = {

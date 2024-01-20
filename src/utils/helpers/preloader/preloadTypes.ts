@@ -1,1 +1,1 @@
-export type loadVidType = (src: string, threshold: number) => Promise<void>
+export type loadNativeVidType = (src: string, threshold: number) => Promise<void>

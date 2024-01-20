@@ -1,23 +1,28 @@
+import _ from 'lodash'
 import { arrayify, filterFalsy } from '../commonUtils'
 import type { queueArgType, queueFunctionType } from '../utilTypes'
 
 class Queue<T = any> {
-  private currentId: undefined | number
+  private currentId: undefined | string
   private interval: undefined | number
-  queueList: queueFunctionType<T>[]
-  capacity: number
+  private capacity: number
+  private queueList: queueFunctionType<T>[]
+  private initialQueueCount: undefined | number
 
   constructor(interval?: number, capacity = 1) {
     this.currentId = undefined
     this.interval = interval
     this.queueList = []
+    this.initialQueueCount = undefined
     this.capacity = capacity
   }
 
   create(queueArgs: queueArgType<T>) {
     this.queueList = filterFalsy(arrayify(queueArgs))
+    this.initialQueueCount = this.queueList.length
+    const id = this.currentId = _.uniqueId()
+
     return new Promise<void>((resolve, reject) => {
-      const id = this.currentId = Date.now()
       const serve = () => {
         const queueArg = this.queueList[0]
         if (!queueArg) return
@@ -30,18 +35,24 @@ class Queue<T = any> {
         const result = queueFunction ? queueFunction() : undefined
         const promise = this.promisify<T | undefined>(result)
 
-        promise
-          .then(res => {
-            const callback = typeof queueArg === 'object' ? queueArg.callback : null
-            if (callback) callback(res)
-            if (id !== this.currentId) return reject('Queue has been aborted.')
-            if (this.queueList.length) {
-              if (this.interval !== undefined)
-                setTimeout(() => serve(), this.interval)
-              else serve()
-            } else resolve()
-          })
-          .catch(err => console.warn(err))
+        promise.then(res => {
+          const callback = typeof queueArg === 'object' ? queueArg.callback : null
+          if (callback) callback(res)
+          if (id !== this.currentId || !this.initialQueueCount)
+            return reject('Queue has been aborted.')
+
+          this.initialQueueCount--
+          if (this.queueList.length) {
+            if (this.interval !== undefined)
+              setTimeout(() => serve(), this.interval)
+            else serve()
+          } else if (
+            this.initialQueueCount === 0 ||
+            !this.capacity ||
+            this.capacity === 1
+          ) resolve()
+
+        }).catch(err => console.warn(err))
       }
 
       for (let i = 0; i < this.capacity; i++)
@@ -57,6 +68,19 @@ class Queue<T = any> {
 
   abort() {
     this.currentId = undefined
+    this.initialQueueCount = undefined
+  }
+
+  push(...queueItems: queueFunctionType<T>[]) {
+    if (!this.currentId || !this.initialQueueCount) return
+    this.queueList.push(...queueItems)
+    this.initialQueueCount += queueItems.length
+  }
+
+  pop() {
+    if (!this.currentId || !this.initialQueueCount) return
+    this.queueList.pop()
+    this.initialQueueCount--
   }
 }
 

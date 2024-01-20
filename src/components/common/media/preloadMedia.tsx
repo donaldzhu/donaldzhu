@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { forwardRef, useEffect, useState } from 'react'
-import dashjs from 'dashjs'
+import Video from '../../../utils/helpers/video/video'
 import { MediaFileType, MediaSize, getFallbackKey, getStackBreakpt } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
 import useIsMobile from '../../../hooks/useIsMobile'
@@ -15,7 +15,7 @@ const PreloadMedia = forwardRef(function PreloadMedia(props: PreloadMediaProps, 
   const posterStack = rest.type === MediaFileType.Image ? undefined :
     mediaStack?.posters
   const isMobile = useIsMobile()
-  const canUseDash = dashjs.supportsMediaSource()
+  const canUseDash = Video.canUseDash
 
   const mediaIsVid = rest.type === MediaFileType.Video
   const getLoadState = (mediaStack = stackData?.stack) => {
@@ -77,6 +77,10 @@ const PreloadMedia = forwardRef(function PreloadMedia(props: PreloadMediaProps, 
         handlePosterStackLoad
       )
   }, [mediaStack, fallbackPath])
+
+  // useEffect(() => {
+  //   console.log(mediaStack)
+  // }, [])
 
   const [nativeW, nativeH] = mediaStack?.nativeDimension ?? []
 

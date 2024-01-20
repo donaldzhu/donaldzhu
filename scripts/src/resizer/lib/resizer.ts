@@ -219,7 +219,7 @@ class Resizer<K extends string> {
         -keyint_min ${gopSize} -g ${gopSize} -hide_banner -loglevel warning \\
         ${qualityFilters} \\
         -use_template 1 -use_timeline 1 -seg_duration 4 \\
-        -adaptation_sets "id=0,streams=v id=1" \\
+        -adaptation_sets "id=0,streams=v" \\
         -f dash ${destFolderPath}/dash.mpd
     `
 

@@ -1,3 +1,4 @@
+import dashjs from 'dashjs'
 import Queue from '../queue'
 import { validateRef } from '../../typeUtils'
 import type { MutableRefObject } from 'react'
@@ -99,14 +100,15 @@ class Video {
     }
 
     // future === isPlayCommand caught by higher filters
+    // TODO: check if new changes work
     if (!this.playQueueList.length) {
       this.playQueueList.push(queueCommand)
-      this.playQueue.queueList.push(queueCommand)
+      this.playQueue.push(queueCommand)
       return
     }
 
     this.playQueueList.pop()
-    this.playQueue.queueList.pop()
+    this.playQueue.pop()
   }
 
   private setFuturePlayState(isPlayCommand: boolean) {
@@ -116,6 +118,10 @@ class Video {
   private onPlayStateSettle() {
     this.playQueue = undefined
     this.playState.isSettled = true
+  }
+
+  static get canUseDash() {
+    return dashjs.supportsMediaSource()
   }
 }
 

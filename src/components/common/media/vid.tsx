@@ -35,7 +35,7 @@ const Vid = forwardRef<
     ...props
   }, ref) {
     const context = useOutletContext<DesktopContextProps | MobileContextProps>()
-    const canUseDash = context ? context.canUseDash : dashjs.supportsMediaSource()
+    const canUseDash = Video.canUseDash
     const vidCanAutoPlay: boolean | undefined =
       !!canAutoPlay || context?.canAutoPlay
 

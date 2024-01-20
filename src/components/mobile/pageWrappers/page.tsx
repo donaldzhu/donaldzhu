@@ -14,6 +14,7 @@ import Header from '../header'
 import Menu from '../menu'
 import VidLoadContainer from '../../common/media/vidLoadContainer'
 import ZoomedMedia from '../../common/media/zoomedMedia'
+import Video from '../../../utils/helpers/video/video'
 import type { Device } from '../../../utils/breakptTypes'
 import type { MobileContextProps } from './pageTypes'
 import type { RouteProps } from '../../routeTypes'
@@ -26,7 +27,6 @@ interface StyledGlobalCanvasProps {
 const Page = ({ mediaSettings }: RouteProps) => {
   const {
     canAutoPlay,
-    canUseDash,
     vidLoadData,
     preloadManager,
     ...rest
@@ -115,14 +115,13 @@ const Page = ({ mediaSettings }: RouteProps) => {
           shouldHideGyro,
           headerRef,
           canAutoPlay,
-          canUseDash,
           preloadManager,
           handleZoomMedia,
           handleGyroButtonClick,
           ...rest
         } satisfies MobileContextProps} />
       </AnimationContainer>
-      {!canUseDash && <VidLoadContainer
+      {!Video.canUseDash && <VidLoadContainer
         isMobile={true}
         verbosity={mediaSettings.preloadManager.verbosity}
         hasZoomedMedia={!!zoomMedia}

@@ -3,25 +3,24 @@ import { MediaType } from './lib/resizerTypes'
 import resize from './resize'
 
 const desktopConfig = {
-  resizeThumbnails: false,
-  resizeWork: true,
+  resizeThumbnails: true,
+  resizeWork: false,
   exportPages: [],
   exportBreakpts: [],
-  exportTypes: []
+  exportTypes: [MediaType.Dash]
 }
 
-const mobileConfig = {
-  resizeThumbnails: true,
-  resizeWork: true,
-  exportPages: [],
-  exportBreakpts: [],
-  exportTypes: []
-}
+// const mobileConfig = {
+//   resizeThumbnails: true,
+//   resizeWork: true,
+//   exportPages: [],
+//   exportBreakpts: [],
+//   exportTypes: []
+// }
 
 
 const run = async () => {
   await resize(Device.Desktop, desktopConfig)
-  await resize(Device.Mobile, mobileConfig)
 }
 
 run()

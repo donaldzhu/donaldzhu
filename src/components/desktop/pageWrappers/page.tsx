@@ -8,6 +8,7 @@ import AutoPlayPopUp from '../../common/autoPlayPopUp'
 import ZoomedMedia from '../../common/media/zoomedMedia'
 import LeftContainer from '../leftContainer/leftContainer'
 import VidLoadContainer from '../../common/media/vidLoadContainer'
+import Video from '../../../utils/helpers/video/video'
 import type { Device } from '../../../utils/breakptTypes'
 import type { ReactNode } from 'react'
 import type { RequiredZoomMediaProps, handleZoomMediaType } from '../../common/media/mediaTypes'
@@ -19,7 +20,6 @@ const TypedGlobalCanvas = GlobalCanvas<Device.Desktop>
 const Page = ({ mediaSettings }: RouteProps) => {
   const {
     canAutoPlay,
-    canUseDash,
     vidLoadData,
     preloadManager,
     ...rest
@@ -64,12 +64,11 @@ const Page = ({ mediaSettings }: RouteProps) => {
         setSidebar,
         zoomMedia,
         canAutoPlay,
-        canUseDash,
         preloadManager,
         handleZoomMedia,
         ...rest
       } satisfies DesktopContextProps} />
-      {!canUseDash && <VidLoadContainer
+      {!Video.canUseDash && <VidLoadContainer
         vidLoadData={vidLoadData}
         canAutoPlay={canAutoPlay} />}
     </>
