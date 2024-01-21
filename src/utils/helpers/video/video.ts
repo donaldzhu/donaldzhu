@@ -68,12 +68,12 @@ class Video {
     // future === isPlayCommand caught by higher filters
     if (!this.playQueueList.length) {
       this.playQueueList.push(queueCommand)
-      this.playQueue.queueList.push(queueCommand)
+      this.playQueue.push(queueCommand)
       return
     }
 
     this.playQueueList.pop()
-    this.playQueue.queueList.pop()
+    this.playQueue.pop()
   }
 
   private setFuturePlayState(isPlayCommand: boolean) {
