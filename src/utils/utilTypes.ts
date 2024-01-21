@@ -16,6 +16,11 @@ export enum BrowserType {
   Safari = 'Safari'
 }
 
+export const enum Environment {
+  Production = 'production',
+  Development = 'development'
+}
+
 type optionalQueueFunctionType<T = void> = queueFunctionType<T> | Falsey
 
 export type queueArgType<T = void> = optionalQueueFunctionType<T> | optionalQueueFunctionType<T>[]

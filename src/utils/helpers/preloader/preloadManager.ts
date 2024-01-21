@@ -7,6 +7,7 @@ import { getDevice, filterFalsy, joinPaths, loopObject, typedKeys, validateStrin
 import breakpts from '../../../data/breakpoints'
 import Video from '../video/video'
 import { getBreakptKey } from '../../queryUtil'
+import { Environment } from '../../utilTypes'
 import { Device } from '../../breakptTypes'
 import { MediaStack } from './mediaStack'
 import { MediaFileType, getPreviewBreakptKey, MediaSize, MediaType, fileIsImg, Verbosity, Fallback } from './preloadUtils'
@@ -61,6 +62,7 @@ class PreloadManager {
 
   enabled: boolean
   loadLocal: boolean
+  loadFromEnv: Environment
   imgPreloaded: boolean
 
   verbosity: Verbosity
@@ -71,6 +73,7 @@ class PreloadManager {
 
     this.enabled = true
     this.loadLocal = true
+    this.loadFromEnv = Environment.Development
     this.imgPreloaded = false
 
     this.verbosity = Verbosity.Minimal
@@ -96,8 +99,10 @@ class PreloadManager {
       this.logTime = false
     }
 
-    if (process.env.NODE_ENV === 'production')
+    if (process.env.NODE_ENV === 'production') {
       this.loadLocal = false
+      this.loadFromEnv = Environment.Production
+    }
 
     if (this.enabled) {
       this.createThumbnailStacks(Device.Desktop)
@@ -391,9 +396,7 @@ class PreloadManager {
   }
 
   get assetPath() {
-    // const storageRoot= 'https://storage.googleapis.com/donaldzhu-portfolio/'
-    // const storageRoot = 'https://donaldzhu-portfolio-us-east.s3.us-east-2.amazonaws.com/'
-    const storageRoot = 'https://raw.githubusercontent.com/donaldzhu/portfolio-static-files/main/'
+    const storageRoot = `https://raw.githubusercontent.com/donaldzhu/portfolio-static-files-${this.loadFromEnv}/main/`
     return validateString(!this.loadLocal, storageRoot) + 'assets'
   }
 

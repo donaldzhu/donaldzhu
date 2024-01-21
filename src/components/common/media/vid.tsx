@@ -125,6 +125,7 @@ const Vid = forwardRef<
     return (
       <StyledVid
         muted
+        playsInline
         src={!canUseDash ? src : undefined}
         loop={loop}
         ref={mergedRef}
