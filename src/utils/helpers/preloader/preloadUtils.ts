@@ -84,7 +84,7 @@ export const getStackBreakpt = (
 ) => getHighestBreakpt(isZoomed, ...mediaStack.loadedSizes)
 
 
-export const getFallbackKey = () => getIsMobile() ?
+export const getFallbackKey = () => getIsMobile(false) ?
   Fallback.MobileFallback : Fallback.DesktopFallback
 
 // TODO

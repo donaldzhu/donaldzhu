@@ -4,6 +4,7 @@ import mixins from '../../../styles/mixins'
 import type { DetailedHTMLProps, ImgHTMLAttributes } from 'react'
 import type { ImgProps, StyledMediaProps } from './mediaTypes'
 
+
 const Img = forwardRef<
   HTMLImageElement,
   DetailedHTMLProps<
@@ -13,6 +14,7 @@ const Img = forwardRef<
     alt,
     hasLoaded,
     aspectRatio,
+    isZoomed,
     ...props
   }, ref) {
     return (
@@ -22,6 +24,7 @@ const Img = forwardRef<
         ref={ref}
         $hasLoaded={hasLoaded}
         $aspectRatio={aspectRatio}
+        $isZoomed={isZoomed}
         {...props} />
     )
   })

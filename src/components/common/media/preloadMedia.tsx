@@ -16,13 +16,14 @@ const PreloadMedia = forwardRef(function PreloadMedia(props: PreloadMediaProps, 
   const isVid = rest.type === MediaFileType.Video
   const canUseDash = VidHelper.canUseDash
 
+  const getLoadedBreakpt = () => getStackBreakpt(mediaStack, isZoomed)
   const getMediaPath = () => {
     if (canUseDash && isVid && mediaStack.dashPath)
       return mediaStack.dashPath
     const size = isVid ? (
       (isZoomed && isDesktop) ? MediaSize.Max : getBreakptKey(mediaStack.device)
     ) : (
-      getStackBreakpt(mediaStack, isZoomed) ?? getFallbackKey()
+      getLoadedBreakpt() ?? getFallbackKey()
     )
     return mediaStack.stack[size].src
   }
@@ -41,15 +42,16 @@ const PreloadMedia = forwardRef(function PreloadMedia(props: PreloadMediaProps, 
     mediaStack.addLoadListener(() => {
       if (!isVid) setPath(getMediaPath())
       else setPosterPath(getPosterPath())
-    }), []
+    }), [mediaStack]
   )
 
   return <Media
     {...rest}
     src={path}
     poster={posterPath}
-    hasLoaded={true}
+    hasLoaded={!!getLoadedBreakpt()}
     aspectRatio={nativeW / nativeH}
+    isZoomed={isZoomed}
     ref={ref} />
 })
 

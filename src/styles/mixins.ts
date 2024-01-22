@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { loopObject } from '../utils/commonUtils'
+import { loopObject, validateString } from '../utils/commonUtils'
 import { desktopQuery } from '../utils/queryUtil'
 import { em } from '../utils/sizeUtils'
 import { fontParams } from './fonts'
@@ -38,7 +38,7 @@ const flex = (
   justifyContent = 'initial',
   isInLine = false
 ) => `
-  display: ${isInLine ? 'inline-' : ''}flex;
+  display: ${validateString(isInLine, 'inline-')}flex;
   justify-content: ${justifyContent};
   align-items: ${alignItems};
 `
@@ -88,9 +88,9 @@ const underline = (thickness?: string, offset?: string) => `
 `
 const textMono = () => fontVar({ MONO: fontParams.monoVariable })
 
-const media = ({ $aspectRatio, $hasLoaded }: MediaProps) => `
-  ${$aspectRatio ? `aspect-ratio: ${$aspectRatio};` : ''}
-  background-color: ${$hasLoaded ? '' : 'rgb(240,240,240)'};
+const media = ({ $aspectRatio, $hasLoaded, $isZoomed }: MediaProps) => `
+  ${validateString($aspectRatio, `aspect-ratio: ${$aspectRatio};`)}
+  background-color: ${validateString(!$hasLoaded, $isZoomed ? 'white' : 'rgb(240,240,240)')};
   border-radius: ${domSizes.desktop.media.borderRadius.css};
 `
 

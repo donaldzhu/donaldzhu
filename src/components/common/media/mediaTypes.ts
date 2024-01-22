@@ -6,11 +6,13 @@ import type { TypedPreloadStack } from '../../../utils/helpers/preloader/preload
 interface MediaProps {
   hasLoaded?: boolean
   aspectRatio?: string | number
+  isZoomed?: boolean
 }
 
 export interface StyledMediaProps {
   $hasLoaded?: boolean
   $aspectRatio?: string | number
+  $isZoomed?: boolean
 }
 
 export type ImgProps = MediaProps
@@ -19,6 +21,7 @@ export type VidProps = {
   alt?: string | undefined,
   canAutoPlay?: boolean | undefined
   useNativeControl?: boolean
+  currentTime?: number
 } & MediaProps
 
 export enum VideoIframeType {
@@ -57,6 +60,7 @@ type ZoomMediaBaseProps<R extends boolean = false> = R extends true ? {
   isToolTip?: boolean,
   stackData: TypedPreloadStack
   getCurrentTime: () => number
+  currentTime?: boolean
   maxSize?: string | number | undefined
 } : {
   src: string,
@@ -64,6 +68,7 @@ type ZoomMediaBaseProps<R extends boolean = false> = R extends true ? {
   isToolTip?: boolean,
   stackData?: PreloadMediaStack
   getCurrentTime?: () => number
+  currentTime?: boolean
   maxSize?: string | number
 }
 

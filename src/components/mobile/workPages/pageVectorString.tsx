@@ -60,7 +60,7 @@ const PageVectorString = ({ WorkInfo }: WorkPageContentProps) => {
         </SmallText>
       </TextContainer>
       <RowContainer ref={translateImgRef}>
-        <WorkImg src={`translate/${translateImgSrc}.webp`} />
+        <WorkImg src={`translate/${translateImgSrc}.webp`} key={translateImgSrc} />
       </RowContainer>
       <SketchContainer>
         <SketchCanvas {...drawVectorStringMobile({ imgSrcRef: translateImgSrcRef })} />

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { domSizes } from '../../../styles/sizes'
 import { addEventListener } from '../../../utils/reactUtils'
@@ -10,6 +10,7 @@ import useIsMobile from '../../../hooks/useIsMobile'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 import useWindowSize from '../../../hooks/useWindowSize'
 import useMediaIsRendered from '../../../hooks/useMediaIsRendered'
+import VidHelper from '../../../utils/helpers/video/vidHelper'
 import PreloadMedia from './preloadMedia'
 import LoadingContainer from './loadingContainer'
 import type { RequiredZoomMediaProps, handleZoomMediaType } from './mediaTypes'
@@ -28,9 +29,11 @@ interface StyledZoomedMediaProps {
 }
 
 const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
+  const [hasLoadedGracefully, setHasLoadedGracefully] = useState(false)
   const zoomedMediaRef = useRef<HTMLImageElement | HTMLVideoElement>(null)
   const isRendered = useMediaIsRendered(zoomedMediaRef)
   const isMobile = useIsMobile()
+  const canUseDash = VidHelper.canUseDash
   const { width, height } = useWindowSize()
 
   useEffect(() => {
@@ -49,9 +52,13 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
     if (!zoomMediaIsVid(currentMedia))
       return removeKeydownListener
 
-    if (!isMobile) currentMedia.currentTime =
-      zoomMedia.getCurrentTime()
-    currentMedia.play()
+    if (!canUseDash) {
+      if (!isMobile) currentMedia.currentTime =
+        zoomMedia.getCurrentTime()
+      currentMedia.play()
+    }
+
+    setTimeout(() => { setHasLoadedGracefully(true) }, 500)
     return removeKeydownListener
   }, [])
 
@@ -81,8 +88,10 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
         alt={alt}
         ref={zoomedMediaRef}
         isZoomed={true}
-        autoPlay={false} />
+        autoPlay={canUseDash}
+        currentTime={!isMobile ? zoomMedia.getCurrentTime() : undefined} />
       {
+        hasLoadedGracefully &&
         isMobile &&
         type === MediaFileType.Video &&
         !isRendered &&
@@ -104,7 +113,7 @@ const ZoomedContainer = styled(PopUpContainer) <StyledZoomedMediaProps>`
       aspect-ratio: ${validateString($aspectRatio)};
     `}
     object-fit: contain;
-    background-color: ${({ $isRendered }) => validateString(!$isRendered, 'white')};
+    ${({ $isRendered }) => validateString(!$isRendered, 'background: white;')}
   }
 `
 

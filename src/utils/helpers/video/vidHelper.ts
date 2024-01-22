@@ -63,7 +63,7 @@ class VidHelper {
           this.dashPlayerRef.current[isInit ? 'on' : 'off']('canPlay', callback)
       }
 
-      else this.vidRef.current[
+      else if (validateRef(this.vidRef)) this.vidRef.current[
         isInit ? 'addEventListener' : 'removeEventListener'
       ]('canplay', callback)
     }
@@ -114,7 +114,6 @@ class VidHelper {
     }
 
     // future === isPlayCommand caught by higher filters
-    // TODO: check if new changes work
     if (!this.playQueueList.length) {
       this.playQueueList.push(queueCommand)
       this.playQueue.push(queueCommand)

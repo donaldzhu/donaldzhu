@@ -29,6 +29,8 @@ const Vid = forwardRef<
     loop = true,
     aspectRatio,
     autoPlay = true,
+    currentTime,
+    isZoomed,
     canAutoPlay,
     useNativeControl,
     ...props
@@ -45,6 +47,8 @@ const Vid = forwardRef<
 
     const playerRef = useRef<MediaPlayerClass | null>(null)
     const playerInitilizedRef = useRef(false)
+    const playerSeekedRef = useRef(false)
+    const zoomSeekEnabled = false
     const shouldControlVid = () =>
       !useNativeControl &&
       (!canUseDash || playerInitilizedRef.current)
@@ -92,7 +96,7 @@ const Vid = forwardRef<
       if (!canUseDash || !src) return _.noop
       if (!validateRef(mergedRef)) throw noRefError('video ref')
       const player = playerRef.current = dashjs.MediaPlayer().create()
-      player.initialize(mergedRef.current, src, false)
+      player.initialize(mergedRef.current, src, isZoomed)
       playerInitilizedRef.current = true
 
       const updateMaxBitrate = () => {
@@ -115,6 +119,9 @@ const Vid = forwardRef<
                 audio: -1,
                 video: maxBitrateInfo.bitrate / 1000
               },
+            },
+            buffer: {
+              flushBufferAtTrackSwitch: true
             }
           }
         })
@@ -123,9 +130,17 @@ const Vid = forwardRef<
       player.on('streamInitialized', updateMaxBitrate)
       const removeResizeListener = addEventListener(window, 'resize', updateMaxBitrate)
 
+      if (isZoomed && zoomSeekEnabled) player.on('playbackStarted', () => {
+        if (currentTime && !playerSeekedRef.current) {
+          playerSeekedRef.current = true
+          player.seek(currentTime)
+        }
+      })
+
       return () => {
         player.destroy()
         playerInitilizedRef.current = false
+        playerSeekedRef.current = false
         removeResizeListener()
       }
     }, [])
@@ -140,6 +155,7 @@ const Vid = forwardRef<
         poster={poster}
         $hasLoaded={!!poster || canPlay}
         $aspectRatio={aspectRatio}
+        $isZoomed={isZoomed}
         autoPlay={useNativeControl && (canAutoPlay !== false && autoPlay)}
         {...props}>
         {alt}
@@ -148,7 +164,7 @@ const Vid = forwardRef<
   })
 
 const StyledVid = styled.video<StyledMediaProps>`
-  ${(props) => mixins.media(props)}
+  ${mixins.media}
 `
 
 export default Vid
