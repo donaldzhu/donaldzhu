@@ -48,6 +48,8 @@ export enum Verbosity {
   Diagnostic,
 }
 
+export const POSTER_SUBFOLDER = 'posters'
+
 const orderedBreakpts = [
   Fallback.MobileFallback,
   Fallback.DesktopFallback,

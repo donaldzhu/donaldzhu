@@ -1,13 +1,13 @@
-import { forwardRef, useEffect, useRef } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
 import { useIntersectionObserver } from '@uidotdev/usehooks'
 import { useOutletContext } from 'react-router-dom'
 import styled from 'styled-components'
 import dashjs from 'dashjs'
 import _ from 'lodash'
 import mixins from '../../../styles/mixins'
-import Video from '../../../utils/helpers/video/video'
+import VidHelper from '../../../utils/helpers/video/vidHelper'
 import useForwardedRef from '../../../hooks/useForwaredRef'
-import { validateRef } from '../../../utils/typeUtils'
+import { noRefError, validateRef } from '../../../utils/typeUtils'
 import useMemoRef from '../../../hooks/useMemoRef'
 import useMergedRef from '../../../hooks/useMergedRef'
 import { addEventListener } from '../../../utils/reactUtils'
@@ -27,7 +27,6 @@ const Vid = forwardRef<
     alt,
     poster,
     loop = true,
-    hasLoaded,
     aspectRatio,
     autoPlay = true,
     canAutoPlay,
@@ -35,9 +34,10 @@ const Vid = forwardRef<
     ...props
   }, ref) {
     const context = useOutletContext<DesktopContextProps | MobileContextProps>()
-    const canUseDash = Video.canUseDash
+    const canUseDash = VidHelper.canUseDash
     const vidCanAutoPlay: boolean | undefined =
       !!canAutoPlay || context?.canAutoPlay
+    const [canPlay, setCanPlay] = useState(false)
 
     const forwardedRef = useForwardedRef(ref)
     const [mediaRef, entry] = useIntersectionObserver<HTMLVideoElement>({ threshold: 0 })
@@ -49,42 +49,48 @@ const Vid = forwardRef<
       !useNativeControl &&
       (!canUseDash || playerInitilizedRef.current)
 
-    const video = useMemoRef(() => {
+    const vidHelperRef = useMemoRef(() => {
       if (useNativeControl) return
-      if (!validateRef(mergedRef)) throw new Error('Video’s ref.current is unexpectedly null')
-      return new Video(
+      if (!validateRef(mergedRef)) throw noRefError('video ref')
+      return new VidHelper(
         mergedRef,
         playerRef,
         canUseDash,
-        vidCanAutoPlay,
-        playerInitilizedRef
+        vidCanAutoPlay
       )
     }, [])
 
     useEffect(() => {
-      if (!validateRef(video)) return _.noop
-      video.current.canAutoPlay = vidCanAutoPlay
+      return vidHelperRef.current?.onVidCanPlay(
+        () => setCanPlay(true)
+      ) ?? _.noop
+    }, [vidHelperRef, playerRef.current])
+
+    useEffect(function onCanAutoPlayChange() {
+      if (!validateRef(vidHelperRef)) return _.noop
+      const vidHelper = vidHelperRef.current
+      vidHelper.canAutoPlay = vidCanAutoPlay
 
       if (!shouldControlVid()) return _.noop
 
-      if (vidCanAutoPlay) video.current.play()
-      else video.current.pause()
+      if (vidCanAutoPlay) vidHelper.play()
+      else vidHelper.pause()
     }, [vidCanAutoPlay, playerInitilizedRef.current])
 
-    useEffect(() => {
+    useEffect(function intersectionToggle() {
       if (
         !shouldControlVid() ||
-        !validateRef(video) ||
+        !validateRef(vidHelperRef) ||
         !entry
       ) return _.noop
 
-      if (!entry.isIntersecting) video.current.pause()
-      else video.current?.play()
+      if (!entry.isIntersecting) vidHelperRef.current.pause()
+      else vidHelperRef.current?.play()
     }, [entry])
 
-    useEffect(() => {
+    useEffect(function dashSetup() {
       if (!canUseDash || !src) return _.noop
-      if (!validateRef(mergedRef)) throw new Error('Video’s ref.current is unexpectedly null')
+      if (!validateRef(mergedRef)) throw noRefError('video ref')
       const player = playerRef.current = dashjs.MediaPlayer().create()
       player.initialize(mergedRef.current, src, false)
       playerInitilizedRef.current = true
@@ -105,7 +111,10 @@ const Vid = forwardRef<
         if (maxBitrateInfo) player.updateSettings({
           streaming: {
             abr: {
-              maxBitrate: { audio: -1, video: maxBitrateInfo.bitrate / 1000 },
+              maxBitrate: {
+                audio: -1,
+                video: maxBitrateInfo.bitrate / 1000
+              },
             }
           }
         })
@@ -121,7 +130,6 @@ const Vid = forwardRef<
       }
     }, [])
 
-
     return (
       <StyledVid
         muted
@@ -130,7 +138,7 @@ const Vid = forwardRef<
         loop={loop}
         ref={mergedRef}
         poster={poster}
-        $hasLoaded={hasLoaded}
+        $hasLoaded={canPlay}
         $aspectRatio={aspectRatio}
         autoPlay={useNativeControl && (canAutoPlay !== false && autoPlay)}
         {...props}>

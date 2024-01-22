@@ -7,7 +7,7 @@ import type { BrowserType, CoorObject, CoorObject3D, coorTuple } from './utilTyp
 // string
 export const capitalize = <T extends string>(string: T) => string.charAt(0)
   .toUpperCase() + string.slice(1) as Capitalize<T>
-export const joinPaths = (...paths: string[]) => paths.filter(p => p).join('/')
+export const joinPaths = (...paths: (string | Falsey)[]) => paths.filter(p => p).join('/')
 
 export function validateString(string: string): string
 export function validateString<T>(validator: T, string?: string): string

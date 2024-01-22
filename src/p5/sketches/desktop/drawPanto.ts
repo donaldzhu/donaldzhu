@@ -5,7 +5,7 @@ import { loopObject } from '../../../utils/commonUtils'
 import ElemRect from '../../../utils/helpers/rect/elemRect'
 import { intersectTwoCircles, parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
 import { getVw } from '../../../utils/sizeUtils'
-import { validateRef } from '../../../utils/typeUtils'
+import { noRefError, validateRef } from '../../../utils/typeUtils'
 import config from '../../configs/stroke'
 import Brush from '../../helpers/brush/brush'
 import FlatBrush from '../../helpers/brush/flatBrush'
@@ -52,8 +52,7 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
   let lastHoverTimeStamp: number | undefined
 
   const setup = (p5: p5) => {
-    if (!validateRef(placeholderRef))
-      throw new Error('Pantograph sketch has no placeholder ref.')
+    if (!validateRef(placeholderRef)) throw noRefError('pantograph placeholder')
 
     placeholder = new ElemRect(placeholderRef)
     paddedPlaceholder = new ElemRect(placeholderRef, sketchSizes.desktop.panto.hoverPadding.value)

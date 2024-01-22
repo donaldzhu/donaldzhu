@@ -1,36 +1,35 @@
 import dashjs from 'dashjs'
+import _ from 'lodash'
 import Queue from '../queue'
-import { validateRef } from '../../typeUtils'
+import { noRefError, validateRef } from '../../typeUtils'
 import type { MutableRefObject } from 'react'
 import type { MediaPlayerClass } from 'dashjs'
 
-class Video {
+class VidHelper {
   private playQueue: Queue | undefined
   private playQueueList: VideoPlayCommand[]
-  vidRef: MutableRefObject<HTMLVideoElement>
-  dashPlayerRef: MutableRefObject<MediaPlayerClass | null>
-  useDash: boolean
-  canAutoPlay: boolean | undefined
-  playerInitializedRef: MutableRefObject<boolean>
-
-  playState: {
+  private vidRef: MutableRefObject<HTMLVideoElement>
+  private dashPlayerRef: MutableRefObject<MediaPlayerClass | null>
+  private useDash: boolean
+  private playState: {
     current: boolean
     future: boolean
     isSettled: boolean
   }
+
+  canAutoPlay: boolean | undefined
 
   constructor(
     vidRef: MutableRefObject<HTMLVideoElement>,
     dashPlayerRef: MutableRefObject<MediaPlayerClass | null>,
     useDash: boolean,
     canAutoPlay: boolean | undefined,
-    playerInitializedRef: MutableRefObject<boolean>
   ) {
     this.vidRef = vidRef
     this.dashPlayerRef = dashPlayerRef
+
     this.useDash = useDash
     this.canAutoPlay = canAutoPlay
-    this.playerInitializedRef = playerInitializedRef
 
     this.playQueue = undefined
     this.playQueueList = []
@@ -56,6 +55,22 @@ class Video {
         this.dashPlayerRef.current.pause()
     }
     else this.nativePause()
+  }
+
+  onVidCanPlay<T>(callback: () => T) {
+    const toggleListener = (isInit: boolean) => {
+      if (this.useDash) {
+        if (validateRef(this.dashPlayerRef))
+          this.dashPlayerRef.current[isInit ? 'on' : 'off']('canPlay', callback)
+      }
+
+      else this.vidRef.current[
+        isInit ? 'addEventListener' : 'removeEventListener'
+      ]('canplay', callback)
+    }
+
+    toggleListener(true)
+    return () => toggleListener(false)
   }
 
   private nativePlay() {
@@ -134,4 +149,4 @@ class VideoPlayCommand {
   }
 }
 
-export default Video
+export default VidHelper

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { loopObject } from '../utils/commonUtils'
 import { P5Event } from '../utils/p5Utils'
-import { validateRef } from '../utils/typeUtils'
+import { noRefError, validateRef } from '../utils/typeUtils'
 import type p5 from 'p5'
 import type { Device } from '../utils/breakptTypes'
 import type {
@@ -23,8 +23,7 @@ const useCanvas = <T extends Device>(
   const outletContext = useOutletContext<GlobalCanvasStates<T>>()
   const { canvasRef, canvasStates } = _.defaults(config ?? {}, outletContext)
 
-  if (!validateRef(canvasRef))
-    throw new Error('No canvasRef is passed to canvas.')
+  if (!validateRef(canvasRef)) throw noRefError('canvasRef')
 
   const { setup, draw, cleanup, ...callbacks } = useMemo(createSketch, [])
 

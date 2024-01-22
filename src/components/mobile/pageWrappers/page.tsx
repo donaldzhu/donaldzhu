@@ -14,7 +14,7 @@ import Header from '../header'
 import Menu from '../menu'
 import VidLoadContainer from '../../common/media/vidLoadContainer'
 import ZoomedMedia from '../../common/media/zoomedMedia'
-import Video from '../../../utils/helpers/video/video'
+import VidHelper from '../../../utils/helpers/video/vidHelper'
 import type { Device } from '../../../utils/breakptTypes'
 import type { MobileContextProps } from './pageTypes'
 import type { RouteProps } from '../../routeTypes'
@@ -121,7 +121,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
           ...rest
         } satisfies MobileContextProps} />
       </AnimationContainer>
-      {!Video.canUseDash && <VidLoadContainer
+      {!VidHelper.canUseDash && <VidLoadContainer
         isMobile={true}
         verbosity={mediaSettings.preloadManager.verbosity}
         hasZoomedMedia={!!zoomMedia}

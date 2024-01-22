@@ -1,7 +1,7 @@
 import colors from '../../../styles/colors'
 import { domSizes } from '../../../styles/sizes'
 import ElemRect from '../../../utils/helpers/rect/elemRect'
-import { validateRef } from '../../../utils/typeUtils'
+import { noRefError, validateRef } from '../../../utils/typeUtils'
 import configs from '../../configs/vector'
 import Text from '../../helpers/vector/text'
 import type p5 from 'p5'
@@ -26,7 +26,7 @@ const drawHomeIcon = ({ placeholderRef, isHoveringRef }: DrawHomeIconProps) => {
 
   const setup = (p5: p5) => {
     if (!validateRef(placeholderRef))
-      throw new Error('Home icon has no placeholder ref.')
+      throw noRefError('home icon placeholder')
     placeholder = new ElemRect(placeholderRef, -sidebarPaddingLeft)
     createVector(p5)
   }

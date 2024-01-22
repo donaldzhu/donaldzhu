@@ -8,7 +8,7 @@ import AutoPlayPopUp from '../../common/autoPlayPopUp'
 import ZoomedMedia from '../../common/media/zoomedMedia'
 import LeftContainer from '../leftContainer/leftContainer'
 import VidLoadContainer from '../../common/media/vidLoadContainer'
-import Video from '../../../utils/helpers/video/video'
+import VidHelper from '../../../utils/helpers/video/vidHelper'
 import type { Device } from '../../../utils/breakptTypes'
 import type { ReactNode } from 'react'
 import type { RequiredZoomMediaProps, handleZoomMediaType } from '../../common/media/mediaTypes'
@@ -68,7 +68,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
         handleZoomMedia,
         ...rest
       } satisfies DesktopContextProps} />
-      {!Video.canUseDash && <VidLoadContainer
+      {!VidHelper.canUseDash && <VidLoadContainer
         vidLoadData={vidLoadData}
         canAutoPlay={canAutoPlay} />}
     </>

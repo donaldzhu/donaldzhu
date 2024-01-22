@@ -5,7 +5,7 @@ import mobileDimensions from '../../../data/media/nativeDimensions/mobile.json'
 import workData from '../../../data/work/workData.json'
 import { getDevice, filterFalsy, joinPaths, loopObject, typedKeys, validateString } from '../../commonUtils'
 import breakpts from '../../../data/breakpoints'
-import Video from '../video/video'
+import VidHelper from '../video/vidHelper'
 import { getBreakptKey } from '../../queryUtil'
 import { Environment } from '../../utilTypes'
 import { Device } from '../../breakptTypes'
@@ -71,12 +71,12 @@ class PreloadManager {
     this.config = config
     this.loadNativeVid = loadNativeVid
 
-    this.enabled = true
-    this.loadLocal = true
+    this.enabled = false
+    this.loadLocal = false
     this.loadFromEnv = Environment.Development
     this.imgPreloaded = false
 
-    this.verbosity = Verbosity.Minimal
+    this.verbosity = Verbosity.Quiet
     this.currentStartTime = Date.now()
     this.logTime = true
 
@@ -139,6 +139,7 @@ class PreloadManager {
           fileName,
           filePath: joinPaths(this.assetPath, device, 'thumbnails'),
           fileType: animatedThumbnail ? MediaFileType.Video : MediaFileType.Image,
+          device,
           breakpts: this.breakpts,
           config: this.config,
           nativeDimension,
@@ -159,8 +160,9 @@ class PreloadManager {
         this.preloadQueuer.stackData.push({
           stack: new MediaStack<MediaBreakpts>({
             fileName,
-            fileType: fileIsImg(fileName) ? MediaFileType.Image : MediaFileType.Video,
             filePath: joinPaths(this.assetPath, device, 'work', pageId),
+            fileType: fileIsImg(fileName) ? MediaFileType.Image : MediaFileType.Video,
+            device,
             breakpts: this.breakpts,
             config: this.config,
             nativeDimension,
@@ -187,7 +189,7 @@ class PreloadManager {
         this.preloadAllPages(MediaSize.Max),
     ]).then(() => {
       this.currentPreloadName = undefined
-      if (Video.canUseDash)
+      if (VidHelper.canUseDash)
         return this.logFinished(true)
       this.logFinished(false)
       this.preloadRemainingVid()
@@ -222,7 +224,7 @@ class PreloadManager {
         this.preloadAllPages(MediaSize.Max, pageIdToLoad),
     ]).then(() => {
       this.currentPreloadName = undefined
-      if (Video.canUseDash)
+      if (VidHelper.canUseDash)
         return this.logFinished(true)
       this.logFinished(false)
       this.preloadRemainingVid()

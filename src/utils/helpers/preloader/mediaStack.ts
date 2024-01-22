@@ -1,51 +1,63 @@
 import _ from 'lodash'
 import dashjs from 'dashjs'
-import Video from '../video/video'
+import VidHelper from '../video/vidHelper'
 import { joinPaths, keysToObject, typedKeys, validateString } from '../../commonUtils'
+import { getBreakptKey } from '../../queryUtil'
 import { ImgPreloader, VidPreloader } from './mediaPreloader'
-import { MediaFileType, VidExt, getPosterFile } from './preloadUtils'
+import { MediaFileType, POSTER_SUBFOLDER, VidExt, getPosterFile, getPreviewBreakptKey } from './preloadUtils'
+import type { Device } from '../../breakptTypes'
 import type { coorTuple } from '../../utilTypes'
 import type { MediaStackProps } from './preloaderTypes'
 
 export class MediaStack<K extends string> {
   private listeners: (() => void)[]
   private canPlayWebm: boolean
-  private dashLoaded: boolean
 
   filePath: string
   fileName: string
   fileType: MediaFileType
+  device: Device
   breakpts: K[]
   nativeDimension: coorTuple
   stack: Record<K, ImgPreloader | VidPreloader>
   posters: MediaStack<K> | undefined
-  dashPath: string | undefined
 
-  constructor(props: MediaStackProps<K> & {
-    fileType: MediaFileType
-  }) {
+  fallback: string
+  dashPath: string | undefined
+  dashLoaded: boolean
+
+  constructor(props: MediaStackProps<K>) {
     const {
       fileName,
-      fileType,
       filePath,
+      fileType,
+      device,
       breakpts,
       config,
       nativeDimension,
       loadNativeVid,
     } = props
     this.fileName = fileName
-    this.fileType = fileType
-    this.nativeDimension = nativeDimension
     this.filePath = filePath
+    this.fileType = fileType
+    this.device = device
+    this.nativeDimension = nativeDimension
     this.breakpts = breakpts
     this.posters = this.isImg ? undefined :
       new MediaStack<K>({
         ...props,
-        fileName: joinPaths('posters', getPosterFile(fileName)),
+        fileName: joinPaths(POSTER_SUBFOLDER, getPosterFile(fileName)),
         fileType: MediaFileType.Image,
       })
+
+    this.fallback = joinPaths(
+      this.filePath,
+      getBreakptKey(this.device),
+      this.fileName
+    )
+
     this.dashPath = this.isImg ? undefined :
-      joinPaths(this.filePath, 'dash', validateString(this.vidName), 'dash.mpd')
+      joinPaths(this.filePath, 'dash', this.vidName, 'dash.mpd')
     this.canPlayWebm = config.canPlayWebm
     this.dashLoaded = false
 
@@ -74,7 +86,7 @@ export class MediaStack<K extends string> {
 
   preload(breakpt: K | undefined, isPoster = false) {
     if (!breakpt) return Promise.resolve()
-    if (!this.isImg && Video.canUseDash && !isPoster) {
+    if (!this.isImg && VidHelper.canUseDash && !isPoster) {
       if (breakpt === 'max') return Promise.resolve()
       else return this.preloadDash()
     }
@@ -121,6 +133,7 @@ export class MediaStack<K extends string> {
         player.off(bufferEvent, bufferListener)
         setTimeout(player.destroy, 0)
         this.dashLoaded = true
+        this.onFinished()
         resolve()
       }
 
