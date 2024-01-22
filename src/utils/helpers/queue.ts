@@ -29,10 +29,10 @@ class Queue<T = any> {
         this.queueList.shift()
         let queueFunction = queueArg
 
-        if (queueFunction && typeof queueFunction !== 'function')
+        if (typeof queueFunction !== 'function')
           queueFunction = queueFunction.run
 
-        const result = queueFunction ? queueFunction() : undefined
+        const result = queueFunction()
         const promise = this.promisify<T | undefined>(result)
 
         promise.then(res => {

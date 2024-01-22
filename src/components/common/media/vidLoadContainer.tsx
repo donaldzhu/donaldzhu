@@ -37,7 +37,7 @@ const VidLoadContainer = ({
     <Container>
       {!shouldPause && typedKeys(vidLoadData)
         .map(src => {
-          const { onProgress } = vidLoadData[src]
+          const { onProgress } = vidLoadData[src] ?? {}
           return <Vid
             key={src}
             src={src}

@@ -38,20 +38,20 @@ const useCanvas = <T extends Device>(
   useEffect(() => {
     const setupOnce = _.once(setup ?? _.noop)
     const drawFunction = (p5: p5) => {
-      setupOnce(p5, canvasStates ?? {})
-      if (draw) draw(p5, canvasStates ?? {})
+      setupOnce(p5, canvasStates)
+      if (draw) draw(p5, canvasStates)
       setSetupDone(true)
     }
 
     registerCallback(P5Event.draw, drawFunction)
     loopObject(callbacks, (eventName, callback) =>
       registerCallback(eventName, (p5: p5) => {
-        if (callback) callback(p5, canvasStates ?? {})
+        if (callback) callback(p5, canvasStates)
       }))
 
     return () => {
       unregisterCallbacks()
-      if (cleanup) cleanup(canvasStates ?? {})
+      if (cleanup) cleanup(canvasStates)
     }
   }, [])
 

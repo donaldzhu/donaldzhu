@@ -4,7 +4,7 @@ import VidHelper from '../video/vidHelper'
 import { joinPaths, keysToObject, typedKeys, validateString } from '../../commonUtils'
 import { getBreakptKey } from '../../queryUtil'
 import { ImgPreloader, VidPreloader } from './mediaPreloader'
-import { MediaFileType, POSTER_SUBFOLDER, VidExt, getPosterFile, getPreviewBreakptKey } from './preloadUtils'
+import { MediaFileType, POSTER_SUBFOLDER, VidExt, getPosterFile } from './preloadUtils'
 import type { Device } from '../../breakptTypes'
 import type { coorTuple } from '../../utilTypes'
 import type { MediaStackProps } from './preloaderTypes'
@@ -22,7 +22,7 @@ export class MediaStack<K extends string> {
   stack: Record<K, ImgPreloader | VidPreloader>
   posters: MediaStack<K> | undefined
 
-  fallback: string
+  fallbackPath: string
   dashPath: string | undefined
   dashLoaded: boolean
 
@@ -50,7 +50,7 @@ export class MediaStack<K extends string> {
         fileType: MediaFileType.Image,
       })
 
-    this.fallback = joinPaths(
+    this.fallbackPath = joinPaths(
       this.filePath,
       getBreakptKey(this.device),
       this.fileName
@@ -149,6 +149,7 @@ export class MediaStack<K extends string> {
 
   addLoadListener(...callback: (() => void)[]) {
     this.listeners.push(...callback)
+    return () => this.removeLoadListener(...callback)
   }
 
   removeLoadListener(...callback: (() => void)[]) {

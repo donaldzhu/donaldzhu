@@ -13,7 +13,7 @@ const usePreloadQueue = (
 ) => {
   const { preloadManager } = useOutletContext<DesktopContextProps | MobileContextProps>()
   useEffect(() => {
-    if (!setupDone || !preloadManager) return _.noop
+    if (!setupDone) return _.noop
     callback(preloadManager)
     return () => preloadManager.abort()
   }, [!!preloadManager, setupDone, ...dependencies])

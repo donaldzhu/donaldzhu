@@ -252,7 +252,7 @@ class Glyph {
       this.canvasStates &&
       validateRef(this.canvasStates.motionSettingsRef) &&
       validateRef(this.canvasStates.gimbalRef) &&
-      this.canvasStates?.gyroStatesRef?.current?.isEnabled
+      this.canvasStates.gyroStatesRef.current?.isEnabled
     ) newRotationVector = this.canvasStates.gimbalRef.current.euler
     else newRotationVector.y = 25
 

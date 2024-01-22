@@ -55,13 +55,13 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
     return removeKeydownListener
   }, [])
 
-  const { type, mediaStack, fallbackPath, alt } = zoomMedia
+  const { type, stackData, alt } = zoomMedia
 
   const maxSize = zoomMedia.maxSize ?? toPercent(domSizes[isMobile ?
     Device.Mobile : Device.Desktop].media.zoomPercentage)
 
-  const { nativeDimension } = mediaStack?.stack ?? {}
-  const aspectRatio = nativeDimension ? nativeDimension[0] / nativeDimension[1] : undefined
+  const { nativeDimension } = stackData.stack
+  const aspectRatio = nativeDimension[0] / nativeDimension[1]
   const deviceRatio = width / height
   const isWider = aspectRatio && deviceRatio && aspectRatio >= deviceRatio
   const mobileWidth = isWider ? maxSize : ''
@@ -77,8 +77,7 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
       onClick={() => handleUnzoom()}>
       <PreloadMedia
         type={type}
-        stackData={mediaStack}
-        fallbackPath={fallbackPath}
+        stackData={stackData}
         alt={alt}
         ref={zoomedMediaRef}
         isZoomed={true}

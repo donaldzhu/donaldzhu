@@ -138,7 +138,7 @@ const Vid = forwardRef<
         loop={loop}
         ref={mergedRef}
         poster={poster}
-        $hasLoaded={canPlay}
+        $hasLoaded={!!poster || canPlay}
         $aspectRatio={aspectRatio}
         autoPlay={useNativeControl && (canAutoPlay !== false && autoPlay)}
         {...props}>

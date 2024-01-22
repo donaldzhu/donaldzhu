@@ -17,8 +17,9 @@ const VideoIframe = ({
   aspectRatio,
   ...rest
 }: IframeHTMLAttributes<HTMLIFrameElement> & VideoIframeProps) => {
-  const prefix = type === VideoIframeType.Youtube ? 'https://www.youtube.com/embed/' :
-    type === VideoIframeType.Vimeo ? 'https://player.vimeo.com/video/' : ''
+  const prefix = type === VideoIframeType.Youtube ?
+    'https://www.youtube.com/embed/' :
+    'https://player.vimeo.com/video/'
   return <Iframe
     {...rest}
     src={prefix + src}

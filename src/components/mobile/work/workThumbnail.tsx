@@ -2,14 +2,12 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import { useOutletContext } from 'react-router-dom'
 import Anchor from '../../common/anchor'
-import { ImgExt, MediaFileType, VidExt } from '../../../utils/helpers/preloader/preloadUtils'
-import { joinPaths } from '../../../utils/commonUtils'
+import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 import mixins from '../../../styles/mixins'
 import { domSizes } from '../../../styles/sizes'
 import { fontLineHeights, fontSizes } from '../../../styles/fonts'
 import PreloadMedia from '../../common/media/preloadMedia'
-import { getBreakptKey } from '../../../utils/queryUtil'
-import { Device } from '../../../utils/breakptTypes'
+import { noStackDataError } from '../../../utils/typeUtils'
 import type { WorkDataInterface } from '../../desktop/work/workTypes'
 import type { MobileContextProps } from '../pageWrappers/pageTypes'
 
@@ -22,8 +20,8 @@ const WorkThumbnail = ({ data }: WorkThumbnailProps) => {
   const { preloadManager, canAutoPlay } = useOutletContext<MobileContextProps>()
   const [shouldAutoPlay] = useState(!!canAutoPlay)
 
-  const fallbackPath = joinPaths(preloadManager.assetPath, 'mobile/thumbnails', getBreakptKey(Device.Mobile), id) + '.' +
-    (animatedThumbnail ? VidExt.Mp4 : ImgExt.Webp)
+  const stackData = preloadManager.findThumbnail(id)
+  if (!stackData) throw noStackDataError('Thumbnail')
   return (
     <ThumbnailLink to={id}>
       <InfoContainer>
@@ -35,11 +33,9 @@ const WorkThumbnail = ({ data }: WorkThumbnailProps) => {
           {
             canAutoPlay:
               shouldAutoPlay &&
-              preloadManager?.imgPreloaded !== false
+              preloadManager.imgPreloaded !== false
           })}
-        stackData={!preloadManager?.enabled ? undefined :
-          preloadManager.findThumbnail(id)}
-        fallbackPath={fallbackPath}
+        stackData={stackData}
         type={animatedThumbnail ? MediaFileType.Video : MediaFileType.Image} />
     </ThumbnailLink>
   )

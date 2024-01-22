@@ -60,7 +60,6 @@ class PreloadManager {
 
   config: PreloaderConfig
 
-  enabled: boolean
   loadLocal: boolean
   loadFromEnv: Environment
   imgPreloaded: boolean
@@ -71,7 +70,6 @@ class PreloadManager {
     this.config = config
     this.loadNativeVid = loadNativeVid
 
-    this.enabled = false
     this.loadLocal = false
     this.loadFromEnv = Environment.Development
     this.imgPreloaded = false
@@ -94,7 +92,7 @@ class PreloadManager {
 
     this.currentPreloadName = undefined
 
-    if (!this.enabled || process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production') {
       this.verbosity = Verbosity.Quiet
       this.logTime = false
     }
@@ -104,12 +102,10 @@ class PreloadManager {
       this.loadFromEnv = Environment.Production
     }
 
-    if (this.enabled) {
-      this.createThumbnailStacks(Device.Desktop)
-      this.createWorkPagesStacks(Device.Desktop)
-      this.createThumbnailStacks(Device.Mobile)
-      this.createWorkPagesStacks(Device.Mobile)
-    }
+    this.createThumbnailStacks(Device.Desktop)
+    this.createWorkPagesStacks(Device.Desktop)
+    this.createThumbnailStacks(Device.Mobile)
+    this.createWorkPagesStacks(Device.Mobile)
 
     if (this.verbosity >= Verbosity.Normal) {
       console.log(
@@ -134,7 +130,7 @@ class PreloadManager {
       const { animatedThumbnail, listed, enabled } = workData.find(page => page.id === pageId) ?? {}
       if (!listed || !enabled) return
 
-      this.preloadQueuer.stackData.push({
+      this.preloadQueuer.mediaStacks.push({
         stack: new MediaStack<MediaBreakpts>({
           fileName,
           filePath: joinPaths(this.assetPath, device, 'thumbnails'),
@@ -157,7 +153,7 @@ class PreloadManager {
       desktopDimensions : mobileDimensions).work
     loopObject(nativeDimensions, (pageId, nativeDimensions) => {
       (nativeDimensions as DimensionData).forEach(([fileName, nativeDimension]) =>
-        this.preloadQueuer.stackData.push({
+        this.preloadQueuer.mediaStacks.push({
           stack: new MediaStack<MediaBreakpts>({
             fileName,
             filePath: joinPaths(this.assetPath, device, 'work', pageId),
@@ -526,7 +522,7 @@ class PreloadManager {
   findStack(searchFunction:
     (stackData: TypedPreloadStack) => boolean
   ) {
-    return this.preloadQueuer.stackData.find(searchFunction)
+    return this.preloadQueuer.mediaStacks.find(searchFunction)
   }
 
   findThumbnail(pageId: string) {

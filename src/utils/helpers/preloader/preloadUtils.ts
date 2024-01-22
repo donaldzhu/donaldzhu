@@ -72,23 +72,17 @@ export const fileIsImg = (fileName: string) => {
 export const getPosterFile = (fileName: string) =>
   fileName.replace(vidRegex, '.' + ImgExt.Webp)
 
-// export const getPreviewBreakptKey = () => {
-//   const breakpt = getBreakptKey()
-//   const breakptPairs = toPairs(breakpts)
-//   const breakptIndex = breakptPairs.findIndex(
-//     ([breakptKey]) => breakptKey === breakpt)
-//   const previewBreakptKey = breakptPairs[breakptIndex - 2][0]
-//   return (breakptIndex > 1 && previewBreakptKey === Breakpt.L) ? previewBreakptKey : undefined
-// }
+export const getHighestBreakpt = (isZoomed?: boolean, ...breakpts: typeof orderedBreakpts) => {
+  let sizes = _.chain(sortLike(breakpts, orderedBreakpts))
+  if (!isZoomed) sizes = sizes.without(MediaSize.Max)
+  return sizes.last().value() as MediaBreakpts
+}
 
 export const getStackBreakpt = (
   mediaStack: MediaStack<MediaBreakpts>,
   isZoomed?: boolean
-): string | undefined => {
-  let sizes = _.chain(sortLike(mediaStack.loadedSizes, orderedBreakpts))
-  if (!isZoomed) sizes = sizes.without(MediaSize.Max)
-  return sizes.last().value()
-}
+) => getHighestBreakpt(isZoomed, ...mediaStack.loadedSizes)
+
 
 export const getFallbackKey = () => getIsMobile() ?
   Fallback.MobileFallback : Fallback.DesktopFallback

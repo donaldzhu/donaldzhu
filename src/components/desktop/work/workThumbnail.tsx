@@ -1,11 +1,9 @@
 import { useOutletContext } from 'react-router-dom'
 import styled from 'styled-components'
-import { joinPaths } from '../../../utils/commonUtils'
-import { ImgExt, MediaFileType, VidExt } from '../../../utils/helpers/preloader/preloadUtils'
-import { getBreakptKey } from '../../../utils/queryUtil'
+import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 import Anchor from '../../common/anchor'
 import PreloadMedia from '../../common/media/preloadMedia'
-import { Device } from '../../../utils/breakptTypes'
+import { noStackDataError } from '../../../utils/typeUtils'
 import type { WorkAnchorProps } from './workTypes'
 import type { DesktopContextProps } from '../pageWrappers/pageTypes'
 
@@ -13,9 +11,8 @@ const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }: Wor
   const { title, id, animatedThumbnail } = data
   const { preloadManager } = useOutletContext<DesktopContextProps>()
 
-  const fallbackPath = '/' + joinPaths(preloadManager.assetPath, 'thumbnails', getBreakptKey(Device.Desktop), id) + '.' +
-    (animatedThumbnail ? VidExt.Webm : ImgExt.Webp)
-
+  const stackData = preloadManager.findThumbnail(id)
+  if (!stackData) throw noStackDataError('Thumbnail')
   return (
     <ThumbnailLink
       to={id}
@@ -23,10 +20,8 @@ const WorkThumbnail = ({ data, isHighlighted, highlightedRef, handleHover }: Wor
       onMouseOver={() => handleHover(title)}>
       <PreloadMedia
         {...(!animatedThumbnail ? {} :
-          { canAutoPlay: preloadManager?.imgPreloaded !== false })}
-        stackData={!preloadManager?.enabled ? undefined :
-          preloadManager.findThumbnail(id)}
-        fallbackPath={fallbackPath}
+          { canAutoPlay: preloadManager.imgPreloaded !== false })}
+        stackData={stackData}
         type={animatedThumbnail ? MediaFileType.Video : MediaFileType.Image} />
     </ThumbnailLink>
   )

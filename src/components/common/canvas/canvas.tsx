@@ -66,7 +66,7 @@ const Canvas = forwardRef<HTMLDivElement, CanvasProps & Partial<P5EventHandlers>
       }
 
       typedKeys<P5Event>(P5Event).forEach(event => {
-        if (defaultEventHandlers[event] &&
+        if (
           event !== P5Event.draw &&
           event !== P5Event.windowResized
         )

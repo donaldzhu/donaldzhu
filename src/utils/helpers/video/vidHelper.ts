@@ -1,7 +1,6 @@
 import dashjs from 'dashjs'
-import _ from 'lodash'
 import Queue from '../queue'
-import { noRefError, validateRef } from '../../typeUtils'
+import { validateRef } from '../../typeUtils'
 import type { MutableRefObject } from 'react'
 import type { MediaPlayerClass } from 'dashjs'
 

@@ -44,8 +44,7 @@ type MediaElement = HTMLImageElement | HTMLVideoElement
 export type MediaRef = ForwardedRef<MediaElement>
 
 interface PreloadMediaBaseProps {
-  stackData?: TypedPreloadStack
-  fallbackPath: string
+  stackData: TypedPreloadStack
   isZoomed?: boolean
   autoPlay?: boolean
 }
@@ -56,16 +55,14 @@ type ZoomMediaBaseProps<R extends boolean = false> = R extends true ? {
   src: string,
   width?: string,
   isToolTip?: boolean,
-  mediaStack?: TypedPreloadStack
-  fallbackPath: string
+  stackData: TypedPreloadStack
   getCurrentTime: () => number
   maxSize?: string | number | undefined
 } : {
   src: string,
   width?: string,
   isToolTip?: boolean,
-  mediaStack?: PreloadMediaStack
-  fallbackPath?: string
+  stackData?: PreloadMediaStack
   getCurrentTime?: () => number
   maxSize?: string | number
 }

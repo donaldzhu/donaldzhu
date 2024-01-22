@@ -23,7 +23,7 @@ class PreloadQueuer<T extends object, S extends string> {
 
   enabled: boolean
   isComplete: boolean
-  stackData: PreloadStack<T, S>[]
+  mediaStacks: PreloadStack<T, S>[]
 
   constructor(config?: PreloadQueuerProps) {
     const {
@@ -42,7 +42,7 @@ class PreloadQueuer<T extends object, S extends string> {
 
     this.enabled = enabled ?? true
     this.isComplete = false
-    this.stackData = []
+    this.mediaStacks = []
   }
 
   preload(
@@ -55,7 +55,7 @@ class PreloadQueuer<T extends object, S extends string> {
     sort ??= (a: PreloadStack<T, S>, b: PreloadStack<T, S>) =>
       a.stack.fileName.localeCompare(b.stack.fileName)
 
-    const filteredStacks = this.stackData.filter(stackData =>
+    const filteredStacks = this.mediaStacks.filter(stackData =>
       (
         !isPoster || stackData.stack.fileType === MediaFileType.Video
       ) && filter(stackData)

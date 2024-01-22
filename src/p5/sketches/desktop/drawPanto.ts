@@ -64,7 +64,6 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
   }
 
   const draw = (p5: p5, { hideCursorRef }: DesktopCanvasStates) => {
-    if (!hideCursorRef) throw new Error('hideCursorRef is undefined.')
     const isClearing = isClearingRef.current
     if (isClearing) clear()
 
@@ -85,7 +84,6 @@ const drawPanto = ({ isClearingRef, placeholderRef }: DrawPantoProps) => {
   }
 
   const cleanup = ({ hideCursorRef }: DesktopCanvasStates) => {
-    if (!hideCursorRef) throw new Error('hideCursorRef is undefined.')
     hideCursorRef.current = false
     // @ts-expect-error
     graphic && graphic.canvas.remove()

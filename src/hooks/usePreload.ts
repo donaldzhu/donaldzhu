@@ -10,7 +10,8 @@ interface LoadDataInterface {
 }
 
 const usePreload = (config: PreloaderConfig) => {
-  const [vidLoadData, setVidLoadData] = useState<Record<string, LoadDataInterface>>({})
+  const [vidLoadData, setVidLoadData] = useState<Record<string, LoadDataInterface | undefined>>({})
+
   const loadNativeVid = (src: string, threshold: number) => {
     if (vidLoadData[src]) return Promise.resolve()
     const loadData: Partial<LoadDataInterface> = {}
