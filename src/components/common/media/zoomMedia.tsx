@@ -22,7 +22,7 @@ interface StyledZoomMediaProps {
   $width: string | number | undefined
 }
 const ZoomMedia = forwardRef(function ZoomMedia(props: ZoomMediaProps, ref: MediaRef) {
-  const { handleZoomMedia, zoomMedia, defaultCanAutoPlay, preloadManager } =
+  const { handleZoomMedia, zoomMedia, canAutoPlay, defaultCanAutoPlay, preloadManager } =
     useOutletContext<DesktopContextProps | MobileContextProps>()
   let { src } = props
   const { maxSize, width, isToolTip, ...rest } = props
@@ -82,7 +82,9 @@ const ZoomMedia = forwardRef(function ZoomMedia(props: ZoomMediaProps, ref: Medi
         isZoomed={false}
         onClick={handleClick} />
       {
-        defaultCanAutoPlay === false &&
+        isMobile &&
+        canAutoPlay === false &&
+        // defaultCanAutoPlay === false &&
         rest.type === MediaFileType.Video && (
           !forceAutoPlay ?
             <div><PlaySvg /></div> :

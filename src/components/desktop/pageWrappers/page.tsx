@@ -52,7 +52,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
         zoomMedia={zoomMedia}
         canAutoPlay={canAutoPlay}
         handleUnzoom={() => setZoomMedia(undefined)} />}
-      {(pathname.match(/^\/work/) && canAutoPlay === false) &&
+      {(pathname.match(/^\/work/i) && canAutoPlay === false) &&
         <AutoPlayPopUp />}
       <LeftContainer
         sidebar={sidebar}

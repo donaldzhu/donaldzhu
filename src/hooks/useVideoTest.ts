@@ -3,7 +3,7 @@ import { addEventListener } from '../utils/reactUtils'
 
 const useVideoTest = () => {
   const activationEvents: (keyof DocumentEventMap)[] =
-    ['keydown', 'mousedown', 'pointerdown', 'pointerup', 'touchend']
+    ['mousedown', 'pointerdown', 'pointerup', 'touchend']
   const [canAutoPlay, setCanAutoPlay] = useState<boolean | undefined>()
   const [defaultCanAutoPlay, setInitialCanAutoPlay] = useState<boolean | undefined>()
 
@@ -27,7 +27,15 @@ const useVideoTest = () => {
     const listenerRemovers = activationEvents.map(eventName =>
       addEventListener(document, eventName, () => setCanAutoPlay(true))
     )
-    return () => listenerRemovers.forEach(remover => remover())
+
+    const removeKeyboardListener = addEventListener(document, 'keydown', e => {
+      if (e.key !== 'Escape') setCanAutoPlay(true)
+    })
+
+    return () => {
+      listenerRemovers.forEach(remover => remover())
+      removeKeyboardListener()
+    }
   }, [canAutoPlay])
 
   return { canAutoPlay, defaultCanAutoPlay, canPlayWebm }

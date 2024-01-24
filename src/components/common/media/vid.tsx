@@ -58,10 +58,8 @@ const Vid = forwardRef<
     const playerInitilizedRef = useRef(false)
     const playerSeekedRef = useRef(false)
 
-    const vidHelperEnabledRef = useMemoRef(
-      () => !useNativeControl && vidCanAutoPlay &&
-        (!canUseDash || playerInitilizedRef.current),
-      [vidCanAutoPlay, playerInitilizedRef.current])
+    const vidHelperIsEnabled = () => !useNativeControl && vidCanAutoPlay &&
+      (!canUseDash || playerInitilizedRef.current)
 
     const vidHelperRef = useMemoRef(() => {
       if (!useNativeControl && validateRef(mergedRef))
@@ -69,19 +67,17 @@ const Vid = forwardRef<
           mergedRef,
           playerRef,
           canUseDash,
-          vidHelperEnabledRef.current
+          vidHelperIsEnabled()
         )
     }, [])
 
     useEffect(() => {
-      if (
-        !validateRef(vidHelperRef) ||
-        !validateRef(vidHelperEnabledRef)
-      ) return
-
-      vidHelperRef.current.enabled = vidHelperEnabledRef.current
+      const isEnabled = vidHelperIsEnabled()
+      if (!validateRef(vidHelperRef) || !isEnabled)
+        return
+      vidHelperRef.current.enabled = isEnabled
       vidHelperRef.current.play()
-    }, [vidHelperRef.current, vidHelperEnabledRef.current])
+    }, [vidCanAutoPlay, playerInitilizedRef.current])
 
     useEffect(
       () => vidHelperRef.current?.onVidCanPlay(() => setCanPlay(true)),
