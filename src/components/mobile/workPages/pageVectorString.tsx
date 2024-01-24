@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import _ from 'lodash'
 import styled from 'styled-components'
 import Anchor from '../../common/anchor'
 import WorkImg from '../../common/media/workImg'
@@ -20,12 +19,12 @@ import type { WorkPageContentProps } from '../work/workPageTypes'
 
 const PageVectorString = ({ WorkInfo }: WorkPageContentProps) => {
   const [translateImgSrc, setTranslateImgSrc] = useState(1)
-  const translateImgSrcRef = useMemoRef(() => translateImgSrc, [translateImgSrc])
-  const tranlsateImgCount = vectorStringCount
   const translateImgRef = useRef<HTMLDivElement>(null)
+  const tranlsateImgCount = vectorStringCount
+  const translateImgSrcRef = useMemoRef(() => translateImgSrc, [translateImgSrc])
 
   useEffect(() => {
-    if (!validateRef(translateImgRef)) return _.noop
+    if (!validateRef(translateImgRef)) return
 
     return addEventListener(window, 'scroll', () => {
       const translateImg = translateImgRef.current

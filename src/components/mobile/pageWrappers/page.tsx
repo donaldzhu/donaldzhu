@@ -100,6 +100,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
       {menuIsShown && <Menu />}
       {zoomMedia && <ZoomedMedia
         zoomMedia={zoomMedia}
+        canAutoPlay={canAutoPlay}
         handleUnzoom={handleUnzoom} />}
       <AnimationContainer
         $shouldFade={shouldFade}

@@ -10,13 +10,13 @@ import useIsMobile from '../../../hooks/useIsMobile'
 import { MediaFileType } from '../../../utils/helpers/preloader/preloadUtils'
 import useWindowSize from '../../../hooks/useWindowSize'
 import useMediaIsRendered from '../../../hooks/useMediaIsRendered'
-import VidHelper from '../../../utils/helpers/video/vidHelper'
 import PreloadMedia from './preloadMedia'
 import LoadingContainer from './loadingContainer'
 import type { RequiredZoomMediaProps, handleZoomMediaType } from './mediaTypes'
 
 interface ZoomedMediaProps {
   zoomMedia: RequiredZoomMediaProps
+  canAutoPlay: boolean | undefined
   handleUnzoom: handleZoomMediaType
 }
 
@@ -28,12 +28,11 @@ interface StyledZoomedMediaProps {
   $aspectRatio: number | undefined
 }
 
-const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
+const ZoomedMedia = ({ zoomMedia, canAutoPlay, handleUnzoom }: ZoomedMediaProps) => {
   const [hasLoadedGracefully, setHasLoadedGracefully] = useState(false)
   const zoomedMediaRef = useRef<HTMLImageElement | HTMLVideoElement>(null)
   const isRendered = useMediaIsRendered(zoomedMediaRef)
   const isMobile = useIsMobile()
-  const canUseDash = VidHelper.canUseDash
   const { width, height } = useWindowSize()
 
   useEffect(() => {
@@ -51,12 +50,6 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
 
     if (!zoomMediaIsVid(currentMedia))
       return removeKeydownListener
-
-    if (!canUseDash) {
-      if (!isMobile) currentMedia.currentTime =
-        zoomMedia.getCurrentTime()
-      currentMedia.play()
-    }
 
     setTimeout(() => { setHasLoadedGracefully(true) }, 500)
     return removeKeydownListener
@@ -88,7 +81,8 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
         alt={alt}
         ref={zoomedMediaRef}
         isZoomed={true}
-        autoPlay={canUseDash}
+        autoPlay={true}
+        canAutoPlay={canAutoPlay}
         currentTime={!isMobile ? zoomMedia.getCurrentTime() : undefined} />
       {
         hasLoadedGracefully &&
@@ -112,7 +106,8 @@ const ZoomedContainer = styled(PopUpContainer) <StyledZoomedMediaProps>`
       height: ${$mobileHeight};
       aspect-ratio: ${validateString($aspectRatio)};
     `}
-    object-fit: contain;
+
+    object-fit: fill;
     ${({ $isRendered }) => validateString(!$isRendered, 'background: white;')}
   }
 `

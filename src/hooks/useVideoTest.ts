@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { addEventListener } from '../utils/reactUtils'
 
@@ -24,7 +23,7 @@ const useVideoTest = () => {
   useEffect(() => {
     if (defaultCanAutoPlay !== false)
       setInitialCanAutoPlay(canAutoPlay)
-    if (canAutoPlay) return _.noop
+    if (canAutoPlay) return
     const listenerRemovers = activationEvents.map(eventName =>
       addEventListener(document, eventName, () => setCanAutoPlay(true))
     )

@@ -14,8 +14,9 @@ const Media = forwardRef(function Media(
   },
   ref: MediaRef
 ) {
+  // TODO: have a better way to filter them out
   return props.type === MediaFileType.Image ?
-    <Img {..._.omit(props, 'type', 'poster', 'posterFallback')} ref={ref as ForwardedRef<HTMLImageElement>} /> :
+    <Img {..._.omit(props, 'type', 'poster', 'posterFallback', 'canAutoPlay', 'currentTime')} ref={ref as ForwardedRef<HTMLImageElement>} /> :
     <Vid {..._.omit(props, 'type', 'hasLoaded')} ref={ref as ForwardedRef<HTMLVideoElement>} />
 })
 

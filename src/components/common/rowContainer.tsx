@@ -67,8 +67,7 @@ const Row = styled.div<StyledRowContainerProps>`
     ${childrenMargin(Device.Mobile)}
   }
 
-  > svg {
-    width: 100%;
+  img, video {
     height: 100%;
   }
 `

@@ -33,7 +33,7 @@ const Canvas = forwardRef<HTMLDivElement, CanvasProps & Partial<P5EventHandlers>
   const defaultEventHandlers: P5EventHandlers = _.defaults(eventHandlers, defaultEventCallbacks)
 
   useEffect(() => {
-    if (!parentRef.current) return _.noop
+    if (!parentRef.current) return
     const _uuid = uuid
 
     sketchRef.current = new p5(p => {

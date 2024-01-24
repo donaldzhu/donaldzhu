@@ -79,6 +79,7 @@ const ZoomMedia = forwardRef(function ZoomMedia(props: ZoomMediaProps, ref: Medi
         })}
         stackData={stackData}
         ref={mediaRef}
+        isZoomed={false}
         onClick={handleClick} />
       {
         defaultCanAutoPlay === false &&

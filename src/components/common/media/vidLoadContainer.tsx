@@ -41,7 +41,6 @@ const VidLoadContainer = ({
           return <Vid
             key={src}
             src={src}
-            preload='true'
             autoPlay={true}
             canAutoPlay={canAutoPlay}
             useNativeControl={true}

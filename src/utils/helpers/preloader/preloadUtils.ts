@@ -75,7 +75,7 @@ export const getPosterFile = (fileName: string) =>
 export const getHighestBreakpt = (isZoomed?: boolean, ...breakpts: typeof orderedBreakpts) => {
   let sizes = _.chain(sortLike(breakpts, orderedBreakpts))
   if (!isZoomed) sizes = sizes.without(MediaSize.Max)
-  return sizes.last().value() as MediaBreakpts
+  return sizes.last().value() as MediaBreakpts | undefined
 }
 
 export const getStackBreakpt = (

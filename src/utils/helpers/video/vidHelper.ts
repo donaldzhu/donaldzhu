@@ -4,56 +4,48 @@ import { validateRef } from '../../typeUtils'
 import type { MutableRefObject } from 'react'
 import type { MediaPlayerClass } from 'dashjs'
 
+enum PlayState {
+  Play = 'play',
+  Pause = 'pause'
+}
+
 class VidHelper {
   private playQueue: Queue | undefined
-  private playQueueList: VideoPlayCommand[]
+  private vidCommands: VidCommand[]
   private vidRef: MutableRefObject<HTMLVideoElement>
   private dashPlayerRef: MutableRefObject<MediaPlayerClass | null>
   private useDash: boolean
+
+  private seeked: boolean
+  private zoomedMediaShouldCatchup: boolean // TODO
   private playState: {
-    current: boolean
-    future: boolean
-    isSettled: boolean
+    current: PlayState
+    future: PlayState
   }
 
-  canAutoPlay: boolean | undefined
+  enabled: boolean | undefined
 
   constructor(
     vidRef: MutableRefObject<HTMLVideoElement>,
     dashPlayerRef: MutableRefObject<MediaPlayerClass | null>,
     useDash: boolean,
-    canAutoPlay: boolean | undefined,
+    canPlay: boolean | undefined
   ) {
     this.vidRef = vidRef
     this.dashPlayerRef = dashPlayerRef
 
     this.useDash = useDash
-    this.canAutoPlay = canAutoPlay
+    this.seeked = false
+    this.zoomedMediaShouldCatchup = false
 
     this.playQueue = undefined
-    this.playQueueList = []
+    this.vidCommands = []
     this.playState = {
-      current: false,
-      future: false,
-      isSettled: true
+      current: PlayState.Pause,
+      future: PlayState.Pause
     }
-  }
 
-  play() {
-    if (!this.canAutoPlay) return
-    if (this.useDash) {
-      if (validateRef(this.dashPlayerRef))
-        this.dashPlayerRef.current.play()
-    }
-    else this.nativePlay()
-  }
-
-  pause() {
-    if (this.useDash) {
-      if (validateRef(this.dashPlayerRef))
-        this.dashPlayerRef.current.pause()
-    }
-    else this.nativePause()
+    this.enabled = canPlay
   }
 
   onVidCanPlay<T>(callback: () => T) {
@@ -72,65 +64,107 @@ class VidHelper {
     return () => toggleListener(false)
   }
 
-  private nativePlay() {
-    if (this.playState.future) return
-    this.addToQueue(new VideoPlayCommand(
-      true, () => {
-        this.playQueueList.shift()
+  play() {
+    this.toggle(PlayState.Play)
+  }
 
-        return this.vidRef.current.play()
-          .then(() => this.playState.current = true)
-          .catch(err => console.error(err))
-      }
-    ))
+  pause() {
+    this.toggle(PlayState.Pause)
+  }
+
+  catchup(currentTime?: number) {
+    if (!currentTime || !this.zoomedMediaShouldCatchup) return
+    if (this.useDash) this.dashCatchup(currentTime)
+    else this.nativeCatchup(currentTime)
+  }
+
+  private toggle(playState: PlayState) {
+    if (!this.enabled) return
+    if (this.useDash) this.dashToggle(playState)
+    else this.nativeToggle(playState)
+  }
+
+  private dashToggle(playState: PlayState) {
+    if (validateRef(this.dashPlayerRef))
+      this.dashPlayerRef.current[playState]()
+  }
+
+  private nativeToggle(playState: PlayState) {
+    if (playState === PlayState.Play) this.nativePlay()
+    else this.nativePause()
+  }
+
+  private nativePlay() {
+    if (this.playState.future === PlayState.Play) return
+    this.addToQueue(PlayState.Play, () =>
+      this.vidRef.current.play()
+        .then(() => this.playState.current = PlayState.Play)
+        .catch(err => console.error(err))
+    )
   }
 
   private nativePause() {
-    if (!this.playState.future) return
-    this.addToQueue(new VideoPlayCommand(
-      false, () => {
-        this.playQueueList.shift()
-        if (validateRef(this.vidRef))
-          this.vidRef.current.pause()
-        this.playState.current = false
-      }
-    ))
+    if (this.playState.future === PlayState.Pause) return
+    this.addToQueue(PlayState.Pause, () => {
+      if (validateRef(this.vidRef))
+        this.vidRef.current.pause()
+      this.playState.current = PlayState.Pause
+    })
   }
 
-  private addToQueue(queueCommand: VideoPlayCommand) {
+  private nativeCatchup(currentTime: number) {
+    this.vidRef.current.currentTime = currentTime
+    this.play()
+  }
+
+  private dashCatchup(currentTime: number) {
+    if (!validateRef(this.dashPlayerRef)) return
+    const player = this.dashPlayerRef.current
+    player.on('playbackStarted', () => {
+      if (this.seeked) return
+      this.seeked = true
+      player.seek(currentTime)
+    })
+  }
+
+  private addToQueue(playState: PlayState, run: () => void) {
+    const queueCommand = new VidCommand(playState, () => {
+      this.vidCommands.shift()
+      run()
+    })
     this.parseNewCommand(queueCommand)
-    this.setFuturePlayState(queueCommand.isPlayCommand)
+    this.setFuturePlayState(queueCommand.playState)
   }
 
-  private parseNewCommand(queueCommand: VideoPlayCommand) {
+  private parseNewCommand(queueCommand: VidCommand) {
+    // there is no current queue
     if (!this.playQueue) {
-      if (this.playState.current === queueCommand.isPlayCommand) return
-      this.playQueue = new Queue(0)
-      this.playState.isSettled = false
-      this.playQueueList = [queueCommand]
+      if (this.playState.current === queueCommand.playState) return
+      this.playQueue = new Queue()
+
+      this.vidCommands = [queueCommand]
       return this.playQueue.create([queueCommand])
-        .then(() => this.onPlayStateSettle())
-        .catch(() => this.onPlayStateSettle())
+        .then(() => this.playQueue = undefined)
+        .catch(() => this.playQueue = undefined)
     }
 
-    // future === isPlayCommand caught by higher filters
-    if (!this.playQueueList.length) {
-      this.playQueueList.push(queueCommand)
+    // there is an empty queue -
+    // last command is being processed
+    if (!this.vidCommands.length) {
+      this.vidCommands.push(queueCommand)
       this.playQueue.push(queueCommand)
       return
     }
 
-    this.playQueueList.pop()
+    // there is an occupied queue -
+    // the one command in the queue is opposite of the incoming command,
+    // so we cancel them out (pop the last command) without pushing the new one
+    this.vidCommands.pop()
     this.playQueue.pop()
   }
 
-  private setFuturePlayState(isPlayCommand: boolean) {
-    this.playState.future = isPlayCommand
-  }
-
-  private onPlayStateSettle() {
-    this.playQueue = undefined
-    this.playState.isSettled = true
+  private setFuturePlayState(playState: PlayState) {
+    this.playState.future = playState
   }
 
   static get canUseDash() {
@@ -138,11 +172,11 @@ class VidHelper {
   }
 }
 
-class VideoPlayCommand {
-  isPlayCommand: boolean
+class VidCommand {
+  playState: PlayState
   run: () => void
-  constructor(isPlayCommand: boolean, run: () => void) {
-    this.isPlayCommand = isPlayCommand
+  constructor(playState: PlayState, run: () => void) {
+    this.playState = playState
     this.run = run
   }
 }

@@ -8,7 +8,7 @@ const WorkVid = forwardRef(function WorkVid(
   props: WorkVidProps,
   ref: ForwardedRef<HTMLVideoElement>
 ) {
-  return <ZoomMedia {...props} ref={ref} preload='false' type={MediaFileType.Video} />
+  return <ZoomMedia {...props} ref={ref} type={MediaFileType.Video} />
 })
 
 

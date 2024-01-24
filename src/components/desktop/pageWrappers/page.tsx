@@ -50,6 +50,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
         canvasStates={canvasStates} />
       {zoomMedia && <ZoomedMedia
         zoomMedia={zoomMedia}
+        canAutoPlay={canAutoPlay}
         handleUnzoom={() => setZoomMedia(undefined)} />}
       {(pathname.match(/^\/work/) && canAutoPlay === false) &&
         <AutoPlayPopUp />}

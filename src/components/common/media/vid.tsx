@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from 'react'
-import { useIntersectionObserver } from '@uidotdev/usehooks'
+import { useIntersectionObserver, usePrevious } from '@uidotdev/usehooks'
 import { useOutletContext } from 'react-router-dom'
 import styled from 'styled-components'
 import dashjs from 'dashjs'
@@ -7,9 +7,10 @@ import _ from 'lodash'
 import mixins from '../../../styles/mixins'
 import VidHelper from '../../../utils/helpers/video/vidHelper'
 import useForwardedRef from '../../../hooks/useForwaredRef'
-import { noRefError, validateRef } from '../../../utils/typeUtils'
+import { validateRef } from '../../../utils/typeUtils'
 import useMemoRef from '../../../hooks/useMemoRef'
 import useMergedRef from '../../../hooks/useMergedRef'
+import useIsMobile from '../../../hooks/useIsMobile'
 import { addEventListener } from '../../../utils/reactUtils'
 import type { DetailedHTMLProps, VideoHTMLAttributes } from 'react'
 import type { MediaPlayerClass } from 'dashjs'
@@ -35,72 +36,91 @@ const Vid = forwardRef<
     useNativeControl,
     ...props
   }, ref) {
+
+    // environment
     const context = useOutletContext<DesktopContextProps | MobileContextProps>()
-    const canUseDash = VidHelper.canUseDash
     const vidCanAutoPlay: boolean | undefined =
       !!canAutoPlay || context?.canAutoPlay
+    const canUseDash = VidHelper.canUseDash
+    const isMobile = useIsMobile()
     const [canPlay, setCanPlay] = useState(false)
 
+    const hasZoomed = !!context?.zoomMedia
+    const prevHasZoomed = usePrevious(hasZoomed)
+
+    // elem refs
     const forwardedRef = useForwardedRef(ref)
     const [mediaRef, entry] = useIntersectionObserver<HTMLVideoElement>({ threshold: 0 })
     const mergedRef = useMergedRef(forwardedRef, mediaRef)
 
+    // playerRefs
     const playerRef = useRef<MediaPlayerClass | null>(null)
     const playerInitilizedRef = useRef(false)
     const playerSeekedRef = useRef(false)
-    const zoomSeekEnabled = false
-    const shouldControlVid = () =>
-      !useNativeControl &&
-      (!canUseDash || playerInitilizedRef.current)
+
+    const vidHelperEnabledRef = useMemoRef(
+      () => !useNativeControl && vidCanAutoPlay &&
+        (!canUseDash || playerInitilizedRef.current),
+      [vidCanAutoPlay, playerInitilizedRef.current])
 
     const vidHelperRef = useMemoRef(() => {
-      if (useNativeControl) return
-      if (!validateRef(mergedRef)) throw noRefError('video ref')
-      return new VidHelper(
-        mergedRef,
-        playerRef,
-        canUseDash,
-        vidCanAutoPlay
-      )
+      if (!useNativeControl && validateRef(mergedRef))
+        return new VidHelper(
+          mergedRef,
+          playerRef,
+          canUseDash,
+          vidHelperEnabledRef.current
+        )
     }, [])
 
     useEffect(() => {
-      return vidHelperRef.current?.onVidCanPlay(
-        () => setCanPlay(true)
-      ) ?? _.noop
-    }, [vidHelperRef, playerRef.current])
-
-    useEffect(function onCanAutoPlayChange() {
-      if (!validateRef(vidHelperRef)) return _.noop
-      const vidHelper = vidHelperRef.current
-      vidHelper.canAutoPlay = vidCanAutoPlay
-
-      if (!shouldControlVid()) return _.noop
-
-      if (vidCanAutoPlay) vidHelper.play()
-      else vidHelper.pause()
-    }, [vidCanAutoPlay, playerInitilizedRef.current])
-
-    useEffect(function intersectionToggle() {
       if (
-        !shouldControlVid() ||
         !validateRef(vidHelperRef) ||
-        !entry
-      ) return _.noop
+        !validateRef(vidHelperEnabledRef)
+      ) return
 
-      if (!entry.isIntersecting) vidHelperRef.current.pause()
-      else vidHelperRef.current?.play()
-    }, [entry])
+      vidHelperRef.current.enabled = vidHelperEnabledRef.current
+      vidHelperRef.current.play()
+    }, [vidHelperRef.current, vidHelperEnabledRef.current])
 
-    useEffect(function dashSetup() {
-      if (!canUseDash || !src) return _.noop
-      if (!validateRef(mergedRef)) throw noRefError('video ref')
+    useEffect(
+      () => vidHelperRef.current?.onVidCanPlay(() => setCanPlay(true)),
+      [vidHelperRef, playerRef.current]
+    )
+
+    const toggle = (shouldPlay?: boolean | null) => {
+      if (!validateRef(vidHelperRef)) return
+
+      const vidHelper = vidHelperRef.current
+      if (shouldPlay) vidHelper.play()
+      else if (shouldPlay === false)
+        vidHelper.pause()
+    }
+
+    useEffect(
+      () => toggle(entry?.isIntersecting),
+      [entry, entry?.isIntersecting]
+    )
+
+    useEffect(() => {
+      if (!isZoomed) toggle(
+        (hasZoomed && prevHasZoomed === false) ? false :
+          (!hasZoomed && prevHasZoomed) ? true : undefined
+      )
+    }, [hasZoomed])
+
+    const catchup = () => {
+      if (isZoomed && !isMobile && validateRef(vidHelperRef))
+        vidHelperRef.current.catchup(currentTime)
+    }
+
+    const dashSetup = () => {
       const player = playerRef.current = dashjs.MediaPlayer().create()
-      player.initialize(mergedRef.current, src, isZoomed)
+      player.initialize(mergedRef.current!, src, isZoomed)
       playerInitilizedRef.current = true
 
       const updateMaxBitrate = () => {
-        const elemWidth = mergedRef.current.getBoundingClientRect().width
+        const elemWidth = mergedRef.current!.getBoundingClientRect().width
         const bitrateInfoList = player.getBitrateInfoListFor('video')
         const widthList = _.uniq(bitrateInfoList.map(info => info.width))
           .sort((a, b) => a - b)
@@ -127,15 +147,10 @@ const Vid = forwardRef<
         })
       }
 
+      catchup()
+
       player.on('streamInitialized', updateMaxBitrate)
       const removeResizeListener = addEventListener(window, 'resize', updateMaxBitrate)
-
-      if (isZoomed && zoomSeekEnabled) player.on('playbackStarted', () => {
-        if (currentTime && !playerSeekedRef.current) {
-          playerSeekedRef.current = true
-          player.seek(currentTime)
-        }
-      })
 
       return () => {
         player.destroy()
@@ -143,12 +158,19 @@ const Vid = forwardRef<
         playerSeekedRef.current = false
         removeResizeListener()
       }
+    }
+
+    useEffect(() => {
+      if (!src || !validateRef(mergedRef)) return
+      if (!canUseDash) catchup()
+      else return dashSetup()
     }, [])
 
     return (
       <StyledVid
         muted
         playsInline
+        preload='metadata'
         src={!canUseDash ? src : undefined}
         loop={loop}
         ref={mergedRef}
