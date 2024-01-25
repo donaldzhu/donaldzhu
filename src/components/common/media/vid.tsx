@@ -87,6 +87,7 @@ const Vid = forwardRef<
     const toggle = (shouldPlay?: boolean | null) => {
       if (!validateRef(vidHelperRef)) return
 
+      console.log('toggle', src)
       const vidHelper = vidHelperRef.current
       if (shouldPlay) vidHelper.play()
       else if (shouldPlay === false)
@@ -147,6 +148,7 @@ const Vid = forwardRef<
       catchup()
 
       player.on('streamInitialized', updateMaxBitrate)
+      player.on('playbackPaused', e => console.log('paused', src, e))
       const removeResizeListener = addEventListener(window, 'resize', updateMaxBitrate)
 
       return () => {
