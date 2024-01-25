@@ -97,6 +97,7 @@ const Vid = forwardRef<
     //   () => toggle(entry?.isIntersecting),
     //   [entry, entry?.isIntersecting]
     // )
+    console.log('check')
 
     useEffect(() => {
       if (!isZoomed) toggle(
