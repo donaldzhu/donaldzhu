@@ -394,7 +394,8 @@ class PreloadManager {
   }
 
   get assetPath() {
-    const storageRoot = `https://raw.githubusercontent.com/donaldzhu/portfolio-static-files-${this.loadFromEnv}/main/`
+    // const storageRoot = `https://raw.githubusercontent.com/donaldzhu/portfolio-static-files-${this.loadFromEnv}/main/`
+    const storageRoot = 'https://raw.githubusercontent.com/donaldzhu/portfolio-static-files-development/main/'
     return validateString(!this.loadLocal, storageRoot) + 'assets'
   }
 
