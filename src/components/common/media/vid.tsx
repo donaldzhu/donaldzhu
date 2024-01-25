@@ -93,10 +93,10 @@ const Vid = forwardRef<
         vidHelper.pause()
     }
 
-    useEffect(
-      () => toggle(entry?.isIntersecting),
-      [entry, entry?.isIntersecting]
-    )
+    // useEffect(
+    //   () => toggle(entry?.isIntersecting),
+    //   [entry, entry?.isIntersecting]
+    // )
 
     useEffect(() => {
       if (!isZoomed) toggle(
