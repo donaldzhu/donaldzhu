@@ -166,8 +166,8 @@ export const DEFAULT_SETTING: Omit<VectorSetting, 'mouseOrigin'> &
 
     // TODO: Remove
     if (debug?.enabled) {
-      const { p5, enabled } = debug
-      if (p5 && enabled)
+      const { p5 } = debug
+      if (p5)
         wrapDrawingContext(p5, () => {
           if (debug.name === 'W') {
 

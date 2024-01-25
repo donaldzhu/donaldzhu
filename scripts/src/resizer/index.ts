@@ -2,13 +2,25 @@ import { Device } from './constants'
 import { MediaType } from './lib/resizerTypes'
 import resize from './resize'
 
-const config = {
-  resizeThumbnails: false,
-  resizeWork: true,
-  exportPages: ['roll'],
+const desktopConfig = {
+  resizeThumbnails: true,
+  resizeWork: false,
+  exportPages: [],
   exportBreakpts: [],
-  exportTypes: []
+  exportTypes: [MediaType.Dash]
 }
 
+// const mobileConfig = {
+//   resizeThumbnails: true,
+//   resizeWork: true,
+//   exportPages: [],
+//   exportBreakpts: [],
+//   exportTypes: []
+// }
 
-resize(Device.Desktop, config)
+
+const run = async () => {
+  await resize(Device.Desktop, desktopConfig)
+}
+
+run()

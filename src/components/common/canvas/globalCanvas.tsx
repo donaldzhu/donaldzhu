@@ -17,13 +17,13 @@ const GlobalCanvas = <T extends Device>({
   className?: string
 }) => {
   const draw = (p5: p5) => {
-    if ('engine' in canvasStates && canvasStates.engine)
+    if ('engine' in canvasStates)
       Engine.update(canvasStates.engine)
     handleEvent(p5, P5Event.draw)
   }
 
   const mouseMoved = (p5: p5) => {
-    if ('mousePositionRef' in canvasStates && canvasStates.mousePositionRef)
+    if ('mousePositionRef' in canvasStates)
       canvasStates.mousePositionRef.current = mousePosition(p5)
     handleEvent(p5, P5Event.mouseMoved)
   }

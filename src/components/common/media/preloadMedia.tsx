@@ -1,84 +1,57 @@
-import _ from 'lodash'
 import { forwardRef, useEffect, useState } from 'react'
+import VidHelper from '../../../utils/helpers/video/vidHelper'
 import { MediaFileType, MediaSize, getFallbackKey, getStackBreakpt } from '../../../utils/helpers/preloader/preloadUtils'
 import { getBreakptKey } from '../../../utils/queryUtil'
 import useIsMobile from '../../../hooks/useIsMobile'
-import { Device } from '../../../utils/breakptTypes'
 import Media from './media'
 import type { MediaRef, PreloadMediaProps } from './mediaTypes'
-import type { MediaBreakpts } from '../../../utils/helpers/preloader/preloaderTypes'
+
 
 const PreloadMedia = forwardRef(function PreloadMedia(props: PreloadMediaProps, ref: MediaRef) {
-  const { stackData, isZoomed, fallbackPath, ...rest } = props
-  const mediaStack = stackData?.stack
-  const posterStack = rest.type === MediaFileType.Image ? undefined :
-    mediaStack?.posters
-  const isMobile = useIsMobile()
+  const { stackData, isZoomed, ...rest } = props
+  const mediaStack = stackData.stack
+  const posterStack = mediaStack.posters
 
-  const mediaIsVid = rest.type === MediaFileType.Video
-  const getLoadState = (mediaStack = stackData?.stack) => {
-    if (!mediaStack) return {
-      src: fallbackPath,
-      hasLoaded: true
-    }
+  const isDesktop = !useIsMobile()
+  const isVid = rest.type === MediaFileType.Video
+  const canUseDash = VidHelper.canUseDash
 
-    let size = getStackBreakpt(mediaStack, isZoomed)
-
-    const hasLoaded = mediaIsVid || !!size
-
-    if (mediaIsVid && mediaStack !== posterStack)
-      size = isZoomed && !isMobile ? MediaSize.Max : getBreakptKey(Device.Mobile)
-    else size ||= getFallbackKey()
-
-    return {
-      src: mediaStack.stack[size as MediaBreakpts].src,
-      hasLoaded
-    }
+  const getLoadedBreakpt = () => getStackBreakpt(mediaStack, isZoomed)
+  const getMediaPath = () => {
+    if (canUseDash && isVid && mediaStack.dashPath)
+      return mediaStack.dashPath
+    const size = isVid ? (
+      (isZoomed && isDesktop) ? MediaSize.Max : getBreakptKey(mediaStack.device)
+    ) : (
+      getLoadedBreakpt() ?? getFallbackKey()
+    )
+    return mediaStack.stack[size].src
   }
 
-  const [loadState, setLoadState] = useState(getLoadState())
-  const [posterLoadState, setPosterLoadState] = useState(getLoadState(posterStack))
+  const getPosterPath = () => {
+    if (!posterStack) return undefined
+    const loadedSize = getStackBreakpt(posterStack, isZoomed) ?? getFallbackKey()
+    return posterStack.stack[loadedSize].src
+  }
 
-  useEffect(() => {
-    const newLoadState = getLoadState()
-    if (!_.isEqual(newLoadState, loadState))
-      setLoadState(newLoadState)
+  const [path, setPath] = useState(getMediaPath())
+  const [posterPath, setPosterPath] = useState(getPosterPath())
+  const [nativeW, nativeH] = mediaStack.nativeDimension
 
-    if (!mediaStack) return _.noop
-    const handleStackLoad = (isPoster = false) => {
-      const newLoadState = getLoadState(isPoster ? posterStack : undefined)
-      if (isZoomed ?? (mediaIsVid && !isPoster)) return
-
-      if (isPoster) {
-        if (!_.isEqual(newLoadState, posterLoadState))
-          setPosterLoadState(newLoadState)
-      } else if (!_.isEqual(newLoadState, loadState))
-        setLoadState(newLoadState)
-    }
-
-    const handleMediaStackLoad = () => handleStackLoad(false)
-    const handlePosterStackLoad = () => handleStackLoad(true)
-
-    mediaStack.addLoadListener(
-      handleMediaStackLoad,
-      handlePosterStackLoad
-    )
-
-    return () =>
-      mediaStack.removeLoadListener(
-        handleMediaStackLoad,
-        handlePosterStackLoad
-      )
-  }, [mediaStack, fallbackPath])
-
-  const [nativeW, nativeH] = mediaStack?.nativeDimension ?? []
+  useEffect(
+    mediaStack.addLoadListener(() => {
+      if (!isVid) setPath(getMediaPath())
+      else setPosterPath(getPosterPath())
+    }), [mediaStack]
+  )
 
   return <Media
     {...rest}
-    src={loadState.src}
-    poster={posterStack ? posterLoadState.src : undefined}
-    hasLoaded={loadState.hasLoaded}
-    aspectRatio={!nativeW || !nativeH ? undefined : nativeW / nativeH}
+    src={path}
+    poster={posterPath}
+    hasLoaded={!!getLoadedBreakpt()}
+    aspectRatio={nativeW / nativeH}
+    isZoomed={isZoomed}
     ref={ref} />
 })
 

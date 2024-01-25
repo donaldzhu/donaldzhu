@@ -19,12 +19,12 @@ interface StyledRowContainerProps {
   $cols: number[]
 }
 
-const RowContainer = forwardRef<HTMLDivElement, RowContainerProps>(({
+const RowContainer = forwardRef<HTMLDivElement, RowContainerProps>(function RowContainer({
   className,
   cols,
   children,
   toolTip
-}, ref) => {
+}, ref) {
   const childrenLength = arrayify(children).flat().length
   return (
     <Container className={className} ref={ref}>
@@ -67,8 +67,7 @@ const Row = styled.div<StyledRowContainerProps>`
     ${childrenMargin(Device.Mobile)}
   }
 
-  > svg {
-    width: 100%;
+  img, video {
     height: 100%;
   }
 `

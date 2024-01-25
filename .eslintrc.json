@@ -43,6 +43,7 @@
       { "argsIgnorePattern": "^_" }
     ],
     "react-hooks/exhaustive-deps": "off",
+    "react/display-name": "warn",
     "import/no-named-as-default": "off",
     "import/order": [
       "error",
@@ -64,7 +65,8 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-unsafe-declaration-merging": "off",
-    "@typescript-eslint/consistent-type-imports": "warn"
+    "@typescript-eslint/consistent-type-imports": "warn",
+    "@typescript-eslint/class-literal-property-style": "off"
   },
   "settings": {
     "react": {

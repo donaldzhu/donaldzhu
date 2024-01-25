@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { useEffect } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import type { DependencyList } from 'react'
@@ -13,7 +12,7 @@ const usePreloadQueue = (
 ) => {
   const { preloadManager } = useOutletContext<DesktopContextProps | MobileContextProps>()
   useEffect(() => {
-    if (!setupDone || !preloadManager) return _.noop
+    if (!setupDone) return
     callback(preloadManager)
     return () => preloadManager.abort()
   }, [!!preloadManager, setupDone, ...dependencies])

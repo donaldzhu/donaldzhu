@@ -3,7 +3,7 @@ import { sketchSizes } from '../../../styles/sizes'
 import { repeat, repeatMap } from '../../../utils/commonUtils'
 import ElemRect from '../../../utils/helpers/rect/elemRect'
 import { wrapDrawingContext } from '../../../utils/p5Utils'
-import { validateRef } from '../../../utils/typeUtils'
+import { noRefError, validateRef } from '../../../utils/typeUtils'
 import configs from '../../configs/vector'
 import Text from '../../helpers/vector/text'
 import type p5 from 'p5'
@@ -40,8 +40,7 @@ const drawMainSketch = ({ placeholderRef }: PlaceholderProp) => {
   }
 
   const setup = (p5: p5) => {
-    if (!validateRef(placeholderRef))
-      throw new Error('Main sketch has no placeholder ref.')
+    if (!validateRef(placeholderRef)) throw noRefError('main sketch placeholder')
     placeholder = new ElemRect(placeholderRef, -sketchSizes.desktop.main.anchor.offset.value)
     createVectors(p5)
   }
@@ -75,7 +74,7 @@ const drawMainSketch = ({ placeholderRef }: PlaceholderProp) => {
       anchors.forEach(anchor =>
         p5.ellipse(...anchor, anchorSize, anchorSize))
 
-      if (!mousePositionRef?.current) return
+      if (!mousePositionRef.current) return
       p5.drawingContext.setLineDash(repeat(2, sketchSizes.desktop.line.dash.value))
       p5.stroke(colors.dashLine)
       p5.strokeCap(ROUND)

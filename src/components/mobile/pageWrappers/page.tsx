@@ -14,6 +14,7 @@ import Header from '../header'
 import Menu from '../menu'
 import VidLoadContainer from '../../common/media/vidLoadContainer'
 import ZoomedMedia from '../../common/media/zoomedMedia'
+import VidHelper from '../../../utils/helpers/video/vidHelper'
 import type { Device } from '../../../utils/breakptTypes'
 import type { MobileContextProps } from './pageTypes'
 import type { RouteProps } from '../../routeTypes'
@@ -24,7 +25,12 @@ interface StyledGlobalCanvasProps {
 }
 
 const Page = ({ mediaSettings }: RouteProps) => {
-  const { canAutoPlay, defaultCanAutoPlay, vidLoadData, preloadManager } = mediaSettings
+  const {
+    canAutoPlay,
+    vidLoadData,
+    preloadManager,
+    ...rest
+  } = mediaSettings
   const location = useLocation()
   const prevLocation = usePrevious(location)
   const engine = usePhysics()
@@ -94,6 +100,7 @@ const Page = ({ mediaSettings }: RouteProps) => {
       {menuIsShown && <Menu />}
       {zoomMedia && <ZoomedMedia
         zoomMedia={zoomMedia}
+        canAutoPlay={canAutoPlay}
         handleUnzoom={handleUnzoom} />}
       <AnimationContainer
         $shouldFade={shouldFade}
@@ -103,24 +110,24 @@ const Page = ({ mediaSettings }: RouteProps) => {
           canvasStates={{ engine }}
           $menuIsShown={menuIsShown} />
         <Outlet context={{
-          canAutoPlay,
-          defaultCanAutoPlay,
           canvasRef,
           canvasStates,
-          shouldHideGyro,
           zoomMedia,
+          shouldHideGyro,
           headerRef,
-          handleZoomMedia,
+          canAutoPlay,
           preloadManager,
-          handleGyroButtonClick
+          handleZoomMedia,
+          handleGyroButtonClick,
+          ...rest
         } satisfies MobileContextProps} />
       </AnimationContainer>
-      <VidLoadContainer
+      {!VidHelper.canUseDash && <VidLoadContainer
         isMobile={true}
         verbosity={mediaSettings.preloadManager.verbosity}
         hasZoomedMedia={!!zoomMedia}
         vidLoadData={vidLoadData}
-        canAutoPlay={canAutoPlay} />
+        canAutoPlay={canAutoPlay} />}
     </Container>
   )
 }

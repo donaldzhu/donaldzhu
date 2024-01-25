@@ -51,7 +51,6 @@ const drawMobileSketch = () => {
     createVectors(p5, canvasState)
 
   const draw = (_: p5, { gimbalRef }: MobileCanvasStates) => {
-    if (!texts) return
     loopObject(texts, (_, text) => text.write())
     if (!validateRef(gimbalRef)) return
     gimbalRef.current.update()
@@ -60,7 +59,6 @@ const drawMobileSketch = () => {
   const windowResized = createVectors
 
   const cleanup = () => {
-    if (!texts) return
     Object.values(texts).forEach(text => text.cleanup())
   }
 

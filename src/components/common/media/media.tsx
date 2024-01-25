@@ -6,13 +6,18 @@ import Vid from './vid'
 import type { ForwardedRef } from 'react'
 import type { MediaIntrinsicProps, MediaRef } from './mediaTypes'
 
-const Media = forwardRef((
-  props: MediaIntrinsicProps & { poster?: string },
+const Media = forwardRef(function Media(
+  props: MediaIntrinsicProps & {
+    poster?: string,
+    posterFallback?: string,
+    isZoomed?: boolean
+  },
   ref: MediaRef
-) => {
+) {
+  // TODO: have a better way to filter them out
   return props.type === MediaFileType.Image ?
-    <Img {..._.omit(props, 'type', 'poster')} ref={ref as ForwardedRef<HTMLImageElement>} /> :
-    <Vid {..._.omit(props, 'type')} ref={ref as ForwardedRef<HTMLVideoElement>} />
+    <Img {..._.omit(props, 'type', 'poster', 'posterFallback', 'canAutoPlay', 'currentTime')} ref={ref as ForwardedRef<HTMLImageElement>} /> :
+    <Vid {..._.omit(props, 'type', 'hasLoaded')} ref={ref as ForwardedRef<HTMLVideoElement>} />
 })
 
 export default Media

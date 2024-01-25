@@ -1,15 +1,16 @@
-import fs from 'fs'
+import fs, { renameSync, unlinkSync } from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
 import _ from 'lodash'
 import sharp from 'sharp'
-import ffmpeg from 'fluent-ffmpeg'
+import ffmpeg, { FfmpegCommand } from 'fluent-ffmpeg'
 import { globSync } from 'glob'
 import chalk from 'chalk'
 import BreakpointResizer from './breakptResizer'
-import { BreakptConfig, ImgExtension, MediaOptions, MediaType, ResizePosterConfig, ResizerConfig, callbackType, Metadata, vidExtensionRegex } from './resizerTypes'
+import { BreakptConfig, ImgExtension, MediaOptions, MediaType, ResizePosterConfig, ResizerConfig, callbackType, Metadata, vidExportTypes } from './resizerTypes'
 import { joinPaths, removeFile, parseMediaType, getExtension, mapPromises, sortFileNames, mkdir, filterFalsy } from '../../utils'
 import { DASH_CONFIGS, DASH_SUBFOLDER, POSTER_SUBFOLDER } from './constants'
+import { isOdd, replaceExt, roundEven } from '../resizeUtils'
 
 class Resizer<K extends string> {
   source: string
@@ -90,10 +91,13 @@ class Resizer<K extends string> {
   }
 
   private createDestDashDir() {
-    if (this.hasVid) mkdir(
-      joinPaths(this.destination, DASH_SUBFOLDER),
-      this.removeFilesAtDest
-    )
+    if (this.hasVid) {
+      mkdir(joinPaths(this.destination, DASH_SUBFOLDER), this.removeFilesAtDest)
+      vidExportTypes.forEach(type => mkdir(
+        joinPaths(this.destination, DASH_SUBFOLDER, type),
+        this.removeFilesAtDest
+      ))
+    }
   }
 
   private async resizeMedia(fileName: string, fileEntry: string) {
@@ -128,11 +132,12 @@ class Resizer<K extends string> {
 
   private async resizeVid(fileName: string, fileEntry: string) {
     const vidPath = this.joinSrcPath(fileName)
-    const vidObj = ffmpeg({ source: vidPath, priority: 10 }).noAudio()
+    let vidObj = ffmpeg({ source: vidPath, priority: 10 }).noAudio()
     const metadata = await new Promise<Metadata>(resolve => {
       vidObj.ffprobe(async (_, metadata) =>
         resolve(this.throwNoWidth(metadata.streams[0], fileName)))
     })
+    const { width, height } = metadata
 
     const pngPosterPath = this.getScreenshotPath(vidPath)
     const webpPosterPath = this.getPosterPath(pngPosterPath)
@@ -160,11 +165,28 @@ class Resizer<K extends string> {
     }
 
     if (this.shouldExport(MediaType.Video)) {
+      const { dir, name, ext } = path.parse(vidPath)
+      const tempPath = `${dir}/${name}_temp${ext}`
+      const shouldResizeOriginal = isOdd(width) || isOdd(height)
+
+      if (shouldResizeOriginal) {
+        vidObj
+          .size(`${roundEven(width)}x?`)
+          .output(tempPath)
+
+        await this.runFfmpeg(vidObj)
+        unlinkSync(vidPath)
+        renameSync(tempPath, vidPath)
+
+        vidObj = ffmpeg({ source: vidPath, priority: 10 }).noAudio()
+      }
+
       await this.mapBreakpts(async resizer => await resizer
         .resizeVideo(vidObj, { metadata, fileName, fileEntry }))
-      await new Promise<null>(resolve =>
-        vidObj.on('end', () => resolve(null)).run())
+      await this.runFfmpeg(vidObj)
+
     }
+
     this.log(vidPath, MediaType.Video, this.shouldExport(MediaType.Video))
 
     if (this.shouldExport(MediaType.Dash))
@@ -175,11 +197,8 @@ class Resizer<K extends string> {
   }
 
   private async generateDash(fileName: string, metadata: Metadata) {
-    const { name, ext } = path.parse(fileName)
+    const { name } = path.parse(fileName)
     const { width, height } = metadata
-    const destFolderPath = joinPaths(this.destination, DASH_SUBFOLDER, `${name}${ext.replace('.', '-')}`)
-    mkdir(destFolderPath, this.removeFilesAtDest)
-    const gopSize = 100
 
     const getEvenWidth = (resizedHeight: number) => 2 * Math.round(width / height * resizedHeight / 2)
     const qualityMap = DASH_CONFIGS
@@ -190,18 +209,30 @@ class Resizer<K extends string> {
       })
 
     const qualityFilters = filterFalsy(qualityMap).join(' ')
+    const gopSize = 100
 
+    const destFolderPath = joinPaths(this.destination, DASH_SUBFOLDER, name)
+    mkdir(destFolderPath, this.removeFilesAtDest)
     const command = `
-      nice -n 10 ffmpeg -i ${this.joinSrcPath(fileName)} -y -c:v libx264 \\
-        -hide_banner -loglevel warning \\
-        -preset veryslow -keyint_min ${gopSize} -g ${gopSize} -sc_threshold 0 \\
+      nice -n 10 ffmpeg -i ${this.joinSrcPath(fileName)} -y \\
+        -c:v libx264 -preset veryslow -sc_threshold 0 \\
+        -keyint_min ${gopSize} -g ${gopSize} -hide_banner -loglevel warning \\
         ${qualityFilters} \\
         -use_template 1 -use_timeline 1 -seg_duration 4 \\
-        -adaptation_sets "id=0,streams=v id=1" \\
+        -adaptation_sets "id=0,streams=v" \\
         -f dash ${destFolderPath}/dash.mpd
-      `
+    `
 
     execSync(command)
+
+  }
+
+  private async runFfmpeg(ffmpegCommand: FfmpegCommand) {
+    return await new Promise<null>(resolve => ffmpegCommand
+      .on('end', () => resolve(null))
+      .on('error', err => console.log(err))
+      .run()
+    )
   }
 
   private joinSrcPath(...subpaths: (string | undefined)[]) {
@@ -231,11 +262,10 @@ class Resizer<K extends string> {
   }
 
   private getScreenshotPath(filename: string) {
-    const regex = new RegExp(`(${vidExtensionRegex})$`)
     return joinPaths(
       path.dirname(filename),
       POSTER_SUBFOLDER,
-      path.basename(filename).replace(regex, ImgExtension.Png)
+      path.basename(replaceExt(filename, ImgExtension.Png)),
     )
   }
 

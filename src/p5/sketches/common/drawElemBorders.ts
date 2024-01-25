@@ -17,7 +17,7 @@ const drawElemBorders = <T extends Element>({
   padding,
   headerRef
 }: DrawElemBordersProps<T>) => {
-  let header: ElemRect<HTMLHeadElement>
+  let header: ElemRect<HTMLHeadElement> | undefined
 
   const draw = (p5: p5) => {
     styleDashedRect(p5)

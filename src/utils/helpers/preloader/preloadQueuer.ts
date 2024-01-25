@@ -6,6 +6,7 @@ import type { queueArgType } from '../../utilTypes'
 
 interface PreloadQueuerProps {
   queueInterval?: number | null
+  queueCount?: number | null
   enabled?: boolean
 }
 
@@ -14,24 +15,26 @@ export type PreloadStack<T extends object, S extends string> = ({
 } & T)
 
 class PreloadQueuer<T extends object, S extends string> {
+  private queueCount: number
   private mainQueue: Queue
   private mainQueueFunctions: queueArgType<any> | undefined
-
   private subqueues: Queue[]
   private interval: number | undefined
 
   enabled: boolean
   isComplete: boolean
-  stackData: PreloadStack<T, S>[]
+  mediaStacks: PreloadStack<T, S>[]
 
   constructor(config?: PreloadQueuerProps) {
     const {
       enabled,
-      queueInterval
+      queueInterval,
+      queueCount
     } = config ?? {}
 
     this.interval = queueInterval ?? undefined
 
+    this.queueCount = queueCount ?? 1
     this.mainQueue = new Queue(this.interval)
     this.mainQueueFunctions = undefined
 
@@ -39,7 +42,7 @@ class PreloadQueuer<T extends object, S extends string> {
 
     this.enabled = enabled ?? true
     this.isComplete = false
-    this.stackData = []
+    this.mediaStacks = []
   }
 
   preload(
@@ -52,7 +55,7 @@ class PreloadQueuer<T extends object, S extends string> {
     sort ??= (a: PreloadStack<T, S>, b: PreloadStack<T, S>) =>
       a.stack.fileName.localeCompare(b.stack.fileName)
 
-    const filteredStacks = this.stackData.filter(stackData =>
+    const filteredStacks = this.mediaStacks.filter(stackData =>
       (
         !isPoster || stackData.stack.fileType === MediaFileType.Video
       ) && filter(stackData)
@@ -75,9 +78,9 @@ class PreloadQueuer<T extends object, S extends string> {
   }
 
   addToSubqueue<T = void>(queueFunctions: queueArgType<T>) {
-    const queue = new Queue(this.interval, 3)
-    this.subqueues.push(queue)
     if (!queueFunctions) return Promise.resolve(false)
+    const queue = new Queue(this.interval, this.queueCount)
+    this.subqueues.push(queue)
     return queue.create(queueFunctions)
       .then(() => _.pull(this.subqueues, queue))
       .catch(_.noop)

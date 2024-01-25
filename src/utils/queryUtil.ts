@@ -11,10 +11,11 @@ export const maxQueries = createQueries('max')
 export const desktopQuery = minQueries.l
 export const mobileQuery = maxQueries.l
 
-const getScreenWidth = () => Math.round(window.screen.width * window.devicePixelRatio)
+const getScreenWidth = (usePixelDensity: boolean) => Math.round(window.screen.width *
+  (usePixelDensity ? window.devicePixelRatio : 1))
 
 export const getBreakptKey = (device: Device) => {
-  const screenWidth = getScreenWidth()
+  const screenWidth = getScreenWidth(true)
   let breakpt: Breakpt
 
   if (screenWidth >= breakpts.xxl)
@@ -39,4 +40,5 @@ export const getBreakptKey = (device: Device) => {
   return breakpt
 }
 
-export const getIsMobile = () => getScreenWidth() <= breakpts.l
+export const getIsMobile = (usePixelDensity: boolean) =>
+  getScreenWidth(usePixelDensity) <= breakpts.l

@@ -4,7 +4,7 @@ import colorConfig from './styles/colors'
 import { fontFamilies, fontSizes } from './styles/fonts'
 import mixins from './styles/mixins'
 import { domSizes } from './styles/sizes'
-import useCanAutoPlay from './hooks/useCanAutoPlay'
+import useVideoTest from './hooks/useVideoTest'
 import useIsMobile from './hooks/useIsMobile'
 import { desktopQuery } from './utils/queryUtil'
 import MobileRoutes from './components/mobile/routes'
@@ -13,7 +13,7 @@ import usePreload from './hooks/usePreload'
 
 const App = () => {
   const isMobile = useIsMobile()
-  const autoPlayConfig = useCanAutoPlay()
+  const autoPlayConfig = useVideoTest()
   const mediaSettings = {
     ...autoPlayConfig,
     ...usePreload({ ...autoPlayConfig, isMobile })

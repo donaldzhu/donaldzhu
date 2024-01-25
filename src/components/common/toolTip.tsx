@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { useContext, useEffect, useState } from 'react'
 import pointInPolygon from 'point-in-polygon'
 import { useOutletContext } from 'react-router-dom'
@@ -30,7 +29,7 @@ const ToolTip = ({ children }: ToolTipProps) => {
   const [isShown, setIsShown] = useState(false)
   const { toolTipRef, popUpRef } = useContext<WorkPageContextProps>(WorkPageContext)
   const { zoomMedia, canvasStates } = useOutletContext<DesktopContextProps>()
-  const mousePositionRef = canvasStates?.mousePositionRef
+  const mousePositionRef = canvasStates.mousePositionRef
 
   const handleHover = ({ currentTarget }: { currentTarget: HTMLDivElement }) => {
     if (toolTipRef) toolTipRef.current = currentTarget
@@ -38,7 +37,7 @@ const ToolTip = ({ children }: ToolTipProps) => {
   }
 
   useEffect(() => {
-    if (!isShown) return _.noop
+    if (!isShown) return
     const mouseHandler = () => {
       if (validateRef(toolTipRef) && validateRef(popUpRef)) {
         const toolTip = new ElemRect(toolTipRef, sketchSizes.desktop.toolTip.padding.value)

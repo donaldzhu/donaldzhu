@@ -8,6 +8,7 @@ import AutoPlayPopUp from '../../common/autoPlayPopUp'
 import ZoomedMedia from '../../common/media/zoomedMedia'
 import LeftContainer from '../leftContainer/leftContainer'
 import VidLoadContainer from '../../common/media/vidLoadContainer'
+import VidHelper from '../../../utils/helpers/video/vidHelper'
 import type { Device } from '../../../utils/breakptTypes'
 import type { ReactNode } from 'react'
 import type { RequiredZoomMediaProps, handleZoomMediaType } from '../../common/media/mediaTypes'
@@ -17,7 +18,12 @@ import type { RouteProps } from '../../routeTypes'
 
 const TypedGlobalCanvas = GlobalCanvas<Device.Desktop>
 const Page = ({ mediaSettings }: RouteProps) => {
-  const { canAutoPlay, defaultCanAutoPlay, vidLoadData, preloadManager } = mediaSettings
+  const {
+    canAutoPlay,
+    vidLoadData,
+    preloadManager,
+    ...rest
+  } = mediaSettings
   const [sidebar, setSidebar] = useState<ReactNode | undefined>()
   const [zoomMedia, setZoomMedia] = useState<RequiredZoomMediaProps | undefined>()
   const { pathname } = useLocation()
@@ -44,8 +50,9 @@ const Page = ({ mediaSettings }: RouteProps) => {
         canvasStates={canvasStates} />
       {zoomMedia && <ZoomedMedia
         zoomMedia={zoomMedia}
+        canAutoPlay={canAutoPlay}
         handleUnzoom={() => setZoomMedia(undefined)} />}
-      {(pathname.match(/^\/work/) && canAutoPlay === false) &&
+      {(pathname.match(/^\/work/i) && canAutoPlay === false) &&
         <AutoPlayPopUp />}
       <LeftContainer
         sidebar={sidebar}
@@ -53,18 +60,18 @@ const Page = ({ mediaSettings }: RouteProps) => {
         canvasStates={canvasStates} />
       <Outlet context={{
         canvasRef,
-        defaultCanAutoPlay,
         canvasStates,
         sidebar,
         setSidebar,
         zoomMedia,
-        handleZoomMedia,
         canAutoPlay,
-        preloadManager
+        preloadManager,
+        handleZoomMedia,
+        ...rest
       } satisfies DesktopContextProps} />
-      <VidLoadContainer
+      {!VidHelper.canUseDash && <VidLoadContainer
         vidLoadData={vidLoadData}
-        canAutoPlay={canAutoPlay} />
+        canAutoPlay={canAutoPlay} />}
     </>
   )
 }

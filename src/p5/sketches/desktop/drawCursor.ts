@@ -6,7 +6,7 @@ import type { DesktopCanvasStates } from '../../../components/common/canvas/canv
 
 const drawCursor = () => {
   const draw = (p5: p5, { mousePositionRef, hideCursorRef }: DesktopCanvasStates) => {
-    if (!validateRef(mousePositionRef) || !!hideCursorRef?.current) return
+    if (!validateRef(mousePositionRef) || !!hideCursorRef.current) return
 
     wrapDrawingContext(p5, () => {
       styleDashedRect(p5)

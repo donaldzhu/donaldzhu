@@ -37,11 +37,10 @@ const VidLoadContainer = ({
     <Container>
       {!shouldPause && typedKeys(vidLoadData)
         .map(src => {
-          const { onProgress } = vidLoadData[src]
+          const { onProgress } = vidLoadData[src] ?? {}
           return <Vid
             key={src}
             src={src}
-            preload='true'
             autoPlay={true}
             canAutoPlay={canAutoPlay}
             useNativeControl={true}

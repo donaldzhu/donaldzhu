@@ -3,7 +3,7 @@ import type { GlobalCanvasStates } from '../../common/canvas/canvasTypes'
 import type { Device } from '../../../utils/breakptTypes'
 import type PreloadManager from '../../../utils/helpers/preloader/preloadManager'
 import type { RequiredZoomMediaProps, handleZoomMediaType } from '../../common/media/mediaTypes'
-import type useCanAutoPlay from '../../../hooks/useCanAutoPlay'
+import type useVideoTest from '../../../hooks/useVideoTest'
 
 export type MobileContextProps = {
   shouldHideGyro: boolean,
@@ -13,4 +13,4 @@ export type MobileContextProps = {
   headerRef: RefObject<HTMLHeadElement>
   zoomMedia: RequiredZoomMediaProps | undefined,
 } & GlobalCanvasStates<Device.Mobile> &
-  ReturnType<typeof useCanAutoPlay>
+  Omit<ReturnType<typeof useVideoTest>, 'canPlayWebm'>

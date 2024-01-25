@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { loopObject } from '../utils/commonUtils'
 import { P5Event } from '../utils/p5Utils'
-import { validateRef } from '../utils/typeUtils'
+import { noRefError, validateRef } from '../utils/typeUtils'
 import type p5 from 'p5'
 import type { Device } from '../utils/breakptTypes'
 import type {
@@ -23,8 +23,7 @@ const useCanvas = <T extends Device>(
   const outletContext = useOutletContext<GlobalCanvasStates<T>>()
   const { canvasRef, canvasStates } = _.defaults(config ?? {}, outletContext)
 
-  if (!validateRef(canvasRef))
-    throw new Error('No canvasRef is passed to canvas.')
+  if (!validateRef(canvasRef)) throw noRefError('canvasRef')
 
   const { setup, draw, cleanup, ...callbacks } = useMemo(createSketch, [])
 
@@ -39,20 +38,20 @@ const useCanvas = <T extends Device>(
   useEffect(() => {
     const setupOnce = _.once(setup ?? _.noop)
     const drawFunction = (p5: p5) => {
-      setupOnce(p5, canvasStates ?? {})
-      if (draw) draw(p5, canvasStates ?? {})
+      setupOnce(p5, canvasStates)
+      if (draw) draw(p5, canvasStates)
       setSetupDone(true)
     }
 
     registerCallback(P5Event.draw, drawFunction)
     loopObject(callbacks, (eventName, callback) =>
       registerCallback(eventName, (p5: p5) => {
-        if (callback) callback(p5, canvasStates ?? {})
+        if (callback) callback(p5, canvasStates)
       }))
 
     return () => {
       unregisterCallbacks()
-      if (cleanup) cleanup(canvasStates ?? {})
+      if (cleanup) cleanup(canvasStates)
     }
   }, [])
 

@@ -10,7 +10,7 @@ const drawVectorString = () => {
   const createVector = (p5: p5) => {
     text = new Text(p5, 'Ä', configs.VECTOR_STRING_TRANSLATE)
     text.setting.mapFunction = (stillVector, mouseVector) => {
-      const distVector = mouseVector.sub(text.setting.mouseOrigin ?? stillVector)
+      const distVector = mouseVector.sub(text.setting.mouseOrigin)
       const segmentation = vectorStringCount
       const segmentSize = Math.PI * 2 / segmentation
       const segmentedHeading = Math.floor(distVector.heading() / segmentSize) * segmentSize
@@ -19,7 +19,7 @@ const drawVectorString = () => {
         text.setting.maxStretch
       return distVector
         .setHeading(segmentedHeading)
-        .setMag(maxStretch ?? 1)
+        .setMag(maxStretch)
         .add(stillVector)
     }
   }

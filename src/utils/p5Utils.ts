@@ -31,7 +31,7 @@ export enum P5Event {
 export const parseVector = (vector: p5.Vector): [number, number] => [vector.x, vector.y]
 
 export const styleDashedRect = (p5: p5) => {
-  const device = getIsMobile() ? Device.Mobile : Device.Desktop
+  const device = getIsMobile(false) ? Device.Mobile : Device.Desktop
   p5.drawingContext.setLineDash(repeat(2, sketchSizes[device].line.dash.value))
   p5.noFill()
   p5.stroke(colors.dashLine)

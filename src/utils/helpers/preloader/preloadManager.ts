@@ -5,14 +5,17 @@ import mobileDimensions from '../../../data/media/nativeDimensions/mobile.json'
 import workData from '../../../data/work/workData.json'
 import { getDevice, filterFalsy, joinPaths, loopObject, typedKeys, validateString } from '../../commonUtils'
 import breakpts from '../../../data/breakpoints'
+import VidHelper from '../video/vidHelper'
 import { getBreakptKey } from '../../queryUtil'
+import { Environment } from '../../utilTypes'
 import { Device } from '../../breakptTypes'
 import { MediaStack } from './mediaStack'
 import { MediaFileType, getPreviewBreakptKey, MediaSize, MediaType, fileIsImg, Verbosity, Fallback } from './preloadUtils'
-import PreloadQueuer, { type PreloadStack } from './preloadQueuer'
+import PreloadQueuer from './preloadQueuer'
+import type { PreloadStack } from './preloadQueuer'
 import type { MediaBreakpts, PreloaderConfig } from './preloaderTypes'
 import type { coorTuple } from '../../utilTypes'
-import type { loadVidType } from './preloadTypes'
+import type { loadNativeVidType } from './preloadTypes'
 
 const LOG_COLORS = {
   [MediaSize.Fallback]: 'yellow',
@@ -48,34 +51,38 @@ interface DecorateLogConfig {
 }
 
 class PreloadManager {
-  private loadVid: loadVidType
+  private loadNativeVid: loadNativeVidType
   private breakpts: MediaBreakpts[]
   private preloadQueuer: PreloadQueuer<PreloadManagerStack, MediaBreakpts>
   private currentPreloadName: PreloadName | undefined
+  private currentStartTime: number
+  private logTime: boolean
 
   config: PreloaderConfig
 
-  enabled: boolean
   loadLocal: boolean
-
+  loadFromEnv: Environment
   imgPreloaded: boolean
+
   verbosity: Verbosity
-  currentStartTime: number
-  logTime: boolean
 
-  constructor(config: PreloaderConfig, loadVid: loadVidType) {
+  constructor(config: PreloaderConfig, loadNativeVid: loadNativeVidType) {
     this.config = config
-    this.loadVid = loadVid
+    this.loadNativeVid = loadNativeVid
 
-    this.verbosity = Verbosity.Minimal
+    this.loadLocal = false
+    this.loadFromEnv = Environment.Development
+    this.imgPreloaded = false
+
+    this.verbosity = Verbosity.Quiet
     this.currentStartTime = Date.now()
     this.logTime = true
 
-    this.enabled = true
-    this.loadLocal = true
     this.preloadQueuer = new PreloadQueuer<PreloadManagerStack, MediaBreakpts>({
-      queueInterval: 0
+      queueInterval: 0,
+      queueCount: 3
     })
+
     this.breakpts = [
       ...typedKeys(breakpts),
       Fallback.MobileFallback,
@@ -84,22 +91,21 @@ class PreloadManager {
     ]
 
     this.currentPreloadName = undefined
-    this.imgPreloaded = false
 
-    if (!this.enabled || process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production') {
       this.verbosity = Verbosity.Quiet
       this.logTime = false
     }
 
-    if (process.env.NODE_ENV === 'production')
+    if (process.env.NODE_ENV === 'production') {
       this.loadLocal = false
-
-    if (this.enabled) {
-      this.createThumbnailStacks(Device.Desktop)
-      this.createWorkPagesStacks(Device.Desktop)
-      this.createThumbnailStacks(Device.Mobile)
-      this.createWorkPagesStacks(Device.Mobile)
+      this.loadFromEnv = Environment.Production
     }
+
+    this.createThumbnailStacks(Device.Desktop)
+    this.createWorkPagesStacks(Device.Desktop)
+    this.createThumbnailStacks(Device.Mobile)
+    this.createWorkPagesStacks(Device.Mobile)
 
     if (this.verbosity >= Verbosity.Normal) {
       console.log(
@@ -124,15 +130,16 @@ class PreloadManager {
       const { animatedThumbnail, listed, enabled } = workData.find(page => page.id === pageId) ?? {}
       if (!listed || !enabled) return
 
-      this.preloadQueuer.stackData.push({
+      this.preloadQueuer.mediaStacks.push({
         stack: new MediaStack<MediaBreakpts>({
           fileName,
           filePath: joinPaths(this.assetPath, device, 'thumbnails'),
           fileType: animatedThumbnail ? MediaFileType.Video : MediaFileType.Image,
+          device,
           breakpts: this.breakpts,
           config: this.config,
           nativeDimension,
-          loadVid: this.loadVid
+          loadNativeVid: this.loadNativeVid
         }),
         device,
         category: PreloadCategory.Thumbnail,
@@ -146,15 +153,16 @@ class PreloadManager {
       desktopDimensions : mobileDimensions).work
     loopObject(nativeDimensions, (pageId, nativeDimensions) => {
       (nativeDimensions as DimensionData).forEach(([fileName, nativeDimension]) =>
-        this.preloadQueuer.stackData.push({
+        this.preloadQueuer.mediaStacks.push({
           stack: new MediaStack<MediaBreakpts>({
             fileName,
-            fileType: fileIsImg(fileName) ? MediaFileType.Image : MediaFileType.Video,
             filePath: joinPaths(this.assetPath, device, 'work', pageId),
+            fileType: fileIsImg(fileName) ? MediaFileType.Image : MediaFileType.Video,
+            device,
             breakpts: this.breakpts,
             config: this.config,
             nativeDimension,
-            loadVid: this.loadVid
+            loadNativeVid: this.loadNativeVid
           }),
           device,
           category: PreloadCategory.WorkPage,
@@ -176,8 +184,10 @@ class PreloadManager {
       this.config.isMobile ? undefined :
         this.preloadAllPages(MediaSize.Max),
     ]).then(() => {
-      this.logFinished(false)
       this.currentPreloadName = undefined
+      if (VidHelper.canUseDash)
+        return this.logFinished(true)
+      this.logFinished(false)
       this.preloadRemainingVid()
     }).catch(() =>
       this.logAborted()
@@ -209,8 +219,10 @@ class PreloadManager {
       this.config.isMobile ? undefined :
         this.preloadAllPages(MediaSize.Max, pageIdToLoad),
     ]).then(() => {
-      this.logFinished(false)
       this.currentPreloadName = undefined
+      if (VidHelper.canUseDash)
+        return this.logFinished(true)
+      this.logFinished(false)
       this.preloadRemainingVid()
     }).catch(() =>
       this.logAborted()
@@ -238,8 +250,7 @@ class PreloadManager {
     excludeId?: string | null,
     isFullVid?: boolean
   ) {
-    if (!size)
-      return () => Promise.resolve(false)
+    if (!size) return () => Promise.resolve(false)
     const preloadType = (type: MediaType) => ({
       run: () => this.preloadQueuer.addToSubqueue(
         filterFalsy(_.pull(this.sortedPageIds, excludeId))
@@ -307,7 +318,8 @@ class PreloadManager {
   }
 
   private preloadRemainingVid() {
-    if (!this.config.canAutoPlay) return () => Promise.resolve(false)
+    if (!this.config.canAutoPlay)
+      return () => Promise.resolve(false)
     return this.preloadQueuer.addToSubqueue([
       {
         run: () => this.preloadQueuer.addToSubqueue([
@@ -382,9 +394,8 @@ class PreloadManager {
   }
 
   get assetPath() {
-    // const storageRoot= 'https://storage.googleapis.com/donaldzhu-portfolio/'
-    // const storageRoot = 'https://donaldzhu-portfolio-us-east.s3.us-east-2.amazonaws.com/'
-    const storageRoot = 'https://raw.githubusercontent.com/donaldzhu/portfolio-static-files/main/'
+    // const storageRoot = `https://raw.githubusercontent.com/donaldzhu/portfolio-static-files-${this.loadFromEnv}/main/`
+    const storageRoot = 'https://raw.githubusercontent.com/donaldzhu/portfolio-static-files-development/main/'
     return validateString(!this.loadLocal, storageRoot) + 'assets'
   }
 
@@ -512,7 +523,7 @@ class PreloadManager {
   findStack(searchFunction:
     (stackData: TypedPreloadStack) => boolean
   ) {
-    return this.preloadQueuer.stackData.find(searchFunction)
+    return this.preloadQueuer.mediaStacks.find(searchFunction)
   }
 
   findThumbnail(pageId: string) {

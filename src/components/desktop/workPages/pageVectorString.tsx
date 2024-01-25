@@ -18,7 +18,7 @@ const PageVectorString = () => {
   const tranlsateImgCount = vectorStringCount
 
   useEffect(() => {
-    let translateContainer: ElemRect<HTMLDivElement>
+    let translateContainer: ElemRect<HTMLDivElement> | undefined
     return addEventListener(document.body, 'mousemove', ({ clientX, clientY }) => {
       if (!validateRef(translateContainerRef)) return
       translateContainer ??= new ElemRect(translateContainerRef)
@@ -36,7 +36,7 @@ const PageVectorString = () => {
         <WorkImg src='1.webp' />
       </RowContainer>
       <RowContainer cols={[4, 3]} ref={translateContainerRef}>
-        <WorkImg src={`translate/${translateImgSrc}.webp`} />
+        <WorkImg src={`translate/${translateImgSrc}.webp`} key={translateImgSrc} />
         <Canvas {...canvasHandlers} />
       </RowContainer>
       <RowContainer toolTip={

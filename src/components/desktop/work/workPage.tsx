@@ -28,9 +28,12 @@ const WorkPage = ({ data, Content }: WorkPageProps) => {
   const popUpRef = useRef<HTMLDivElement>(null)
   const setupDone = useCanvas(() =>
     drawToolTip({ toolTipRef, popUpRef }))
-  usePreloadQueue(setupDone, preloadManager =>
-    preloadManager.pagePreload(pageId), [data])
+  usePreloadQueue(setupDone, preloadManager => {
+    console.log(performance.now() / 1000)
+    preloadManager.pagePreload(pageId)
+  }, [data])
   useSidebar(<WorkPageSidebar {...data} />)
+
 
   return (
     <WorkPageContext.Provider value={{ toolTipRef, popUpRef, pageId }}>

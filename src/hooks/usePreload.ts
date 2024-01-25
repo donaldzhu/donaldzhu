@@ -10,8 +10,9 @@ interface LoadDataInterface {
 }
 
 const usePreload = (config: PreloaderConfig) => {
-  const [vidLoadData, setVidLoadData] = useState<Record<string, LoadDataInterface>>({})
-  const loadVid = (src: string, threshold: number) => {
+  const [vidLoadData, setVidLoadData] = useState<Record<string, LoadDataInterface | undefined>>({})
+
+  const loadNativeVid = (src: string, threshold: number) => {
     if (vidLoadData[src]) return Promise.resolve()
     const loadData: Partial<LoadDataInterface> = {}
     loadData.promise = new Promise(resolve =>
@@ -27,7 +28,7 @@ const usePreload = (config: PreloaderConfig) => {
     return loadData.promise
   }
 
-  const preloadManager = useMemo(() => new PreloadManager(config, loadVid), [])
+  const preloadManager = useMemo(() => new PreloadManager(config, loadNativeVid), [])
 
   useEffect(() => {
     Object.assign(preloadManager.config, config)

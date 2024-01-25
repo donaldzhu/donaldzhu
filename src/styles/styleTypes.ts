@@ -16,4 +16,5 @@ export interface FontVarConfigProps {
 export interface MediaProps {
   $aspectRatio?: string | number
   $hasLoaded?: boolean
+  $isZoomed?: boolean
 }

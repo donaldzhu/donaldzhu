@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -48,7 +71,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs_1 = __importDefault(require("fs"));
+var fs_1 = __importStar(require("fs"));
 var path_1 = __importDefault(require("path"));
 var child_process_1 = require("child_process");
 var lodash_1 = __importDefault(require("lodash"));
@@ -60,6 +83,7 @@ var breakptResizer_1 = __importDefault(require("./breakptResizer"));
 var resizerTypes_1 = require("./resizerTypes");
 var utils_1 = require("../../utils");
 var constants_1 = require("./constants");
+var resizeUtils_1 = require("../resizeUtils");
 var Resizer = (function () {
     function Resizer(source, breakptConfigs, _a) {
         var _this = this;
@@ -133,8 +157,11 @@ var Resizer = (function () {
             (0, utils_1.mkdir)(this.joinSrcPath(constants_1.POSTER_SUBFOLDER), this.removeFilesAtDest);
     };
     Resizer.prototype.createDestDashDir = function () {
-        if (this.hasVid)
+        var _this = this;
+        if (this.hasVid) {
             (0, utils_1.mkdir)((0, utils_1.joinPaths)(this.destination, constants_1.DASH_SUBFOLDER), this.removeFilesAtDest);
+            resizerTypes_1.vidExportTypes.forEach(function (type) { return (0, utils_1.mkdir)((0, utils_1.joinPaths)(_this.destination, constants_1.DASH_SUBFOLDER, type), _this.removeFilesAtDest); });
+        }
     };
     Resizer.prototype.resizeMedia = function (fileName, fileEntry) {
         return __awaiter(this, void 0, void 0, function () {
@@ -211,10 +238,10 @@ var Resizer = (function () {
     };
     Resizer.prototype.resizeVid = function (fileName, fileEntry) {
         return __awaiter(this, void 0, void 0, function () {
-            var vidPath, vidObj, metadata, pngPosterPath, webpPosterPath;
+            var vidPath, vidObj, metadata, width, height, pngPosterPath, webpPosterPath, _a, dir, name_1, ext, tempPath, shouldResizeOriginal;
             var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         vidPath = this.joinSrcPath(fileName);
                         vidObj = (0, fluent_ffmpeg_1.default)({ source: vidPath, priority: 10 }).noAudio();
@@ -224,7 +251,8 @@ var Resizer = (function () {
                                 }); }); });
                             })];
                     case 1:
-                        metadata = _a.sent();
+                        metadata = _b.sent();
+                        width = metadata.width, height = metadata.height;
                         pngPosterPath = this.getScreenshotPath(vidPath);
                         webpPosterPath = this.getPosterPath(pngPosterPath);
                         if (!(this.exportPoster && this.shouldExport("poster"))) return [3, 3];
@@ -251,31 +279,43 @@ var Resizer = (function () {
                                 }); });
                             })];
                     case 2:
-                        _a.sent();
+                        _b.sent();
                         this.resizeImg(webpPosterPath, fileEntry, {
                             vidSize: metadata, vidFileName: fileName
                         });
-                        _a.label = 3;
+                        _b.label = 3;
                     case 3:
-                        if (!this.shouldExport("video")) return [3, 6];
-                        return [4, this.mapBreakpts(function (resizer) { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4, resizer
-                                                .resizeVideo(vidObj, { metadata: metadata, fileName: fileName, fileEntry: fileEntry })];
-                                        case 1: return [2, _a.sent()];
-                                    }
-                                });
-                            }); })];
+                        if (!this.shouldExport("video")) return [3, 8];
+                        _a = path_1.default.parse(vidPath), dir = _a.dir, name_1 = _a.name, ext = _a.ext;
+                        tempPath = "".concat(dir, "/").concat(name_1, "_temp").concat(ext);
+                        shouldResizeOriginal = (0, resizeUtils_1.isOdd)(width) || (0, resizeUtils_1.isOdd)(height);
+                        if (!shouldResizeOriginal) return [3, 5];
+                        vidObj
+                            .size("".concat((0, resizeUtils_1.roundEven)(width), "x?"))
+                            .output(tempPath);
+                        return [4, this.runFfmpeg(vidObj)];
                     case 4:
-                        _a.sent();
-                        return [4, new Promise(function (resolve) {
-                                return vidObj.on('end', function () { return resolve(null); }).run();
-                            })];
-                    case 5:
-                        _a.sent();
-                        _a.label = 6;
+                        _b.sent();
+                        (0, fs_1.unlinkSync)(vidPath);
+                        (0, fs_1.renameSync)(tempPath, vidPath);
+                        vidObj = (0, fluent_ffmpeg_1.default)({ source: vidPath, priority: 10 }).noAudio();
+                        _b.label = 5;
+                    case 5: return [4, this.mapBreakpts(function (resizer) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4, resizer
+                                            .resizeVideo(vidObj, { metadata: metadata, fileName: fileName, fileEntry: fileEntry })];
+                                    case 1: return [2, _a.sent()];
+                                }
+                            });
+                        }); })];
                     case 6:
+                        _b.sent();
+                        return [4, this.runFfmpeg(vidObj)];
+                    case 7:
+                        _b.sent();
+                        _b.label = 8;
+                    case 8:
                         this.log(vidPath, "video", this.shouldExport("video"));
                         if (this.shouldExport("dash"))
                             this.generateDash(fileName, metadata);
@@ -288,13 +328,10 @@ var Resizer = (function () {
     };
     Resizer.prototype.generateDash = function (fileName, metadata) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, ext, width, height, destFolderPath, gopSize, getEvenWidth, qualityMap, qualityFilters, command;
-            return __generator(this, function (_b) {
-                _a = path_1.default.parse(fileName), name = _a.name, ext = _a.ext;
+            var name, width, height, getEvenWidth, qualityMap, qualityFilters, gopSize, destFolderPath, command;
+            return __generator(this, function (_a) {
+                name = path_1.default.parse(fileName).name;
                 width = metadata.width, height = metadata.height;
-                destFolderPath = (0, utils_1.joinPaths)(this.destination, constants_1.DASH_SUBFOLDER, "".concat(name).concat(ext.replace('.', '-')));
-                (0, utils_1.mkdir)(destFolderPath, this.removeFilesAtDest);
-                gopSize = 100;
                 getEvenWidth = function (resizedHeight) { return 2 * Math.round(width / height * resizedHeight / 2); };
                 qualityMap = constants_1.DASH_CONFIGS
                     .map(function (_a, i) {
@@ -306,9 +343,25 @@ var Resizer = (function () {
                     return "-map v:0 -s:".concat(i, " ").concat(getEvenWidth(size), "x").concat(size, " -b:v:").concat(i, " ").concat(bitrate, " -r:").concat(i, " ").concat(frameRate);
                 });
                 qualityFilters = (0, utils_1.filterFalsy)(qualityMap).join(' ');
-                command = "\n      nice -n 10 ffmpeg -i ".concat(this.joinSrcPath(fileName), " -y -c:v libx264 \\\n        -hide_banner -loglevel warning \\\n        -preset veryslow -keyint_min ").concat(gopSize, " -g ").concat(gopSize, " -sc_threshold 0 \\\n        ").concat(qualityFilters, " \\\n        -use_template 1 -use_timeline 1 -seg_duration 4 \\\n        -adaptation_sets \"id=0,streams=v id=1\" \\\n        -f dash ").concat(destFolderPath, "/dash.mpd\n      ");
+                gopSize = 100;
+                destFolderPath = (0, utils_1.joinPaths)(this.destination, constants_1.DASH_SUBFOLDER, name);
+                (0, utils_1.mkdir)(destFolderPath, this.removeFilesAtDest);
+                command = "\n      nice -n 10 ffmpeg -i ".concat(this.joinSrcPath(fileName), " -y \\\n        -c:v libx264 -preset veryslow -sc_threshold 0 \\\n        -keyint_min ").concat(gopSize, " -g ").concat(gopSize, " -hide_banner -loglevel warning \\\n        ").concat(qualityFilters, " \\\n        -use_template 1 -use_timeline 1 -seg_duration 4 \\\n        -adaptation_sets \"id=0,streams=v\" \\\n        -f dash ").concat(destFolderPath, "/dash.mpd\n    ");
                 (0, child_process_1.execSync)(command);
                 return [2];
+            });
+        });
+    };
+    Resizer.prototype.runFfmpeg = function (ffmpegCommand) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, new Promise(function (resolve) { return ffmpegCommand
+                            .on('end', function () { return resolve(null); })
+                            .on('error', function (err) { return console.log(err); })
+                            .run(); })];
+                    case 1: return [2, _a.sent()];
+                }
             });
         });
     };
@@ -354,8 +407,7 @@ var Resizer = (function () {
             'Resized' : 'Debugged', " [ ").concat(type, " ]: "))).concat(chalk_1.default[color](fileName)));
     };
     Resizer.prototype.getScreenshotPath = function (filename) {
-        var regex = new RegExp("(".concat(resizerTypes_1.vidExtensionRegex, ")$"));
-        return (0, utils_1.joinPaths)(path_1.default.dirname(filename), constants_1.POSTER_SUBFOLDER, path_1.default.basename(filename).replace(regex, resizerTypes_1.ImgExtension.Png));
+        return (0, utils_1.joinPaths)(path_1.default.dirname(filename), constants_1.POSTER_SUBFOLDER, path_1.default.basename((0, resizeUtils_1.replaceExt)(filename, resizerTypes_1.ImgExtension.Png)));
     };
     Resizer.prototype.getPosterPath = function (filename) {
         return filename.replace(resizerTypes_1.ImgExtension.Png, resizerTypes_1.ImgExtension.Webp);

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { domSizes } from '../../../styles/sizes'
 import { addEventListener } from '../../../utils/reactUtils'
@@ -16,6 +16,7 @@ import type { RequiredZoomMediaProps, handleZoomMediaType } from './mediaTypes'
 
 interface ZoomedMediaProps {
   zoomMedia: RequiredZoomMediaProps
+  canAutoPlay: boolean | undefined
   handleUnzoom: handleZoomMediaType
 }
 
@@ -27,7 +28,8 @@ interface StyledZoomedMediaProps {
   $aspectRatio: number | undefined
 }
 
-const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
+const ZoomedMedia = ({ zoomMedia, canAutoPlay, handleUnzoom }: ZoomedMediaProps) => {
+  const [hasLoadedGracefully, setHasLoadedGracefully] = useState(false)
   const zoomedMediaRef = useRef<HTMLImageElement | HTMLVideoElement>(null)
   const isRendered = useMediaIsRendered(zoomedMediaRef)
   const isMobile = useIsMobile()
@@ -49,19 +51,17 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
     if (!zoomMediaIsVid(currentMedia))
       return removeKeydownListener
 
-    if (!isMobile) currentMedia.currentTime =
-      zoomMedia.getCurrentTime()
-    currentMedia.play()
+    setTimeout(() => { setHasLoadedGracefully(true) }, 500)
     return removeKeydownListener
   }, [])
 
-  const { type, mediaStack, fallbackPath, alt } = zoomMedia
+  const { type, stackData, alt } = zoomMedia
 
   const maxSize = zoomMedia.maxSize ?? toPercent(domSizes[isMobile ?
     Device.Mobile : Device.Desktop].media.zoomPercentage)
 
-  const { nativeDimension } = mediaStack?.stack ?? {}
-  const aspectRatio = nativeDimension ? nativeDimension[0] / nativeDimension[1] : undefined
+  const { nativeDimension } = stackData.stack
+  const aspectRatio = nativeDimension[0] / nativeDimension[1]
   const deviceRatio = width / height
   const isWider = aspectRatio && deviceRatio && aspectRatio >= deviceRatio
   const mobileWidth = isWider ? maxSize : ''
@@ -77,13 +77,15 @@ const ZoomedMedia = ({ zoomMedia, handleUnzoom }: ZoomedMediaProps) => {
       onClick={() => handleUnzoom()}>
       <PreloadMedia
         type={type}
-        stackData={mediaStack}
-        fallbackPath={fallbackPath}
+        stackData={stackData}
         alt={alt}
         ref={zoomedMediaRef}
         isZoomed={true}
-        autoPlay={false} />
+        autoPlay={true}
+        canAutoPlay={canAutoPlay}
+        currentTime={!isMobile ? zoomMedia.getCurrentTime() : undefined} />
       {
+        hasLoadedGracefully &&
         isMobile &&
         type === MediaFileType.Video &&
         !isRendered &&
@@ -104,8 +106,9 @@ const ZoomedContainer = styled(PopUpContainer) <StyledZoomedMediaProps>`
       height: ${$mobileHeight};
       aspect-ratio: ${validateString($aspectRatio)};
     `}
-    object-fit: contain;
-    background-color: ${({ $isRendered }) => validateString(!$isRendered, 'white')};
+
+    object-fit: fill;
+    ${({ $isRendered }) => validateString(!$isRendered, 'background: white;')}
   }
 `
 
