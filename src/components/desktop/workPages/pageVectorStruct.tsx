@@ -52,7 +52,7 @@ const PageVectorStruct = () => {
       </SvgOuterContainer>
       <RowContainer>
         <ColumnContainer>
-          <WorkImgGroup grid={[3, 3]} prefix={glyphs[displayedGlyph]} />
+          <WorkImgGroup grid={[3, 3]} prefix={glyphs[displayedGlyph]} key={displayedGlyph} />
         </ColumnContainer>
         <WorkVid src={`${displayedGlyph + 4}.webm`} key={displayedGlyph} />
       </RowContainer>
