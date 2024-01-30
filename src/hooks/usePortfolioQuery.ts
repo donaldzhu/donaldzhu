@@ -5,9 +5,13 @@ import allPortfolioData from '../data/portfolio.json'
 const TypedPortfolioData: Record<string, string> = allPortfolioData
 const usePortfolioQuery = () => {
   const [searchParams] = useSearchParams()
-  const pid = searchParams.get('pid')
+
+  const pidKey = Array.from(searchParams.keys())
+    .find(param => param.toLowerCase() === 'pid')
+  const pid = pidKey ? searchParams.get(pidKey) : null
+
   const portfolioData: string | undefined =
-    useMemo(() => { if (pid) return TypedPortfolioData[pid] }, [searchParams])
+    useMemo(() => { if (pid) return TypedPortfolioData[pid.toLowerCase()] }, [searchParams])
   return { portfolioData, pid: portfolioData ? pid : undefined }
 }
 

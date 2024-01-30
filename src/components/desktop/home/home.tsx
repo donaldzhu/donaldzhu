@@ -1,3 +1,4 @@
+import styled from 'styled-components'
 import usePortfolioQuery from '../../../hooks/usePortfolioQuery'
 import useSidebar from '../../../hooks/useSidebar'
 import Anchor from '../../common/anchor'
@@ -17,9 +18,11 @@ const HomeSidebar = () => {
     `${portfolioData.toLocaleUpperCase()}, WELCOME!` :
     'DONALD ZHU is a graphic designer based in Toronto, Canada.'
 
-  const pdfLink = pid ? (pdfPortfolioData as Record<string, string>)[pid] : null
+  const pdfLink = pid ? (pdfPortfolioData as Record<string, string>)[pid.toLowerCase()] : null
   const PortfolioHeaderSuffix = pdfLink ?
-    <p>Please <Anchor to={pdfLink}>click here</Anchor> for a curated PDF portfolio.</p> :
+    <PdfSpan>
+      Please <Anchor to={pdfLink}>click here</Anchor> for a curated PDF portfolio.
+    </PdfSpan> :
     <>Thanks for your time.</>
 
   return (
@@ -39,5 +42,9 @@ const HomeSidebar = () => {
     </TextContainer>
   )
 }
+
+const PdfSpan = styled.span`
+  display: block;
+`
 
 export default Home

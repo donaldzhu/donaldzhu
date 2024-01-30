@@ -3,6 +3,7 @@ import type { MediaFileType } from '../../../utils/helpers/preloader/preloadUtil
 import type { PreloadMediaStack } from '../../../utils/helpers/preloader/preloaderTypes'
 import type { TypedPreloadStack } from '../../../utils/helpers/preloader/preloadManager'
 
+// TODO change these to be unconditional
 interface MediaProps {
   hasLoaded?: boolean
   aspectRatio?: string | number

@@ -73,6 +73,7 @@ const Vid = forwardRef<
 
     useEffect(() => {
       const isEnabled = vidHelperIsEnabled()
+      console.log(isEnabled)
       if (!validateRef(vidHelperRef) || !isEnabled)
         return
       vidHelperRef.current.enabled = isEnabled
@@ -87,7 +88,6 @@ const Vid = forwardRef<
     const toggle = (shouldPlay?: boolean | null) => {
       if (!validateRef(vidHelperRef)) return
 
-      console.log('toggle', src)
       const vidHelper = vidHelperRef.current
       if (shouldPlay) vidHelper.play()
       else if (shouldPlay === false)
@@ -98,7 +98,6 @@ const Vid = forwardRef<
     //   () => toggle(entry?.isIntersecting),
     //   [entry, entry?.isIntersecting]
     // )
-    console.log('check')
 
     useEffect(() => {
       if (!isZoomed) toggle(
@@ -114,7 +113,7 @@ const Vid = forwardRef<
 
     const dashSetup = () => {
       const player = playerRef.current = dashjs.MediaPlayer().create()
-      player.initialize(mergedRef.current!, src, isZoomed)
+      player.initialize(mergedRef.current!, src, !!isZoomed || vidCanAutoPlay)
       playerInitilizedRef.current = true
 
       const updateMaxBitrate = () => {
@@ -138,9 +137,13 @@ const Vid = forwardRef<
                 video: maxBitrateInfo.bitrate / 1000
               },
             },
-            buffer: {
-              flushBufferAtTrackSwitch: true
-            }
+            // TODO
+            // buffer: {
+            //   flushBufferAtTrackSwitch: true
+            // }
+          },
+          debug: {
+            logLevel: src?.match('vector-struct') ? 5 : 3
           }
         })
       }
@@ -148,7 +151,6 @@ const Vid = forwardRef<
       catchup()
 
       player.on('streamInitialized', updateMaxBitrate)
-      player.on('playbackPaused', e => console.log('paused', src, e))
       const removeResizeListener = addEventListener(window, 'resize', updateMaxBitrate)
 
       return () => {
