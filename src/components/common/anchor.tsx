@@ -13,14 +13,18 @@ const Anchor = forwardRef<HTMLAnchorElement, LinkProps & { noQuery?: boolean }>(
   noQuery,
   ...props
 }, ref) {
-  const linkIsExternal = to && typeof to === 'string' && to.match(/^(https|www)/)
+  const linkIsExternal = typeof to === 'string' && to.match(/^(https|www)/)
   const { pid } = usePortfolioQuery()
+
+  const isPdf = typeof to === 'string' && to.match(/\.pdf$/i)
 
   target ||= (linkIsExternal ? '_blank' : '_self')
   to += `${validateString(
-    (pid && !linkIsExternal && !noQuery),
+    (pid && !linkIsExternal && !noQuery && !isPdf),
     appendQuery(['pid', pid])
   )}`
+
+  if (isPdf) to = window.location.origin + to
 
   return <HoverLink
     {...props}

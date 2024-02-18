@@ -18,7 +18,7 @@ const contactData: ContactDataInterface[] = [
     qrName: 'instagram',
     text: 'instagram',
     displayName: 'Instagram',
-    link: 'https://www.instagram.com/donaldzhu.graphics/',
+    link: 'https://www.instagram.com/donald.zhu.design/',
     SvgComponent: InstagramSvg
   },
   {

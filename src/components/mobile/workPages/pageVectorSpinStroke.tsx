@@ -1,9 +1,9 @@
 import Anchor from '../../common/anchor'
-import WorkImg from '../../common/media/workImg'
-import WorkVid from '../../common/media/workVid'
 import RowContainer from '../../common/rowContainer'
 import SmallText from '../../common/styled/smallText'
 import TextContainer from '../../common/styled/textContainer'
+import WorkImg from '../../common/media/workImg'
+import WorkVid from '../../common/media/workVid'
 import type { WorkPageContentProps } from '../work/workPageTypes'
 
 const PageVectorSpinStroke = ({ WorkInfo }: WorkPageContentProps) => {
