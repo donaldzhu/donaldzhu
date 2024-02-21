@@ -13,6 +13,7 @@ import WorkImg from '../../common/media/workImg'
 import WorkImgGroup from '../../common/media/workImgGroup'
 import WorkVid from '../../common/media/workVid'
 import RowContainer from '../../common/rowContainer'
+import { validateString } from '../../../utils/commonUtils'
 import type { Device } from '../../../utils/breakptTypes'
 
 const PageStroke = () => {
@@ -30,7 +31,10 @@ const PageStroke = () => {
 
   const handleClear = () => isClearingRef.current = true
 
-  const handleOnHover = (i: number, isOver: boolean) => setHoveringCard(isOver ? i : null)
+  const handleOnHover = (i: number, isOver: boolean) => {
+    console.log(isOver)
+    setHoveringCard(isOver ? i : null)
+  }
   return (
     <>
       <RowContainer>
@@ -81,7 +85,7 @@ const PageStroke = () => {
       </RowContainer>
       <RowContainer>
         {cardRefs.map((ref, i) => <WorkImg
-          key={i}
+          key={i + validateString(hoveringCard === i, '-hover')}
           ref={ref}
           src={`hover/${i + (hoveringCard === i ? 3 : 0) + 1}.webp`}
           onMouseOver={() => handleOnHover(i, true)}
