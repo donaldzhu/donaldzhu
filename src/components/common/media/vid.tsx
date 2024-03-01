@@ -73,7 +73,6 @@ const Vid = forwardRef<
 
     useEffect(() => {
       const isEnabled = vidHelperIsEnabled()
-      console.log(isEnabled)
       if (!validateRef(vidHelperRef) || !isEnabled)
         return
       vidHelperRef.current.enabled = isEnabled
@@ -151,6 +150,7 @@ const Vid = forwardRef<
       catchup()
 
       player.on('streamInitialized', updateMaxBitrate)
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_ENDED, e => console.log(e, src))
       const removeResizeListener = addEventListener(window, 'resize', updateMaxBitrate)
 
       return () => {
@@ -166,6 +166,12 @@ const Vid = forwardRef<
       if (!canUseDash) catchup()
       else return dashSetup()
     }, [])
+
+
+    useEffect(() => {
+      if (src?.match('vector-struct'))
+        console.log(loop,)
+    }, [loop, src])
 
     return (
       <StyledVid
