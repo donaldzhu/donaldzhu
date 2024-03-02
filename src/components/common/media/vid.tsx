@@ -93,10 +93,10 @@ const Vid = forwardRef<
         vidHelper.pause()
     }
 
-    // useEffect(
-    //   () => toggle(entry?.isIntersecting),
-    //   [entry, entry?.isIntersecting]
-    // )
+    useEffect(
+      () => toggle(entry?.isIntersecting),
+      [entry, entry?.isIntersecting]
+    )
 
     useEffect(() => {
       if (!isZoomed) toggle(
@@ -136,21 +136,30 @@ const Vid = forwardRef<
                 video: maxBitrateInfo.bitrate / 1000
               },
             },
-            // TODO
-            // buffer: {
-            //   flushBufferAtTrackSwitch: true
-            // }
-          },
-          debug: {
-            logLevel: src?.match('vector-struct') ? 5 : 3
+            cacheInitSegments: true,
+            buffer: {
+              flushBufferAtTrackSwitch: true
+            }
           }
         })
       }
 
       catchup()
 
-      player.on('streamInitialized', updateMaxBitrate)
-      player.on(dashjs.MediaPlayer.events.PLAYBACK_ENDED, e => console.log(e, src))
+      const {
+        STREAM_INITIALIZED,
+        PLAYBACK_ENDED
+      } = dashjs.MediaPlayer.events
+
+      player.on(STREAM_INITIALIZED, updateMaxBitrate)
+      player.on(PLAYBACK_ENDED, e => {
+        const { isLast } = (e as dashjs.Event & { isLast: boolean })
+        if (!isLast && !loop) return
+        player.seek(0)
+        player.play()
+      })
+
+
       const removeResizeListener = addEventListener(window, 'resize', updateMaxBitrate)
 
       return () => {
@@ -166,12 +175,6 @@ const Vid = forwardRef<
       if (!canUseDash) catchup()
       else return dashSetup()
     }, [])
-
-
-    useEffect(() => {
-      if (src?.match('vector-struct'))
-        console.log(loop,)
-    }, [loop, src])
 
     return (
       <StyledVid

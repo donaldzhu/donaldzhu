@@ -4,7 +4,7 @@ import resize from './resize'
 
 const desktopConfig = {
   resizeThumbnails: true,
-  resizeWork: false,
+  resizeWork: true,
   exportPages: [],
   exportBreakpts: [],
   exportTypes: [MediaType.Dash]
@@ -20,7 +20,7 @@ const desktopConfig = {
 
 
 const run = async () => {
-  await resize(Device.Desktop, desktopConfig)
+  await resize(Device.Mobile, desktopConfig)
 }
 
 run()

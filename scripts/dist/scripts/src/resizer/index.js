@@ -43,7 +43,7 @@ var constants_1 = require("./constants");
 var resize_1 = __importDefault(require("./resize"));
 var desktopConfig = {
     resizeThumbnails: true,
-    resizeWork: false,
+    resizeWork: true,
     exportPages: [],
     exportBreakpts: [],
     exportTypes: ["dash"]
@@ -51,7 +51,7 @@ var desktopConfig = {
 var run = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4, (0, resize_1.default)(constants_1.Device.Desktop, desktopConfig)];
+            case 0: return [4, (0, resize_1.default)(constants_1.Device.Mobile, desktopConfig)];
             case 1:
                 _a.sent();
                 return [2];

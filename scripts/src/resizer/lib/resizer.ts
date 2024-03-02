@@ -203,7 +203,6 @@ class Resizer<K extends string> {
     let srcPath = this.joinSrcPath(fileName)
     const shouldCreateMp4 = ext !== '.mp4' && shouldExport
 
-
     if (shouldCreateMp4) {
       const vidObj = this.createFfmpeg(srcPath)
       srcPath = srcPath.replace(/\.webm$/, '_temp.mp4')
@@ -213,10 +212,9 @@ class Resizer<K extends string> {
 
     const getEvenWidth = (resizedHeight: number) => 2 * Math.round(width / height * resizedHeight / 2)
     const qualityMap = DASH_CONFIGS
-      .map(({ size, bitrate, frameRate }, i) => {
+      .map(({ size, bitrate }, i) => {
         if (size > height) return
-        frameRate = Math.min(frameRate, metadata.frameRate ?? Infinity)
-        return `-map v:0 -s:${i} ${getEvenWidth(size)}x${size} -b:v:${i} ${bitrate} -r:${i} ${frameRate}`
+        return `-map v:0 -s:${i} ${getEvenWidth(size)}x${size} -b:v:${i} ${bitrate}`
       })
 
     const qualityFilters = filterFalsy(qualityMap).join(' ')
@@ -224,8 +222,8 @@ class Resizer<K extends string> {
 
     const destFolderPath = joinPaths(this.destination, DASH_SUBFOLDER, name)
     const command = `
-    nice -n 10 ffmpeg -i ${srcPath} -y \\
-    -c:v libx264 -preset veryslow -sc_threshold 0 \\
+    nice -n 5 ffmpeg -i ${srcPath} -y \\
+    -c:v libx264 -preset veryslow -sc_threshold 0 -r 25 \\
     -keyint_min ${gopSize} -g ${gopSize} -hide_banner -loglevel warning \\
     ${qualityFilters} \\
     -use_template 1 -use_timeline 1 -seg_duration 4 \\
@@ -235,7 +233,6 @@ class Resizer<K extends string> {
 
     mkdir(destFolderPath, this.removeFilesAtDest)
     execSync(command)
-    console.log(command)
     if (shouldCreateMp4) unlinkSync(srcPath)
   }
 
@@ -290,9 +287,9 @@ class Resizer<K extends string> {
   }
 
   private throwNoWidth(metadata: Partial<Metadata>, fileName: string) {
-    const { width, height, pageHeight, frameRate } = metadata
+    const { width, height, pageHeight } = metadata
     if (!width || !height) throw new Error(`Cannot read dimensions of ${fileName}.`)
-    return { width, height: pageHeight ?? height, frameRate: frameRate ?? 24 }
+    return { width, height: pageHeight ?? height }
   }
 
   private shouldExport(type: MediaType) {

@@ -82,5 +82,4 @@ export type callbackType = (fileName: string, size: Metadata) => void
 export interface DashConfig {
   size: number,
   bitrate: string,
-  frameRate: number
 }

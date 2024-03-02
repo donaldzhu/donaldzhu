@@ -70,7 +70,6 @@ class VidHelper {
 
   pause() {
     this.toggle(PlayState.Pause)
-    console.log('pause')
   }
 
   catchup(currentTime?: number) {

@@ -348,20 +348,17 @@ var Resizer = (function () {
                         getEvenWidth = function (resizedHeight) { return 2 * Math.round(width / height * resizedHeight / 2); };
                         qualityMap = constants_1.DASH_CONFIGS
                             .map(function (_a, i) {
-                            var _b;
-                            var size = _a.size, bitrate = _a.bitrate, frameRate = _a.frameRate;
+                            var size = _a.size, bitrate = _a.bitrate;
                             if (size > height)
                                 return;
-                            frameRate = Math.min(frameRate, (_b = metadata.frameRate) !== null && _b !== void 0 ? _b : Infinity);
-                            return "-map v:0 -s:".concat(i, " ").concat(getEvenWidth(size), "x").concat(size, " -b:v:").concat(i, " ").concat(bitrate, " -r:").concat(i, " ").concat(frameRate);
+                            return "-map v:0 -s:".concat(i, " ").concat(getEvenWidth(size), "x").concat(size, " -b:v:").concat(i, " ").concat(bitrate);
                         });
                         qualityFilters = (0, utils_1.filterFalsy)(qualityMap).join(' ');
                         gopSize = 100;
                         destFolderPath = (0, utils_1.joinPaths)(this.destination, constants_1.DASH_SUBFOLDER, name);
-                        command = "\n    nice -n 10 ffmpeg -i ".concat(srcPath, " -y \\\n    -c:v libx264 -preset veryslow -sc_threshold 0 \\\n    -keyint_min ").concat(gopSize, " -g ").concat(gopSize, " -hide_banner -loglevel warning \\\n    ").concat(qualityFilters, " \\\n    -use_template 1 -use_timeline 1 -seg_duration 4 \\\n    -adaptation_sets \"id=0,streams=v\" \\\n    -f dash ").concat(destFolderPath, "/dash.mpd\n    ");
+                        command = "\n    nice -n 5 ffmpeg -i ".concat(srcPath, " -y \\\n    -c:v libx264 -preset veryslow -sc_threshold 0 -r 25 \\\n    -keyint_min ").concat(gopSize, " -g ").concat(gopSize, " -hide_banner -loglevel warning \\\n    ").concat(qualityFilters, " \\\n    -use_template 1 -use_timeline 1 -seg_duration 4 \\\n    -adaptation_sets \"id=0,streams=v\" \\\n    -f dash ").concat(destFolderPath, "/dash.mpd\n    ");
                         (0, utils_1.mkdir)(destFolderPath, this.removeFilesAtDest);
                         (0, child_process_1.execSync)(command);
-                        console.log(command);
                         if (shouldCreateMp4)
                             (0, fs_1.unlinkSync)(srcPath);
                         return [2];
@@ -433,10 +430,10 @@ var Resizer = (function () {
         return filename.replace(resizerTypes_1.ImgExtension.Png, resizerTypes_1.ImgExtension.Webp);
     };
     Resizer.prototype.throwNoWidth = function (metadata, fileName) {
-        var width = metadata.width, height = metadata.height, pageHeight = metadata.pageHeight, frameRate = metadata.frameRate;
+        var width = metadata.width, height = metadata.height, pageHeight = metadata.pageHeight;
         if (!width || !height)
             throw new Error("Cannot read dimensions of ".concat(fileName, "."));
-        return { width: width, height: pageHeight !== null && pageHeight !== void 0 ? pageHeight : height, frameRate: frameRate !== null && frameRate !== void 0 ? frameRate : 24 };
+        return { width: width, height: pageHeight !== null && pageHeight !== void 0 ? pageHeight : height };
     };
     Resizer.prototype.shouldExport = function (type) {
         return !this.debugOnly && (this.exportTypes.length === 0 || this.exportTypes.includes(type));
