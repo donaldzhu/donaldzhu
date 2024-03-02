@@ -70,7 +70,7 @@ class PreloadManager {
     this.config = config
     this.loadNativeVid = loadNativeVid
 
-    this.loadLocal = true
+    this.loadLocal = false
     this.loadFromEnv = Environment.Development
     this.imgPreloaded = false
 
@@ -394,6 +394,7 @@ class PreloadManager {
   }
 
   get assetPath() {
+    // TODO
     // const storageRoot = `https://raw.githubusercontent.com/donaldzhu/portfolio-static-files-${this.loadFromEnv}/main/`
     const storageRoot = 'https://raw.githubusercontent.com/donaldzhu/portfolio-static-files-development/main/'
     return validateString(!this.loadLocal, storageRoot) + 'assets'
