@@ -70,7 +70,7 @@ class PreloadManager {
     this.config = config
     this.loadNativeVid = loadNativeVid
 
-    this.loadLocal = false
+    this.loadLocal = true
     this.loadFromEnv = Environment.Development
     this.imgPreloaded = false
 

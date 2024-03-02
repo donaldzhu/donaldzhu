@@ -132,7 +132,7 @@ class Resizer<K extends string> {
 
   private async resizeVid(fileName: string, fileEntry: string) {
     const vidPath = this.joinSrcPath(fileName)
-    let vidObj = ffmpeg({ source: vidPath, priority: 10 }).noAudio()
+    let vidObj = this.createFfmpeg(vidPath)
     const metadata = await new Promise<Metadata>(resolve => {
       vidObj.ffprobe(async (_, metadata) =>
         resolve(this.throwNoWidth(metadata.streams[0], fileName)))
@@ -178,7 +178,7 @@ class Resizer<K extends string> {
         unlinkSync(vidPath)
         renameSync(tempPath, vidPath)
 
-        vidObj = ffmpeg({ source: vidPath, priority: 10 }).noAudio()
+        vidObj = this.createFfmpeg(vidPath)
       }
 
       await this.mapBreakpts(async resizer => await resizer
@@ -190,15 +190,26 @@ class Resizer<K extends string> {
     this.log(vidPath, MediaType.Video, this.shouldExport(MediaType.Video))
 
     if (this.shouldExport(MediaType.Dash))
-      this.generateDash(fileName, metadata)
+      this.generateDash(fileName, metadata, this.shouldExport(MediaType.Dash))
     this.log(vidPath, MediaType.Dash, this.shouldExport(MediaType.Dash))
 
     this.callback(vidPath, metadata)
   }
 
-  private async generateDash(fileName: string, metadata: Metadata) {
-    const { name } = path.parse(fileName)
+  private async generateDash(fileName: string, metadata: Metadata, shouldExport: boolean) {
+    const { name, ext } = path.parse(fileName)
     const { width, height } = metadata
+
+    let srcPath = this.joinSrcPath(fileName)
+    const shouldCreateMp4 = ext !== '.mp4' && shouldExport
+
+
+    if (shouldCreateMp4) {
+      const vidObj = this.createFfmpeg(srcPath)
+      srcPath = srcPath.replace(/\.webm$/, '_temp.mp4')
+      vidObj.output(srcPath)
+      await this.runFfmpeg(vidObj)
+    }
 
     const getEvenWidth = (resizedHeight: number) => 2 * Math.round(width / height * resizedHeight / 2)
     const qualityMap = DASH_CONFIGS
@@ -212,19 +223,24 @@ class Resizer<K extends string> {
     const gopSize = 100
 
     const destFolderPath = joinPaths(this.destination, DASH_SUBFOLDER, name)
-    mkdir(destFolderPath, this.removeFilesAtDest)
     const command = `
-      nice -n 10 ffmpeg -i ${this.joinSrcPath(fileName)} -y \\
-        -c:v libx264 -preset veryslow -sc_threshold 0 \\
-        -keyint_min ${gopSize} -g ${gopSize} -hide_banner -loglevel warning \\
-        ${qualityFilters} \\
-        -use_template 1 -use_timeline 1 -seg_duration 4 \\
-        -adaptation_sets "id=0,streams=v" \\
-        -f dash ${destFolderPath}/dash.mpd
+    nice -n 10 ffmpeg -i ${srcPath} -y \\
+    -c:v libx264 -preset veryslow -sc_threshold 0 \\
+    -keyint_min ${gopSize} -g ${gopSize} -hide_banner -loglevel warning \\
+    ${qualityFilters} \\
+    -use_template 1 -use_timeline 1 -seg_duration 4 \\
+    -adaptation_sets "id=0,streams=v" \\
+    -f dash ${destFolderPath}/dash.mpd
     `
 
+    mkdir(destFolderPath, this.removeFilesAtDest)
     execSync(command)
+    console.log(command)
+    if (shouldCreateMp4) unlinkSync(srcPath)
+  }
 
+  private createFfmpeg(source: string) {
+    return ffmpeg({ source, priority: 10 }).noAudio()
   }
 
   private async runFfmpeg(ffmpegCommand: FfmpegCommand) {

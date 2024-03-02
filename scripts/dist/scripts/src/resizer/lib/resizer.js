@@ -244,7 +244,7 @@ var Resizer = (function () {
                 switch (_b.label) {
                     case 0:
                         vidPath = this.joinSrcPath(fileName);
-                        vidObj = (0, fluent_ffmpeg_1.default)({ source: vidPath, priority: 10 }).noAudio();
+                        vidObj = this.createFfmpeg(vidPath);
                         return [4, new Promise(function (resolve) {
                                 vidObj.ffprobe(function (_, metadata) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                                     return [2, resolve(this.throwNoWidth(metadata.streams[0], fileName))];
@@ -298,7 +298,7 @@ var Resizer = (function () {
                         _b.sent();
                         (0, fs_1.unlinkSync)(vidPath);
                         (0, fs_1.renameSync)(tempPath, vidPath);
-                        vidObj = (0, fluent_ffmpeg_1.default)({ source: vidPath, priority: 10 }).noAudio();
+                        vidObj = this.createFfmpeg(vidPath);
                         _b.label = 5;
                     case 5: return [4, this.mapBreakpts(function (resizer) { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
@@ -318,7 +318,7 @@ var Resizer = (function () {
                     case 8:
                         this.log(vidPath, "video", this.shouldExport("video"));
                         if (this.shouldExport("dash"))
-                            this.generateDash(fileName, metadata);
+                            this.generateDash(fileName, metadata, this.shouldExport("dash"));
                         this.log(vidPath, "dash", this.shouldExport("dash"));
                         this.callback(vidPath, metadata);
                         return [2];
@@ -326,31 +326,51 @@ var Resizer = (function () {
             });
         });
     };
-    Resizer.prototype.generateDash = function (fileName, metadata) {
+    Resizer.prototype.generateDash = function (fileName, metadata, shouldExport) {
         return __awaiter(this, void 0, void 0, function () {
-            var name, width, height, getEvenWidth, qualityMap, qualityFilters, gopSize, destFolderPath, command;
-            return __generator(this, function (_a) {
-                name = path_1.default.parse(fileName).name;
-                width = metadata.width, height = metadata.height;
-                getEvenWidth = function (resizedHeight) { return 2 * Math.round(width / height * resizedHeight / 2); };
-                qualityMap = constants_1.DASH_CONFIGS
-                    .map(function (_a, i) {
-                    var _b;
-                    var size = _a.size, bitrate = _a.bitrate, frameRate = _a.frameRate;
-                    if (size > height)
-                        return;
-                    frameRate = Math.min(frameRate, (_b = metadata.frameRate) !== null && _b !== void 0 ? _b : Infinity);
-                    return "-map v:0 -s:".concat(i, " ").concat(getEvenWidth(size), "x").concat(size, " -b:v:").concat(i, " ").concat(bitrate, " -r:").concat(i, " ").concat(frameRate);
-                });
-                qualityFilters = (0, utils_1.filterFalsy)(qualityMap).join(' ');
-                gopSize = 100;
-                destFolderPath = (0, utils_1.joinPaths)(this.destination, constants_1.DASH_SUBFOLDER, name);
-                (0, utils_1.mkdir)(destFolderPath, this.removeFilesAtDest);
-                command = "\n      nice -n 10 ffmpeg -i ".concat(this.joinSrcPath(fileName), " -y \\\n        -c:v libx264 -preset veryslow -sc_threshold 0 \\\n        -keyint_min ").concat(gopSize, " -g ").concat(gopSize, " -hide_banner -loglevel warning \\\n        ").concat(qualityFilters, " \\\n        -use_template 1 -use_timeline 1 -seg_duration 4 \\\n        -adaptation_sets \"id=0,streams=v\" \\\n        -f dash ").concat(destFolderPath, "/dash.mpd\n    ");
-                (0, child_process_1.execSync)(command);
-                return [2];
+            var _a, name, ext, width, height, srcPath, shouldCreateMp4, vidObj, getEvenWidth, qualityMap, qualityFilters, gopSize, destFolderPath, command;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = path_1.default.parse(fileName), name = _a.name, ext = _a.ext;
+                        width = metadata.width, height = metadata.height;
+                        srcPath = this.joinSrcPath(fileName);
+                        shouldCreateMp4 = ext !== '.mp4' && shouldExport;
+                        if (!shouldCreateMp4) return [3, 2];
+                        vidObj = this.createFfmpeg(srcPath);
+                        srcPath = srcPath.replace(/\.webm$/, '_temp.mp4');
+                        vidObj.output(srcPath);
+                        return [4, this.runFfmpeg(vidObj)];
+                    case 1:
+                        _b.sent();
+                        _b.label = 2;
+                    case 2:
+                        getEvenWidth = function (resizedHeight) { return 2 * Math.round(width / height * resizedHeight / 2); };
+                        qualityMap = constants_1.DASH_CONFIGS
+                            .map(function (_a, i) {
+                            var _b;
+                            var size = _a.size, bitrate = _a.bitrate, frameRate = _a.frameRate;
+                            if (size > height)
+                                return;
+                            frameRate = Math.min(frameRate, (_b = metadata.frameRate) !== null && _b !== void 0 ? _b : Infinity);
+                            return "-map v:0 -s:".concat(i, " ").concat(getEvenWidth(size), "x").concat(size, " -b:v:").concat(i, " ").concat(bitrate, " -r:").concat(i, " ").concat(frameRate);
+                        });
+                        qualityFilters = (0, utils_1.filterFalsy)(qualityMap).join(' ');
+                        gopSize = 100;
+                        destFolderPath = (0, utils_1.joinPaths)(this.destination, constants_1.DASH_SUBFOLDER, name);
+                        command = "\n    nice -n 10 ffmpeg -i ".concat(srcPath, " -y \\\n    -c:v libx264 -preset veryslow -sc_threshold 0 \\\n    -keyint_min ").concat(gopSize, " -g ").concat(gopSize, " -hide_banner -loglevel warning \\\n    ").concat(qualityFilters, " \\\n    -use_template 1 -use_timeline 1 -seg_duration 4 \\\n    -adaptation_sets \"id=0,streams=v\" \\\n    -f dash ").concat(destFolderPath, "/dash.mpd\n    ");
+                        (0, utils_1.mkdir)(destFolderPath, this.removeFilesAtDest);
+                        (0, child_process_1.execSync)(command);
+                        console.log(command);
+                        if (shouldCreateMp4)
+                            (0, fs_1.unlinkSync)(srcPath);
+                        return [2];
+                }
             });
         });
+    };
+    Resizer.prototype.createFfmpeg = function (source) {
+        return (0, fluent_ffmpeg_1.default)({ source: source, priority: 10 }).noAudio();
     };
     Resizer.prototype.runFfmpeg = function (ffmpegCommand) {
         return __awaiter(this, void 0, void 0, function () {
