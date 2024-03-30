@@ -1,30 +1,31 @@
 import _ from 'lodash'
+
 import vectorsData from '../../../data/vector/glyphs.json'
 import { MaxNumber } from '../../../utils/helpers/number'
 import Size from '../../../utils/helpers/size'
 import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
 import { Mode } from './constants'
+
 import type p5 from 'p5'
 import type { SetTransformProps, VectorSetting } from './vectorTypes'
 
 class Vector {
-  private setting: VectorSetting
-  private p5: p5 | p5.Graphics
   private rawData: number[][][]
   private mode: Mode
   private nativeDimension: {
     w: number,
     h: number
   }
-
   vectors: p5.Vector[][]
   position: p5.Vector
   scale: Size
 
-  constructor(p5: p5 | p5.Graphics, name: keyof typeof vectorsData, setting: VectorSetting) {
+  constructor(
+    private p5: p5 | p5.Graphics,
+    name: keyof typeof vectorsData,
+    private setting: VectorSetting
+  ) {
     const { x, y, scale, mode = Mode.Corner } = setting
-    this.setting = setting
-    this.p5 = p5
 
     this.rawData = vectorsData[name]
     this.vectors = this.rawData.map(path =>

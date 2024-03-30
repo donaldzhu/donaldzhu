@@ -1,16 +1,20 @@
+import ffmpeg from 'fluent-ffmpeg'
+import { globSync } from 'glob'
+import _ from 'lodash'
 import path from 'path'
 import sharp from 'sharp'
-import ffmpeg from 'fluent-ffmpeg'
-import _ from 'lodash'
-import { globSync } from 'glob'
-import { BreakptConfig, BreakptResizerConfig, MediaType, ImgExtension, MediaOptions, Metadata, vidExportTypes, BreakptResizeConfig } from './resizerTypes'
-import { mkdirIfNone, joinPaths, removeFile, parseMediaType, getExtension, mkdir } from '../../utils'
-import { POSTER_SUBFOLDER } from './constants'
+
+import {
+  getExtension, joinPaths, mkdir, mkdirIfNone, parseMediaType, removeFile
+} from '../../utils'
 import { replaceExt, roundEven } from '../resizeUtils'
+import { POSTER_SUBFOLDER } from './constants'
+import {
+  BreakptConfig, BreakptResizeConfig, BreakptResizerConfig, ImgExtension, MediaOptions, MediaType,
+  Metadata, vidExportTypes
+} from './resizerTypes'
 
 class BreakpointResizer<K extends string> {
-  source: string
-  config: BreakptConfig<K>
   destination: string
   breakptTypes: MediaType[]
   mediaOptions: MediaOptions
@@ -20,8 +24,8 @@ class BreakpointResizer<K extends string> {
   debugOnly: boolean
 
   constructor(
-    source: string,
-    config: BreakptConfig<K>,
+    public source: string,
+    public config: BreakptConfig<K>,
     {
       destination,
       mediaOptions,
@@ -30,8 +34,6 @@ class BreakpointResizer<K extends string> {
       exportTypes
     }: BreakptResizerConfig
   ) {
-    this.source = source
-    this.config = config
     this.destination = joinPaths(destination, this.config.breakpt)
 
     this.breakptTypes = _.uniq(

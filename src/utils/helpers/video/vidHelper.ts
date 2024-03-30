@@ -1,6 +1,8 @@
 import dashjs from 'dashjs'
-import Queue from '../queue'
+
 import { validateRef } from '../../typeUtils'
+import Queue from '../queue'
+
 import type { MutableRefObject } from 'react'
 import type { MediaPlayerClass } from 'dashjs'
 
@@ -12,9 +14,6 @@ enum PlayState {
 class VidHelper {
   private playQueue: Queue | undefined
   private vidCommands: VidCommand[]
-  private vidRef: MutableRefObject<HTMLVideoElement>
-  private dashPlayerRef: MutableRefObject<MediaPlayerClass | null>
-  private useDash: boolean
 
   private seeked: boolean
   private zoomedMediaShouldCatchup: boolean // TODO
@@ -26,15 +25,11 @@ class VidHelper {
   enabled: boolean | undefined
 
   constructor(
-    vidRef: MutableRefObject<HTMLVideoElement>,
-    dashPlayerRef: MutableRefObject<MediaPlayerClass | null>,
-    useDash: boolean,
+    private vidRef: MutableRefObject<HTMLVideoElement>,
+    private dashPlayerRef: MutableRefObject<MediaPlayerClass | null>,
+    private useDash: boolean,
     canPlay: boolean | undefined
   ) {
-    this.vidRef = vidRef
-    this.dashPlayerRef = dashPlayerRef
-
-    this.useDash = useDash
     this.seeked = false
     this.zoomedMediaShouldCatchup = false
 
@@ -173,12 +168,7 @@ class VidHelper {
 }
 
 class VidCommand {
-  playState: PlayState
-  run: () => void
-  constructor(playState: PlayState, run: () => void) {
-    this.playState = playState
-    this.run = run
-  }
+  constructor(public playState: PlayState, public run: () => void) { }
 }
 
 export default VidHelper

@@ -1,10 +1,12 @@
 import { Bodies, Body, Composite, Constraint } from 'matter-js'
+
 import bearingsData from '../../../data/vector/spacings.json'
+import RollingFilter from '../../../utils/helpers/rollingFilter'
 import { parseVector, wrapDrawingContext } from '../../../utils/p5Utils'
 import { validateRef } from '../../../utils/typeUtils'
-import RollingFilter from '../../../utils/helpers/rollingFilter'
-import Vector from './vector'
 import { createMobilePhysicsSettings } from './constants'
+import Vector from './vector'
+
 import type p5 from 'p5'
 import type Matter from 'matter-js'
 import type { Engine } from 'matter-js'
@@ -13,10 +15,7 @@ import type { MobileCanvasStates } from '../../../components/common/canvas/canva
 
 
 class Glyph {
-  private p5: p5 | p5.Graphics
   private nativeBearings: number[]
-
-  private canvasStates: MobileCanvasStates | undefined
   private engine: Engine | undefined
 
   private bodies: {
@@ -29,25 +28,17 @@ class Glyph {
   private _rotationVector: p5.Vector
   private _accelVector: p5.Vector
 
-  private name: string // TODO: remove when mobile dev is finished
-
-  setting: VectorSetting
   still: Vector
   active: Vector
   constructor(
-    p5: p5 | p5.Graphics,
-    name: keyof typeof bearingsData,
-    setting: VectorSetting,
-    canvasStates?: MobileCanvasStates
+    private p5: p5 | p5.Graphics,
+    private name: keyof typeof bearingsData, // TODO: remove when mobile dev is finished
+    public setting: VectorSetting,
+    private canvasStates?: MobileCanvasStates
   ) {
-    this.p5 = p5
-    this.setting = setting
     this.still = new Vector(p5, name, setting)
     this.active = new Vector(p5, name, setting)
     this.nativeBearings = bearingsData[name]
-
-    this.name = name
-    this.canvasStates = canvasStates
 
     this.engine = canvasStates?.engine
     this.bodies = undefined

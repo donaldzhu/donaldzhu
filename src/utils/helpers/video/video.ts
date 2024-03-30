@@ -1,21 +1,21 @@
-import Queue from '../queue'
 import { validateRef } from '../../typeUtils'
+import Queue from '../queue'
+
 import type { MutableRefObject } from 'react'
 
 class Video {
   private playQueue: Queue | undefined
   private playQueueList: VideoPlayCommand[]
-  ref: MutableRefObject<HTMLVideoElement>
-  canAutoPlay: boolean | undefined
   playState: {
     current: boolean
     future: boolean
     isSettled: boolean
   }
 
-  constructor(ref: MutableRefObject<HTMLVideoElement>, canAutoPlay: boolean | undefined) {
-    this.ref = ref
-    this.canAutoPlay = canAutoPlay
+  constructor(
+    public ref: MutableRefObject<HTMLVideoElement>,
+    public canAutoPlay: boolean | undefined
+  ) {
     this.playQueue = undefined
     this.playQueueList = []
     this.playState = {
@@ -87,12 +87,7 @@ class Video {
 }
 
 class VideoPlayCommand {
-  isPlayCommand: boolean
-  run: () => void
-  constructor(isPlayCommand: boolean, run: () => void) {
-    this.isPlayCommand = isPlayCommand
-    this.run = run
-  }
+  constructor(public isPlayCommand: boolean, public run: () => void) { }
 }
 
 export default Video

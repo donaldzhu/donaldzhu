@@ -1,17 +1,23 @@
 import _ from 'lodash'
 import toSpaceCase from 'to-space-case'
+
+import breakpts from '../../../data/breakpoints'
 import desktopDimensions from '../../../data/media/nativeDimensions/desktop.json'
 import mobileDimensions from '../../../data/media/nativeDimensions/mobile.json'
 import workData from '../../../data/work/workData.json'
-import { getDevice, filterFalsy, joinPaths, loopObject, typedKeys, validateString } from '../../commonUtils'
-import breakpts from '../../../data/breakpoints'
-import VidHelper from '../video/vidHelper'
+import { Device } from '../../breakptTypes'
+import {
+  filterFalsy, getDevice, joinPaths, loopObject, typedKeys, validateString
+} from '../../commonUtils'
 import { getBreakptKey } from '../../queryUtil'
 import { Environment } from '../../utilTypes'
-import { Device } from '../../breakptTypes'
+import VidHelper from '../video/vidHelper'
 import { MediaStack } from './mediaStack'
-import { MediaFileType, getPreviewBreakptKey, MediaSize, MediaType, fileIsImg, Verbosity, Fallback } from './preloadUtils'
 import PreloadQueuer from './preloadQueuer'
+import {
+  Fallback, fileIsImg, getPreviewBreakptKey, MediaFileType, MediaSize, MediaType, Verbosity
+} from './preloadUtils'
+
 import type { PreloadStack } from './preloadQueuer'
 import type { MediaBreakpts, PreloaderConfig } from './preloaderTypes'
 import type { coorTuple } from '../../utilTypes'
@@ -51,14 +57,11 @@ interface DecorateLogConfig {
 }
 
 class PreloadManager {
-  private loadNativeVid: loadNativeVidType
   private breakpts: MediaBreakpts[]
   private preloadQueuer: PreloadQueuer<PreloadManagerStack, MediaBreakpts>
   private currentPreloadName: PreloadName | undefined
   private currentStartTime: number
   private logTime: boolean
-
-  config: PreloaderConfig
 
   loadLocal: boolean
   loadFromEnv: Environment
@@ -66,10 +69,7 @@ class PreloadManager {
 
   verbosity: Verbosity
 
-  constructor(config: PreloaderConfig, loadNativeVid: loadNativeVidType) {
-    this.config = config
-    this.loadNativeVid = loadNativeVid
-
+  constructor(public config: PreloaderConfig, private loadNativeVid: loadNativeVidType) {
     this.loadLocal = false
     this.loadFromEnv = Environment.Development
     this.imgPreloaded = false

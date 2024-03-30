@@ -1,11 +1,9 @@
 import { wrapDrawingContext } from '../../../utils/p5Utils'
+
 import type p5 from 'p5'
 import type { BrushSetting } from '../../sketches/sketchTypes'
 
 class Brush {
-  setting: BrushSetting
-  private p5: p5
-  private drawingContext: p5.Graphics
   x: number
   y: number
   prevX: number
@@ -15,12 +13,11 @@ class Brush {
   size: number
   prevSize: number
   isDrawing: boolean
-  constructor(setting: BrushSetting, p5: p5, drawingContext: p5.Graphics) {
-    this.setting = setting
-
-    this.p5 = p5
-    this.drawingContext = drawingContext
-
+  constructor(
+    public setting: BrushSetting,
+    private p5: p5,
+    private drawingContext: p5.Graphics
+  ) {
     this.x = 0
     this.y = 0
     this.prevX = 0

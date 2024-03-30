@@ -1,4 +1,5 @@
 import { MediaFileType } from './preloadUtils'
+
 import type { loadNativeVidType } from './preloadTypes'
 import type { PreloaderConfig } from './preloaderTypes'
 
@@ -32,19 +33,15 @@ export class ImgPreloader extends MediaPreloader {
 }
 
 export class VidPreloader extends MediaPreloader {
-  private config: PreloaderConfig
-  private loadNativeVid: loadNativeVidType
   private threshold: number
   loadCount: number
 
   constructor(
     src: string,
-    config: PreloaderConfig,
-    loadNativeVid: loadNativeVidType
+    private config: PreloaderConfig,
+    private loadNativeVid: loadNativeVidType
   ) {
     super(src, MediaFileType.Video)
-    this.config = config
-    this.loadNativeVid = loadNativeVid
     this.loadCount = 0
     this.threshold = config.isMobile ? 0.125 : 0.25
   }

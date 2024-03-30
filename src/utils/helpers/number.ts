@@ -2,10 +2,8 @@ type toCompareType = (newValue: number, currValue: number) => number
 
 abstract class ExtremeNumber {
   value: number
-  toCompare: toCompareType
-  constructor(extremum: number, toCompare: toCompareType) {
+  constructor(extremum: number, private toCompare: toCompareType) {
     this.value = extremum
-    this.toCompare = toCompare
   }
 
   compare(newValue: number) {

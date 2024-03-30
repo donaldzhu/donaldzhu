@@ -1,20 +1,18 @@
 import _ from 'lodash'
+
 import { arrayify, filterFalsy } from '../commonUtils'
+
 import type { queueArgType, queueFunctionType } from '../utilTypes'
 
 class Queue<T = any> {
   private currentId: undefined | string
-  private interval: undefined | number
-  private capacity: number
   private queueList: queueFunctionType<T>[]
   private initialQueueCount: undefined | number
 
-  constructor(interval?: number, capacity = 1) {
+  constructor(private interval?: number, private capacity = 1) {
     this.currentId = undefined
-    this.interval = interval
     this.queueList = []
     this.initialQueueCount = undefined
-    this.capacity = capacity
   }
 
   create(queueArgs: queueArgType<T>) {
