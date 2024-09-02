@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import styled from 'styled-components'
+
 import { ReactComponent as CSvg } from '../../../assets/desktop/work/vector-struct/c.svg'
 import { ReactComponent as ESvg } from '../../../assets/desktop/work/vector-struct/e.svg'
 import { ReactComponent as OSvg } from '../../../assets/desktop/work/vector-struct/o.svg'

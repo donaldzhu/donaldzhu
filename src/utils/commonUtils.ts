@@ -1,5 +1,6 @@
 import workData from '../data/work/workData.json'
 import { Device } from './breakptTypes'
+
 import type { Falsey } from 'lodash'
 import type ElemRect from './helpers/rect/elemRect'
 import type { BrowserType, CoorObject, CoorObject3D, coorTuple } from './utilTypes'
