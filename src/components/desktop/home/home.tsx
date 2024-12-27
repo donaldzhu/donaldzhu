@@ -1,10 +1,11 @@
 import styled from 'styled-components'
+
+import pdfPortfolioData from '../../../data/pdf-portfolio.json'
 import usePortfolioQuery from '../../../hooks/usePortfolioQuery'
 import useSidebar from '../../../hooks/useSidebar'
 import Anchor from '../../common/anchor'
 import Text from '../../common/styled/text'
 import TextContainer from '../../common/styled/textContainer'
-import pdfPortfolioData from '../../../data/pdf-portfolio.json'
 
 const Home = () => {
   useSidebar(<HomeSidebar />)
@@ -32,11 +33,13 @@ const HomeSidebar = () => {
       </Text>
       <Text>
         {portfolioData ?
-          <>Donald Zhu is a designer based in Toronto. He finished at OCAD U as the <Anchor to='https://eportfolio.ocadu.ca/exhibitor/details/b75b45af-1ace-4d75-bdd0-bb9afa12cea8' target='_blank'>medal winner</Anchor> of 2023. His work focuses on <i>typography, interaction, and code</i>. In his free time, he likes to work on typefaces and web projects.</> :
           <>
-            He finished his degree at OCAD University in 2023. His work primarily focuses on
-            <i> typography, interaction, and code</i>. In his free time, he likes to work on
-            custom typefaces and side web projects.
+            Donald Zhu is a designer based in Toronto.
+            His work focuses on <i>typography, interaction, and code</i>.
+            In his free time, he likes to work on typefaces and web projects.</> :
+          <>
+            His work primarily focuses on <i> typography, interaction, and code</i>.
+            In his free time, he likes to work on custom typefaces and side web projects.
           </>}
       </Text>
     </TextContainer>
